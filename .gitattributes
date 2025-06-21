@@ -1,0 +1,17 @@
+# Default setting
+*       text=auto
+
+# Compatible line endings for different OS
+*.sh    text eol=lf
+*.bat   text eol=crlf
+
+# Mark shell scripts as executable
+*.sh   export-executable
+*.bat  export-executable
+
+# Docker compose ending
+docker-compose.yaml  text eol=lf
+
+# Maven wrapper files
+/mvnw text eol=lf
+*.cmd text eol=crlf
