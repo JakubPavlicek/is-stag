@@ -1,4 +1,4 @@
-package com.stag.subject.entity;
+package com.stag.academics.subject.variant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -15,10 +15,18 @@ import java.util.Objects;
 @Getter
 @Setter
 @Embeddable
-public class PredHlavickyId implements Serializable {
+public class PredVariantyId implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -6314439891527470641L;
+    private static final long serialVersionUID = 3701775921980234098L;
+    @Size(max = 5)
+    @NotNull
+    @Column(
+        name = "ZKR_PREDM",
+        nullable = false,
+        length = 5
+    )
+    private String zkrPredm;
 
     @Size(max = 6)
     @NotNull
@@ -29,14 +37,14 @@ public class PredHlavickyId implements Serializable {
     )
     private String pracZkr;
 
-    @Size(max = 5)
+    @Size(max = 4)
     @NotNull
     @Column(
-        name = "ZKR_PREDM",
+        name = "ROK_VARIANTY",
         nullable = false,
-        length = 5
+        length = 4
     )
-    private String zkrPredm;
+    private String rokVarianty;
 
     @Override
     public boolean equals(Object o) {
@@ -46,14 +54,15 @@ public class PredHlavickyId implements Serializable {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        PredHlavickyId entity = (PredHlavickyId) o;
+        PredVariantyId entity = (PredVariantyId) o;
         return Objects.equals(this.zkrPredm, entity.zkrPredm) &&
-            Objects.equals(this.pracZkr, entity.pracZkr);
+            Objects.equals(this.pracZkr, entity.pracZkr) &&
+            Objects.equals(this.rokVarianty, entity.rokVarianty);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(zkrPredm, pracZkr);
+        return Objects.hash(zkrPredm, pracZkr, rokVarianty);
     }
 
 }

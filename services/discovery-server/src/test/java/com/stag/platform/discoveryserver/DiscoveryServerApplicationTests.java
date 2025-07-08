@@ -1,10 +1,10 @@
-package com.stag.configserver;
+package com.stag.platform.discoveryserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ConfigServerApplicationTests {
+class DiscoveryServerApplicationTests {
 
     @Test
     void contextLoads() {

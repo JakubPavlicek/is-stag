@@ -1,4 +1,4 @@
-package com.stag.discoveryserver;
+package com.stag.platform.discoveryserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,5 +1,6 @@
-package com.stag.subject.entity;
+package com.stag.academics.subject.variant;
 
+import com.stag.academics.subject.header.PredHlavicky;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -15,11 +16,15 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -271,9 +276,11 @@ public class PredVarianty {
     private String owner;
 
     @NotNull
+    @CreationTimestamp
     @Column(
         name = "DATE_OF_INSERT",
-        nullable = false
+        nullable = false,
+        updatable = false
     )
     private LocalDate dateOfInsert;
 
@@ -284,7 +291,11 @@ public class PredVarianty {
     )
     private String updator;
 
-    @Column(name = "DATE_OF_UPDATE")
+    @UpdateTimestamp
+    @Column(
+        name = "DATE_OF_UPDATE",
+        insertable = false
+    )
     private LocalDate dateOfUpdate;
 
     @Size(max = 40)
@@ -730,5 +741,29 @@ public class PredVarianty {
 
     @Column(name = "TYHOIDNO_ZPPZK")
     private Long tyhoidnoZppzk;
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer()
+                                                                                     .getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
+                                                                                              .getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) {
+            return false;
+        }
+        PredVarianty that = (PredVarianty) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(id);
+    }
 
 }

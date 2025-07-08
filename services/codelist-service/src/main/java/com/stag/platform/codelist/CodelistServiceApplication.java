@@ -1,13 +1,13 @@
-package com.stag.subject;
+package com.stag.platform.codelist;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SubjectServiceApplication {
+public class CodelistServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SubjectServiceApplication.class, args);
+        SpringApplication.run(CodelistServiceApplication.class, args);
     }
 
 }

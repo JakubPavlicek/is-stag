@@ -1,4 +1,4 @@
-package com.stag.subject.entity;
+package com.stag.academics.subject.header;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -17,8 +17,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -84,7 +86,10 @@ public class PredHlavicky {
     private LocalDate dateOfInsert;
 
     @UpdateTimestamp
-    @Column(name = "DATE_OF_UPDATE")
+    @Column(
+        name = "DATE_OF_UPDATE",
+        insertable = false
+    )
     private LocalDate dateOfUpdate;
 
     @Size(max = 3)
@@ -97,5 +102,29 @@ public class PredHlavicky {
     @Size(max = 255)
     @Column(name = "IDENTIFIKATOR")
     private String identifikator;
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer()
+                                                                                     .getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
+                                                                                              .getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) {
+            return false;
+        }
+        PredHlavicky that = (PredHlavicky) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(id);
+    }
 
 }
