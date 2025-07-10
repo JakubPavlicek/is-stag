@@ -1,6 +1,5 @@
-package com.stag.platform.codelist.grading;
+package com.stag.platform.codelist.entity;
 
-import com.stag.platform.codelist.gradingtype.CisHodnoceniTyp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

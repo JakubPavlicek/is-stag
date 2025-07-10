@@ -23,7 +23,10 @@
     <modules>
         <module>config-server</module>
         <module>discovery-server</module>
+        <module>api-gateway</module>
         <module>subject-service</module>
+        <module>codelist-service</module>
+        <module>user-service</module>
     </modules>
 
     <dependencyManagement>
