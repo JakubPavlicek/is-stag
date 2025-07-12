@@ -2,8 +2,10 @@ package com.stag.keycloak.authentication;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
+import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
+import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import org.keycloak.authentication.AuthenticationFlowContext;
@@ -25,31 +27,27 @@ public class IsStagAuthenticator implements Authenticator {
 
     private static final String STAG_LOGIN_URL = "https://stag-demo.zcu.cz/ws/login";
     private static final String STAG_REDIRECT_PARAM = "originalURL";
-    private static final String CALLBACK_PARAM = "stagUserInfo";
-    private static final String REDIRECT_TRIGGER_PARAM = "kc_action";
-    private static final String REDIRECT_TRIGGER_VALUE = "stag_login";
+    private static final String STAG_USER_INFO = "stagUserInfo";
+    private static final String STAG_LOGIN = "stag_login";
+    private static final String KC_ACTION = "kc_action";
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
-        var query = context.getHttpRequest()
-                           .getUri()
-                           .getQueryParameters();
+        MultivaluedMap<String, String> queryParams = context.getHttpRequest()
+                                                            .getUri()
+                                                            .getQueryParameters();
 
         // Check if we are handling a STAG login response
-        if (query.containsKey(CALLBACK_PARAM)) {
-            action(context); // STAG login complete — continue flow
+        if (queryParams.containsKey(STAG_USER_INFO)) {
+            handleStagLoginResponse(context, queryParams.getFirst(STAG_USER_INFO)); // STAG login complete — continue flow
             return;
         }
 
         // Check if user clicked "Login with STAG" button
-        if (REDIRECT_TRIGGER_VALUE.equals(query.getFirst(REDIRECT_TRIGGER_PARAM))) {
-
-            // TODO: remove "kc_action=stag_login" from the URL ???
-
-            // Build return URL back to Keycloak’s login-action endpoint
+        if (STAG_LOGIN.equals(queryParams.getFirst(KC_ACTION))) {
+            // Build a return URL back to Keycloak’s login-action endpoint
             URI returnUri = context.getUriInfo()
                                    .getRequestUriBuilder()
-                                   .replaceQueryParam(REDIRECT_TRIGGER_PARAM, REDIRECT_TRIGGER_VALUE)
                                    .build();
 
             log.info(String.format("IsStagAuthenticator: Return to URI: %s", returnUri.toString()));
@@ -59,26 +57,24 @@ public class IsStagAuthenticator implements Authenticator {
                                          .queryParam(STAG_REDIRECT_PARAM, returnUri.toString())
                                          .build();
 
-            context.challenge(Response.seeOther(stagLoginUri)
-                                      .build());
+            context.challenge(Response.seeOther(stagLoginUri).build());
             return;
         }
 
-        log.info("IsStagAuthenticator: Attempted");
+        log.info("IsStagAuthenticator: attempted() called");
 
         // Show Keycloak's login form (fallback or first load)
         context.attempted(); // let next flow handle (e.g. normal login page)
     }
 
-    @Override
-    public void action(AuthenticationFlowContext context) {
+    private void handleStagLoginResponse(AuthenticationFlowContext context, String stagUserInfo) {
         try {
             log.info("IsStagAuthenticator: action() called");
 
             String encodedUserInfo = context.getHttpRequest()
                                             .getUri()
                                             .getQueryParameters()
-                                            .getFirst(CALLBACK_PARAM);
+                                            .getFirst(STAG_USER_INFO);
 
             if (encodedUserInfo == null || encodedUserInfo.isEmpty()) {
                 throw new RuntimeException("Missing stagUserInfo");
@@ -92,19 +88,29 @@ public class IsStagAuthenticator implements Authenticator {
 
             JsonReader jsonReader = Json.createReader(new StringReader(decodedJson));
             JsonObject userInfoPayload = jsonReader.readObject();
-            JsonArray userInfoArray = userInfoPayload.getJsonArray(CALLBACK_PARAM);
+            JsonArray userInfoArray = userInfoPayload.getJsonArray(STAG_USER_INFO);
 
             if (userInfoArray.isEmpty()) {
                 throw new RuntimeException("Empty stagUserInfo array");
             }
 
-            JsonObject userDetails = userInfoArray.getJsonObject(0);
-            String username = userDetails.getString("userName");
-            String email = userDetails.getString("email");
+            // TODO: extract 'role' and 'ucitIdno'/'osCislo' and save them to the Keycloak
+
+            // TODO: use Jackson or another library to parse the JSON if needed
+
             String firstName = userInfoPayload.getString("jmeno");
             String lastName = userInfoPayload.getString("prijmeni");
 
-            log.info(String.format("IsStagAuthenticator: [username=%s, email=%s, firstname=%s, lastname=%s]", username, email, firstName, lastName));
+            JsonObject userDetails = userInfoArray.getJsonObject(0);
+
+            String username = userDetails.getString("userName");
+            String email = userDetails.getString("email");
+            String role = userDetails.getString("role");
+            JsonNumber ucitIndoJsonNumber = userDetails.getJsonNumber("ucitIdno");
+            Long ucitIdno = ucitIndoJsonNumber != null ? ucitIndoJsonNumber.longValue() : null;
+            String osCislo = userDetails.getString("osCislo", null);
+
+            log.info(String.format("IsStagAuthenticator: [username=%s, email=%s, firstname=%s, lastname=%s, role=%s, ucitIdno=%s, osCislo=%s]", username, email, firstName, lastName, role, ucitIdno, osCislo));
 
             if (username == null || username.isEmpty()) {
                 throw new RuntimeException("Missing username in stagUserInfo");
@@ -116,20 +122,38 @@ public class IsStagAuthenticator implements Authenticator {
                                     .getUserByUsername(context.getRealm(), username);
 
             if (user == null) {
+                System.out.println("Creating new user");
                 user = context.getSession()
                               .users()
                               .addUser(context.getRealm(), username);
                 user.setEnabled(true);
 
                 if (email != null && !email.isEmpty()) {
+                    System.out.println("Setting email");
                     user.setEmail(email);
                     user.setEmailVerified(true);
                 }
                 if (firstName != null && !firstName.isEmpty()) {
+                    System.out.println("Setting firstname");
                     user.setFirstName(firstName);
                 }
                 if (lastName != null && !lastName.isEmpty()) {
+                    System.out.println("Setting lastname");
                     user.setLastName(lastName);
+                }
+                if (role != null && !role.isEmpty()) {
+//                    System.out.println("Setting role");
+//                    user.setSingleAttribute("role", role);
+                    // TODO: Assign role to the user (Create a role in Keycloak if it doesn't exist)
+//                    user.grantRole(context.getRealm().getRole(role));
+                }
+                if (ucitIdno != null) {
+                    System.out.println("Setting ucitIdno: " + ucitIdno);
+                    user.setSingleAttribute("ucitIdno", ucitIdno.toString());
+                }
+                if (osCislo != null && !osCislo.isEmpty()) {
+                    System.out.println("Setting osCislo: " + osCislo);
+                    user.setSingleAttribute("osCislo", osCislo);
                 }
             }
 
@@ -147,6 +171,11 @@ public class IsStagAuthenticator implements Authenticator {
                        .createErrorPage(Response.Status.BAD_REQUEST)
             );
         }
+    }
+
+    @Override
+    public void action(AuthenticationFlowContext context) {
+        log.warning("IsStagAuthenticator: action() called");
     }
 
     @Override
