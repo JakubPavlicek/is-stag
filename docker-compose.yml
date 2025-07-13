@@ -9,4 +9,4 @@ services:
       - "8180:8080"
     command: start-dev --import-realm
     volumes:
-      - /Users/kuba/Downloads/is-stag-realm-export.json:/opt/keycloak/data/import/is-stag-realm.json
+      - ./keycloak/is-stag-realm-export.json:/opt/keycloak/data/import/is-stag-realm.json
