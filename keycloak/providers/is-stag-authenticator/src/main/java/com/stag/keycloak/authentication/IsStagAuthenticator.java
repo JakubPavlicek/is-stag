@@ -31,7 +31,7 @@ public class IsStagAuthenticator implements Authenticator {
     private static final String STAG_REDIRECT_PARAM = "originalURL";
     private static final String STAG_USER_INFO = "stagUserInfo";
     private static final String STAG_LOGIN = "stag_login";
-    private static final String KC_ACTION = "kc_action";
+    private static final String STAG_LOGIN_TRIGGER = "true";
 
     // Attribute keys
     private static final String PERSONAL_NUM_ATTR = "osCislo";
@@ -39,6 +39,8 @@ public class IsStagAuthenticator implements Authenticator {
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
+        System.out.println("authenticate() called");
+
         MultivaluedMap<String, String> queryParams = context.getHttpRequest()
                                                             .getUri()
                                                             .getQueryParameters();
@@ -50,7 +52,7 @@ public class IsStagAuthenticator implements Authenticator {
         }
 
         // Check if user clicked "Login with IS/STAG" button
-        if (STAG_LOGIN.equals(queryParams.getFirst(KC_ACTION))) {
+        if (STAG_LOGIN_TRIGGER.equals(queryParams.getFirst(STAG_LOGIN))) {
             redirectToStagLogin(context);
             return;
         }
@@ -76,6 +78,7 @@ public class IsStagAuthenticator implements Authenticator {
 
     // TODO: Handle redirection in login.ftl after the user failed to authenticate in Keycloak
     //  (if it fails it is no longer possible to redirect to the IS/STAG login page using the button)
+    //  see https://stackoverflow.com/questions/71419515/reset-authentication-flow-from-freemarker-template
 
     private void handleStagLoginResponse(AuthenticationFlowContext context, String stagUserInfo) {
         try {
@@ -132,7 +135,7 @@ public class IsStagAuthenticator implements Authenticator {
     }
 
     private void logUserDetails(IsStagUser isStagUser, IsStagUserDetails isStagUserDetails) {
-        log.info(String.format(
+        String message = String.format(
             "IsStagAuthenticator: [username=%s, email=%s, firstname=%s, lastname=%s, role=%s, ucitIdno=%s, osCislo=%s]",
             isStagUserDetails.userName(),
             isStagUserDetails.email(),
@@ -141,7 +144,8 @@ public class IsStagAuthenticator implements Authenticator {
             isStagUserDetails.role(),
             isStagUserDetails.teacherIdentifier().orElse(null),
             isStagUserDetails.personalNumber().orElse(null)
-        ));
+        );
+        log.info(message);
     }
 
     private void handleAuthenticationError(AuthenticationFlowContext context, String message) {
@@ -157,6 +161,7 @@ public class IsStagAuthenticator implements Authenticator {
     @Override
     public void action(AuthenticationFlowContext context) {
         // NO-OP
+        System.out.println("action() called");
     }
 
     @Override

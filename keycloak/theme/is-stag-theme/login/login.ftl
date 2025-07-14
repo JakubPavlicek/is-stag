@@ -41,7 +41,7 @@
                     <button id="stag-login-button"
                             class="${properties.kcButtonPrimaryClass} ${properties.kcButtonBlockClass} ${properties.kcMarginTopClass} stag-login-btn"
                             type="button">
-                        ${msg("Log In With IS/STAG")}
+                        ${msg("Login with IS/STAG")}
                     </button>
                 </div>
             </#if>
@@ -66,15 +66,39 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    const OIDC_PARAMS = ['client_id', 'redirect_uri', 'state', 'response_type', 'scope'];
+    const currentUrl = new URL(window.location.href);
+    // A simple check to see if the current URL is the initial authentication request.
+    const isInitialAuth = OIDC_PARAMS.every(param => currentUrl.searchParams.has(param));
+
+    // When the login page first loads, it contains all the OIDC parameters.
+    // We save this initial URL to session storage so we can restart the flow correctly later.
+    if (isInitialAuth) {
+      sessionStorage.setItem('initialAuthUrl', currentUrl.href);
+    }
+
     const stagLoginButton = document.getElementById('stag-login-button');
     if (stagLoginButton) {
-      stagLoginButton.addEventListener('click', function () {
+      stagLoginButton.addEventListener('click', function (e) {
+        e.preventDefault();
         try {
-          const actionUrl = new URL(window.location.href);
-          actionUrl.searchParams.append('kc_action', 'stag_login');
-          window.location.href = actionUrl.toString();
-        } catch (e) {
-          console.error("Failed to construct redirect URL:", e);
+          // Retrieve the saved initial URL. This will be used as the base for our redirect.
+          const initialAuthUrl = sessionStorage.getItem('initialAuthUrl');
+
+          if (!initialAuthUrl) {
+            console.error('Initial authentication URL not found in session storage. Cannot proceed with IS/STAG login.');
+            // You could display an error to the user here if desired.
+            return;
+          }
+
+          const redirectUrl = new URL(initialAuthUrl);
+          redirectUrl.searchParams.set('stag_login', 'true');
+
+          // By redirecting to the full initial URL with the added parameter,
+          // we restart the authentication flow correctly, preserving the OIDC context.
+          window.location.href = redirectUrl.toString();
+        } catch (error) {
+          console.error('Failed to construct IS/STAG login redirect URL:', error);
         }
       });
     }
