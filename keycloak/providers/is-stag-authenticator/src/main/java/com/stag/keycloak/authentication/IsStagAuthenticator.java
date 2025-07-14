@@ -56,7 +56,7 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
             return;
         }
 
-        // If not, proceed with the default Keycloak authentication flow
+        // If not, proceed with the default Keycloak UsernamePasswordForm authentication
         super.authenticate(context);
     }
 

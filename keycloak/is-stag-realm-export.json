@@ -891,6 +891,27 @@
       }
     ]
   },
+  "users": [
+    {
+      "username": "stagadmin",
+      "enabled": true,
+      "email": "admin@admin.cz",
+      "firstName": "stag",
+      "lastName": "admin",
+      "createdTimestamp": 1752300000000,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "stagadmin"
+        }
+      ],
+      "clientRoles": {
+        "realm-management": [
+          "realm-admin"
+        ]
+      }
+    }
+  ],
   "clients": [
     {
       "id": "2132bfb0-3c1b-49d5-a54b-abada546d25d",
