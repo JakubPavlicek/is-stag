@@ -42,8 +42,9 @@
                     <!-- IS/STAG button -->
                     <div class="${properties.kcFormGroupClass!}">
                         <button id="stag-login-button"
-                                class="${properties.kcButtonPrimaryClass} ${properties.kcButtonBlockClass} ${properties.kcMarginTopClass} stag-login-btn"
-                                type="button">
+                                class="${properties.kcButtonPrimaryClass} ${properties.kcButtonBlockClass} ${properties.kcMarginTopClass}"
+                                type="button"
+                                onclick="window.location.href += '&stag_login=true';">
                             ${msg("Login with IS/STAG")}
                         </button>
                     </div>
@@ -66,21 +67,3 @@
     </#if>
 
 </@layout.registrationLayout>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const stagLoginButton = document.getElementById('stag-login-button');
-    if (stagLoginButton) {
-      stagLoginButton.addEventListener('click', function (e) {
-        e.preventDefault();
-        try {
-          const redirectUrl = new URL(window.location.href);
-          redirectUrl.searchParams.set('stag_login', 'true');
-          window.location.href = redirectUrl.toString();
-        } catch (error) {
-          console.error('Failed to construct IS/STAG login redirect URL:', error);
-        }
-      });
-    }
-  });
-</script>
