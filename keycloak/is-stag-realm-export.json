@@ -48,9 +48,198 @@
   "roles": {
     "realm": [
       {
-        "id": "33e79789-38ca-4f52-859e-e08897917189",
-        "name": "uma_authorization",
-        "description": "${role_uma_authorization}",
+        "id": "8adc187d-e35e-4c7b-b606-bfb6c0482155",
+        "name": "AM",
+        "description": "Admin e-learningových systémů",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "843bfd83-9017-4cd2-80b5-a89793a57eef",
+        "name": "KO",
+        "description": "Komerce",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "5617eca1-418f-4b23-92ce-fc7e9d4a44a5",
+        "name": "NO",
+        "description": "Správa nostrifikací",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "8e97c9ff-8c57-4c7b-ac39-db8051536e22",
+        "name": "PP",
+        "description": "Správa předpisů plateb studentů",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "b431b3b3-acbd-439f-bc9b-f3f3b1b2b83e",
+        "name": "SP",
+        "description": "Spec. referentka",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "a5837420-4ea6-440c-9e11-49992ff7240a",
+        "name": "SV",
+        "description": "Schvalovatel VŠKP",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "ef3c4e31-b7cb-42f1-aa92-677a66c66170",
+        "name": "VY",
+        "description": "Vyučující",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "b8bbcd06-5af1-4252-874e-b1eb74cd7255",
+        "name": "MA",
+        "description": "Management",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "2702aac5-1285-4eb3-be7d-2734a585fc27",
+        "name": "ST",
+        "description": "Student",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "c4bd6211-0f29-4033-941d-c7d6566f472d",
+        "name": "DE",
+        "description": "Děkan",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "f675c43c-1660-4da3-a69f-a26112a3a1b8",
+        "name": "EP",
+        "description": "ECTS koordinátor pracoviště",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "13537d0e-671f-46a7-9c31-19b6596eb7a4",
+        "name": "RP",
+        "description": "Schvalování rozvrhových podkladů",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "65e1ea49-404b-46ec-854f-7cac49300f13",
+        "name": "TE",
+        "description": "Správce témat",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "e7ec3c91-0637-438f-af7b-4d8f42a2774c",
+        "name": "AD",
+        "description": "Administrátor",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "c347e477-2a60-4921-baa1-936f5e562ebc",
+        "name": "KN",
+        "description": "Knihovna",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "5f22dea3-3adc-41db-a3e1-531d39c495c9",
+        "name": "AC",
+        "description": "Správa číselníků a uživatelů",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "e83438e1-e6e2-47d6-b335-5ddf3f0680f6",
+        "name": "PJ",
+        "description": "Přijímací řízení",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "64da5589-a882-40be-8ab3-74c31f25dbe5",
+        "name": "FR",
+        "description": "Fakultní rozvrhář",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "f2501f6b-1032-49e0-99e1-e94787c3ff96",
+        "name": "SR",
+        "description": "Studijní referentka",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "60f19793-d369-418b-a96f-06dc1be6dce4",
+        "name": "SA",
+        "description": "Fakultní správce absolventů",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "6ba7b82e-9dad-11d1-80b4-00c04fd430c8",
+        "name": "QR",
+        "description": "Úprava Q-rámce oboru",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "2a1ea649-9b8e-42e7-8ca2-ae23cb34c7bf",
+        "name": "PW",
+        "description": "Webové služby pro E-přihlášku",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
@@ -78,45 +267,9 @@
         "attributes": {}
       },
       {
-        "id": "359b2f14-7012-4884-a6fd-477ccff79d2d",
-        "name": "offline_access",
-        "description": "${role_offline-access}",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "264e0473-882a-4fe4-aea2-19fc6b60ff6a",
-        "name": "AA",
-        "description": "Administrátor absolventů",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "5f22dea3-3adc-41db-a3e1-531d39c495c9",
-        "name": "AC",
-        "description": "Správa číselníků a uživatelů",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "e7ec3c91-0637-438f-af7b-4d8f42a2774c",
-        "name": "AD",
-        "description": "Administrátor",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "05c642f0-e9eb-4e4a-ad10-af7a985a4474",
-        "name": "AE",
-        "description": "Administrátor evaluace",
+        "id": "4018bfe9-d798-480a-83a5-d12737f646fb",
+        "name": "ZR",
+        "description": "Zahraniční referentka",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
@@ -132,51 +285,6 @@
         "attributes": {}
       },
       {
-        "id": "028cd8d3-903d-458f-ac2a-5195dfb64820",
-        "name": "AL",
-        "description": "Správa stud. plánů",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "8adc187d-e35e-4c7b-b606-bfb6c0482155",
-        "name": "AM",
-        "description": "Admin e-learningových systémů",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "9f1be07c-aa6e-4344-8c2d-4ca5c07fab4d",
-        "name": "AP",
-        "description": "Správa předmětů",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "c4bd6211-0f29-4033-941d-c7d6566f472d",
-        "name": "DE",
-        "description": "Děkan",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "65001081-b433-46a7-9de5-feb3da5787bd",
-        "name": "EI",
-        "description": "ECTS koordinátor instituce",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
         "id": "559193a9-a46f-42ca-ab80-3070a9592a67",
         "name": "EM",
         "description": "E-mailové konto",
@@ -186,126 +294,9 @@
         "attributes": {}
       },
       {
-        "id": "f675c43c-1660-4da3-a69f-a26112a3a1b8",
-        "name": "EP",
-        "description": "ECTS koordinátor pracoviště",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "2e644e7c-7b9d-44b7-8df9-3f00afbc6c8a",
-        "name": "EX",
-        "description": "Externí uživatel",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "9b43d0f7-26a7-4d9a-a822-1e609528469a",
-        "name": "FA",
-        "description": "Tajemník fakulty",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "64da5589-a882-40be-8ab3-74c31f25dbe5",
-        "name": "FR",
-        "description": "Fakultní rozvrhář",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "51dabef0-7d5a-4876-8091-15015394b5d8",
-        "name": "FS",
-        "description": "Fakultní superrozvrhář",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "144b4691-7e67-46b5-99f4-5100772499b0",
-        "name": "KA",
-        "description": "Katedra",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "c347e477-2a60-4921-baa1-936f5e562ebc",
-        "name": "KN",
-        "description": "Knihovna",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "843bfd83-9017-4cd2-80b5-a89793a57eef",
-        "name": "KO",
-        "description": "Komerce",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "a205815e-0c3f-4117-9327-324de2f43c8e",
-        "name": "KS",
-        "description": "Knihovna správce",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "b8bbcd06-5af1-4252-874e-b1eb74cd7255",
-        "name": "MA",
-        "description": "Management",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "05eea1df-1b8f-4492-a4ad-45d69d95e94f",
-        "name": "MK",
-        "description": "Marketing",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "5617eca1-418f-4b23-92ce-fc7e9d4a44a5",
-        "name": "NO",
-        "description": "Správa nostrifikací",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "1667add8-02fc-4cd6-b9a6-c4499fbf7fb2",
-        "name": "OP",
-        "description": "Operátor",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "d4be5110-3930-49f0-9f59-d915539af005",
-        "name": "PE",
-        "description": "Editor portálu",
+        "id": "028cd8d3-903d-458f-ac2a-5195dfb64820",
+        "name": "AL",
+        "description": "Správa stud. plánů",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
@@ -321,36 +312,36 @@
         "attributes": {}
       },
       {
-        "id": "e83438e1-e6e2-47d6-b335-5ddf3f0680f6",
-        "name": "PJ",
-        "description": "Přijímací řízení",
+        "id": "9f1be07c-aa6e-4344-8c2d-4ca5c07fab4d",
+        "name": "AP",
+        "description": "Správa předmětů",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
         "attributes": {}
       },
       {
-        "id": "8e97c9ff-8c57-4c7b-ac39-db8051536e22",
-        "name": "PP",
-        "description": "Správa předpisů plateb studentů",
+        "id": "51dabef0-7d5a-4876-8091-15015394b5d8",
+        "name": "FS",
+        "description": "Fakultní superrozvrhář",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
         "attributes": {}
       },
       {
-        "id": "0bdb4e89-e648-4035-a981-028985b0f3bb",
-        "name": "PR",
-        "description": "Prorektor",
+        "id": "d4be5110-3930-49f0-9f59-d915539af005",
+        "name": "PE",
+        "description": "Editor portálu",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
         "attributes": {}
       },
       {
-        "id": "2a1ea649-9b8e-42e7-8ca2-ae23cb34c7bf",
-        "name": "PW",
-        "description": "Webové služby pro E-přihlášku",
+        "id": "65001081-b433-46a7-9de5-feb3da5787bd",
+        "name": "EI",
+        "description": "ECTS koordinátor instituce",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
@@ -366,36 +357,27 @@
         "attributes": {}
       },
       {
-        "id": "6ba7b82e-9dad-11d1-80b4-00c04fd430c8",
-        "name": "QR",
-        "description": "Úprava Q-rámce oboru",
+        "id": "2e644e7c-7b9d-44b7-8df9-3f00afbc6c8a",
+        "name": "EX",
+        "description": "Externí uživatel",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
         "attributes": {}
       },
       {
-        "id": "2f4cd8b3-60ab-4de8-8df3-05acf3974a03",
-        "name": "RE",
-        "description": "Rektor",
+        "id": "359b2f14-7012-4884-a6fd-477ccff79d2d",
+        "name": "offline_access",
+        "description": "${role_offline-access}",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
         "attributes": {}
       },
       {
-        "id": "13537d0e-671f-46a7-9c31-19b6596eb7a4",
-        "name": "RP",
-        "description": "Schvalování rozvrhových podkladů",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "60f19793-d369-418b-a96f-06dc1be6dce4",
-        "name": "SA",
-        "description": "Fakultní správce absolventů",
+        "id": "05eea1df-1b8f-4492-a4ad-45d69d95e94f",
+        "name": "MK",
+        "description": "Marketing",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
@@ -411,45 +393,9 @@
         "attributes": {}
       },
       {
-        "id": "b431b3b3-acbd-439f-bc9b-f3f3b1b2b83e",
-        "name": "SP",
-        "description": "Spec. referentka",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "f2501f6b-1032-49e0-99e1-e94787c3ff96",
-        "name": "SR",
-        "description": "Studijní referentka",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "2702aac5-1285-4eb3-be7d-2734a585fc27",
-        "name": "ST",
-        "description": "Student",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "a5837420-4ea6-440c-9e11-49992ff7240a",
-        "name": "SV",
-        "description": "Schvalovatel VŠKP",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
-        "attributes": {}
-      },
-      {
-        "id": "65e1ea49-404b-46ec-854f-7cac49300f13",
-        "name": "TE",
-        "description": "Správce témat",
+        "id": "144b4691-7e67-46b5-99f4-5100772499b0",
+        "name": "KA",
+        "description": "Katedra",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
@@ -465,6 +411,60 @@
         "attributes": {}
       },
       {
+        "id": "2f4ce0a5-1394-419f-874a-607bc81235b5",
+        "name": "ZS",
+        "description": "Zapisovatel státnic",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "33e79789-38ca-4f52-859e-e08897917189",
+        "name": "uma_authorization",
+        "description": "${role_uma_authorization}",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "2f4cd8b3-60ab-4de8-8df3-05acf3974a03",
+        "name": "RE",
+        "description": "Rektor",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "264e0473-882a-4fe4-aea2-19fc6b60ff6a",
+        "name": "AA",
+        "description": "Administrátor absolventů",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "1667add8-02fc-4cd6-b9a6-c4499fbf7fb2",
+        "name": "OP",
+        "description": "Operátor",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
+        "id": "9b43d0f7-26a7-4d9a-a822-1e609528469a",
+        "name": "FA",
+        "description": "Tajemník fakulty",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
         "id": "94ead474-fd40-45d1-b34b-db3f30f5e88d",
         "name": "VK",
         "description": "Vedoucí katedry",
@@ -474,27 +474,27 @@
         "attributes": {}
       },
       {
-        "id": "ef3c4e31-b7cb-42f1-aa92-677a66c66170",
-        "name": "VY",
-        "description": "Vyučující",
+        "id": "a205815e-0c3f-4117-9327-324de2f43c8e",
+        "name": "KS",
+        "description": "Knihovna správce",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
         "attributes": {}
       },
       {
-        "id": "4018bfe9-d798-480a-83a5-d12737f646fb",
-        "name": "ZR",
-        "description": "Zahraniční referentka",
+        "id": "05c642f0-e9eb-4e4a-ad10-af7a985a4474",
+        "name": "AE",
+        "description": "Administrátor evaluace",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
         "attributes": {}
       },
       {
-        "id": "2f4ce0a5-1394-419f-874a-607bc81235b5",
-        "name": "ZS",
-        "description": "Zapisovatel státnic",
+        "id": "0bdb4e89-e648-4035-a981-028985b0f3bb",
+        "name": "PR",
+        "description": "Prorektor",
         "composite": false,
         "clientRole": false,
         "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
@@ -891,27 +891,6 @@
       }
     ]
   },
-  "users": [
-    {
-      "username": "stagadmin",
-      "enabled": true,
-      "email": "admin@admin.cz",
-      "firstName": "stag",
-      "lastName": "admin",
-      "createdTimestamp": 1752300000000,
-      "credentials": [
-        {
-          "type": "password",
-          "value": "stagadmin"
-        }
-      ],
-      "clientRoles": {
-        "realm-management": [
-          "realm-admin"
-        ]
-      }
-    }
-  ],
   "clients": [
     {
       "id": "2132bfb0-3c1b-49d5-a54b-abada546d25d",
@@ -2063,13 +2042,13 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
+            "oidc-usermodel-attribute-mapper",
+            "saml-user-attribute-mapper",
+            "oidc-usermodel-property-mapper",
+            "oidc-address-mapper",
             "oidc-sha256-pairwise-sub-mapper",
             "oidc-full-name-mapper",
             "saml-role-list-mapper",
-            "oidc-address-mapper",
-            "oidc-usermodel-attribute-mapper",
-            "oidc-usermodel-property-mapper",
-            "saml-user-attribute-mapper",
             "saml-user-property-mapper"
           ]
         }
@@ -2082,14 +2061,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
-            "oidc-usermodel-property-mapper",
+            "saml-role-list-mapper",
             "oidc-address-mapper",
             "oidc-sha256-pairwise-sub-mapper",
-            "saml-user-attribute-mapper",
-            "saml-user-property-mapper",
-            "saml-role-list-mapper",
+            "oidc-usermodel-property-mapper",
             "oidc-usermodel-attribute-mapper",
-            "oidc-full-name-mapper"
+            "oidc-full-name-mapper",
+            "saml-user-property-mapper",
+            "saml-user-attribute-mapper"
           ]
         }
       },
@@ -2732,9 +2711,9 @@
       ]
     },
     {
-      "id": "fad3639e-68d5-4182-88e3-9c615dd3ceca",
+      "id": "84a1b51f-1b57-40f6-81f5-ce8a8dd17d8f",
       "alias": "is-stag-browser",
-      "description": "Browser based authentication",
+      "description": "IS/STAG Browser based authentication",
       "providerId": "basic-flow",
       "topLevel": true,
       "builtIn": false,
@@ -2764,17 +2743,17 @@
           "userSetupAllowed": false
         },
         {
-          "authenticator": "is-stag-authenticator",
-          "authenticatorFlow": false,
+          "authenticatorFlow": true,
           "requirement": "ALTERNATIVE",
-          "priority": 30,
-          "autheticatorFlow": false,
+          "priority": 26,
+          "autheticatorFlow": true,
+          "flowAlias": "is-stag-browser Organization",
           "userSetupAllowed": false
         },
         {
           "authenticatorFlow": true,
           "requirement": "ALTERNATIVE",
-          "priority": 31,
+          "priority": 30,
           "autheticatorFlow": true,
           "flowAlias": "is-stag-browser forms",
           "userSetupAllowed": false
@@ -2782,7 +2761,7 @@
       ]
     },
     {
-      "id": "3264648b-7b83-40d2-b5d4-858e7fdd881c",
+      "id": "a1250460-8e55-4b46-8c1a-8edd600d2424",
       "alias": "is-stag-browser Browser - Conditional 2FA",
       "description": "Flow to determine if any 2FA is required for the authentication",
       "providerId": "basic-flow",
@@ -2824,15 +2803,15 @@
       ]
     },
     {
-      "id": "3f3691c6-a1ca-4da4-bf8e-abed441b9ab3",
-      "alias": "is-stag-browser forms",
-      "description": "Username, password, otp and other auth forms.",
+      "id": "8ffba71d-1ea8-44b7-8703-497c53ba655a",
+      "alias": "is-stag-browser Browser - Conditional Organization",
+      "description": "Flow to determine if the organization identity-first login is to be used",
       "providerId": "basic-flow",
       "topLevel": false,
       "builtIn": false,
       "authenticationExecutions": [
         {
-          "authenticator": "auth-username-password-form",
+          "authenticator": "conditional-user-configured",
           "authenticatorFlow": false,
           "requirement": "REQUIRED",
           "priority": 10,
@@ -2840,9 +2819,52 @@
           "userSetupAllowed": false
         },
         {
+          "authenticator": "organization",
+          "authenticatorFlow": false,
+          "requirement": "ALTERNATIVE",
+          "priority": 20,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        }
+      ]
+    },
+    {
+      "id": "d5885f58-0ee7-4ee2-8ab0-982ded29033e",
+      "alias": "is-stag-browser Organization",
+      "providerId": "basic-flow",
+      "topLevel": false,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
           "authenticatorFlow": true,
           "requirement": "CONDITIONAL",
+          "priority": 10,
+          "autheticatorFlow": true,
+          "flowAlias": "is-stag-browser Browser - Conditional Organization",
+          "userSetupAllowed": false
+        }
+      ]
+    },
+    {
+      "id": "c619d0f9-cf95-4c0d-aac2-11b4455d4505",
+      "alias": "is-stag-browser forms",
+      "description": "Username, password, otp and other auth forms.",
+      "providerId": "basic-flow",
+      "topLevel": false,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "is-stag-authenticator",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
           "priority": 20,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticatorFlow": true,
+          "requirement": "CONDITIONAL",
+          "priority": 21,
           "autheticatorFlow": true,
           "flowAlias": "is-stag-browser Browser - Conditional 2FA",
           "userSetupAllowed": false

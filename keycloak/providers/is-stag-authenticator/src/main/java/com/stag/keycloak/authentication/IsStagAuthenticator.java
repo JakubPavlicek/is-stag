@@ -9,8 +9,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
-import org.keycloak.authentication.Authenticator;
-import org.keycloak.models.KeycloakSession;
+import org.keycloak.authentication.authenticators.browser.UsernamePasswordForm;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.UserProvider;
@@ -21,7 +20,7 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-public class IsStagAuthenticator implements Authenticator {
+public class IsStagAuthenticator extends UsernamePasswordForm {
 
     private static final Logger log = Logger.getLogger(IsStagAuthenticator.class.getName());
     private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new Jdk8Module());
@@ -39,7 +38,7 @@ public class IsStagAuthenticator implements Authenticator {
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
-        System.out.println("authenticate() called");
+        log.info("authenticate() called");
 
         MultivaluedMap<String, String> queryParams = context.getHttpRequest()
                                                             .getUri()
@@ -57,8 +56,8 @@ public class IsStagAuthenticator implements Authenticator {
             return;
         }
 
-        // Show Keycloak's login form (fallback or first load)
-        context.attempted(); // let the next flow handle (e.g., normal login page)
+        // If not, proceed with the default Keycloak authentication flow
+        super.authenticate(context);
     }
 
     private void redirectToStagLogin(AuthenticationFlowContext context) {
@@ -75,10 +74,6 @@ public class IsStagAuthenticator implements Authenticator {
         // Redirect user to STAG login
         context.challenge(Response.seeOther(stagLoginUri).build());
     }
-
-    // TODO: Handle redirection in login.ftl after the user failed to authenticate in Keycloak
-    //  (if it fails it is no longer possible to redirect to the IS/STAG login page using the button)
-    //  see https://stackoverflow.com/questions/71419515/reset-authentication-flow-from-freemarker-template
 
     private void handleStagLoginResponse(AuthenticationFlowContext context, String stagUserInfo) {
         try {
@@ -156,32 +151,6 @@ public class IsStagAuthenticator implements Authenticator {
                    .addError(new FormMessage("login-error", message))
                    .createErrorPage(Response.Status.BAD_REQUEST)
         );
-    }
-
-    @Override
-    public void action(AuthenticationFlowContext context) {
-        // NO-OP
-        System.out.println("action() called");
-    }
-
-    @Override
-    public boolean requiresUser() {
-        return false;
-    }
-
-    @Override
-    public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
-        return true;
-    }
-
-    @Override
-    public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
-        // NO-OP
-    }
-
-    @Override
-    public void close() {
-        // NO-OP
     }
 
 }
