@@ -113,7 +113,7 @@ import java.time.LocalDate;
         )
     }
 )
-public class Osoby {
+public class Osoba {
 
     @Id
     @Column(

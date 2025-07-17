@@ -19,7 +19,7 @@ import java.time.LocalDate;
     name = "KRAJE",
     schema = "INSTALL2"
 )
-public class Kraje {
+public class Kraj {
 
     @Id
     @Column(

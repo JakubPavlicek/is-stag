@@ -11,6 +11,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
+.spectral.yaml
 
 ### IntelliJ IDEA ###
 .idea
@@ -39,3 +40,4 @@ build/
 GEMINI.md
 DATABASE.md
 MICROSERVICES.md
+API.md

@@ -98,6 +98,6 @@ public class CisOkresu {
         name = "KRAJ_KOD",
         nullable = false
     )
-    private Kraje krajKod;
+    private Kraj krajKod;
 
 }

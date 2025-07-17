@@ -3,5 +3,3 @@ spring:
     name: api-gateway
   config:
     import: optional:configserver:http://localhost:8888
-
-# TODO: Zamyslet se, jak vlastne bude probihat Login uzivatele pres WS IS/STAGu a jak do toho bude zakomponovanej Keycloak

@@ -136,6 +136,6 @@ public class CisSs {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "OBEC_IDNO")
-    private CisObci obecIdno;
+    private CisObce obecIdno;
 
 }

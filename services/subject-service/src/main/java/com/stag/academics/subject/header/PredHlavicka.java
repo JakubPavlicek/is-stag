@@ -39,10 +39,10 @@ import java.util.Objects;
         )
     }
 )
-public class PredHlavicky {
+public class PredHlavicka {
 
     @EmbeddedId
-    private PredHlavickyId id;
+    private PredHlavickaId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(
@@ -58,7 +58,7 @@ public class PredHlavicky {
         }
     )
     @OnDelete(action = OnDeleteAction.RESTRICT)
-    private PredHlavicky parentPredHlavicky;
+    private PredHlavicka parentPredHlavicka;
 
     @Size(max = 30)
     @NotNull
@@ -118,7 +118,7 @@ public class PredHlavicky {
         if (thisEffectiveClass != oEffectiveClass) {
             return false;
         }
-        PredHlavicky that = (PredHlavicky) o;
+        PredHlavicka that = (PredHlavicka) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

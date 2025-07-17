@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info:
+  title: User Service API
+  description: |
+    This API provides access to user-related functionalities in the IS/STAG system.
+    It allows for the management and retrieval of user data, including personal information, roles, and permissions.
+  version: 1.0.0
+  contact:
+    name: STAG Support
+    email: stag@service.zcu.cz
+    url: https://is-stag.zcu.cz/zakaznici/Support.html
+
+servers:
+  - url: /api/v1
+    description: Main API server
+
+tags:
+  - name: users
+    description: Operations for managing users
+  - name: persons
+    description: Operations for managing persons
+
+paths:
+  /persons/{person_id}:
+    $ref: 'paths/persons/get_person.yaml'
+
+  /persons/{person_id}/contacts:
+    $ref: 'paths/persons/get_contacts.yaml'
+
+  /persons/{person_id}/addresses:
+    $ref: 'paths/persons/get_addresses.yaml'
+
+  /persons/{person_id}/banking:
+    $ref: 'paths/persons/get_banking.yaml'
+
+  /persons/{person_id}/education:
+    $ref: 'paths/persons/get_education.yaml'
+
+components:
+
+  schemas:
+    PersonProfileResponse:
+      $ref: 'schemas/PersonProfileResponse.yaml'
+    ProblemDetail:
+      $ref: 'schemas/ProblemDetail.yaml'

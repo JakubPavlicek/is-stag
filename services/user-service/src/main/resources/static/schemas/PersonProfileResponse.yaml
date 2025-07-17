@@ -1,0 +1,74 @@
+type: object
+title: PersonProfileResponse
+description: Response containing person profile details.
+additionalProperties: false
+required:
+  - personId
+  - personalNumbers
+  - firstName
+  - lastName
+  - birthSurname
+  - email
+  - titles
+  - gender
+  - birthDate
+  - maritalStatus
+properties:
+  personId:
+    $ref: '../schemas/PersonId.yaml'
+  personalNumbers:
+    type: array
+    description: List of personal numbers associated with the person.
+    items:
+      type: string
+      description: Personal number of the person.
+      example: K24B4302P
+      pattern: "^[A-Z0-9]{9}$"
+      maxLength: 9
+  firstName:
+    type: string
+    description: First name of the person.
+    example: John
+    maxLength: 100
+  lastName:
+    type: string
+    description: Last name of the person.
+    example: Doe
+    maxLength: 100
+  birthSurname:
+    type: string
+    description: Birth surename of the person.
+    example: Smith
+    maxLength: 100
+  email:
+    type: string
+    format: email
+    description: Email address of the person.
+    example: Martin95043186@xxx.cz
+    maxLength: 100
+  titles:
+    type: object
+    description: Title of the person.
+    additionalProperties: false
+    properties:
+      prefix:
+        $ref: './Title.yaml'
+      suffix:
+        $ref: './Title.yaml'
+  gender:
+    type: string
+    description: Gender of the person.
+    example: male
+    maxLength: 240
+  birthDate:
+    type: string
+    format: date
+    description: Birth date of the person.
+    example: "1990-01-01"
+    pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+    maxLength: 10
+  maritalStatus:
+    type: string
+    description: Marital status of the person.
+    example: single
+    maxLength: 240

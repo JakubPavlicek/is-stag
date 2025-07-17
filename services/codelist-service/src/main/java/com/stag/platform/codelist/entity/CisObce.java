@@ -31,7 +31,7 @@ import java.time.LocalDate;
         )
     }
 )
-public class CisObci {
+public class CisObce {
 
     @Id
     @Column(

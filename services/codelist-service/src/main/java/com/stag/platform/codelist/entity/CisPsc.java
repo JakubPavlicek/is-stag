@@ -70,7 +70,7 @@ public class CisPsc {
         name = "STAV",
         nullable = false
     )
-    private Boolean stav = false;
+    private Boolean stav;
 
     @Column(name = "VZNIK_DNE")
     private LocalDate vznikDne;

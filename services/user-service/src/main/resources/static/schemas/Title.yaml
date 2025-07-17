@@ -1,0 +1,18 @@
+type: object
+description: Represents a title with its code and value.
+additionalProperties: false
+required:
+  - code
+  - value
+properties:
+  code:
+    type: string
+    description: Code of the title.
+    example: "132"
+    pattern: "^\\d+$"
+    maxLength: 240
+  value:
+    type: string
+    description: Value of the title.
+    example: Ing.
+    maxLength: 240

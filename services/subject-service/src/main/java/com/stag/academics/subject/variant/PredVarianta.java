@@ -1,6 +1,6 @@
 package com.stag.academics.subject.variant;
 
-import com.stag.academics.subject.header.PredHlavicky;
+import com.stag.academics.subject.header.PredHlavicka;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -55,10 +55,10 @@ import java.util.Objects;
         )
     }
 )
-public class PredVarianty {
+public class PredVarianta {
 
     @EmbeddedId
-    private PredVariantyId id;
+    private PredVariantaId id;
 
     @MapsId("id")
     @ManyToOne(
@@ -80,7 +80,7 @@ public class PredVarianty {
         }
     )
     @OnDelete(action = OnDeleteAction.RESTRICT)
-    private PredHlavicky predHlavicky;
+    private PredHlavicka predHlavicka;
 
     @NotNull
     @Column(
@@ -757,7 +757,7 @@ public class PredVarianty {
         if (thisEffectiveClass != oEffectiveClass) {
             return false;
         }
-        PredVarianty that = (PredVarianty) o;
+        PredVarianta that = (PredVarianta) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

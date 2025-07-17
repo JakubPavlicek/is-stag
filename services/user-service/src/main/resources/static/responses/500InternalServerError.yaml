@@ -1,0 +1,11 @@
+description: Internal server error
+content:
+  application/json:
+    schema:
+      $ref: '../schemas/ProblemDetail.yaml'
+    example:
+      type: http://localhost:8080/api/v1/internal-server-error
+      title: Internal server error
+      status: 500
+      detail: An unexpected error occurred
+      instance: /api/v1/persons/K24B4302P

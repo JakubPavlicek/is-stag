@@ -64,7 +64,7 @@ public class CisCastiObce {
         name = "OBEC_IDNO",
         nullable = false
     )
-    private CisObci obecIdno;
+    private CisObce obecIdno;
 
     @Size(max = 16)
     @NotNull
@@ -81,7 +81,7 @@ public class CisCastiObce {
         name = "STAV",
         nullable = false
     )
-    private Boolean stav = false;
+    private Boolean stav;
 
     @Column(name = "VZNIK_DNE")
     private LocalDate vznikDne;
