@@ -1,0 +1,72 @@
+type: object
+title: EducationDetails
+description: Education details of the person.
+additionalProperties: false
+required:
+  - previousInstitution
+  - highSchool
+  - foreignHighSchool
+properties:
+  previousInstitution:
+    type: string
+    nullable: true
+    description: Name of the previous educational institution attended.
+    example: vysoká škola
+    maxLength: 100
+  highSchool:
+    type: object
+    description: Details of the high school attended by the person.
+    additionalProperties: false
+    required:
+      - institutionName
+      - fieldOfStudy
+      - graduationDate
+      - address
+    properties:
+      institutionName:
+        type: string
+        nullable: true
+        description: Name of the high school.
+        example: Gymnázium
+        maxLength: 150
+      fieldOfStudy:
+        type: string
+        nullable: true
+        description: Field of study at the high school.
+        example: Výpočetní technika a informatika
+        maxLength: 240
+      graduationDate:
+        type: string
+        format: date
+        nullable: true
+        description: Date of graduation from the educational institution.
+        example: 2020-06-15
+      address:
+        $ref: './Address.yaml'
+  foreignHighSchool:
+    type: object
+    description: Details of the foreign high school attended by the person.
+    additionalProperties: false
+    required:
+      - institutionName
+      - location
+      - fieldOfStudy
+    properties:
+      institutionName:
+        type: string
+        nullable: true
+        description: Name of the foreign high school.
+        example: International School
+        maxLength: 75
+      location:
+        type: string
+        nullable: true
+        description: Location of the foreign high school.
+        example: Paris
+        maxLength: 75
+      fieldOfStudy:
+        type: string
+        nullable: true
+        description: Field of study at the foreign high school.
+        example: Computer Science
+        maxLength: 255

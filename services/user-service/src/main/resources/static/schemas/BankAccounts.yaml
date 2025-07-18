@@ -1,0 +1,12 @@
+type: object
+title: BankAccounts
+description: Bank accounts of the person.
+additionalProperties: false
+required:
+  - account
+  - euroAccount
+properties:
+  account:
+    $ref: './BankAccountDetails.yaml'
+  euroAccount:
+    $ref: './EuroBankAccountDetails.yaml'

@@ -30,7 +30,7 @@ paths:
   /persons/{personId}/banking:
     $ref: 'paths/persons/get_banking.yaml'
 
-  /persons/{personId}/education: # IZO = ID STREDNI SKOLY
+  /persons/{personId}/education:
     $ref: 'paths/persons/get_education.yaml'
 
 components:

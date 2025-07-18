@@ -9,10 +9,10 @@ required:
   - foreignTemporaryResidence
 properties:
   permanentResidence:
-    $ref: '../schemas/Address.yaml'
+    $ref: './Address.yaml'
   temporaryResidence:
-    $ref: '../schemas/Address.yaml'
+    $ref: './Address.yaml'
   foreignPermanentResidence:
-    $ref: '../schemas/ForeignAddress.yaml'
+    $ref: './ForeignAddress.yaml'
   foreignTemporaryResidence:
-    $ref: '../schemas/ForeignAddress.yaml'
+    $ref: './ForeignAddress.yaml'

@@ -12,7 +12,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/PersonAddresses.yaml'
+            $ref: '../../schemas/Addresses.yaml'
     '404':
       $ref: '../../responses/404NotFound.yaml'
     '500':

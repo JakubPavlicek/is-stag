@@ -1,5 +1,5 @@
 allOf:
-  - $ref: '../schemas/Address.yaml'
+  - $ref: './Address.yaml'
   - type: object
     title: ForeignAddress
     description: Address details of the person when they have a foreign residence.
@@ -9,6 +9,7 @@ allOf:
     properties:
       postOffice:
         type: string
+        nullable: true
         description: Post office of the foreign address.
         example: Mornaguia
         maxLength: 75

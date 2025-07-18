@@ -1,0 +1,67 @@
+type: object
+title: BankAccountDetails
+description: Response containing bank account details.
+additionalProperties: false
+required:
+  - bankAccountNumberPrefix
+  - bankAccountNumber
+  - bankCode
+  - bankName
+  - iban
+  - currency
+  - holderName
+  - holderAddress
+properties:
+  bankAccountNumberPrefix:
+    type: string
+    nullable: true
+    description: Prefix of the bank account number.
+    example: 2955389
+    pattern: "^\\d{1,6}$"
+    minLength: 1
+    maxLength: 6
+  bankAccountNumber:
+    type: string
+    nullable: true
+    description: Main part of the bank account number.
+    example: 00416719719121179556460
+    pattern: "^\\d{1,10}$"
+    minLength: 1
+    maxLength: 10
+  bankCode:
+    type: string
+    nullable: true
+    description: Bank code of the bank where the account is held.
+    example: 0100
+    pattern: "^\\d{4}$"
+    maxLength: 4
+  bankName:
+    type: string
+    description: Name of the bank where the account is held.
+    example: Česká spořitelna, a.s.
+    maxLength: 240
+  iban:
+    type: string
+    nullable: true
+    description: International Bank Account Number (IBAN).
+    example: CZ6508000000002000145399
+    maxLength: 30
+  currency:
+    type: string
+    nullable: true
+    description: Currency of the bank account.
+    example: CZK
+    pattern: "^[A-Z]{3}$"
+    maxLength: 3
+  holderName:
+    type: string
+    nullable: true
+    description: Name of the account holder.
+    example: Jan Novák
+    maxLength: 255
+  holderAddress:
+    type: string
+    nullable: true
+    description: Address of the account holder.
+    example: Příchovice 97, 34901 Stříbro, Česká republika
+    maxLength: 255
