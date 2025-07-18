@@ -1,4 +1,4 @@
-name: person_id
+name: personId
 in: path
 required: true
 description: Unique identifier of the person.

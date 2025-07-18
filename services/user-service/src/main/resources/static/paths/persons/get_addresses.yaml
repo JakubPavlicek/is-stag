@@ -5,16 +5,14 @@ get:
   description: Retrieve addresses associated with a person by their unique identifier.
   operationId: getPersonAddresses
   parameters:
-    - $ref: '../../parameters/path/person_id.yaml'
+    - $ref: '../../parameters/path/personId.yaml'
   responses:
     '200':
       description: Person addresses retrieved successfully
       content:
         application/json:
           schema:
-            type: array
-            items:
-              type: string
+            $ref: '../../schemas/PersonAddresses.yaml'
     '404':
       $ref: '../../responses/404NotFound.yaml'
     '500':

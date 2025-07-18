@@ -21,19 +21,16 @@ tags:
     description: Operations for managing persons
 
 paths:
-  /persons/{person_id}:
+  /persons/{personId}:
     $ref: 'paths/persons/get_person.yaml'
 
-  /persons/{person_id}/contacts:
-    $ref: 'paths/persons/get_contacts.yaml'
-
-  /persons/{person_id}/addresses:
+  /persons/{personId}/addresses:
     $ref: 'paths/persons/get_addresses.yaml'
 
-  /persons/{person_id}/banking:
+  /persons/{personId}/banking:
     $ref: 'paths/persons/get_banking.yaml'
 
-  /persons/{person_id}/education:
+  /persons/{personId}/education: # IZO = ID STREDNI SKOLY
     $ref: 'paths/persons/get_education.yaml'
 
 components:

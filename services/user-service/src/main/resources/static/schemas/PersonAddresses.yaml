@@ -1,0 +1,18 @@
+type: object
+title: PersonAddresses
+description: Response containing person addresses.
+additionalProperties: false
+required:
+  - permanentResidence
+  - temporaryResidence
+  - foreignPermanentResidence
+  - foreignTemporaryResidence
+properties:
+  permanentResidence:
+    $ref: '../schemas/Address.yaml'
+  temporaryResidence:
+    $ref: '../schemas/Address.yaml'
+  foreignPermanentResidence:
+    $ref: '../schemas/ForeignAddress.yaml'
+  foreignTemporaryResidence:
+    $ref: '../schemas/ForeignAddress.yaml'

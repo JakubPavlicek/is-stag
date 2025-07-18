@@ -1,0 +1,49 @@
+type: object
+title: Address
+description: Address details of the person.
+additionalProperties: false
+required:
+  - street
+  - streetNumber
+  - postalCode
+  - municipality
+  - municipalityPart
+  - district
+  - country
+properties:
+  street: # ulice
+    type: string
+    description: Street name of the address.
+    example: Příchovice
+    maxLength: 48
+  streetNumber: # cislo ulice
+    type: string
+    description: Street number of the address.
+    example: 97
+    maxLength: 10
+  postalCode: # postovni smerovaci cislo
+    type: string
+    description: Postal code of the address.
+    example: 34901
+    pattern: "^\\d{5,10}$"
+    maxLength: 5
+  municipality: # obec
+    type: string
+    description: Municipality of the address.
+    example: Stříbro
+    maxLength: 255
+  municipalityPart: # cast obce
+    type: string
+    description: Part of the municipality.
+    example: Stříbro I
+    maxLength: 255
+  district: # okres
+    type: string
+    description: District of the address.
+    example: Tachov
+    maxLength: 100
+  country: # stat
+    type: string
+    description: Country of the address.
+    example: Česká republika
+    maxLength: 70
