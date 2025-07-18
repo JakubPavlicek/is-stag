@@ -11,5 +11,5 @@ allOf:
         type: string
         nullable: true
         description: Post office of the foreign address.
-        example: Mornaguia
+        example: "Mornaguia"
         maxLength: 75

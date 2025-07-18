@@ -26,24 +26,24 @@ properties:
     items:
       type: string
       description: Personal number of the person.
-      example: K24B4302P
+      example: "K24B4302P"
       pattern: "^[A-Z0-9]{9}$"
       maxLength: 9
   firstName:
     type: string
     description: First name of the person.
-    example: John
+    example: "John"
     maxLength: 100
   lastName:
     type: string
     description: Last name of the person.
-    example: Doe
+    example: "Doe"
     maxLength: 100
   birthSurname:
     type: string
     nullable: true
     description: Birth surename of the person.
-    example: Smith
+    example: "Smith"
     maxLength: 100
   contact:
     type: object
@@ -59,19 +59,19 @@ properties:
         nullable: true
         format: email
         description: Email address of the person.
-        example: Martin95043186@xxx.cz
+        example: "Martin95043186@xxx.cz"
       phone:
         type: string
         nullable: true
         description: Phone number of the person.
-        example: +420123456789
+        example: "+420123456789"
         pattern: "^\\+?\\d{1,20}$"
         maxLength: 20
       mobile:
         type: string
         nullable: true
         description: Mobile number of the person.
-        example: +420987654321
+        example: "+420987654321"
         pattern: "^\\+?\\d{1,30}$"
         maxLength: 30
   titles:
@@ -89,7 +89,7 @@ properties:
   birthNumber:
     type: string
     description: Birth number of the person.
-    example: 7061030163
+    example: "7061030163"
     pattern: "^\\d{10}$"
     maxLength: 10
   birthDate:
@@ -111,12 +111,12 @@ properties:
         type: string
         nullable: true
         description: Birth place of the person.
-        example: Prague
+        example: "Prague"
         maxLength: 100
       country:
         type: string
         description: Country of birth.
-        example: Czech Republic
+        example: "Czech Republic"
         maxLength: 70
   citizenship:
     type: object
@@ -129,29 +129,29 @@ properties:
       country:
         type: string
         description: Country of citizenship.
-        example: Czech Republic
+        example: "Czech Republic"
         maxLength: 70
       qualifier:
         type: string
         nullable: true
         description: Citizenship qualifier of the person.
-        example: Občan
+        example: "Občan"
         maxLength: 240
   passportNumber:
     type: string
     nullable: true
     description: Passport number of the person.
-    example: 16128791799
+    example: "16128791799"
     pattern: "^[A-Z0-9]{1,11}$"
     maxLength: 11
   gender:
     type: string
     description: Gender of the person.
-    example: male
+    example: "male"
     maxLength: 240
   maritalStatus:
     type: string
     nullable: true
     description: Marital status of the person.
-    example: single
+    example: "single"
     maxLength: 240

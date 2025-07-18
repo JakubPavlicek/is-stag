@@ -12,12 +12,12 @@ allOf:
         type: string
         nullable: true
         description: Country code of the Euro account.
-        example: Česká republika
+        example: "Česká republika"
         maxLength: 70
       swiftCode:
         type: string
         nullable: true
         description: SWIFT code of the bank for Euro transactions.
-        example: KOMBCZPPXXX
+        example: "KOMBCZPPXXX"
         pattern: "^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$"
         maxLength: 11

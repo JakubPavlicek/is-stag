@@ -15,42 +15,42 @@ properties:
     type: string
     nullable: true
     description: Street name of the address.
-    example: Příchovice
+    example: "Příchovice"
     maxLength: 48
   streetNumber: # cislo ulice
     type: string
     nullable: true
     description: Street number of the address.
-    example: 97
+    example: "97"
     maxLength: 10
   postalCode: # postovni smerovaci cislo
     type: string
     nullable: true
     description: Postal code of the address.
-    example: 34901
+    example: "34901"
     pattern: "^\\d{1,10}$"
     maxLength: 10
   municipality: # obec
     type: string
     nullable: true
     description: Municipality of the address.
-    example: Stříbro
+    example: "Stříbro"
     maxLength: 255
   municipalityPart: # cast obce
     type: string
     nullable: true
     description: Part of the municipality.
-    example: Stříbro I
+    example: "Stříbro I"
     maxLength: 255
   district: # okres
     type: string
     nullable: true
     description: District of the address.
-    example: Tachov
+    example: "Tachov"
     maxLength: 100
   country: # stat
     type: string
     nullable: true
     description: Country of the address.
-    example: Česká republika
+    example: "Česká republika"
     maxLength: 70

@@ -22,21 +22,13 @@ tags:
 
 paths:
   /persons/{personId}:
-    $ref: 'paths/persons/get_person.yaml'
+    $ref: './paths/persons/get_person.yaml'
 
   /persons/{personId}/addresses:
-    $ref: 'paths/persons/get_addresses.yaml'
+    $ref: './paths/persons/get_addresses.yaml'
 
   /persons/{personId}/banking:
-    $ref: 'paths/persons/get_banking.yaml'
+    $ref: './paths/persons/get_banking.yaml'
 
   /persons/{personId}/education:
-    $ref: 'paths/persons/get_education.yaml'
-
-components:
-
-  schemas:
-    PersonProfileResponse:
-      $ref: 'schemas/PersonProfileResponse.yaml'
-    ProblemDetail:
-      $ref: 'schemas/ProblemDetail.yaml'
+    $ref: './paths/persons/get_education.yaml'

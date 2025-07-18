@@ -7,5 +7,5 @@ content:
       type: http://localhost:8080/api/v1/person-not-found
       title: Person Not Found
       status: 404
-      detail: "Person with ID: K24B4302P not found"
-      instance: /api/v1/persons/K24B4302P
+      detail: "Person with ID: 221264 not found"
+      instance: /api/v1/persons/221264
