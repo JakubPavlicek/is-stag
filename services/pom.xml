@@ -16,12 +16,21 @@
     <description>Aggregator for microservices</description>
 
     <properties>
+        <!-- Spring -->
         <java.version>24</java.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <springdoc.version>2.8.9</springdoc.version>
+        <spring-grpc.version>0.9.0</spring-grpc.version>
+
+        <!-- gRPC -->
         <grpc.version>1.72.0</grpc.version>
         <protobuf-java.version>4.30.2</protobuf-java.version>
-        <spring-grpc.version>0.9.0</spring-grpc.version>
+
+        <!-- Tools -->
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <openapi-generator.version>7.14.0</openapi-generator.version>
+        <protobuf-maven-plugin.version>3.4.2</protobuf-maven-plugin.version>
     </properties>
 
     <modules>
@@ -36,6 +45,7 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Spring Cloud -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -43,10 +53,40 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- Spring gRPC -->
+            <dependency>
+                <groupId>org.springframework.grpc</groupId>
+                <artifactId>spring-grpc-dependencies</artifactId>
+                <version>${spring-grpc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- OpenAPI -->
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${springdoc.version}</version>
+            </dependency>
+
+            <!-- Database -->
+            <dependency>
+                <groupId>com.oracle.database.jdbc</groupId>
+                <artifactId>ojdbc11</artifactId>
+                <version>23.4.0.24.05</version>
+            </dependency>
+            <dependency>
+                <groupId>com.oracle.database.nls</groupId>
+                <artifactId>orai18n</artifactId>
+                <version>23.4.0.24.05</version>
+            </dependency>
+
+            <!-- Tools -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -54,17 +94,101 @@
     <build>
         <pluginManagement>
             <plugins>
+                <!-- Spring Boot Plugin -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <!-- Compiler Plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
                     <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                         <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.mapstruct</groupId>
+                                <artifactId>mapstruct-processor</artifactId>
+                                <version>${mapstruct.version}</version>
+                            </path>
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok-mapstruct-binding</artifactId>
+                                <version>${lombok-mapstruct-binding.version}</version>
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
+                </plugin>
+
+                <!-- OpenAPI Generator Plugin -->
+                <plugin>
+                    <groupId>org.openapitools</groupId>
+                    <artifactId>openapi-generator-maven-plugin</artifactId>
+                    <version>${openapi-generator.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                            <configuration>
+                                <inputSpec>${project.basedir}/src/main/resources/static/openapi.yaml</inputSpec>
+                                <generatorName>spring</generatorName>
+                                <configOptions>
+                                    <sourceFolder>src/gen/java</sourceFolder>
+                                    <useSpringBoot3>true</useSpringBoot3>
+                                    <interfaceOnly>true</interfaceOnly>
+                                    <generateBuilders>true</generateBuilders>
+                                    <openApiNullable>false</openApiNullable>
+                                    <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                                </configOptions>
+                                <typeMappings>
+                                    <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+                                </typeMappings>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- gRPC Protobuf Plugin -->
+                <plugin>
+                    <groupId>io.github.ascopes</groupId>
+                    <artifactId>protobuf-maven-plugin</artifactId>
+                    <version>${protobuf-maven-plugin.version}</version>
+                    <configuration>
+                        <protocVersion>${protobuf-java.version}</protocVersion>
+                        <binaryMavenPlugins>
+                            <binaryMavenPlugin>
+                                <groupId>io.grpc</groupId>
+                                <artifactId>protoc-gen-grpc-java</artifactId>
+                                <version>${grpc.version}</version>
+                                <options>@generated=omit</options>
+                            </binaryMavenPlugin>
+                        </binaryMavenPlugins>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>generate</id>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

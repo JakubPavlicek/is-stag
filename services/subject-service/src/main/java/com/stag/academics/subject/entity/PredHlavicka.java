@@ -1,4 +1,4 @@
-package com.stag.academics.subject.header;
+package com.stag.academics.subject.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;

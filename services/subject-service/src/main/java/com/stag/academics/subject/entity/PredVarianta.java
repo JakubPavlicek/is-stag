@@ -1,6 +1,5 @@
-package com.stag.academics.subject.variant;
+package com.stag.academics.subject.entity;
 
-import com.stag.academics.subject.header.PredHlavicka;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
