@@ -5,6 +5,7 @@ import com.stag.identity.user.dto.Addresses;
 import com.stag.identity.user.dto.BankAccounts;
 import com.stag.identity.user.dto.EducationDetails;
 import com.stag.identity.user.dto.PersonProfile;
+import com.stag.identity.user.dto.PersonProfileInternal;
 import com.stag.identity.user.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<PersonProfile> getPerson(Integer personId) {
-        personService.getPerson(personId);
+        PersonProfileInternal personProfileInternal = personService.getPerson(personId);
         return null;
     }
 
