@@ -6,5 +6,27 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:8180/realms/is-stag
-          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8180/realms/is-stag
+          jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: student-service
+              uri: lb://student-service
+              predicates:
+                - Path=/students/**
+            - id: user-service
+              uri: lb://user-service
+              predicates:
+                - Path=/users/**,/api/v1/persons/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/

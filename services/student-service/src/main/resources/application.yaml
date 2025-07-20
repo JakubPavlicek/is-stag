@@ -3,3 +3,12 @@ spring:
     name: student-service
   config:
     import: optional:configserver:http://config-server:8888
+
+logging:
+  level:
+    io.grpc: DEBUG
+    net.devh.boot.grpc: DEBUG
+
+grpc:
+  server:
+    port: 9030

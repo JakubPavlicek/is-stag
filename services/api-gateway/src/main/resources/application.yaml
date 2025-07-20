@@ -3,17 +3,3 @@ spring:
     name: api-gateway
   config:
     import: optional:configserver:http://config-server:8888
-  cloud:
-    gateway:
-      server:
-        webmvc:
-          routes:
-            - id: student-service
-              uri: lb://student-service
-              predicates:
-                - Path=/students/**
-            - id: user-service
-              uri: lb://user-service
-              predicates:
-                - Path=/users/**
-                - Path=/persons/**

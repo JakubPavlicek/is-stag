@@ -4,6 +4,7 @@ import com.stag.academics.student.v1.GetStudentPersonalNumbersRequest;
 import com.stag.academics.student.v1.GetStudentPersonalNumbersResponse;
 import com.stag.academics.student.v1.StudentServiceGrpc;
 import lombok.RequiredArgsConstructor;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentServiceClient {
 
-    private final StudentServiceGrpc.StudentServiceBlockingStub studentServiceStub;
+    @GrpcClient("student-service")
+    private StudentServiceGrpc.StudentServiceBlockingStub studentServiceStub;
 
     public List<String> getStudentPersonalNumbers(Integer personId) {
         GetStudentPersonalNumbersRequest request = GetStudentPersonalNumbersRequest.newBuilder()

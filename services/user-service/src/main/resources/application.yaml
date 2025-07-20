@@ -3,3 +3,11 @@ spring:
     name: user-service
   config:
     import: optional:configserver:http://config-server:8888
+
+grpc:
+  server:
+    port: 9020
+  client:
+    student-service:
+      address: discovery:///student-service
+      negotiation-type: plaintext

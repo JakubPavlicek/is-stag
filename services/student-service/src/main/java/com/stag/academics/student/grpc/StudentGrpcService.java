@@ -6,7 +6,7 @@ import com.stag.academics.student.v1.GetStudentPersonalNumbersResponse;
 import com.stag.academics.student.v1.StudentServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
-import org.springframework.grpc.server.service.GrpcService;
+import net.devh.boot.grpc.server.service.GrpcService;
 
 import java.util.List;
 
