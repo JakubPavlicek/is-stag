@@ -16,10 +16,10 @@ spring:
 
   grpc:
     server:
-      port: 9020
+      port: 9030
 
 server:
-  port: 8020
+  port: 8030
 
 eureka:
   instance:
@@ -28,7 +28,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://discovery-server:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
 
 springdoc:
   api-docs:

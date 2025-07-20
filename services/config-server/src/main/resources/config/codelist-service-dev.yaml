@@ -1,11 +1,9 @@
 spring:
-
   jpa:
     hibernate:
       ddl-auto: none
       default_schema: ${spring.datasource.hikari.schema}
     open-in-view: false
-
   datasource:
     url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=atreus.zcu.cz)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=pelops.zcu.cz)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=DEMO_SERVICE)(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))
     username: install
@@ -14,12 +12,8 @@ spring:
     hikari:
       schema: install2
 
-  grpc:
-    server:
-      port: 9020
-
 server:
-  port: 8020
+  port: 8010
 
 eureka:
   instance:
@@ -28,7 +22,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://discovery-server:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
 
 springdoc:
   api-docs:

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package stag.academics.student.v1;
+
+option java_package = "com.stag.academics.student.v1";
+option java_outer_classname = "UserServiceProto";
+option java_multiple_files = true;
+
+service StudentService {
+  rpc GetStudentPersonalNumbers (GetStudentPersonalNumbersRequest) returns (GetStudentPersonalNumbersResponse);
+}
+
+message GetStudentPersonalNumbersRequest {
+  int32 person_id = 1;
+}
+
+message GetStudentPersonalNumbersResponse {
+  repeated string personal_numbers = 1;
+}

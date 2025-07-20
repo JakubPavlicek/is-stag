@@ -10,3 +10,91 @@ services:
     command: start-dev --import-realm
     volumes:
       - ./keycloak/is-stag-realm-export.json:/opt/keycloak/data/import/is-stag-realm.json
+
+  config-server:
+    image: config-server:0.0.1
+    pull_policy: never
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - is-stag-network
+
+  discovery-server:
+    image: discovery-server:0.0.1
+    pull_policy: never
+    container_name: discovery-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - config-server
+    networks:
+      - is-stag-network
+
+  api-gateway:
+    image: api-gateway:0.0.1
+    pull_policy: never
+    container_name: api-gateway
+    ports:
+      - "8100:8100"
+    depends_on:
+      - discovery-server
+      - config-server
+    networks:
+      - is-stag-network
+
+  student-service:
+    image: student-service:0.0.1
+    pull_policy: never
+    container_name: student-service
+    ports:
+      - "8030:8030"
+      - "9030:9030"
+    depends_on:
+      - config-server
+      - discovery-server
+    networks:
+      - is-stag-network
+
+  subject-service:
+    image: subject-service:0.0.1
+    pull_policy: never
+    container_name: subject-service
+    ports:
+      - "8040:8040"
+#      - "9040:9040"
+    depends_on:
+      - config-server
+      - discovery-server
+    networks:
+      - is-stag-network
+
+  user-service:
+    image: user-service:0.0.1
+    pull_policy: never
+    container_name: user-service
+    ports:
+      - "8020:8020"
+      - "9020:9020"
+    depends_on:
+      - config-server
+      - discovery-server
+    networks:
+      - is-stag-network
+
+  codelist-service:
+    image: codelist-service:0.0.1
+    pull_policy: never
+    container_name: codelist-service
+    ports:
+      - "8010:8010"
+#      - "9010:9010"
+    depends_on:
+      - config-server
+      - discovery-server
+    networks:
+      - is-stag-network
+
+networks:
+  is-stag-network:
+    driver: bridge

@@ -6,6 +6,7 @@ import com.stag.identity.user.dto.BankAccounts;
 import com.stag.identity.user.dto.EducationDetails;
 import com.stag.identity.user.dto.PersonProfile;
 import com.stag.identity.user.dto.PersonProfileInternal;
+import com.stag.identity.user.mapper.PersonMapper;
 import com.stag.identity.user.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class PersonController implements PersonsApi {
 
     private final PersonService personService;
+    private final PersonMapper personMapper;
 
     @Override
     public ResponseEntity<PersonProfile> getPerson(Integer personId) {
         PersonProfileInternal personProfileInternal = personService.getPerson(personId);
-        return null;
+        PersonProfile personProfile = personMapper.toPersonProfile(personProfileInternal);
+
+        return ResponseEntity.ok(personProfile);
     }
 
     @Override

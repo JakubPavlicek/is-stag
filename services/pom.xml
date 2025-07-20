@@ -149,6 +149,7 @@
                             <configuration>
                                 <inputSpec>${project.basedir}/src/main/resources/static/openapi.yaml</inputSpec>
                                 <generatorName>spring</generatorName>
+                                <addCompileSourceRoot>true</addCompileSourceRoot>
                                 <configOptions>
                                     <sourceFolder>src/gen/java</sourceFolder>
                                     <useSpringBoot3>true</useSpringBoot3>
@@ -172,6 +173,9 @@
                     <version>${protobuf-maven-plugin.version}</version>
                     <configuration>
                         <protocVersion>${protobuf-java.version}</protocVersion>
+                        <sourceDirectories>
+                            <sourceDirectory>${maven.multiModuleProjectDirectory}/proto</sourceDirectory>
+                        </sourceDirectories>
                         <binaryMavenPlugins>
                             <binaryMavenPlugin>
                                 <groupId>io.grpc</groupId>
