@@ -1,7 +1,7 @@
 package com.stag.identity.user.service;
 
 import com.stag.identity.user.dto.PersonProfileInternal;
-import com.stag.identity.user.entity.Osoba;
+import com.stag.identity.user.entity.Person;
 import com.stag.identity.user.grpc.StudentServiceClient;
 import com.stag.identity.user.mapper.PersonMapper;
 import com.stag.identity.user.repository.PersonRepository;
@@ -21,13 +21,13 @@ public class PersonService {
 
     private final StudentServiceClient studentServiceClient;
 
-    private Osoba getPersonById(Integer personId) {
+    private Person getPersonById(Integer personId) {
         return personRepository.findById(personId)
                                .orElseThrow(() -> new IllegalArgumentException("Person with ID: " + personId + " not found"));
     }
 
     public PersonProfileInternal getPerson(Integer personId) {
-        Osoba person = getPersonById(personId);
+        Person person = getPersonById(personId);
 
         // TODO: Call gRPC service to get personal numbers (STUDENT table)
         List<String> personalNumbers = studentServiceClient.getStudentPersonalNumbers(personId);

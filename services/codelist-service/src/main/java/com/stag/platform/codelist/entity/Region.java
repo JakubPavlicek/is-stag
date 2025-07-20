@@ -6,54 +6,45 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(
-    name = "CIS_PSC",
+    name = "KRAJE",
     schema = "INSTALL2"
 )
-public class CisPsc {
+public class Region {
 
     @Id
-    @Size(max = 5)
     @Column(
-        name = "PSC",
+        name = "KRAJ_KOD",
+        nullable = false
+    )
+    private Short id;
+
+    @Size(max = 5)
+    @NotNull
+    @Column(
+        name = "NUTS3",
         nullable = false,
         length = 5
     )
-    private String psc;
+    private String nuts3;
 
-    @Size(max = 50)
+    @Size(max = 32)
     @NotNull
     @Column(
-        name = "POSTA",
+        name = "NAZEV",
         nullable = false,
-        length = 50
+        length = 32
     )
-    private String posta;
-
-    @Size(max = 1)
-    @NotNull
-    @ColumnDefault("'A'")
-    @Column(
-        name = "AKTUALNI",
-        nullable = false,
-        length = 1
-    )
-    private String aktualni;
+    private String name;
 
     @Size(max = 16)
     @NotNull
@@ -62,7 +53,7 @@ public class CisPsc {
         nullable = false,
         length = 16
     )
-    private String zkratka;
+    private String abbreviation;
 
     @NotNull
     @ColumnDefault("1")
@@ -70,26 +61,26 @@ public class CisPsc {
         name = "STAV",
         nullable = false
     )
-    private Boolean stav;
+    private Boolean status = false;
 
     @Column(name = "VZNIK_DNE")
-    private LocalDate vznikDne;
+    private LocalDate creationDate;
 
     @Size(max = 254)
     @Column(
         name = "VZNIK_INFO",
         length = 254
     )
-    private String vznikInfo;
+    private String creationInfo;
 
     @Column(name = "ZANIK_DNE")
-    private LocalDate zanikDne;
+    private LocalDate dissolutionDate;
 
     @Size(max = 254)
     @Column(
         name = "ZANIK_INFO",
         length = 254
     )
-    private String zanikInfo;
+    private String dissolutionInfo;
 
 }

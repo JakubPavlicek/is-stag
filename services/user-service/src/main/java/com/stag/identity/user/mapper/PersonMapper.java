@@ -1,16 +1,13 @@
 package com.stag.identity.user.mapper;
 
-import com.stag.identity.user.dto.BirthPlaceInternal;
-import com.stag.identity.user.dto.CitizenshipInternal;
 import com.stag.identity.user.dto.ContactInternal;
 import com.stag.identity.user.dto.PersonProfile;
 import com.stag.identity.user.dto.PersonProfileInternal;
 import com.stag.identity.user.dto.TitlesInternal;
-import com.stag.identity.user.entity.Osoba;
+import com.stag.identity.user.entity.Person;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.Collections;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -36,39 +33,39 @@ public interface PersonMapper {
 
     // --- Main Mapping Method ---
 
-    @Mapping(source = "osoba.id", target = "personId")
+    @Mapping(source = "person.id", target = "personId")
     @Mapping(source = "personalNumbers", target = "personalNumbers")
-    @Mapping(source = "osoba.jmeno", target = "firstName")
-    @Mapping(source = "osoba.prijmeni", target = "lastName")
-    @Mapping(source = "osoba.rodnePrijmeni", target = "birthSurname")
-    @Mapping(source = "osoba", target = "contact")
-    @Mapping(source = "osoba", target = "titles")
-    @Mapping(source = "osoba.rodCislo", target = "birthNumber")
-    @Mapping(source = "osoba.datumNaroz", target = "birthDate")
-    @Mapping(source = "osoba", target = "birthPlace")
-    @Mapping(source = "osoba", target = "citizenship")
-    @Mapping(source = "osoba.cisloPasu", target = "passportNumber")
-    @Mapping(source = "osoba.pohlavi", target = "gender")
-    @Mapping(source = "osoba.stav", target = "maritalStatus")
-    PersonProfileInternal toPersonProfileInternal(Osoba osoba, List<String> personalNumbers);
+    @Mapping(source = "person.name", target = "firstName")
+    @Mapping(source = "person.surname", target = "lastName")
+    @Mapping(source = "person.birthSurname", target = "birthSurname")
+    @Mapping(source = "person", target = "contact")
+    @Mapping(source = "person", target = "titles")
+    @Mapping(source = "person.birthNumber", target = "birthNumber")
+    @Mapping(source = "person.birthDate", target = "birthDate")
+    @Mapping(source = "person", target = "birthPlace")
+    @Mapping(source = "person", target = "citizenship")
+    @Mapping(source = "person.passportNumber", target = "passportNumber")
+    @Mapping(source = "person.gender", target = "gender")
+    @Mapping(source = "person.maritalStatus", target = "maritalStatus")
+    PersonProfileInternal toPersonProfileInternal(Person person, List<String> personalNumbers);
 
     // --- Delegate Mappers for Nested Objects ---
 
     @Mapping(source = "email", target = "email")
-    @Mapping(source = "telefon", target = "phone")
-    @Mapping(source = "mobil", target = "mobile")
-    ContactInternal toContactInternal(Osoba osoba);
+    @Mapping(source = "phone", target = "phone")
+    @Mapping(source = "mobile", target = "mobile")
+    ContactInternal toContactInternal(Person person);
 
-    @Mapping(source = "titulPred", target = "prefix")
-    @Mapping(source = "titulZa", target = "suffix")
-    TitlesInternal toTitlesInternal(Osoba osoba);
+    @Mapping(source = "titlePrefix", target = "prefix")
+    @Mapping(source = "titleSuffix", target = "suffix")
+    TitlesInternal toTitlesInternal(Person person);
 
 //    @Mapping(source = "mistoNar", target = "city")
 //    @Mapping(source = "statNar", target = "country")
-//    BirthPlaceInternal toBirthPlaceInternal(Osoba osoba);
+//    BirthPlaceInternal toBirthPlaceInternal(Person person);
 //
 //    @Mapping(source = "statniPrislusnost", target = "country")
 //    @Mapping(source = "kvalifikator", target = "qualifier")
-//    CitizenshipInternal toCitizenshipInternal(Osoba osoba);
+//    CitizenshipInternal toCitizenshipInternal(Person person);
 
 }

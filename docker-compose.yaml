@@ -129,7 +129,7 @@ services:
     container_name: codelist-service
     ports:
       - "8010:8010"
-#      - "9010:9010"
+      - "9010:9010"
     depends_on:
       config-server:
         condition: service_healthy

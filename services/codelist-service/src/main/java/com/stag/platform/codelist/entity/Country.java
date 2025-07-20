@@ -19,7 +19,7 @@ import java.time.LocalDate;
     name = "CIS_STATU",
     schema = "INSTALL2"
 )
-public class CisStatu {
+public class Country {
 
     @Id
     @Column(
@@ -35,24 +35,24 @@ public class CisStatu {
         nullable = false,
         length = 70
     )
-    private String stat;
+    private String name;
 
     @NotNull
     @Column(
         name = "PLATNOST_OD",
         nullable = false
     )
-    private LocalDate platnostOd;
+    private LocalDate validFrom;
 
     @Column(name = "PLATNOST_DO")
-    private LocalDate platnostDo;
+    private LocalDate validTo;
 
     @Size(max = 240)
     @Column(
         name = "ENGLISH",
         length = 240
     )
-    private String english;
+    private String englishName;
 
     @Size(max = 1)
     @ColumnDefault("'A'")
@@ -60,21 +60,21 @@ public class CisStatu {
         name = "VIZOVA_POVINNOST",
         length = 1
     )
-    private String vizovaPovinnost;
+    private String hasVisaRequirement;
 
     @Size(max = 2)
     @Column(
         name = "ZKRATKA",
         length = 2
     )
-    private String zkratka;
+    private String abbreviation;
 
     @Size(max = 3)
     @Column(
         name = "ZKRATKA3",
         length = 3
     )
-    private String zkratka3;
+    private String abbreviation3;
 
     @Size(max = 1)
     @NotNull
@@ -84,21 +84,21 @@ public class CisStatu {
         nullable = false,
         length = 1
     )
-    private String obvykly;
+    private String isCommon;
 
     @Size(max = 70)
     @Column(
         name = "OBECNY_NAZEV_CZ",
         length = 70
     )
-    private String obecnyNazevCz;
+    private String commonNameCz;
 
     @Size(max = 70)
     @Column(
         name = "OBECNY_NAZEV_AN",
         length = 70
     )
-    private String obecnyNazevAn;
+    private String commonNameEn;
 
     @Size(max = 1)
     @NotNull
@@ -108,7 +108,7 @@ public class CisStatu {
         nullable = false,
         length = 1
     )
-    private String rizikovy;
+    private String isRisky;
 
     @Size(max = 1)
     @NotNull
@@ -118,6 +118,6 @@ public class CisStatu {
         nullable = false,
         length = 1
     )
-    private String jeVEu;
+    private String isInEu;
 
 }

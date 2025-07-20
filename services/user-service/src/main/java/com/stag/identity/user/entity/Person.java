@@ -113,7 +113,7 @@ import java.time.LocalDate;
         )
     }
 )
-public class Osoba {
+public class Person {
 
     @Id
     @Column(
@@ -130,28 +130,28 @@ public class Osoba {
         nullable = false,
         length = 1
     )
-    private String zpHlasen;
+    private String healthInsuranceNotified;
 
     @Size(max = 2000)
     @Column(
         name = "POZNAMKA",
         length = 2000
     )
-    private String poznamka;
+    private String note;
 
     @Size(max = 2000)
     @Column(
         name = "POZNAMKA2",
         length = 2000
     )
-    private String poznamka2;
+    private String note2;
 
     @Size(max = 48)
     @Column(
         name = "PR_ULICE",
         length = 48
     )
-    private String prUlice;
+    private String temporaryStreet;
 
     @Size(max = 100)
     @NotNull
@@ -160,7 +160,7 @@ public class Osoba {
         nullable = false,
         length = 100
     )
-    private String prijmeni;
+    private String surname;
 
     @Size(max = 10)
     @NotNull
@@ -169,28 +169,28 @@ public class Osoba {
         nullable = false,
         length = 10
     )
-    private String rodCislo;
+    private String birthNumber;
 
     @Size(max = 10)
     @Column(
         name = "CISLO_ULICE",
         length = 10
     )
-    private String cisloUlice;
+    private String streetNumber;
 
     @NotNull
     @Column(
         name = "DATUM_NAROZ",
         nullable = false
     )
-    private LocalDate datumNaroz;
+    private LocalDate birthDate;
 
     @Size(max = 100)
     @Column(
         name = "JMENO",
         length = 100
     )
-    private String jmeno;
+    private String name;
 
     @Size(max = 2)
     @ColumnDefault("NULL")
@@ -198,7 +198,7 @@ public class Osoba {
         name = "STAV",
         length = 2
     )
-    private String stav;
+    private String maritalStatus;
 
     @Size(max = 1)
     @NotNull
@@ -207,14 +207,14 @@ public class Osoba {
         nullable = false,
         length = 1
     )
-    private String pohlavi;
+    private String gender;
 
     @Size(max = 100)
     @Column(
         name = "RODNE_PRIJMENI",
         length = 100
     )
-    private String rodnePrijmeni;
+    private String birthSurname;
 
     @Size(max = 30)
     @NotNull
@@ -247,14 +247,14 @@ public class Osoba {
         name = "TITUL_PRED",
         length = 3
     )
-    private String titulPred;
+    private String titlePrefix;
 
     @Size(max = 3)
     @Column(
         name = "TITUL_ZA",
         length = 3
     )
-    private String titulZa;
+    private String titleSuffix;
 
     @Size(max = 1)
     @ColumnDefault("NULL")
@@ -262,10 +262,10 @@ public class Osoba {
         name = "OBCANSTVI_KVALIFIKACE",
         length = 1
     )
-    private String obcanstviKvalifikace;
+    private String citizenshipQualification;
 
     @Column(name = "MATURITA_DATUM")
-    private LocalDate maturitaDatum;
+    private LocalDate graduationDate;
 
     @Size(max = 1)
     @NotNull
@@ -275,49 +275,49 @@ public class Osoba {
         nullable = false,
         length = 1
     )
-    private String trvalyPobyt;
+    private String hasPermanentResidence;
 
     @Size(max = 48)
     @Column(
         name = "ULICE",
         length = 48
     )
-    private String ulice;
+    private String street;
 
     @Size(max = 75)
     @Column(
         name = "OBEC_CIZI",
         length = 75
     )
-    private String obecCizi;
+    private String municipalityForeign;
 
     @Size(max = 75)
     @Column(
         name = "POSTA_CIZI",
         length = 75
     )
-    private String postaCizi;
+    private String postOfficeForeign;
 
     @Size(max = 75)
     @Column(
         name = "STRED_SKOLA_CIZI",
         length = 75
     )
-    private String stredSkolaCizi;
+    private String highSchoolForeign;
 
     @Size(max = 50)
     @Column(
         name = "OKRES_CIZI",
         length = 50
     )
-    private String okresCizi;
+    private String districtForeign;
 
     @Size(max = 10)
     @Column(
         name = "PSC_CIZI",
         length = 10
     )
-    private String pscCizi;
+    private String zipCodeForeign;
 
     @Size(max = 100)
     @Column(
@@ -331,7 +331,7 @@ public class Osoba {
         name = "TELEFON",
         length = 20
     )
-    private String telefon;
+    private String phone;
 
     @Column(name = "IZO")
     private String izo;
@@ -342,7 +342,7 @@ public class Osoba {
         name = "STATIDNO_OBCA",
         nullable = false
     )
-    private Integer statidnoObca;
+    private Integer residenceCountryId;
 
     @NotNull
     @ColumnDefault("203")
@@ -350,11 +350,11 @@ public class Osoba {
         name = "STATIDNO_BYDL",
         nullable = false
     )
-    private Integer statidnoBydl;
+    private Integer domicileCountryId;
 
     @ColumnDefault("NULL")
     @Column(name = "STATIDNO_NARO")
-    private Integer statidnoNaro;
+    private Integer birthCountryId;
 
     @NotNull
     @ColumnDefault("7777")
@@ -362,7 +362,7 @@ public class Osoba {
         name = "OKRESIDNO_BYDL",
         nullable = false
     )
-    private Integer okresidnoBydl;
+    private Integer domicileDistrictId;
 
     @NotNull
     @ColumnDefault("7777")
@@ -370,7 +370,7 @@ public class Osoba {
         name = "OKRESIDNO_PRBY",
         nullable = false
     )
-    private Integer okresidnoPrby;
+    private Integer temporaryDistrictId;
 
     @NotNull
     @ColumnDefault("'0'")
@@ -378,7 +378,7 @@ public class Osoba {
         name = "PSC_BYDL",
         nullable = false
     )
-    private String pscBydl;
+    private String domicileZipCode;
 
     @NotNull
     @ColumnDefault("'0'")
@@ -386,24 +386,24 @@ public class Osoba {
         name = "PSC_PRBY",
         nullable = false
     )
-    private String pscPrby;
+    private String prZipCode;
 
     @Column(name = "PR_OSOBIDNO")
-    private Long prOsobidno;
+    private Long admissionPersonId;
 
     @Size(max = 11)
     @Column(
         name = "CISLO_PASU",
         length = 11
     )
-    private String cisloPasu;
+    private String passportNumber;
 
     @Size(max = 10)
     @Column(
         name = "PR_CISLO_ULICE",
         length = 10
     )
-    private String prCisloUlice;
+    private String temporaryStreetNumber;
 
     @NotNull
     @ColumnDefault("0")
@@ -411,7 +411,7 @@ public class Osoba {
         name = "CCOBIDNO_BYDL",
         nullable = false
     )
-    private Long ccobidnoBydl;
+    private Long domicileMunicipalityPartId;
 
     @NotNull
     @ColumnDefault("0")
@@ -419,7 +419,7 @@ public class Osoba {
         name = "CCOBIDNO_PRBY",
         nullable = false
     )
-    private Long ccobidnoPrby;
+    private Long temporaryMunicipalityPartId;
 
     @NotNull
     @ColumnDefault("0")
@@ -427,7 +427,7 @@ public class Osoba {
         name = "OBECIDNO_BYDL",
         nullable = false
     )
-    private Long obecidnoBydl;
+    private Long domicileMunicipalityId;
 
     @NotNull
     @ColumnDefault("0")
@@ -435,50 +435,50 @@ public class Osoba {
         name = "OBECIDNO_PRBY",
         nullable = false
     )
-    private Long obecidnoPrby;
+    private Long temporaryMunicipalityId;
 
     @Size(max = 30)
     @Column(
         name = "MOBIL",
         length = 30
     )
-    private String mobil;
+    private String mobile;
 
     @Size(max = 255)
     @Column(name = "UCET_MAJITEL")
-    private String ucetMajitel;
+    private String accountOwner;
 
     @Size(max = 255)
     @Column(name = "UCET_ADRESA")
-    private String ucetAdresa;
+    private String accountAddress;
 
     @Size(max = 6)
     @Column(
         name = "UCET_PRED",
         length = 6
     )
-    private String ucetPred;
+    private String accountPrefix;
 
     @Size(max = 10)
     @Column(
         name = "UCET_ZA",
         length = 10
     )
-    private String ucetZa;
+    private String accountSuffix;
 
     @Size(max = 4)
     @Column(
         name = "UCET_BANKA",
         length = 4
     )
-    private String ucetBanka;
+    private String accountBank;
 
     @Size(max = 30)
     @Column(
         name = "HESLO_PRO_VENEK",
         length = 30
     )
-    private String hesloProVenek;
+    private String externalPassword;
 
     @Size(max = 1)
     @NotNull
@@ -488,31 +488,31 @@ public class Osoba {
         nullable = false,
         length = 1
     )
-    private String zadaOKolej;
+    private String dormitoryApplication;
 
     @Column(name = "ZADA_O_KOLEJ_DATUM")
-    private LocalDate zadaOKolejDatum;
+    private LocalDate dormitoryApplicationDate;
 
     @Size(max = 30)
     @Column(
         name = "UCET_IBAN",
         length = 30
     )
-    private String ucetIban;
+    private String accountIban;
 
     @Size(max = 3)
     @Column(
         name = "UCET_MENA",
         length = 3
     )
-    private String ucetMena;
+    private String accountCurrency;
 
     @Size(max = 75)
     @Column(
         name = "STRED_SKOLA_CIZI_MISTO",
         length = 75
     )
-    private String stredSkolaCiziMisto;
+    private String highSchoolForeignPlace;
 
     @NotNull
     @ColumnDefault("203")
@@ -520,32 +520,32 @@ public class Osoba {
         name = "STATIDNO_STRED_SKOLA",
         nullable = false
     )
-    private Integer statidnoStredSkola;
+    private Integer highSchoolCountryId;
 
     @Size(max = 255)
     @Column(name = "STRED_SKOLA_CIZI_OBOR")
-    private String stredSkolaCiziObor;
+    private String highSchoolForeignFieldOfStudy;
 
     @Size(max = 75)
     @Column(
         name = "PR_OBEC_CIZI",
         length = 75
     )
-    private String prObecCizi;
+    private String temporaryMunicipalityForeign;
 
     @Size(max = 50)
     @Column(
         name = "PR_OKRES_CIZI",
         length = 50
     )
-    private String prOkresCizi;
+    private String temporaryDistrictForeign;
 
     @Size(max = 75)
     @Column(
         name = "PR_POSTA_CIZI",
         length = 75
     )
-    private String prPostaCizi;
+    private String temporaryPostOfficeForeign;
 
     @NotNull
     @ColumnDefault("203")
@@ -553,11 +553,11 @@ public class Osoba {
         name = "STATIDNO_PRBY",
         nullable = false
     )
-    private Integer statidnoPrby;
+    private Integer temporaryCountryId;
 
     @Size(max = 255)
     @Column(name = "IDENTIFIKATOR")
-    private String identifikator;
+    private String identifier;
 
     @Size(max = 2)
     @NotNull
@@ -567,21 +567,21 @@ public class Osoba {
         nullable = false,
         length = 2
     )
-    private String odkud;
+    private String fromWhere;
 
     @Size(max = 10)
     @Column(
         name = "CISLO_OBORU",
         length = 10
     )
-    private String cisloOboru;
+    private String fieldOfStudyNumber;
 
     @Size(max = 10)
     @Column(
         name = "PR_PSC_CIZI",
         length = 10
     )
-    private String prPscCizi;
+    private String temporaryZipCodeForeign;
 
     @Size(max = 75)
     @ColumnDefault("NULL")
@@ -589,50 +589,50 @@ public class Osoba {
         name = "MISTO_NAR",
         length = 75
     )
-    private String mistoNar;
+    private String placeOfBirth;
 
     @Size(max = 10)
     @Column(
         name = "UCET_EURO_ZA",
         length = 10
     )
-    private String ucetEuroZa;
+    private String euroAccountSuffix;
 
     @Size(max = 6)
     @Column(
         name = "UCET_EURO_PRED",
         length = 6
     )
-    private String ucetEuroPred;
+    private String euroAccountPrefix;
 
     @Size(max = 4)
     @Column(
         name = "UCET_EURO_BANKA",
         length = 4
     )
-    private String ucetEuroBanka;
+    private String euroAccountBank;
 
     @Size(max = 3)
     @Column(
         name = "UCET_EURO_MENA",
         length = 3
     )
-    private String ucetEuroMena;
+    private String euroAccountCurrency;
 
     @Size(max = 255)
     @Column(name = "UCET_EURO_ADRESA")
-    private String ucetEuroAdresa;
+    private String euroAccountAddress;
 
     @Size(max = 255)
     @Column(name = "UCET_EURO_MAJITEL")
-    private String ucetEuroMajitel;
+    private String euroAccountOwner;
 
     @Size(max = 30)
     @Column(
         name = "UCET_EURO_IBAN",
         length = 30
     )
-    private String ucetEuroIban;
+    private String euroAccountIban;
 
     @Size(max = 1)
     @ColumnDefault("NULL")
@@ -640,144 +640,145 @@ public class Osoba {
         name = "ZDR_SPECIFIKA",
         length = 1
     )
-    private String zdrSpecifika;
+    private String healthSpecifics;
 
     @Size(max = 12)
     @Column(
         name = "ADRESA_DATOVE_SCHRANKY",
         length = 12
     )
-    private String adresaDatoveSchranky;
+    private String dataBoxAddress;
 
     @Size(max = 255)
     @Column(name = "EXTERNI_IDENTITA")
-    private String externiIdentita;
+    private String externalIdentity;
 
     @Size(max = 20)
     @Column(
         name = "ID_REGISTR_ZDR_PRAC",
         length = 20
     )
-    private String idRegistrZdrPrac;
+    private String healthPractitionerRegisterId;
 
     @Size(max = 4000)
     @Column(
         name = "ZDR_SPECIFIKA_ULEVY",
         length = 4000
     )
-    private String zdrSpecifikaUlevy;
+    private String healthSpecificsRelief;
 
     @Size(max = 4000)
     @Column(
         name = "ZDR_SPECIFIKA_DALSI_OPATRENI",
         length = 4000
     )
-    private String zdrSpecifikaDalsiOpatreni;
+    private String healthSpecificsOtherMeasures;
 
     @ColumnDefault("203")
     @Column(name = "UCET_EURO_STATIDNO")
-    private Integer ucetEuroStatidno;
+    private Integer euroAccountCountryId;
 
     @Size(max = 11)
     @Column(
         name = "UCET_EURO_SWIFT",
         length = 11
     )
-    private String ucetEuroSwift;
+    private String euroAccountSwift;
 
     @Size(max = 4000)
     @Column(
         name = "REPREZENTANT_ULEVY",
         length = 4000
     )
-    private String reprezentantUlevy;
+    private String representativeRelief;
 
     @Column(name = "DATUM_ANONYMIZACE_HNED")
-    private LocalDate datumAnonymizaceHned;
+    private LocalDate anonymizationDateImmediate;
 
     @Column(name = "DATUM_ANONYMIZACE_1_ROK")
-    private LocalDate datumAnonymizace1Rok;
+    private LocalDate anonymizationDate1Year;
 
     @Column(name = "DATUM_ANONYMIZACE_65_LET")
-    private LocalDate datumAnonymizace65Let;
+    private LocalDate anonymizationDate65Years;
 
     @Size(max = 1)
     @Column(
         name = "STUPEN_PRED_VZDELANI",
         length = 1
     )
-    private String stupenPredVzdelani;
+    private String previousEducationLevel;
 
     @Column(name = "ADMIIDNO_BYDL")
-    private Long admiidnoBydl;
+    private Long domicileAdminId;
 
     @Column(name = "ADMIIDNO_PRBY")
-    private Long admiidnoPrby;
+    private Long temporaryAdminId;
 
     @Column(name = "RODICOVSKA_Z_MPSV_OD")
-    private LocalDate rodicovskaZMpsvOd;
+    private LocalDate parentalLeaveFromMpsvFrom;
 
     @Column(name = "MATERSKA_Z_MPSV_OD")
-    private LocalDate materskaZMpsvOd;
+    private LocalDate maternityLeaveFromMpsvFrom;
 
     @Column(name = "MATERSKA_Z_MPSV_DOU")
-    private LocalDate materskaZMpsvDou;
+    private LocalDate maternityLeaveFromMpsvDou;
 
     @Column(name = "RODICOVSKA_Z_MPSV_DO")
-    private LocalDate rodicovskaZMpsvDo;
+    private LocalDate parentalLeaveFromMpsvTo;
 
     @Column(name = "RODICOVSKA_Z_MPSV_DOU")
-    private LocalDate rodicovskaZMpsvDou;
+    private LocalDate parentalLeaveFromMpsvDou;
 
     @Size(max = 1)
     @Column(
         name = "EVIDOVAN_NA_UP",
         length = 1
     )
-    private String evidovanNaUp;
+    private String registeredAtLaborOffice;
 
     @Column(name = "CERPA_DAVKU_MPSV_DOU")
-    private LocalDate cerpaDavkuMpsvDou;
+    private LocalDate drawingBenefitMpsvDou;
 
     @Column(name = "DATUM_POSLEDNI_AKTUALIZACE")
-    private LocalDate datumPosledniAktualizace;
+    private LocalDate lastUpdateDate;
 
     @Size(max = 1)
     @Column(
         name = "REPREZENTANT_Z_MSMT",
         length = 1
     )
-    private String reprezentantZMsmt;
+    private String representativeFromMsmt;
 
     @Column(name = "REPREZENTANT_Z_MSMT_DOU")
-    private LocalDate reprezentantZMsmtDou;
+    private LocalDate representativeFromMsmtDou;
 
     @Column(name = "MATERSKA_Z_MPSV_DO")
-    private LocalDate materskaZMpsvDo;
+    private LocalDate maternityLeaveFromMpsvTo;
 
     @Column(name = "EVIDOVAN_NA_UP_DOU")
-    private LocalDate evidovanNaUpDou;
+    private LocalDate registeredAtLaborOfficeDou;
 
     @Size(max = 1)
     @Column(
         name = "CERPA_DAVKU_MPSV",
         length = 1
     )
-    private String cerpaDavkuMpsv;
+    private String drawingBenefitMpsv;
 
     @Size(max = 100)
     @Column(
         name = "ZAHRANICNI_ID",
         length = 100
     )
-    private String zahranicniId;
+    private String foreignId;
 
     @Column(name = "ISZRIDNO")
-    private Long iszridno;
+    private Long iszrId;
 
     @Size(max = 255)
     @Column(name = "SIMS_VLASTNIK")
-    private String simsVlastnik;
+    private String simsOwner;
+
     @Size(max = 255)
     @Column(name = "SIMS_ID")
     private String simsId;
@@ -789,6 +790,6 @@ public class Osoba {
     name = "ZDR_SPECIFIKAT",
     columnDefinition = "ZDR_SPECIFIKAT"
     )
-    private Object zdrSpecifikat;
+    private Object healthSpecifics;
 */
 }

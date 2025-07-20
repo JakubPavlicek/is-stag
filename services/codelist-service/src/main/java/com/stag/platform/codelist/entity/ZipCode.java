@@ -2,54 +2,58 @@ package com.stag.platform.codelist.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(
-    name = "CIS_OKRESU",
+    name = "CIS_PSC",
     schema = "INSTALL2"
 )
-public class CisOkresu {
+public class ZipCode {
 
     @Id
+    @Size(max = 5)
     @Column(
-        name = "OKRESIDNO",
-        nullable = false
+        name = "PSC",
+        nullable = false,
+        length = 5
     )
-    private Integer id;
+    private String zipCodeId;
 
-    @Size(max = 100)
+    @Size(max = 50)
     @NotNull
     @Column(
-        name = "OKRES",
+        name = "POSTA",
         nullable = false,
-        length = 100
+        length = 50
     )
-    private String okres;
+    private String postOffice;
 
-    @Size(max = 6)
+    @Size(max = 1)
     @NotNull
+    @ColumnDefault("'A'")
     @Column(
-        name = "NUTS4",
+        name = "AKTUALNI",
         nullable = false,
-        length = 6
+        length = 1
     )
-    private String nuts4;
+    private String isCurrent;
 
     @Size(max = 16)
     @NotNull
@@ -58,7 +62,7 @@ public class CisOkresu {
         nullable = false,
         length = 16
     )
-    private String zkratka;
+    private String abbreviation;
 
     @NotNull
     @ColumnDefault("1")
@@ -66,38 +70,26 @@ public class CisOkresu {
         name = "STAV",
         nullable = false
     )
-    private Boolean stav = false;
+    private Boolean signOfExistence;
 
     @Column(name = "VZNIK_DNE")
-    private LocalDate vznikDne;
+    private LocalDate creationDate;
 
     @Size(max = 254)
     @Column(
         name = "VZNIK_INFO",
         length = 254
     )
-    private String vznikInfo;
+    private String creationInfo;
 
     @Column(name = "ZANIK_DNE")
-    private LocalDate zanikDne;
+    private LocalDate dissolutionDate;
 
     @Size(max = 254)
     @Column(
         name = "ZANIK_INFO",
         length = 254
     )
-    private String zanikInfo;
-
-    @NotNull
-    @ManyToOne(
-        fetch = FetchType.LAZY,
-        optional = false
-    )
-    @OnDelete(action = OnDeleteAction.RESTRICT)
-    @JoinColumn(
-        name = "KRAJ_KOD",
-        nullable = false
-    )
-    private Kraj krajKod;
+    private String dissolutionInfo;
 
 }

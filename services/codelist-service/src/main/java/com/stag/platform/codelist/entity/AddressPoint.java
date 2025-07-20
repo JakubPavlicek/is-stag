@@ -46,7 +46,7 @@ import java.time.LocalDate;
         )
     }
 )
-public class CisAdresnichMist {
+public class AddressPoint {
 
     @Id
     @Column(
@@ -56,41 +56,41 @@ public class CisAdresnichMist {
     private Long id;
 
     @Column(name = "ULICIDNO")
-    private Long ulicidno;
+    private Long streetId;
 
     @Column(name = "OBEC_IDNO")
-    private Long obecIdno;
+    private Long municipalityId;
 
     @Column(name = "CCOB_IDNO")
-    private Long ccobIdno;
+    private Long municipalityPartId;
 
     @Size(max = 10)
     @Column(
         name = "TYP_SO",
         length = 10
     )
-    private String typSo;
+    private String buildingType;
 
     @Size(max = 20)
     @Column(
         name = "CISLO_DOMOVNI",
         length = 20
     )
-    private String cisloDomovni;
+    private String houseNumber;
 
     @Size(max = 20)
     @Column(
         name = "CISLO_ORIENTACNI",
         length = 20
     )
-    private String cisloOrientacni;
+    private String orientationNumber;
 
     @Size(max = 20)
     @Column(
         name = "CISLO_ORIENTACNI_PISMENO",
         length = 20
     )
-    private String cisloOrientacniPismeno;
+    private String orientationNumberLetter;
 
     @Size(max = 5)
     @NotNull
@@ -99,13 +99,13 @@ public class CisAdresnichMist {
         nullable = false,
         length = 5
     )
-    private String psc;
+    private String zipCode;
 
     @Column(name = "VZNIK_DNE")
-    private LocalDate vznikDne;
+    private LocalDate creationDate;
 
     @Column(name = "ZANIK_DNE")
-    private LocalDate zanikDne;
+    private LocalDate dissolutionDate;
 
     @Column(
         name = "GPS_X",

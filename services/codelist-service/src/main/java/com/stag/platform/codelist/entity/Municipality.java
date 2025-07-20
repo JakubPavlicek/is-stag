@@ -31,7 +31,7 @@ import java.time.LocalDate;
         )
     }
 )
-public class CisObce {
+public class Municipality {
 
     @Id
     @Column(
@@ -46,7 +46,7 @@ public class CisObce {
         name = "NAZEV",
         nullable = false
     )
-    private String nazev;
+    private String name;
 
     @Size(max = 12)
     @NotNull
@@ -64,7 +64,7 @@ public class CisObce {
         nullable = false,
         length = 16
     )
-    private String zkratka;
+    private String abbreviation;
 
     @NotNull
     @ColumnDefault("1")
@@ -72,27 +72,27 @@ public class CisObce {
         name = "STAV",
         nullable = false
     )
-    private Boolean stav = false;
+    private Boolean status = false;
 
     @Column(name = "VZNIK_DNE")
-    private LocalDate vznikDne;
+    private LocalDate creationDate;
 
     @Size(max = 254)
     @Column(
         name = "VZNIK_INFO",
         length = 254
     )
-    private String vznikInfo;
+    private String creationInfo;
 
     @Column(name = "ZANIK_DNE")
-    private LocalDate zanikDne;
+    private LocalDate dissolutionDate;
 
     @Size(max = 254)
     @Column(
         name = "ZANIK_INFO",
         length = 254
     )
-    private String zanikInfo;
+    private String dissolutionInfo;
 
     @NotNull
     @ManyToOne(
@@ -104,6 +104,6 @@ public class CisObce {
         name = "OKRESIDNO",
         nullable = false
     )
-    private CisOkresu okresidno;
+    private District district;
 
 }

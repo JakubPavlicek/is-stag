@@ -31,7 +31,7 @@ import java.time.LocalDate;
         )
     }
 )
-public class CisSs {
+public class HighSchool {
 
     @Id
     @Size(max = 10)
@@ -47,56 +47,56 @@ public class CisSs {
         name = "NAZEV",
         length = 150
     )
-    private String nazev;
+    private String name;
 
     @Size(max = 3)
     @Column(
         name = "TYP_SS",
         length = 3
     )
-    private String typSs;
+    private String type;
 
     @Size(max = 255)
     @Column(name = "MESTO")
-    private String mesto;
+    private String city;
 
     @Size(max = 48)
     @Column(
         name = "ULICE",
         length = 48
     )
-    private String ulice;
+    private String street;
 
     @Size(max = 9)
     @Column(
         name = "CISLO_ULICE",
         length = 9
     )
-    private String cisloUlice;
+    private String streetNumber;
 
     @Size(max = 5)
     @Column(
         name = "PSC",
         length = 5
     )
-    private String psc;
+    private String zipCode;
 
     @Size(max = 1)
     @Column(
         name = "TYP_PR",
         length = 1
     )
-    private String typPr;
+    private String typeForAdmission;
 
     @NotNull
     @Column(
         name = "PLATNOST_OD",
         nullable = false
     )
-    private LocalDate platnostOd;
+    private LocalDate validFrom;
 
     @Column(name = "PLATNOST_DO")
-    private LocalDate platnostDo;
+    private LocalDate validTo;
 
     @Size(max = 30)
     @NotNull
@@ -113,7 +113,7 @@ public class CisSs {
         name = "RED_IZO",
         length = 9
     )
-    private String redIzo;
+    private String schoolAdministrationIzo;
 
     @NotNull
     @ColumnDefault("null")
@@ -136,6 +136,6 @@ public class CisSs {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "OBEC_IDNO")
-    private CisObce obecIdno;
+    private Municipality municipalityId;
 
 }

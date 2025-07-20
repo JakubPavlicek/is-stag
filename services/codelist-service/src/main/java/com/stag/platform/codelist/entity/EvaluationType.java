@@ -36,7 +36,7 @@ import java.util.Objects;
         )
     }
 )
-public class CisHodnoceniTyp {
+public class EvaluationType {
 
     @Id
     @Column(
@@ -52,7 +52,7 @@ public class CisHodnoceniTyp {
         nullable = false,
         length = 20
     )
-    private String czZkratka;
+    private String abbreviationCz;
 
     @Size(max = 100)
     @NotNull
@@ -61,21 +61,21 @@ public class CisHodnoceniTyp {
         nullable = false,
         length = 100
     )
-    private String czNazev;
+    private String nameCz;
 
     @Size(max = 10)
     @Column(
         name = "AN_ZKRATKA",
         length = 10
     )
-    private String anZkratka;
+    private String abbreviationEn;
 
     @Size(max = 100)
     @Column(
         name = "AN_NAZEV",
         length = 100
     )
-    private String anNazev;
+    private String nameEn;
 
     @Size(max = 1)
     @NotNull
@@ -85,7 +85,7 @@ public class CisHodnoceniTyp {
         nullable = false,
         length = 1
     )
-    private String jednaSeOEcts;
+    private String isEcts;
 
     @Size(max = 30)
     @NotNull
@@ -127,7 +127,7 @@ public class CisHodnoceniTyp {
         nullable = false,
         length = 4
     )
-    private String platnyOd;
+    private String validFrom;
 
     @Size(max = 4)
     @NotNull
@@ -137,7 +137,7 @@ public class CisHodnoceniTyp {
         nullable = false,
         length = 4
     )
-    private String neplatnyOd;
+    private String invalidFrom;
 
     @Size(max = 20)
     @NotNull
@@ -147,14 +147,14 @@ public class CisHodnoceniTyp {
         nullable = false,
         length = 20
     )
-    private String urcenoPro;
+    private String designatedFor;
 
     @Column(
         name = "NEVYPLNENO_HODNOTA_DO_PRUMERU",
         precision = 5,
         scale = 2
     )
-    private BigDecimal nevyplnenoHodnotaDoPrumeru;
+    private BigDecimal unfilledValueForAverage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.RESTRICT)
@@ -162,7 +162,7 @@ public class CisHodnoceniTyp {
         name = "HODNIDNO_NEVYPLNENO",
         referencedColumnName = "HODNIDNO"
     )
-    private CisHodnoceni hodnidnoNevyplneno;
+    private Evaluation unfilledEvaluation;
 
     @Override
     public final boolean equals(Object o) {
@@ -179,7 +179,7 @@ public class CisHodnoceniTyp {
         if (thisEffectiveClass != oEffectiveClass) {
             return false;
         }
-        CisHodnoceniTyp that = (CisHodnoceniTyp) o;
+        EvaluationType that = (EvaluationType) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

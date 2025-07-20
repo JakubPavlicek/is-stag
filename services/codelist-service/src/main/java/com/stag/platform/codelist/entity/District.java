@@ -2,13 +2,18 @@ package com.stag.platform.codelist.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -16,35 +21,35 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(
-    name = "KRAJE",
+    name = "CIS_OKRESU",
     schema = "INSTALL2"
 )
-public class Kraj {
+public class District {
 
     @Id
     @Column(
-        name = "KRAJ_KOD",
+        name = "OKRESIDNO",
         nullable = false
     )
-    private Short id;
+    private Integer id;
 
-    @Size(max = 5)
+    @Size(max = 100)
     @NotNull
     @Column(
-        name = "NUTS3",
+        name = "OKRES",
         nullable = false,
-        length = 5
+        length = 100
     )
-    private String nuts3;
+    private String name;
 
-    @Size(max = 32)
+    @Size(max = 6)
     @NotNull
     @Column(
-        name = "NAZEV",
+        name = "NUTS4",
         nullable = false,
-        length = 32
+        length = 6
     )
-    private String nazev;
+    private String nuts4;
 
     @Size(max = 16)
     @NotNull
@@ -53,7 +58,7 @@ public class Kraj {
         nullable = false,
         length = 16
     )
-    private String zkratka;
+    private String abbreviation;
 
     @NotNull
     @ColumnDefault("1")
@@ -61,26 +66,38 @@ public class Kraj {
         name = "STAV",
         nullable = false
     )
-    private Boolean stav = false;
+    private Boolean status = false;
 
     @Column(name = "VZNIK_DNE")
-    private LocalDate vznikDne;
+    private LocalDate creationDate;
 
     @Size(max = 254)
     @Column(
         name = "VZNIK_INFO",
         length = 254
     )
-    private String vznikInfo;
+    private String creationInfo;
 
     @Column(name = "ZANIK_DNE")
-    private LocalDate zanikDne;
+    private LocalDate dissolutionDate;
 
     @Size(max = 254)
     @Column(
         name = "ZANIK_INFO",
         length = 254
     )
-    private String zanikInfo;
+    private String dissolutionInfo;
+
+    @NotNull
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        optional = false
+    )
+    @OnDelete(action = OnDeleteAction.RESTRICT)
+    @JoinColumn(
+        name = "KRAJ_KOD",
+        nullable = false
+    )
+    private Region regionCode;
 
 }

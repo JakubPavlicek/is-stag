@@ -38,7 +38,7 @@ import java.util.Objects;
         )
     }
 )
-public class CisHodnoceni {
+public class Evaluation {
 
     @Id
     @Column(
@@ -58,7 +58,7 @@ public class CisHodnoceni {
         nullable = false,
         referencedColumnName = "TYHOIDNO"
     )
-    private CisHodnoceniTyp tyhoidno;
+    private EvaluationType evaluationType;
 
     @Size(max = 3)
     @NotNull
@@ -67,7 +67,7 @@ public class CisHodnoceni {
         nullable = false,
         length = 3
     )
-    private String czZkratka;
+    private String abbreviationCz;
 
     @Size(max = 100)
     @NotNull
@@ -76,29 +76,29 @@ public class CisHodnoceni {
         nullable = false,
         length = 100
     )
-    private String czNazev;
+    private String nameCz;
 
     @Size(max = 10)
     @Column(
         name = "AN_ZKRATKA",
         length = 10
     )
-    private String anZkratka;
+    private String abbreviationEn;
 
     @Size(max = 100)
     @Column(
         name = "AN_NAZEV",
         length = 100
     )
-    private String anNazev;
+    private String nameEn;
 
     @Size(max = 255)
     @Column(name = "CZ_UROVEN_ZNALOSTI")
-    private String czUrovenZnalosti;
+    private String knowledgeLevelCz;
 
     @Size(max = 255)
     @Column(name = "AN_UROVEN_ZNALOSTI")
-    private String anUrovenZnalosti;
+    private String knowledgeLevelEn;
 
     @Size(max = 1)
     @NotNull
@@ -108,7 +108,7 @@ public class CisHodnoceni {
         nullable = false,
         length = 1
     )
-    private String jeToUspech;
+    private String isSuccess;
 
     @NotNull
     @ColumnDefault("99")
@@ -116,7 +116,7 @@ public class CisHodnoceni {
         name = "PORADI",
         nullable = false
     )
-    private Short poradi;
+    private Short order;
 
     @NotNull
     @ColumnDefault("99")
@@ -126,14 +126,14 @@ public class CisHodnoceni {
         precision = 5,
         scale = 2
     )
-    private BigDecimal hodnotaDoPrumeru;
+    private BigDecimal valueForAverage;
 
     @Size(max = 2)
     @Column(
         name = "ECTS_EKVIVALENT",
         length = 2
     )
-    private String ectsEkvivalent;
+    private String ectsEquivalent;
 
     @Size(max = 30)
     @NotNull
@@ -169,7 +169,7 @@ public class CisHodnoceni {
         nullable = false,
         length = 4
     )
-    private String platnyOd;
+    private String validFrom;
 
     @Size(max = 4)
     @NotNull
@@ -179,13 +179,13 @@ public class CisHodnoceni {
         nullable = false,
         length = 4
     )
-    private String neplatnyOd;
+    private String invalidFrom;
 
     @Column(name = "BODU_OD")
-    private Short boduOd;
+    private Short pointsFrom;
 
     @Column(name = "BODU_DO")
-    private Short boduDo;
+    private Short pointsTo;
 
     @Size(max = 1)
     @NotNull
@@ -195,14 +195,14 @@ public class CisHodnoceni {
         nullable = false,
         length = 1
     )
-    private String doPrumeru;
+    private String forAverage;
 
     @Size(max = 1000)
     @Column(
         name = "AN_NAZEV_DOKUMENTY",
         length = 1000
     )
-    private String anNazevDokumenty;
+    private String documentNameEn;
 
     @Override
     public final boolean equals(Object o) {
@@ -219,7 +219,7 @@ public class CisHodnoceni {
         if (thisEffectiveClass != oEffectiveClass) {
             return false;
         }
-        CisHodnoceni that = (CisHodnoceni) o;
+        Evaluation that = (Evaluation) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 
