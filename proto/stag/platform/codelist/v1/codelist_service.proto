@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package stag.platform.codelist.v1;
+
+option java_package = "com.stag.platform.codelist.v1";
+option java_outer_classname = "CodelistServiceProto";
+option java_multiple_files = true;
+
+service CodelistService {
+  rpc GetCodelistValues (GetCodelistValuesRequest) returns (GetCodelistValuesResponse);
+}
+
+message GetCodelistValuesRequest {
+  repeated CodelistValueId codelistValueIds = 1;
+}
+
+message GetCodelistValuesResponse {
+  repeated CodelistValue codelistValues = 1;
+}
+
+message CodelistValueId {
+  string domain = 1;
+  string lowValue = 2;
+}
+
+message CodelistValue {
+  string domain = 1;
+  string lowValue = 2;
+  string meaning = 3;
+}

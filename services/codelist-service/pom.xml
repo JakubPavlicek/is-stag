@@ -41,13 +41,10 @@
         </dependency>
 
         <!-- gRPC -->
+        <!-- TODO: this can be server only (client is not needed) -->
         <dependency>
             <groupId>net.devh</groupId>
             <artifactId>grpc-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-services</artifactId>
         </dependency>
 
         <!-- OpenAPI -->
@@ -124,6 +121,11 @@
             <plugin>
                 <groupId>io.github.ascopes</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>stag/platform/codelist/v1/*.proto</include>
+                    </includes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

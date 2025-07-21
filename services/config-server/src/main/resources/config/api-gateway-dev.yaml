@@ -7,7 +7,20 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8180/realms/is-stag
-          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+          jwk-set-uri: http://localhost:8180/realms/is-stag/protocol/openid-connect/certs
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: student-service
+              uri: http://student-service:8030
+              predicates:
+                - Path=/students/**
+            - id: user-service
+              uri: http://student-service:8020
+              predicates:
+                - Path=/users/**,/api/v1/persons/**
 
 eureka:
   instance:
