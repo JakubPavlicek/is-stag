@@ -43,10 +43,10 @@ import java.time.LocalDate;
         )
     }
 )
-public class CodelistValue {
+public class CodelistEntry {
 
     @EmbeddedId
-    private CodelistValueId id;
+    private CodelistEntryId id;
 
     @MapsId("domain")
     @ManyToOne(

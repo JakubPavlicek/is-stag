@@ -1,9 +1,10 @@
 package com.stag.platform.codelist.projection;
 
-public record CodelistValueMeaning(
+public record CodelistEntryValue(
     String idDomain,
     String idLowValue,
-    String meaningCz
+    String meaningCz,
+    String meaningEn
 ) {
 
 }

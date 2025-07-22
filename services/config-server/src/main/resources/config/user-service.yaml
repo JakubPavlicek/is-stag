@@ -8,6 +8,9 @@ grpc:
     student-service:
       address: discovery:///student-service
       negotiation-type: plaintext
+    codelist-service:
+      address: discovery:///codelist-service
+      negotiation-type: plaintext
 
 spring:
   jpa:

@@ -1,8 +1,8 @@
 package com.stag.platform.codelist.service;
 
-import com.stag.platform.codelist.entity.CodelistValueId;
-import com.stag.platform.codelist.projection.CodelistValueMeaning;
-import com.stag.platform.codelist.repository.CodelistValueRepository;
+import com.stag.platform.codelist.entity.CodelistEntryId;
+import com.stag.platform.codelist.projection.CodelistEntryValue;
+import com.stag.platform.codelist.repository.CodelistEntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +12,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CodelistService {
 
-    private final CodelistValueRepository codelistValueRepository;
+    private final CodelistEntryRepository codelistEntryRepository;
 
-    public List<CodelistValueMeaning> getCodelistValues(List<CodelistValueId> codelistValueIds) {
-        return codelistValueRepository.findAllByIdIn(codelistValueIds);
+    public List<CodelistEntryValue> getCodelistEntryMeanings(List<CodelistEntryId> codelistEntryIds) {
+        return codelistEntryRepository.findAllByIdIn(codelistEntryIds);
     }
 
 }

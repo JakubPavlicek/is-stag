@@ -3,14 +3,12 @@ package com.stag.identity.user.grpc;
 import com.stag.academics.student.v1.GetStudentPersonalNumbersRequest;
 import com.stag.academics.student.v1.GetStudentPersonalNumbersResponse;
 import com.stag.academics.student.v1.StudentServiceGrpc;
-import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class StudentServiceClient {
 
     @GrpcClient("student-service")

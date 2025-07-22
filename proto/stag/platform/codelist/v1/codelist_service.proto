@@ -11,14 +11,15 @@ service CodelistService {
 }
 
 message GetCodelistValuesRequest {
-  repeated CodelistValueId codelistValueIds = 1;
+  repeated CodelistKey codelistKeys = 1;
+  string language = 2;
 }
 
 message GetCodelistValuesResponse {
   repeated CodelistValue codelistValues = 1;
 }
 
-message CodelistValueId {
+message CodelistKey {
   string domain = 1;
   string lowValue = 2;
 }

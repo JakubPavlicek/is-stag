@@ -1,7 +1,6 @@
 package com.stag.platform.codelist.grpc;
 
-import com.stag.platform.codelist.entity.CodelistValueId;
-import com.stag.platform.codelist.projection.CodelistValueMeaning;
+import com.stag.platform.codelist.entity.CodelistEntryId;
 import com.stag.platform.codelist.service.CodelistService;
 import com.stag.platform.codelist.v1.CodelistServiceGrpc;
 import com.stag.platform.codelist.v1.CodelistValue;
@@ -21,22 +20,20 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
     @Override
     public void getCodelistValues(GetCodelistValuesRequest request, StreamObserver<GetCodelistValuesResponse> responseObserver) {
-        List<CodelistValueId> codelistValueIdsList = request.getCodelistValueIdsList()
-                                                            .stream()
-                                                            .map(cv -> CodelistValueId.builder()
-                                                                                      .domain(cv.getDomain())
-                                                                                      .lowValue(cv.getLowValue())
-                                                                                      .build())
-                                                            .toList();
+        List<CodelistEntryId> codelistEntryIds = request.getCodelistKeysList()
+                                                        .stream()
+                                                        .map(key -> new CodelistEntryId(key.getDomain(), key.getLowValue()))
+                                                        .toList();
 
-        List<CodelistValueMeaning> codelistValueMeanings = codelistService.getCodelistValues(codelistValueIdsList);
-        List<CodelistValue> codelistValues = codelistValueMeanings.stream()
-                                                                  .map(cv -> CodelistValue.newBuilder()
-                                                                                          .setDomain(cv.idDomain())
-                                                                                          .setLowValue(cv.idLowValue())
-                                                                                          .setMeaning(cv.meaningCz())
-                                                                                          .build())
-                                                                  .toList();
+        List<CodelistValue> codelistValues = codelistService.getCodelistEntryMeanings(codelistEntryIds)
+                                                            .stream()
+                                                            .map(entry -> CodelistValue.newBuilder()
+                                                                                       .setDomain(entry.idDomain())
+                                                                                       .setLowValue(entry.idLowValue())
+                                                                                       .setMeaning(request.getLanguage().equals("cs") ? entry.meaningCz() : entry.meaningEn())
+                                                                                       .build()
+                                                            )
+                                                            .toList();
 
         GetCodelistValuesResponse response = GetCodelistValuesResponse.newBuilder()
                                                                       .addAllCodelistValues(codelistValues)

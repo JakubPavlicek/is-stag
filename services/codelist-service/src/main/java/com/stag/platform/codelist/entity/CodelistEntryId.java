@@ -22,10 +22,16 @@ import java.util.Objects;
 @Getter
 @Setter
 @Embeddable
-public class CodelistValueId implements Serializable {
+public class CodelistEntryId implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -4080125746614352067L;
+
+    public CodelistEntryId(String domain, String lowValue) {
+        this.domain = domain;
+        this.lowValue = lowValue;
+        this.subsystemCode = "STA";
+    }
 
     @Size(max = 100)
     @NotNull
@@ -64,7 +70,7 @@ public class CodelistValueId implements Serializable {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        CodelistValueId entity = (CodelistValueId) o;
+        CodelistEntryId entity = (CodelistEntryId) o;
         return Objects.equals(this.domain, entity.domain) &&
             Objects.equals(this.lowValue, entity.lowValue) &&
             Objects.equals(this.subsystemCode, entity.subsystemCode);
