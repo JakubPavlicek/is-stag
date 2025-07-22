@@ -1,8 +1,7 @@
 package com.stag.identity.user.service;
 
-import com.stag.identity.user.dto.CodelistEntryId;
+import com.stag.identity.user.dto.PersonProfileCodelistData;
 import com.stag.identity.user.dto.PersonProfileInternal;
-import com.stag.identity.user.dto.TitlesInternal;
 import com.stag.identity.user.entity.Person;
 import com.stag.identity.user.grpc.CodelistServiceClient;
 import com.stag.identity.user.grpc.StudentServiceClient;
@@ -13,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,31 +24,57 @@ public class PersonService {
     private final StudentServiceClient studentServiceClient;
     private final CodelistServiceClient codelistServiceClient;
 
-    private Person getPersonById(Integer personId) {
-        return personRepository.findById(personId)
-                               .orElseThrow(() -> new IllegalArgumentException("Person with ID: " + personId + " not found"));
-    }
-
     public PersonProfileInternal getPerson(Integer personId) {
         Person person = getPersonById(personId);
 
         List<String> personalNumbers = studentServiceClient.getStudentPersonalNumbers(personId);
+        PersonProfileCodelistData profileCodelistData = codelistServiceClient.getPersonProfileCodelistData(person);
 
-        // Get the person's titles
-        List<CodelistEntryId> titleCodelistEntryIds = List.of(
-            new CodelistEntryId("TITUL_PRED", person.getTitlePrefix()),
-            new CodelistEntryId("TITUL_ZA", person.getTitleSuffix())
-        );
+        return personMapper.toPersonProfileInternal(person, personalNumbers, profileCodelistData);
+    }
 
-        Map<CodelistEntryId, String> codelistMeanings = codelistServiceClient.getCodelistMeanings(titleCodelistEntryIds);
+//    /**
+//     * Get person address data with codelist lookups
+//     */
+//    public Object getPersonAddresses(Integer personId) {
+//        Person person = getPersonById(personId);
+//
+//        // Get only the codelist data needed for addresses
+//        PersonAddressCodelistData addressCodelistData = codelistServiceClient.getPersonAddressCodelistData(person);
+//
+//        // TODO: Implement address mapping
+//        return null;
+//    }
+//
+//    /**
+//     * Get person banking data with codelist lookups
+//     */
+//    public Object getPersonBanking(Integer personId) {
+//        Person person = getPersonById(personId);
+//
+//        // Get only the codelist data needed for banking
+//        PersonBankingCodelistData bankingCodelistData = codelistServiceClient.getPersonBankingCodelistData(person);
+//
+//        // TODO: Implement banking mapping
+//        return null;
+//    }
+//
+//    /**
+//     * Get person education data with codelist lookups
+//     */
+//    public Object getPersonEducation(Integer personId) {
+//        Person person = getPersonById(personId);
+//
+//        // Get only the codelist data needed for education
+//        PersonEducationCodelistData educationCodelistData = codelistServiceClient.getPersonEducationCodelistData(person);
+//
+//        // TODO: Implement education mapping
+//        return null;
+//    }
 
-        PersonProfileInternal personProfileInternal = personMapper.toPersonProfileInternal(person, personalNumbers);
-        TitlesInternal titlesInternal = TitlesInternal.builder()
-                                                      .prefix(codelistMeanings.get(titleCodelistEntryIds.getFirst()))
-                                                      .suffix(codelistMeanings.get(titleCodelistEntryIds.getLast()))
-                                                      .build();
-        personProfileInternal.setTitles(titlesInternal);
-        return personProfileInternal;
+    private Person getPersonById(Integer personId) {
+        return personRepository.findById(personId)
+                               .orElseThrow(() -> new IllegalArgumentException("Person with ID: " + personId + " not found"));
     }
 
 }

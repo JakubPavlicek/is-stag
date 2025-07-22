@@ -7,25 +7,129 @@ option java_outer_classname = "CodelistServiceProto";
 option java_multiple_files = true;
 
 service CodelistService {
-  rpc GetCodelistValues (GetCodelistValuesRequest) returns (GetCodelistValuesResponse);
+  // Generic codelist lookup
+  rpc GetCodelistValues(GetCodelistValuesRequest) returns (GetCodelistValuesResponse);
+
+  // Use-case specific methods
+  rpc GetPersonProfileCodelistData(GetPersonProfileCodelistDataRequest) returns (GetPersonProfileCodelistDataResponse);
+  rpc GetPersonAddressCodelistData(GetPersonAddressCodelistDataRequest) returns (GetPersonAddressCodelistDataResponse);
+  rpc GetPersonBankingCodelistData(GetPersonBankingCodelistDataRequest) returns (GetPersonBankingCodelistDataResponse);
+  rpc GetPersonEducationCodelistData(GetPersonEducationCodelistDataRequest) returns (GetPersonEducationCodelistDataResponse);
 }
 
 message GetCodelistValuesRequest {
-  repeated CodelistKey codelistKeys = 1;
+  repeated CodelistKey codelist_keys = 1;
   string language = 2;
 }
 
 message GetCodelistValuesResponse {
-  repeated CodelistValue codelistValues = 1;
+  repeated CodelistValue codelist_values = 1;
 }
 
+// Person Profile specific (only what's needed for GET /persons/{id})
+message GetPersonProfileCodelistDataRequest {
+  repeated CodelistKey codelist_keys = 1;  // titles, gender, marital status, citizenship qualifier
+  optional int32 birth_country_id = 2;
+  optional int32 citizenship_country_id = 4;
+  string language = 5;
+}
+
+message GetPersonProfileCodelistDataResponse {
+  repeated CodelistValue codelist_values = 1;
+  optional CountryName birth_country_name = 2;
+  optional CountryName citizenship_country_name = 3;
+}
+
+// Person Address specific (only what's needed for GET /persons/{id}/addresses)
+message GetPersonAddressCodelistDataRequest {
+  // Permanent residence
+  optional int32 permanent_country_id = 1;
+  optional int64 permanent_municipality_id = 2;
+  optional int64 permanent_municipality_part_id = 3;
+  optional int32 permanent_district_id = 4;
+
+  // Temporary residence
+  optional int32 temporary_country_id = 5;
+  optional int64 temporary_municipality_id = 6;
+  optional int64 temporary_municipality_part_id = 7;
+  optional int32 temporary_district_id = 8;
+
+  string language = 9;
+}
+
+message GetPersonAddressCodelistDataResponse {
+  // Permanent residence
+  optional CountryValue permanent_country = 1;
+  optional MunicipalityValue permanent_municipality = 2;
+  optional MunicipalityPartValue permanent_municipality_part = 3;
+  optional DistrictValue permanent_district = 4;
+
+  // Temporary residence
+  optional CountryValue temporary_country = 5;
+  optional MunicipalityValue temporary_municipality = 6;
+  optional MunicipalityPartValue temporary_municipality_part = 7;
+  optional DistrictValue temporary_district = 8;
+}
+
+// Banking specific request (only what's needed for GET /persons/{id}/banking)
+message GetPersonBankingCodelistDataRequest {
+  repeated CodelistKey codelist_keys = 1; // bank codes, currency codes
+  string language = 2;
+}
+
+message GetPersonBankingCodelistDataResponse {
+  repeated CodelistValue codelist_values = 1;
+}
+
+// Education specific request (only what's needed for GET /persons/{id}/education)
+message GetPersonEducationCodelistDataRequest {
+  optional int32 high_school_country_id = 1;
+  repeated CodelistKey codelist_keys = 2; // education level, field of study codes
+  string language = 3;
+}
+
+message GetPersonEducationCodelistDataResponse {
+  repeated CodelistValue codelist_values = 1;
+  optional CountryValue high_school_country = 2;
+}
+
+// Generic messages
 message CodelistKey {
   string domain = 1;
-  string lowValue = 2;
+  string low_value = 2;
 }
 
 message CodelistValue {
   string domain = 1;
-  string lowValue = 2;
+  string low_value = 2;
   string meaning = 3;
+}
+
+// Shared value objects
+message CountryValue {
+  int32 id = 1;
+  string name = 2;
+  string english_name = 3;
+  string abbreviation = 4;
+}
+
+message CountryName {
+  string name = 1;
+}
+
+message MunicipalityValue {
+  int64 id = 1;
+  string name = 2;
+  string abbreviation = 3;
+}
+
+message MunicipalityPartValue {
+  int64 id = 1;
+  string name = 2;
+}
+
+message DistrictValue {
+  int32 id = 1;
+  string name = 2;
+  string abbreviation = 3;
 }

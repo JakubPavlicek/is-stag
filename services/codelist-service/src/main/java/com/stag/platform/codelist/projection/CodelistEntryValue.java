@@ -1,10 +1,9 @@
 package com.stag.platform.codelist.projection;
 
-public record CodelistEntryValue(
-    String idDomain,
-    String idLowValue,
-    String meaningCz,
-    String meaningEn
-) {
+import com.stag.platform.codelist.entity.CodelistEntryId;
 
+public interface CodelistEntryValue {
+    CodelistEntryId getId();
+    String getMeaningCz();
+    String getMeaningEn();
 }
