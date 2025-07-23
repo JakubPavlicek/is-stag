@@ -162,6 +162,7 @@
                                 <inputSpec>${project.basedir}/src/main/resources/static/openapi.yaml</inputSpec>
                                 <generatorName>spring</generatorName>
                                 <addCompileSourceRoot>true</addCompileSourceRoot>
+                                <modelNameSuffix>DTO</modelNameSuffix>
                                 <configOptions>
                                     <sourceFolder>src/gen/java</sourceFolder>
                                     <useSpringBoot3>true</useSpringBoot3>

@@ -11,10 +11,10 @@ service CodelistService {
   rpc GetCodelistValues(GetCodelistValuesRequest) returns (GetCodelistValuesResponse);
 
   // Use-case specific methods
-  rpc GetPersonProfileCodelistData(GetPersonProfileCodelistDataRequest) returns (GetPersonProfileCodelistDataResponse);
-  rpc GetPersonAddressCodelistData(GetPersonAddressCodelistDataRequest) returns (GetPersonAddressCodelistDataResponse);
-  rpc GetPersonBankingCodelistData(GetPersonBankingCodelistDataRequest) returns (GetPersonBankingCodelistDataResponse);
-  rpc GetPersonEducationCodelistData(GetPersonEducationCodelistDataRequest) returns (GetPersonEducationCodelistDataResponse);
+  rpc GetPersonProfileData(GetPersonProfileDataRequest) returns (GetPersonProfileDataResponse);
+  rpc GetPersonAddressData(GetPersonAddressDataRequest) returns (GetPersonAddressDataResponse);
+  rpc GetPersonBankingData(GetPersonBankingDataRequest) returns (GetPersonBankingDataResponse);
+  rpc GetPersonEducationData(GetPersonEducationDataRequest) returns (GetPersonEducationDataResponse);
 }
 
 message GetCodelistValuesRequest {
@@ -27,21 +27,21 @@ message GetCodelistValuesResponse {
 }
 
 // Person Profile specific (only what's needed for GET /persons/{id})
-message GetPersonProfileCodelistDataRequest {
+message GetPersonProfileDataRequest {
   repeated CodelistKey codelist_keys = 1;  // titles, gender, marital status, citizenship qualifier
   optional int32 birth_country_id = 2;
-  optional int32 citizenship_country_id = 4;
-  string language = 5;
+  optional int32 citizenship_country_id = 3;
+  string language = 4;
 }
 
-message GetPersonProfileCodelistDataResponse {
+message GetPersonProfileDataResponse {
   repeated CodelistValue codelist_values = 1;
   optional CountryName birth_country_name = 2;
   optional CountryName citizenship_country_name = 3;
 }
 
 // Person Address specific (only what's needed for GET /persons/{id}/addresses)
-message GetPersonAddressCodelistDataRequest {
+message GetPersonAddressDataRequest {
   // Permanent residence
   optional int32 permanent_country_id = 1;
   optional int64 permanent_municipality_id = 2;
@@ -57,7 +57,7 @@ message GetPersonAddressCodelistDataRequest {
   string language = 9;
 }
 
-message GetPersonAddressCodelistDataResponse {
+message GetPersonAddressDataResponse {
   // Permanent residence
   optional CountryValue permanent_country = 1;
   optional MunicipalityValue permanent_municipality = 2;
@@ -72,23 +72,23 @@ message GetPersonAddressCodelistDataResponse {
 }
 
 // Banking specific request (only what's needed for GET /persons/{id}/banking)
-message GetPersonBankingCodelistDataRequest {
+message GetPersonBankingDataRequest {
   repeated CodelistKey codelist_keys = 1; // bank codes, currency codes
   string language = 2;
 }
 
-message GetPersonBankingCodelistDataResponse {
+message GetPersonBankingDataResponse {
   repeated CodelistValue codelist_values = 1;
 }
 
 // Education specific request (only what's needed for GET /persons/{id}/education)
-message GetPersonEducationCodelistDataRequest {
+message GetPersonEducationDataRequest {
   optional int32 high_school_country_id = 1;
   repeated CodelistKey codelist_keys = 2; // education level, field of study codes
   string language = 3;
 }
 
-message GetPersonEducationCodelistDataResponse {
+message GetPersonEducationDataResponse {
   repeated CodelistValue codelist_values = 1;
   optional CountryValue high_school_country = 2;
 }

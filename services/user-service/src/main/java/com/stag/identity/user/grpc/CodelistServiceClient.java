@@ -1,12 +1,12 @@
 package com.stag.identity.user.grpc;
 
-import com.stag.identity.user.dto.CodelistEntryId;
-import com.stag.identity.user.dto.PersonProfileCodelistData;
-import com.stag.identity.user.entity.Person;
+import com.stag.identity.user.model.CodelistEntryId;
+import com.stag.identity.user.service.data.PersonProfileData;
+import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistServiceGrpc;
 import com.stag.platform.codelist.v1.CodelistValue;
-import com.stag.platform.codelist.v1.GetPersonProfileCodelistDataRequest;
+import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
@@ -24,52 +24,52 @@ public class CodelistServiceClient {
     /**
      * Get codelist data specifically for person profile (GET /persons/{id})
      */
-    public PersonProfileCodelistData getPersonProfileCodelistData(Person person) {
+    public PersonProfileData getPersonProfileData(PersonProfileProjection personProfile) {
         // Build codelist keys for profile fields
         List<CodelistKey> codelistKeys = new ArrayList<>();
 
         // Add title prefix if exists
-        if (person.getTitlePrefix() != null) {
-            codelistKeys.add(createCodelistKey("TITUL_PRED", person.getTitlePrefix()));
+        if (personProfile.titlePrefix() != null) {
+            codelistKeys.add(createCodelistKey("TITUL_PRED", personProfile.titlePrefix()));
         }
 
         // Add title suffix if exists
-        if (person.getTitleSuffix() != null) {
-            codelistKeys.add(createCodelistKey("TITUL_ZA", person.getTitleSuffix()));
+        if (personProfile.titleSuffix() != null) {
+            codelistKeys.add(createCodelistKey("TITUL_ZA", personProfile.titleSuffix()));
         }
 
         // Add gender if exists
-        if (person.getGender() != null) {
-            codelistKeys.add(createCodelistKey("POHLAVI", person.getGender()));
+        if (personProfile.gender() != null) {
+            codelistKeys.add(createCodelistKey("POHLAVI", personProfile.gender()));
         }
 
         // Add marital status if exists
-        if (person.getMaritalStatus() != null) {
-            codelistKeys.add(createCodelistKey("STAV", person.getMaritalStatus()));
+        if (personProfile.maritalStatus() != null) {
+            codelistKeys.add(createCodelistKey("STAV", personProfile.maritalStatus()));
         }
 
         // Add citizenship qualification if exists
-        if (person.getCitizenshipQualification() != null) {
-            codelistKeys.add(createCodelistKey("KVANT_OBCAN", person.getCitizenshipQualification()));
+        if (personProfile.citizenshipQualification() != null) {
+            codelistKeys.add(createCodelistKey("KVANT_OBCAN", personProfile.citizenshipQualification()));
         }
 
         // Build request
-        var requestBuilder = GetPersonProfileCodelistDataRequest.newBuilder()
-                                                                .addAllCodelistKeys(codelistKeys)
-                                                                .setLanguage("cs");
+        var requestBuilder = GetPersonProfileDataRequest.newBuilder()
+                                                        .addAllCodelistKeys(codelistKeys)
+                                                        .setLanguage("cs");
 
         // Add birth country if exists
-        if (person.getBirthCountryId() != null) {
-            requestBuilder.setBirthCountryId(person.getBirthCountryId());
+        if (personProfile.birthCountryId() != null) {
+            requestBuilder.setBirthCountryId(personProfile.birthCountryId());
         }
 
         // Add citizenship country if exists
-        if (person.getResidenceCountryId() != null) {
-            requestBuilder.setCitizenshipCountryId(person.getResidenceCountryId());
+        if (personProfile.residenceCountryId() != null) {
+            requestBuilder.setCitizenshipCountryId(personProfile.residenceCountryId());
         }
 
         // Make the call
-        var response = codelistServiceStub.getPersonProfileCodelistData(requestBuilder.build());
+        var response = codelistServiceStub.getPersonProfileData(requestBuilder.build());
 
         // Convert response to map
         Map<CodelistEntryId, String> codelistMeanings = response.getCodelistValuesList()
@@ -80,15 +80,15 @@ public class CodelistServiceClient {
                                                                 ));
 
         // Return the data
-        return PersonProfileCodelistData.builder()
-                                        .codelistMeanings(codelistMeanings)
-                                        .birthCountryName(response.hasBirthCountryName()
+        return PersonProfileData.builder()
+                                .codelistMeanings(codelistMeanings)
+                                .birthCountryName(response.hasBirthCountryName()
                                             ? response.getBirthCountryName().getName()
                                             : null)
-                                        .citizenshipCountryName(response.hasCitizenshipCountryName()
+                                .citizenshipCountryName(response.hasCitizenshipCountryName()
                                             ? response.getCitizenshipCountryName().getName()
                                             : null)
-                                        .build();
+                                .build();
     }
 
     private CodelistKey createCodelistKey(String domain, String lowValue) {

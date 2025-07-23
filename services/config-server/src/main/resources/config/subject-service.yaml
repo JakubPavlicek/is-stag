@@ -3,6 +3,11 @@ server:
 
 spring:
   jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        generate_statistics: true
     hibernate:
       ddl-auto: none
       default_schema: ${spring.datasource.hikari.schema}
@@ -14,6 +19,7 @@ spring:
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
       schema: install2
+      auto-commit: false
 
 eureka:
   instance:

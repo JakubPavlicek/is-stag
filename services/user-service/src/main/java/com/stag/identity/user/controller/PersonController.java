@@ -1,11 +1,11 @@
 package com.stag.identity.user.controller;
 
 import com.stag.identity.user.PersonsApi;
-import com.stag.identity.user.dto.Addresses;
-import com.stag.identity.user.dto.BankAccounts;
-import com.stag.identity.user.dto.EducationDetails;
-import com.stag.identity.user.dto.PersonProfile;
-import com.stag.identity.user.dto.PersonProfileInternal;
+import com.stag.identity.user.dto.AddressesDTO;
+import com.stag.identity.user.dto.BankAccountsDTO;
+import com.stag.identity.user.dto.EducationDetailsDTO;
+import com.stag.identity.user.dto.PersonProfileDTO;
+import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.mapper.PersonMapper;
 import com.stag.identity.user.service.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -22,25 +22,25 @@ public class PersonController implements PersonsApi {
     private final PersonMapper personMapper;
 
     @Override
-    public ResponseEntity<PersonProfile> getPerson(Integer personId) {
-        PersonProfileInternal personProfileInternal = personService.getPerson(personId);
-        PersonProfile personProfile = personMapper.toPersonProfile(personProfileInternal);
+    public ResponseEntity<PersonProfileDTO> getPerson(Integer personId) {
+        PersonProfile personProfile = personService.getPersonProfile(personId);
+        PersonProfileDTO personProfileDTO = personMapper.toPersonProfileDTO(personProfile);
 
-        return ResponseEntity.ok(personProfile);
+        return ResponseEntity.ok(personProfileDTO);
     }
 
     @Override
-    public ResponseEntity<Addresses> getPersonAddresses(Integer personId) {
+    public ResponseEntity<AddressesDTO> getPersonAddresses(Integer personId) {
         return PersonsApi.super.getPersonAddresses(personId);
     }
 
     @Override
-    public ResponseEntity<BankAccounts> getPersonBanking(Integer personId) {
+    public ResponseEntity<BankAccountsDTO> getPersonBanking(Integer personId) {
         return PersonsApi.super.getPersonBanking(personId);
     }
 
     @Override
-    public ResponseEntity<EducationDetails> getPersonEducation(Integer personId) {
+    public ResponseEntity<EducationDetailsDTO> getPersonEducation(Integer personId) {
         return PersonsApi.super.getPersonEducation(personId);
     }
 

@@ -160,7 +160,7 @@ public class Person {
         nullable = false,
         length = 100
     )
-    private String surname;
+    private String lastName;
 
     @Size(max = 10)
     @NotNull
@@ -190,7 +190,7 @@ public class Person {
         name = "JMENO",
         length = 100
     )
-    private String name;
+    private String firstName;
 
     @Size(max = 2)
     @ColumnDefault("NULL")
@@ -214,7 +214,7 @@ public class Person {
         name = "RODNE_PRIJMENI",
         length = 100
     )
-    private String birthSurname;
+    private String birthName;
 
     @Size(max = 30)
     @NotNull
@@ -589,7 +589,7 @@ public class Person {
         name = "MISTO_NAR",
         length = 75
     )
-    private String placeOfBirth;
+    private String birthPlace;
 
     @Size(max = 10)
     @Column(

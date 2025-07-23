@@ -5,7 +5,7 @@ additionalProperties: false
 required:
   - street
   - streetNumber
-  - postalCode
+  - zipCode
   - municipality
   - municipalityPart
   - district
@@ -23,10 +23,10 @@ properties:
     description: Street number of the address.
     example: "97"
     maxLength: 10
-  postalCode: # postovni smerovaci cislo
+  zipCode: # postovni smerovaci cislo
     type: string
     nullable: true
-    description: Postal code of the address.
+    description: Zip code of the address.
     example: "34901"
     pattern: "^\\d{1,10}$"
     maxLength: 10

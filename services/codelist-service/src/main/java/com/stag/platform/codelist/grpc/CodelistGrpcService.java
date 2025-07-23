@@ -19,26 +19,35 @@ import com.stag.platform.codelist.v1.CountryValue;
 import com.stag.platform.codelist.v1.DistrictValue;
 import com.stag.platform.codelist.v1.GetCodelistValuesRequest;
 import com.stag.platform.codelist.v1.GetCodelistValuesResponse;
-import com.stag.platform.codelist.v1.GetPersonAddressCodelistDataRequest;
-import com.stag.platform.codelist.v1.GetPersonAddressCodelistDataResponse;
-import com.stag.platform.codelist.v1.GetPersonBankingCodelistDataRequest;
-import com.stag.platform.codelist.v1.GetPersonBankingCodelistDataResponse;
-import com.stag.platform.codelist.v1.GetPersonEducationCodelistDataRequest;
-import com.stag.platform.codelist.v1.GetPersonEducationCodelistDataResponse;
-import com.stag.platform.codelist.v1.GetPersonProfileCodelistDataRequest;
-import com.stag.platform.codelist.v1.GetPersonProfileCodelistDataResponse;
+import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
+import com.stag.platform.codelist.v1.GetPersonAddressDataResponse;
+import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
+import com.stag.platform.codelist.v1.GetPersonBankingDataResponse;
+import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
+import com.stag.platform.codelist.v1.GetPersonEducationDataResponse;
+import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
+import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
 import com.stag.platform.codelist.v1.MunicipalityPartValue;
 import com.stag.platform.codelist.v1.MunicipalityValue;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
+@Slf4j
 @GrpcService
 @RequiredArgsConstructor
 public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImplBase {
+
+    private static final String CZECH_LANGUAGE = "cs";
 
     private final CodelistService codelistService;
     private final CountryService countryService;
@@ -47,166 +56,259 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     private final DistrictService districtService;
 
     @Override
-    public void getCodelistValues(
-        GetCodelistValuesRequest request,
-        StreamObserver<GetCodelistValuesResponse> responseObserver
-    ) {
-        GetCodelistValuesResponse.Builder responseBuilder = GetCodelistValuesResponse.newBuilder();
+    public void getCodelistValues(GetCodelistValuesRequest request, StreamObserver<GetCodelistValuesResponse> responseObserver) {
+        var response = GetCodelistValuesResponse.newBuilder()
+                                                .addAllCodelistValues(buildCodelistValues(
+                                                    request.getCodelistKeysList(),
+                                                    request.getLanguage()
+                                                ))
+                                                .build();
 
-        // Process codelist entries
-        if (!request.getCodelistKeysList().isEmpty()) {
-            List<CodelistValue> codelistValues = getCodelistValues(request.getCodelistKeysList(), request.getLanguage());
-            responseBuilder.addAllCodelistValues(codelistValues);
-        }
-
-        responseObserver.onNext(responseBuilder.build());
-        responseObserver.onCompleted();
+        completeResponse(responseObserver, response);
     }
 
     @Override
-    public void getPersonProfileCodelistData(
-        GetPersonProfileCodelistDataRequest request,
-        StreamObserver<GetPersonProfileCodelistDataResponse> responseObserver
-    ) {
-        GetPersonProfileCodelistDataResponse.Builder responseBuilder = GetPersonProfileCodelistDataResponse.newBuilder();
+    public void getPersonProfileData(GetPersonProfileDataRequest request, StreamObserver<GetPersonProfileDataResponse> responseObserver) {
+        CompletableFuture<List<CodelistValue>> codelistValuesFuture = CompletableFuture.supplyAsync(
+            () -> buildCodelistValues(request.getCodelistKeysList(), request.getLanguage())
+        );
 
-        // Process codelist entries
-        if (!request.getCodelistKeysList().isEmpty()) {
-            List<CodelistValue> codelistValues = getCodelistValues(request.getCodelistKeysList(), request.getLanguage());
-            responseBuilder.addAllCodelistValues(codelistValues);
-        }
+        CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
+            () -> getCountryNames(request)
+        );
 
-        // Process birth country
-        if (request.hasBirthCountryId()) {
-            findCountryName(request.getBirthCountryId())
-                .ifPresent(name -> responseBuilder.setBirthCountryName(toCountryName(name)));
-        }
-
-        // Process citizenship country
-        if (request.hasCitizenshipCountryId()) {
-            findCountryName(request.getCitizenshipCountryId())
-                .ifPresent(name -> responseBuilder.setCitizenshipCountryName(toCountryName(name)));
-        }
-
-        responseObserver.onNext(responseBuilder.build());
-        responseObserver.onCompleted();
+        codelistValuesFuture.thenCombine(countryNamesFuture, (codelistValues, countryNames) ->
+                                buildPersonProfileDataResponse(request, codelistValues, countryNames)
+                            )
+                            .thenAccept(response -> completeResponse(responseObserver, response))
+                            .exceptionally(ex -> errorResponse(responseObserver, ex));
     }
 
     @Override
-    public void getPersonAddressCodelistData(
-        GetPersonAddressCodelistDataRequest request,
-        StreamObserver<GetPersonAddressCodelistDataResponse> responseObserver
-    ) {
-        // Build response
-        GetPersonAddressCodelistDataResponse.Builder responseBuilder = GetPersonAddressCodelistDataResponse.newBuilder();
+    public void getPersonAddressData(GetPersonAddressDataRequest request, StreamObserver<GetPersonAddressDataResponse> responseObserver) {
+        var responseBuilder = GetPersonAddressDataResponse.newBuilder();
 
-        // Process permanent residence data
-        if (request.hasPermanentCountryId()) {
-            findCountry(request.getPermanentCountryId())
-                .ifPresent(country -> responseBuilder.setPermanentCountry(toCountryValue(country)));
-        }
+        // Add permanent residence data
+        addAddressData(request, responseBuilder, true);
 
-        if (request.hasPermanentMunicipalityId()) {
-            findMunicipality(request.getPermanentMunicipalityId())
-                .ifPresent(municipality -> responseBuilder.setPermanentMunicipality(toMunicipalityValue(municipality)));
-        }
+        // Add temporary residence data
+        addAddressData(request, responseBuilder, false);
 
-        if (request.hasPermanentMunicipalityPartId()) {
-            findMunicipalityPart(request.getPermanentMunicipalityPartId())
-                .ifPresent(part -> responseBuilder.setPermanentMunicipalityPart(toMunicipalityPartValue(part)));
-        }
-
-        if (request.hasPermanentDistrictId()) {
-            findDistrict(request.getPermanentDistrictId())
-                .ifPresent(district -> responseBuilder.setPermanentDistrict(toDistrictValue(district)));
-        }
-
-        // Process temporary residence data
-        if (request.hasTemporaryCountryId()) {
-            findCountry(request.getTemporaryCountryId())
-                .ifPresent(country -> responseBuilder.setTemporaryCountry(toCountryValue(country)));
-        }
-
-        if (request.hasTemporaryMunicipalityId()) {
-            findMunicipality(request.getTemporaryMunicipalityId())
-                .ifPresent(municipality -> responseBuilder.setTemporaryMunicipality(toMunicipalityValue(municipality)));
-        }
-
-        if (request.hasTemporaryMunicipalityPartId()) {
-            findMunicipalityPart(request.getTemporaryMunicipalityPartId())
-                .ifPresent(part -> responseBuilder.setTemporaryMunicipalityPart(toMunicipalityPartValue(part)));
-        }
-
-        if (request.hasTemporaryDistrictId()) {
-            findDistrict(request.getTemporaryDistrictId())
-                .ifPresent(district -> responseBuilder.setTemporaryDistrict(toDistrictValue(district)));
-        }
-
-        // Send response
-        responseObserver.onNext(responseBuilder.build());
-        responseObserver.onCompleted();
+        completeResponse(responseObserver, responseBuilder.build());
     }
 
     @Override
-    public void getPersonBankingCodelistData(
-        GetPersonBankingCodelistDataRequest request,
-        StreamObserver<GetPersonBankingCodelistDataResponse> responseObserver
+    public void getPersonBankingData(
+        GetPersonBankingDataRequest request,
+        StreamObserver<GetPersonBankingDataResponse> responseObserver
     ) {
-        // Build response
-        GetPersonBankingCodelistDataResponse.Builder responseBuilder = GetPersonBankingCodelistDataResponse.newBuilder();
+        var response =
+            GetPersonBankingDataResponse.newBuilder()
+                                        .addAllCodelistValues(buildCodelistValues(
+                                            request.getCodelistKeysList(),
+                                            request.getLanguage()
+                                        ))
+                                        .build();
 
-        // Process codelist entries
-        if (!request.getCodelistKeysList().isEmpty()) {
-            List<CodelistValue> codelistValues = getCodelistValues(request.getCodelistKeysList(), request.getLanguage());
-            responseBuilder.addAllCodelistValues(codelistValues);
-        }
-
-        // Send response
-        responseObserver.onNext(responseBuilder.build());
-        responseObserver.onCompleted();
+        completeResponse(responseObserver, response);
     }
 
     @Override
-    public void getPersonEducationCodelistData(
-        GetPersonEducationCodelistDataRequest request,
-        StreamObserver<GetPersonEducationCodelistDataResponse> responseObserver
+    public void getPersonEducationData(
+        GetPersonEducationDataRequest request,
+        StreamObserver<GetPersonEducationDataResponse> responseObserver
     ) {
-        // Build response
-        GetPersonEducationCodelistDataResponse.Builder responseBuilder = GetPersonEducationCodelistDataResponse.newBuilder();
+        var responseBuilder =
+            GetPersonEducationDataResponse.newBuilder()
+                                          .addAllCodelistValues(buildCodelistValues(
+                                              request.getCodelistKeysList(),
+                                              request.getLanguage()
+                                          ));
 
-        // Process codelist entries
-        if (!request.getCodelistKeysList().isEmpty()) {
-            List<CodelistValue> codelistValues = getCodelistValues(request.getCodelistKeysList(), request.getLanguage());
-            responseBuilder.addAllCodelistValues(codelistValues);
-        }
-
-        // Process high school country
+        // Add high school country if present
         if (request.hasHighSchoolCountryId()) {
-            findCountry(request.getHighSchoolCountryId())
-                .ifPresent(country -> responseBuilder.setHighSchoolCountry(toCountryValue(country)));
+            countryService.findById(request.getHighSchoolCountryId())
+                          .map(this::toCountryValue)
+                          .ifPresent(responseBuilder::setHighSchoolCountry);
         }
 
-        // Send response
-        responseObserver.onNext(responseBuilder.build());
-        responseObserver.onCompleted();
+        completeResponse(responseObserver, responseBuilder.build());
     }
 
-    private List<CodelistValue> getCodelistValues(List<CodelistKey> codelistKeys, String language) {
-        List<CodelistEntryId> codelistEntryIds = codelistKeys.stream()
-                                                             .map(key -> new CodelistEntryId(key.getDomain(), key.getLowValue()))
-                                                             .toList();
+    // Private helper methods
 
-        return codelistService.getCodelistEntryMeanings(codelistEntryIds)
+    private List<CodelistValue> buildCodelistValues(List<CodelistKey> codelistKeys, String language) {
+        if (codelistKeys.isEmpty()) {
+            return List.of();
+        }
+
+        List<CodelistEntryId> entryIds = codelistKeys.stream()
+                                                     .map(this::toCodelistEntryId)
+                                                     .toList();
+
+        return codelistService.getCodelistEntryMeanings(entryIds)
                               .stream()
                               .map(entry -> toCodelistValue(entry, language))
                               .toList();
     }
 
+    private Map<Integer, String> getCountryNames(GetPersonProfileDataRequest request) {
+        // If neither country is present, skip adding names
+        if (!request.hasBirthCountryId() && !request.hasCitizenshipCountryId()) {
+            return Collections.emptyMap();
+        }
+
+        List<Integer> countryIds = Stream.of(
+                                             request.hasBirthCountryId() ? request.getBirthCountryId() : null,
+                                             request.hasCitizenshipCountryId() ? request.getCitizenshipCountryId() : null
+                                         )
+                                         .filter(Objects::nonNull)
+                                         .toList();
+
+        return countryService.findNamesByIds(countryIds);
+    }
+
+    private GetPersonProfileDataResponse buildPersonProfileDataResponse(
+        GetPersonProfileDataRequest request,
+        List<CodelistValue> codelistValues,
+        Map<Integer, String> countryNames
+    ) {
+        var responseBuilder = GetPersonProfileDataResponse.newBuilder()
+                                                          .addAllCodelistValues(codelistValues);
+
+        // Add country names if present
+        if (!countryNames.isEmpty()) {
+            if (request.hasBirthCountryId() && countryNames.containsKey(request.getBirthCountryId())) {
+                responseBuilder.setBirthCountryName(toCountryName(countryNames.get(request.getBirthCountryId())));
+            }
+            if (request.hasCitizenshipCountryId() && countryNames.containsKey(request.getCitizenshipCountryId())) {
+                responseBuilder.setCitizenshipCountryName(toCountryName(countryNames.get(request.getCitizenshipCountryId())));
+            }
+        }
+
+        return responseBuilder.build();
+    }
+
+    private void addAddressData(
+        GetPersonAddressDataRequest request,
+        GetPersonAddressDataResponse.Builder responseBuilder,
+        boolean isPermanent
+    ) {
+        // Country
+        getCountryId(request, isPermanent)
+            .flatMap(countryService::findById)
+            .map(this::toCountryValue)
+            .ifPresent(country -> setCountry(responseBuilder, country, isPermanent));
+
+        // Municipality
+        getMunicipalityId(request, isPermanent)
+            .flatMap(municipalityService::findById)
+            .map(this::toMunicipalityValue)
+            .ifPresent(municipality -> setMunicipality(responseBuilder, municipality, isPermanent));
+
+        // Municipality Part
+        getMunicipalityPartId(request, isPermanent)
+            .flatMap(municipalityPartService::findById)
+            .map(this::toMunicipalityPartValue)
+            .ifPresent(part -> setMunicipalityPart(responseBuilder, part, isPermanent));
+
+        // District
+        getDistrictId(request, isPermanent)
+            .flatMap(districtService::findById)
+            .map(this::toDistrictValue)
+            .ifPresent(district -> setDistrict(responseBuilder, district, isPermanent));
+    }
+
+    private Optional<Integer> getCountryId(GetPersonAddressDataRequest request, boolean isPermanent) {
+        return isPermanent && request.hasPermanentCountryId() ?
+            Optional.of(request.getPermanentCountryId()) :
+            !isPermanent && request.hasTemporaryCountryId() ?
+                Optional.of(request.getTemporaryCountryId()) : Optional.empty();
+    }
+
+    private Optional<Long> getMunicipalityId(GetPersonAddressDataRequest request, boolean isPermanent) {
+        return isPermanent && request.hasPermanentMunicipalityId() ?
+            Optional.of(request.getPermanentMunicipalityId()) :
+            !isPermanent && request.hasTemporaryMunicipalityId() ?
+                Optional.of(request.getTemporaryMunicipalityId()) : Optional.empty();
+    }
+
+    private Optional<Long> getMunicipalityPartId(GetPersonAddressDataRequest request, boolean isPermanent) {
+        return isPermanent && request.hasPermanentMunicipalityPartId() ?
+            Optional.of(request.getPermanentMunicipalityPartId()) :
+            !isPermanent && request.hasTemporaryMunicipalityPartId() ?
+                Optional.of(request.getTemporaryMunicipalityPartId()) : Optional.empty();
+    }
+
+    private Optional<Integer> getDistrictId(GetPersonAddressDataRequest request, boolean isPermanent) {
+        return isPermanent && request.hasPermanentDistrictId() ?
+            Optional.of(request.getPermanentDistrictId()) :
+            !isPermanent && request.hasTemporaryDistrictId() ?
+                Optional.of(request.getTemporaryDistrictId()) : Optional.empty();
+    }
+
+    private void setCountry(GetPersonAddressDataResponse.Builder builder, CountryValue country, boolean isPermanent) {
+        if (isPermanent) {
+            builder.setPermanentCountry(country);
+        }
+        else {
+            builder.setTemporaryCountry(country);
+        }
+    }
+
+    private void setMunicipality(GetPersonAddressDataResponse.Builder builder, MunicipalityValue municipality, boolean isPermanent) {
+        if (isPermanent) {
+            builder.setPermanentMunicipality(municipality);
+        }
+        else {
+            builder.setTemporaryMunicipality(municipality);
+        }
+    }
+
+    private void setMunicipalityPart(GetPersonAddressDataResponse.Builder builder, MunicipalityPartValue part, boolean isPermanent) {
+        if (isPermanent) {
+            builder.setPermanentMunicipalityPart(part);
+        }
+        else {
+            builder.setTemporaryMunicipalityPart(part);
+        }
+    }
+
+    private void setDistrict(GetPersonAddressDataResponse.Builder builder, DistrictValue district, boolean isPermanent) {
+        if (isPermanent) {
+            builder.setPermanentDistrict(district);
+        }
+        else {
+            builder.setTemporaryDistrict(district);
+        }
+    }
+
+    private <T> void completeResponse(StreamObserver<T> responseObserver, T response) {
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    private <T> Void errorResponse(StreamObserver<T> responseObserver, Throwable ex) {
+        log.error("Error processing request", ex);
+        responseObserver.onError(ex);
+        return null;
+    }
+
+    // Converter methods
+
+    private CodelistEntryId toCodelistEntryId(CodelistKey key) {
+        return new CodelistEntryId(key.getDomain(), key.getLowValue());
+    }
+
     private CodelistValue toCodelistValue(CodelistEntryValue entry, String language) {
-        String meaning = "cs".equalsIgnoreCase(language) ? entry.getMeaningCz() : entry.getMeaningEn();
+        String meaning = CZECH_LANGUAGE.equalsIgnoreCase(language) ?
+            entry.getMeaningCz() : entry.getMeaningEn();
+
         return CodelistValue.newBuilder()
-                            .setDomain(entry.getId().getDomain())
-                            .setLowValue(entry.getId().getLowValue())
+                            .setDomain(entry.getId()
+                                            .getDomain())
+                            .setLowValue(entry.getId()
+                                              .getLowValue())
                             .setMeaning(meaning)
                             .build();
     }
@@ -249,23 +351,4 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                             .build();
     }
 
-    private Optional<Country> findCountry(int id) {
-        return countryService.findById(id);
-    }
-
-    private Optional<String> findCountryName(int id) {
-        return countryService.findNameById(id);
-    }
-
-    private Optional<Municipality> findMunicipality(long id) {
-        return municipalityService.findById(id);
-    }
-
-    private Optional<MunicipalityPart> findMunicipalityPart(long id) {
-        return municipalityPartService.findById(id);
-    }
-
-    private Optional<District> findDistrict(int id) {
-        return districtService.findById(id);
-    }
 }

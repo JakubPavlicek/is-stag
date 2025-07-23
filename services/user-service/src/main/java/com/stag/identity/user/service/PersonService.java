@@ -1,17 +1,18 @@
 package com.stag.identity.user.service;
 
-import com.stag.identity.user.dto.PersonProfileCodelistData;
-import com.stag.identity.user.dto.PersonProfileInternal;
-import com.stag.identity.user.entity.Person;
+import com.stag.identity.user.service.data.PersonProfileData;
+import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.grpc.CodelistServiceClient;
 import com.stag.identity.user.grpc.StudentServiceClient;
 import com.stag.identity.user.mapper.PersonMapper;
+import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,13 +25,19 @@ public class PersonService {
     private final StudentServiceClient studentServiceClient;
     private final CodelistServiceClient codelistServiceClient;
 
-    public PersonProfileInternal getPerson(Integer personId) {
-        Person person = getPersonById(personId);
+    public PersonProfile getPersonProfile(Integer personId) {
+        PersonProfileProjection personProfile = getPersonProfileById(personId);
 
-        List<String> personalNumbers = studentServiceClient.getStudentPersonalNumbers(personId);
-        PersonProfileCodelistData profileCodelistData = codelistServiceClient.getPersonProfileCodelistData(person);
+        CompletableFuture<List<String>> personalNumbersFuture = CompletableFuture.supplyAsync(
+            () -> studentServiceClient.getStudentPersonalNumbers(personId)
+        );
+        CompletableFuture<PersonProfileData> profileCodelistDataFuture = CompletableFuture.supplyAsync(
+            () -> codelistServiceClient.getPersonProfileData(personProfile)
+        );
 
-        return personMapper.toPersonProfileInternal(person, personalNumbers, profileCodelistData);
+        CompletableFuture.allOf(personalNumbersFuture, profileCodelistDataFuture).join();
+
+        return personMapper.toPersonProfile(personProfile, personalNumbersFuture.join(), profileCodelistDataFuture.join());
     }
 
 //    /**
@@ -72,8 +79,8 @@ public class PersonService {
 //        return null;
 //    }
 
-    private Person getPersonById(Integer personId) {
-        return personRepository.findById(personId)
+    private PersonProfileProjection getPersonProfileById(Integer personId) {
+        return personRepository.findById(personId, PersonProfileProjection.class)
                                .orElseThrow(() -> new IllegalArgumentException("Person with ID: " + personId + " not found"));
     }
 
