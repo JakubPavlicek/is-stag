@@ -10,6 +10,7 @@ import com.stag.identity.user.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -79,6 +80,7 @@ public class PersonService {
 //        return null;
 //    }
 
+    @Transactional(readOnly = true)
     private PersonProfileProjection getPersonProfileById(Integer personId) {
         return personRepository.findById(personId, PersonProfileProjection.class)
                                .orElseThrow(() -> new IllegalArgumentException("Person with ID: " + personId + " not found"));

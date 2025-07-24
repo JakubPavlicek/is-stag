@@ -5,8 +5,9 @@ import com.stag.platform.codelist.projection.CountryName;
 import com.stag.platform.codelist.repository.CountryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,7 +26,8 @@ public class CountryService {
         return countryRepository.findNameById(id);
     }
 
-    public Map<Integer, String> findNamesByIds(List<Integer> ids) {
+    @Transactional(readOnly = true)
+    public Map<Integer, String> findNamesByIds(Collection<Integer> ids) {
         return countryRepository.findNamesByIds(ids)
                                 .stream()
                                 .collect(Collectors.toMap(
@@ -35,3 +37,4 @@ public class CountryService {
     }
 
 }
+

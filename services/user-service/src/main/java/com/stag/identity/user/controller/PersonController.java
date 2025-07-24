@@ -9,10 +9,12 @@ import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.mapper.PersonMapper;
 import com.stag.identity.user.service.PersonService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -23,9 +25,13 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<PersonProfileDTO> getPerson(Integer personId) {
+        long startTime = System.currentTimeMillis();
+        log.info("Request started at: {}", startTime);
         PersonProfile personProfile = personService.getPersonProfile(personId);
         PersonProfileDTO personProfileDTO = personMapper.toPersonProfileDTO(personProfile);
 
+        long duration = System.currentTimeMillis() - startTime;
+        log.info("Total request duration: {}ms", duration);
         return ResponseEntity.ok(personProfileDTO);
     }
 

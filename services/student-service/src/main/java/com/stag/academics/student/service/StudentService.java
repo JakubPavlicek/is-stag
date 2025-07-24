@@ -3,6 +3,7 @@ package com.stag.academics.student.service;
 import com.stag.academics.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
 
+    @Transactional(readOnly = true)
     public List<String> findAllPersonalNumbers(Integer personId) {
         return studentRepository.findAllPersonalNumbers(personId);
     }

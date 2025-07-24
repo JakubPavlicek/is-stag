@@ -59,16 +59,16 @@ message GetPersonAddressDataRequest {
 
 message GetPersonAddressDataResponse {
   // Permanent residence
-  optional CountryValue permanent_country = 1;
-  optional MunicipalityValue permanent_municipality = 2;
-  optional MunicipalityPartValue permanent_municipality_part = 3;
-  optional DistrictValue permanent_district = 4;
+  optional CountryName permanent_country = 1;
+  optional MunicipalityName permanent_municipality = 2;
+  optional MunicipalityPartName permanent_municipality_part = 3;
+  optional DistrictName permanent_district = 4;
 
   // Temporary residence
-  optional CountryValue temporary_country = 5;
-  optional MunicipalityValue temporary_municipality = 6;
-  optional MunicipalityPartValue temporary_municipality_part = 7;
-  optional DistrictValue temporary_district = 8;
+  optional CountryName temporary_country = 5;
+  optional MunicipalityName temporary_municipality = 6;
+  optional MunicipalityPartName temporary_municipality_part = 7;
+  optional DistrictName temporary_district = 8;
 }
 
 // Banking specific request (only what's needed for GET /persons/{id}/banking)
@@ -90,7 +90,7 @@ message GetPersonEducationDataRequest {
 
 message GetPersonEducationDataResponse {
   repeated CodelistValue codelist_values = 1;
-  optional CountryValue high_school_country = 2;
+  optional CountryName high_school_country = 2;
 }
 
 // Generic messages
@@ -105,31 +105,20 @@ message CodelistValue {
   string meaning = 3;
 }
 
-// Shared value objects
-message CountryValue {
-  int32 id = 1;
-  string name = 2;
-  string english_name = 3;
-  string abbreviation = 4;
-}
+// Shared objects
 
 message CountryName {
   string name = 1;
 }
 
-message MunicipalityValue {
-  int64 id = 1;
-  string name = 2;
-  string abbreviation = 3;
-}
-
-message MunicipalityPartValue {
-  int64 id = 1;
+message MunicipalityName {
   string name = 2;
 }
 
-message DistrictValue {
-  int32 id = 1;
+message MunicipalityPartName {
   string name = 2;
-  string abbreviation = 3;
+}
+
+message DistrictName {
+  string name = 2;
 }
