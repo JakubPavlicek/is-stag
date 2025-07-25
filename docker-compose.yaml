@@ -5,6 +5,23 @@ services:
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: true
+    healthcheck:
+      test: [
+        "CMD-SHELL",
+        "exec 3<>/dev/tcp/localhost/8080; \
+        echo -en 'GET /health/ready' >&3; \
+        # Give the server a moment to respond, then search for 'UP'
+        if timeout 3 cat <&3 | grep -m 1 'UP'; then \
+          exec 3<&-; exec 3>&-; exit 0; \
+        else \
+          exec 3<&-; exec 3>&-; exit 1; \
+        fi"
+      ]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - "8180:8080"
     command: start-dev --import-realm
@@ -22,6 +39,9 @@ services:
       VITE_KEYCLOAK_URL: http://localhost:8180/
     ports:
       - "5173:5173"
+    depends_on:
+      keycloak:
+        condition: service_healthy
     networks:
       - is-stag-network
 
@@ -35,7 +55,6 @@ services:
     healthcheck:
       test: ["CMD", "/workspace/health-check"]
       start_period: 10s
-      interval: 1s
       timeout: 20s
       retries: 5
     ports:
@@ -55,7 +74,6 @@ services:
     healthcheck:
       test: [ "CMD", "/workspace/health-check" ]
       start_period: 10s
-      interval: 1s
       timeout: 20s
       retries: 5
     depends_on:
@@ -70,10 +88,20 @@ services:
     container_name: api-gateway
     ports:
       - "8100:8100"
+    environment:
+      THC_PATH: /actuator/health
+      THC_PORT: 8100
+    healthcheck:
+      test: [ "CMD", "/workspace/health-check" ]
+      start_period: 30s
+      timeout: 10s
+      retries: 5
     depends_on:
       config-server:
         condition: service_healthy
       discovery-server:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
     networks:
       - is-stag-network
@@ -86,9 +114,7 @@ services:
       - "8030:8030"
       - "9030:9030"
     depends_on:
-      config-server:
-        condition: service_healthy
-      discovery-server:
+      api-gateway:
         condition: service_healthy
     networks:
       - is-stag-network
@@ -101,9 +127,7 @@ services:
       - "8040:8040"
 #      - "9040:9040"
     depends_on:
-      config-server:
-        condition: service_healthy
-      discovery-server:
+      api-gateway:
         condition: service_healthy
     networks:
       - is-stag-network
@@ -116,9 +140,7 @@ services:
       - "8020:8020"
       - "9020:9020"
     depends_on:
-      config-server:
-        condition: service_healthy
-      discovery-server:
+      api-gateway:
         condition: service_healthy
     networks:
       - is-stag-network
@@ -131,9 +153,7 @@ services:
       - "8010:8010"
       - "9010:9010"
     depends_on:
-      config-server:
-        condition: service_healthy
-      discovery-server:
+      api-gateway:
         condition: service_healthy
     networks:
       - is-stag-network

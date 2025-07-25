@@ -22,17 +22,19 @@ spring:
     password: demo
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
-      schema: install2
       auto-commit: false
-      minimum-idle: 10                   # Keep 5 connections ready at all times.
-      maximum-pool-size: 20              # Max number of connections. Tune based on the load.
-      idle-timeout: 600000               # 10 minutes. Connections won't be closed before this.
-      connection-timeout: 30000          # 30 seconds. How long to wait for a connection.
-      max-lifetime: 1800000              # 30 minutes. Max lifetime of a connection.
+      minimum-idle: 10
+      maximum-pool-size: 20
+      idle-timeout: 600000
+      connection-timeout: 30000
+      max-lifetime: 1800000
       data-source-properties:
         oracle:
           jdbc:
             defaultConnectionValidation: LOCAL
+  threads:
+    virtual:
+      enabled: true
 
 logging:
   level:

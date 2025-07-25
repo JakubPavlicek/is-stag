@@ -26,6 +26,7 @@ public class PersonService {
     private final StudentServiceClient studentServiceClient;
     private final CodelistServiceClient codelistServiceClient;
 
+    @Transactional(readOnly = true)
     public PersonProfile getPersonProfile(Integer personId) {
         PersonProfileProjection personProfile = getPersonProfileById(personId);
 
@@ -80,7 +81,6 @@ public class PersonService {
 //        return null;
 //    }
 
-    @Transactional(readOnly = true)
     private PersonProfileProjection getPersonProfileById(Integer personId) {
         return personRepository.findById(personId, PersonProfileProjection.class)
                                .orElseThrow(() -> new IllegalArgumentException("Person with ID: " + personId + " not found"));

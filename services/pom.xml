@@ -73,7 +73,7 @@
             <!-- Database -->
             <dependency>
                 <groupId>com.oracle.database.jdbc</groupId>
-                <artifactId>ojdb11</artifactId>
+                <artifactId>ojdbc11</artifactId>
                 <version>${oracle.jdbc.version}</version>
             </dependency>
             <dependency>

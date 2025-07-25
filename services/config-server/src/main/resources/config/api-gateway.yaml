@@ -11,16 +11,19 @@ spring:
   cloud:
     gateway:
       server:
-        webmvc:
+        webflux:
           routes:
             - id: student-service
               uri: lb://student-service
               predicates:
-                - Path=/students/**
+                - Path=/api/v1/students/**
             - id: user-service
               uri: lb://user-service
               predicates:
-                - Path=/users/**,/api/v1/persons/**
+                - Path=/api/v1/users/**,/api/v1/persons/**
+  threads:
+    virtual:
+      enabled: true
 
 eureka:
   instance:
