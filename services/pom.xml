@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.3</version>
+        <version>3.5.4</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.stag</groupId>
@@ -109,14 +109,17 @@
                             <enabled>true</enabled>
                         </layers>
                         <image>
+                            <builder>paketobuildpacks/builder-noble-java-tiny:0.0.47</builder>
+                            <buildpacks>
+                                <buildpack>paketobuildpacks/java:18.11.0</buildpack>
+                                <buildpack>paketobuildpacks/health-checker:2.10.1</buildpack>
+                            </buildpacks>
                             <env>
+                                <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
                                 <BP_HEALTH_CHECKER_ENABLED>true</BP_HEALTH_CHECKER_ENABLED>
                                 <BPL_JAVA_NMT_ENABLED>false</BPL_JAVA_NMT_ENABLED>
+                                <JAVA_TOOL_OPTIONS>-Duser.timezone=Europe/Prague</JAVA_TOOL_OPTIONS>
                             </env>
-                            <buildpacks>
-                                <buildpack>urn:cnb:builder:paketo-buildpacks/java</buildpack>
-                                <buildpack>docker.io/paketobuildpacks/health-checker:2.10.1</buildpack>
-                            </buildpacks>
                         </image>
                     </configuration>
                 </plugin>

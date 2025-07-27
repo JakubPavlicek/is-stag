@@ -5,8 +5,8 @@ import com.stag.identity.user.dto.AddressesDTO;
 import com.stag.identity.user.dto.BankAccountsDTO;
 import com.stag.identity.user.dto.EducationDetailsDTO;
 import com.stag.identity.user.dto.PersonProfileDTO;
-import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.mapper.PersonMapper;
+import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +25,9 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<PersonProfileDTO> getPerson(Integer personId) {
-        long startTime = System.currentTimeMillis();
-        log.info("Request started at: {}", startTime);
         PersonProfile personProfile = personService.getPersonProfile(personId);
         PersonProfileDTO personProfileDTO = personMapper.toPersonProfileDTO(personProfile);
 
-        long duration = System.currentTimeMillis() - startTime;
-        log.info("Total request duration: {}ms", duration);
         return ResponseEntity.ok(personProfileDTO);
     }
 

@@ -7,7 +7,7 @@ public record AddressProjection(
     String municipality,
     String municipalityPart,
     String district,
-    String state
+    String country
 ) {
 
 }

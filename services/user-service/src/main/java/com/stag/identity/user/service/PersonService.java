@@ -1,12 +1,10 @@
 package com.stag.identity.user.service;
 
-import com.stag.identity.user.service.data.PersonProfileData;
-import com.stag.identity.user.model.PersonProfile;
-import com.stag.identity.user.grpc.CodelistServiceClient;
-import com.stag.identity.user.grpc.StudentServiceClient;
 import com.stag.identity.user.mapper.PersonMapper;
-import com.stag.identity.user.repository.projection.PersonProfileProjection;
+import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.repository.PersonRepository;
+import com.stag.identity.user.repository.projection.PersonProfileProjection;
+import com.stag.identity.user.service.data.PersonProfileData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,37 +21,29 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PersonMapper personMapper;
 
-    private final StudentServiceClient studentServiceClient;
-    private final CodelistServiceClient codelistServiceClient;
+    private final PersonAsyncService personAsyncService;
 
     @Transactional(readOnly = true)
     public PersonProfile getPersonProfile(Integer personId) {
         PersonProfileProjection personProfile = getPersonProfileById(personId);
 
-        CompletableFuture<List<String>> personalNumbersFuture = CompletableFuture.supplyAsync(
-            () -> studentServiceClient.getStudentPersonalNumbers(personId)
-        );
-        CompletableFuture<PersonProfileData> profileCodelistDataFuture = CompletableFuture.supplyAsync(
-            () -> codelistServiceClient.getPersonProfileData(personProfile)
-        );
+        CompletableFuture<List<String>> personalNumbersFuture = personAsyncService.getStudentPersonalNumbersAsync(personId);
+        CompletableFuture<PersonProfileData> profileDataFuture = personAsyncService.getPersonProfileDataAsync(personProfile);
 
-        CompletableFuture.allOf(personalNumbersFuture, profileCodelistDataFuture).join();
+        CompletableFuture.allOf(personalNumbersFuture, profileDataFuture).join();
 
-        return personMapper.toPersonProfile(personProfile, personalNumbersFuture.join(), profileCodelistDataFuture.join());
+        return personMapper.toPersonProfile(personProfile, personalNumbersFuture.join(), profileDataFuture.join());
     }
 
-//    /**
-//     * Get person address data with codelist lookups
-//     */
-//    public Object getPersonAddresses(Integer personId) {
-//        Person person = getPersonById(personId);
-//
-//        // Get only the codelist data needed for addresses
-//        PersonAddressCodelistData addressCodelistData = codelistServiceClient.getPersonAddressCodelistData(person);
-//
-//        // TODO: Implement address mapping
-//        return null;
-//    }
+    public Object getPersonAddresses(Integer personId) {
+        AddressProjection address = getPersonById(personId);
+
+        // Get only the codelist data needed for addresses
+        PersonAddressCodelistData addressCodelistData = codelistServiceClient.getPersonAddressCodelistData(person);
+
+        // TODO: Implement address mapping
+        return null;
+    }
 //
 //    /**
 //     * Get person banking data with codelist lookups
