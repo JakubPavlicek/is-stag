@@ -1,5 +1,6 @@
 package com.stag.identity.user.service;
 
+import com.stag.identity.user.exception.PersonNotFoundException;
 import com.stag.identity.user.mapper.PersonMapper;
 import com.stag.identity.user.model.Addresses;
 import com.stag.identity.user.model.PersonProfile;
@@ -44,7 +45,7 @@ public class PersonService {
     @Transactional(readOnly = true)
     public Addresses getPersonAddresses(Integer personId) {
         if (!personRepository.existsById(personId)) {
-            throw new IllegalArgumentException("Person with ID: " + personId + " not found");
+            throw new PersonNotFoundException(personId);
         }
 
         CompletableFuture<PersonAddressData> addressDataFuture =
@@ -60,7 +61,7 @@ public class PersonService {
 
     private PersonProfileProjection getPersonProfileById(Integer personId) {
         return personRepository.findById(personId, PersonProfileProjection.class)
-                               .orElseThrow(() -> new IllegalArgumentException("Person with ID: " + personId + " not found"));
+                               .orElseThrow(() -> new PersonNotFoundException(personId));
     }
 
 }
