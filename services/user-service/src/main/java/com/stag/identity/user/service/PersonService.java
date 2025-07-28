@@ -1,9 +1,12 @@
 package com.stag.identity.user.service;
 
 import com.stag.identity.user.mapper.PersonMapper;
+import com.stag.identity.user.model.Addresses;
 import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.repository.PersonRepository;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
+import com.stag.identity.user.service.data.PersonAddressData;
+import com.stag.identity.user.service.data.PersonForeignAddressData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,49 +30,33 @@ public class PersonService {
     public PersonProfile getPersonProfile(Integer personId) {
         PersonProfileProjection personProfile = getPersonProfileById(personId);
 
-        CompletableFuture<List<String>> personalNumbersFuture = personAsyncService.getStudentPersonalNumbersAsync(personId);
-        CompletableFuture<PersonProfileData> profileDataFuture = personAsyncService.getPersonProfileDataAsync(personProfile);
+        CompletableFuture<List<String>> personalNumbersFuture =
+            personAsyncService.getStudentPersonalNumbers(personId);
+
+        CompletableFuture<PersonProfileData> profileDataFuture =
+            personAsyncService.getPersonProfileData(personProfile);
 
         CompletableFuture.allOf(personalNumbersFuture, profileDataFuture).join();
 
         return personMapper.toPersonProfile(personProfile, personalNumbersFuture.join(), profileDataFuture.join());
     }
 
-    public Object getPersonAddresses(Integer personId) {
-        AddressProjection address = getPersonById(personId);
+    @Transactional(readOnly = true)
+    public Addresses getPersonAddresses(Integer personId) {
+        if (!personRepository.existsById(personId)) {
+            throw new IllegalArgumentException("Person with ID: " + personId + " not found");
+        }
 
-        // Get only the codelist data needed for addresses
-        PersonAddressCodelistData addressCodelistData = codelistServiceClient.getPersonAddressCodelistData(person);
+        CompletableFuture<PersonAddressData> addressDataFuture =
+            personAsyncService.getPersonAddressData(personId);
 
-        // TODO: Implement address mapping
-        return null;
+        CompletableFuture<PersonForeignAddressData> foreignAddressesFuture =
+            personAsyncService.getForeignAddressesByPersonId(personId);
+
+        CompletableFuture.allOf(addressDataFuture, foreignAddressesFuture).join();
+
+        return personMapper.mapToAddresses(addressDataFuture.join(), foreignAddressesFuture.join());
     }
-//
-//    /**
-//     * Get person banking data with codelist lookups
-//     */
-//    public Object getPersonBanking(Integer personId) {
-//        Person person = getPersonById(personId);
-//
-//        // Get only the codelist data needed for banking
-//        PersonBankingCodelistData bankingCodelistData = codelistServiceClient.getPersonBankingCodelistData(person);
-//
-//        // TODO: Implement banking mapping
-//        return null;
-//    }
-//
-//    /**
-//     * Get person education data with codelist lookups
-//     */
-//    public Object getPersonEducation(Integer personId) {
-//        Person person = getPersonById(personId);
-//
-//        // Get only the codelist data needed for education
-//        PersonEducationCodelistData educationCodelistData = codelistServiceClient.getPersonEducationCodelistData(person);
-//
-//        // TODO: Implement education mapping
-//        return null;
-//    }
 
     private PersonProfileProjection getPersonProfileById(Integer personId) {
         return personRepository.findById(personId, PersonProfileProjection.class)

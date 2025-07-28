@@ -386,7 +386,7 @@ public class Person {
         name = "PSC_PRBY",
         nullable = false
     )
-    private String prZipCode;
+    private String temporaryZipCode;
 
     @Column(name = "PR_OSOBIDNO")
     private Long admissionPersonId;

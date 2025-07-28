@@ -1,4 +1,4 @@
-package com.stag.platform.codelist.projection;
+package com.stag.platform.codelist.repository.projection;
 
 import com.stag.platform.codelist.entity.CodelistEntryId;
 

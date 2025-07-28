@@ -1,7 +1,8 @@
 package com.stag.platform.codelist.grpc;
 
 import com.stag.platform.codelist.entity.CodelistEntryId;
-import com.stag.platform.codelist.projection.CodelistEntryValue;
+import com.stag.platform.codelist.repository.projection.AddressPlaceNameProjection;
+import com.stag.platform.codelist.repository.projection.CodelistEntryValue;
 import com.stag.platform.codelist.service.CodelistService;
 import com.stag.platform.codelist.service.CountryService;
 import com.stag.platform.codelist.service.DistrictService;
@@ -10,9 +11,10 @@ import com.stag.platform.codelist.service.MunicipalityService;
 import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistServiceGrpc;
 import com.stag.platform.codelist.v1.CodelistValue;
-import com.stag.platform.codelist.v1.CountryName;
 import com.stag.platform.codelist.v1.GetCodelistValuesRequest;
 import com.stag.platform.codelist.v1.GetCodelistValuesResponse;
+import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
+import com.stag.platform.codelist.v1.GetPersonAddressDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
 import io.grpc.stub.StreamObserver;
@@ -54,6 +56,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
         completeResponse(responseObserver, response);
     }
 
+    // TODO: check Virtual Thread usage
     @Override
     public void getPersonProfileData(GetPersonProfileDataRequest request, StreamObserver<GetPersonProfileDataResponse> responseObserver) {
         CompletableFuture<List<CodelistValue>> codelistValuesFuture = CompletableFuture.supplyAsync(
@@ -68,6 +71,26 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
         codelistValuesFuture.thenCombine(countryNamesFuture, (codelistValues, countryNames) ->
                                 buildPersonProfileDataResponse(request, codelistValues, countryNames)
+                            )
+                            .thenAccept(response -> completeResponse(responseObserver, response))
+                            .exceptionally(ex -> errorResponse(responseObserver, ex));
+    }
+
+    // TODO: check Virtual Thread usage
+    @Override
+    public void getPersonAddressData(GetPersonAddressDataRequest request, StreamObserver<GetPersonAddressDataResponse> responseObserver) {
+        CompletableFuture<Map<Long, AddressPlaceNameProjection>> addressNamesFuture = CompletableFuture.supplyAsync(
+            () -> getAddressNames(request),
+            grpcExecutor
+        );
+
+        CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
+            () -> getCountryNames(request),
+            grpcExecutor
+        );
+
+        addressNamesFuture.thenCombine(countryNamesFuture, (addressNames, countryNames) ->
+                                buildPersonAddressDataResponse(request, addressNames, countryNames)
                             )
                             .thenAccept(response -> completeResponse(responseObserver, response))
                             .exceptionally(ex -> errorResponse(responseObserver, ex));
@@ -100,12 +123,45 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             countryIds.add(request.getCitizenshipCountryId());
         }
 
-        // If neither country is present, skip adding names
         if (countryIds.isEmpty()) {
             return Collections.emptyMap();
         }
 
         return countryService.findNamesByIds(countryIds);
+    }
+
+    private Map<Integer, String> getCountryNames(GetPersonAddressDataRequest request) {
+        Set<Integer> countryIds = HashSet.newHashSet(2);
+
+        if (request.hasPermanentCountryId()) {
+            countryIds.add(request.getPermanentCountryId());
+        }
+        if (request.hasTemporaryCountryId()) {
+            countryIds.add(request.getTemporaryCountryId());
+        }
+
+        if (countryIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return countryService.findNamesByIds(countryIds);
+    }
+
+    private Map<Long, AddressPlaceNameProjection> getAddressNames(GetPersonAddressDataRequest request) {
+        Set<Long> municipalityPartIds = HashSet.newHashSet(2);
+
+        if (request.hasPermanentMunicipalityPartId()) {
+            municipalityPartIds.add(request.getPermanentMunicipalityPartId());
+        }
+        if (request.hasTemporaryMunicipalityPartId()) {
+            municipalityPartIds.add(request.getTemporaryMunicipalityPartId());
+        }
+
+        if (municipalityPartIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return municipalityPartService.findAddressNamesByIds(municipalityPartIds);
     }
 
     private GetPersonProfileDataResponse buildPersonProfileDataResponse(
@@ -123,15 +179,46 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
         return responseBuilder.build();
     }
 
+    private GetPersonAddressDataResponse buildPersonAddressDataResponse(
+        GetPersonAddressDataRequest request,
+        Map<Long, AddressPlaceNameProjection> addressNames,
+        Map<Integer, String> countryNames
+    ) {
+        var responseBuilder = GetPersonAddressDataResponse.newBuilder();
+
+        if (!addressNames.isEmpty()) {
+            AddressPlaceNameProjection permanentAddress = addressNames.get(request.getPermanentMunicipalityPartId());
+            if (permanentAddress != null) {
+                responseBuilder.setPermanentMunicipalityName(permanentAddress.municipalityName())
+                               .setPermanentMunicipalityPartName(permanentAddress.municipalityPartName())
+                               .setPermanentDistrictName(permanentAddress.districtName());
+            }
+
+            AddressPlaceNameProjection temporaryAddress = addressNames.get(request.getTemporaryMunicipalityPartId());
+            if (temporaryAddress != null) {
+                responseBuilder.setTemporaryMunicipalityName(temporaryAddress.municipalityName())
+                               .setTemporaryMunicipalityPartName(temporaryAddress.municipalityPartName())
+                               .setTemporaryDistrictName(temporaryAddress.districtName());
+            }
+        }
+
+        if (!countryNames.isEmpty()) {
+            processCountryName(countryNames, request.getPermanentCountryId(), responseBuilder::setPermanentCountryName);
+            processCountryName(countryNames, request.getTemporaryCountryId(), responseBuilder::setTemporaryCountryName);
+        }
+
+        return responseBuilder.build();
+    }
+
     private void processCountryName(
         Map<Integer, String> countryNames,
         Integer countryId,
-        Consumer<CountryName> setter
+        Consumer<String> setter
     ) {
         if (countryId != null) {
             String countryName = countryNames.get(countryId);
             if (countryName != null) {
-                setter.accept(toCountryName(countryName));
+                setter.accept(countryName);
             }
         }
     }
@@ -163,12 +250,6 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                             .setLowValue(entry.getId().getLowValue())
                             .setMeaning(meaning)
                             .build();
-    }
-
-    private CountryName toCountryName(String name) {
-        return CountryName.newBuilder()
-                          .setName(name)
-                          .build();
     }
 
 }

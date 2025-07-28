@@ -28,8 +28,8 @@ properties:
     nullable: true
     description: Zip code of the address.
     example: "34901"
-    pattern: "^\\d{1,10}$"
-    maxLength: 10
+    pattern: "^\\d{1,5}$"
+    maxLength: 5
   municipality: # obec
     type: string
     nullable: true

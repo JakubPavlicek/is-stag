@@ -1,7 +1,7 @@
 package com.stag.platform.codelist.repository;
 
 import com.stag.platform.codelist.entity.Country;
-import com.stag.platform.codelist.projection.CountryName;
+import com.stag.platform.codelist.repository.projection.CountryNameProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,6 +15,6 @@ public interface CountryRepository extends JpaRepository<Country, Integer> {
     Optional<String> findNameById(Integer id);
 
     @Query("SELECT c.id, c.name FROM Country c WHERE c.id IN :ids")
-    List<CountryName> findNamesByIds(Collection<Integer> ids);
+    List<CountryNameProjection> findNamesByIds(Collection<Integer> ids);
 
 }

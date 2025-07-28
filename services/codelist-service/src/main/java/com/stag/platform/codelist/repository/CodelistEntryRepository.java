@@ -2,7 +2,7 @@ package com.stag.platform.codelist.repository;
 
 import com.stag.platform.codelist.entity.CodelistEntry;
 import com.stag.platform.codelist.entity.CodelistEntryId;
-import com.stag.platform.codelist.projection.CodelistEntryValue;
+import com.stag.platform.codelist.repository.projection.CodelistEntryValue;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;

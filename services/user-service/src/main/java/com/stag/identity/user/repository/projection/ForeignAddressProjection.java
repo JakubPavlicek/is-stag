@@ -1,14 +1,11 @@
 package com.stag.identity.user.repository.projection;
 
-public record AddressProjection(
+public record ForeignAddressProjection(
     String addressType,
-    String street,
-    String streetNumber,
     String zipCode,
-    Long municipalityId,
-    Long municipalityPartId,
-    Integer districtId,
-    Integer countryId
+    String municipality,
+    String district,
+    String postOffice
 ) implements Address {
 
     @Override

@@ -1,15 +1,35 @@
-allOf:
-  - $ref: './Address.yaml'
-  - type: object
-    title: ForeignAddress
-    description: Address details of the person when they have a foreign residence.
-    additionalProperties: false
-    required:
-      - postOffice
-    properties:
-      postOffice:
-        type: string
-        nullable: true
-        description: Post office of the foreign address.
-        example: "Mornaguia"
-        maxLength: 75
+type: object
+title: ForeignAddress
+description: Address details of the person when they have a foreign residence.
+additionalProperties: false
+required:
+  - zipCode
+  - municipality
+  - district
+  - postOffice
+properties:
+  zipCode:
+    type: string
+    nullable: true
+    description: Zip code of the address.
+    example: "1110"
+    pattern: "^\\d{1,10}$"
+    maxLength: 10
+  municipality:
+    type: string
+    nullable: true
+    description: Municipality of the address.
+    example: "Mornaguia"
+    maxLength: 75
+  district:
+    type: string
+    nullable: true
+    description: District of the address.
+    example: "manouba"
+    maxLength: 50
+  postOffice:
+    type: string
+    nullable: true
+    description: Post office of the foreign address.
+    example: "Mornaguia"
+    maxLength: 75

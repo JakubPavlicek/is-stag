@@ -1,10 +1,17 @@
 package com.stag.identity.user.mapper;
 
+import com.stag.identity.user.dto.AddressesDTO;
+import com.stag.identity.user.model.Address;
+import com.stag.identity.user.model.Addresses;
 import com.stag.identity.user.model.BirthPlace;
 import com.stag.identity.user.model.Citizenship;
 import com.stag.identity.user.model.CodelistEntryId;
 import com.stag.identity.user.model.Contact;
 import com.stag.identity.user.dto.PersonProfileDTO;
+import com.stag.identity.user.model.ForeignAddress;
+import com.stag.identity.user.repository.projection.ForeignAddressProjection;
+import com.stag.identity.user.service.data.PersonAddressData;
+import com.stag.identity.user.service.data.PersonForeignAddressData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.model.Titles;
@@ -105,5 +112,58 @@ public abstract class PersonMapper {
         CodelistEntryId key = new CodelistEntryId(domain, lowValue);
         return meanings.get(key);
     }
+
+    public Addresses mapToAddresses(PersonAddressData addressData, PersonForeignAddressData foreignAddressData) {
+        Address permanentAddress = getPermanentAddress(addressData);
+        Address temporaryAddress = getTemporaryAddress(addressData);
+        ForeignAddress foreignPermanentAddress = getForeignAddress(foreignAddressData.getForeignPermanentAddress());
+        ForeignAddress foreignTemporaryAddress = getForeignAddress(foreignAddressData.getForeignTemporaryAddress());
+
+        return Addresses.builder()
+                        .permanentResidence(permanentAddress)
+                        .temporaryResidence(temporaryAddress)
+                        .foreignPermanentResidence(foreignPermanentAddress)
+                        .foreignTemporaryResidence(foreignTemporaryAddress)
+                        .build();
+    }
+
+    private Address getPermanentAddress(PersonAddressData addressData) {
+        return Address.builder()
+                      .street(addressData.getPermanentStreet())
+                      .streetNumber(addressData.getPermanentStreetNumber())
+                      .zipCode(addressData.getPermanentZipCode())
+                      .municipality(addressData.getPermanentMunicipality())
+                      .municipalityPart(addressData.getPermanentMunicipalityPart())
+                      .district(addressData.getPermanentDistrict())
+                      .country(addressData.getPermanentCountry())
+                      .build();
+    }
+
+    private Address getTemporaryAddress(PersonAddressData addressData) {
+        return Address.builder()
+                      .street(addressData.getTemporaryStreet())
+                      .streetNumber(addressData.getTemporaryStreetNumber())
+                      .zipCode(addressData.getTemporaryZipCode())
+                      .municipality(addressData.getTemporaryMunicipality())
+                      .municipalityPart(addressData.getTemporaryMunicipalityPart())
+                      .district(addressData.getTemporaryDistrict())
+                      .country(addressData.getTemporaryCountry())
+                      .build();
+    }
+
+    private ForeignAddress getForeignAddress(ForeignAddressProjection foreignAddress) {
+        return ForeignAddress.builder()
+                             .zipCode(foreignAddress.zipCode())
+                             .municipality(foreignAddress.municipality())
+                             .district(foreignAddress.district())
+                             .postOffice(foreignAddress.postOffice())
+                             .build();
+    }
+
+    @Mapping(source = "permanentResidence", target = "permanentResidence")
+    @Mapping(source = "temporaryResidence", target = "temporaryResidence")
+    @Mapping(source = "foreignPermanentResidence", target = "foreignPermanentResidence")
+    @Mapping(source = "foreignTemporaryResidence", target = "foreignTemporaryResidence")
+    public abstract AddressesDTO toAddressesDTO(Addresses personAddresses);
 
 }

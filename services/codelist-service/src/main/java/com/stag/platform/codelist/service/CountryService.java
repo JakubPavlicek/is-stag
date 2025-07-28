@@ -1,7 +1,7 @@
 package com.stag.platform.codelist.service;
 
 import com.stag.platform.codelist.entity.Country;
-import com.stag.platform.codelist.projection.CountryName;
+import com.stag.platform.codelist.repository.projection.CountryNameProjection;
 import com.stag.platform.codelist.repository.CountryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,8 +31,8 @@ public class CountryService {
         return countryRepository.findNamesByIds(ids)
                                 .stream()
                                 .collect(Collectors.toMap(
-                                    CountryName::id,
-                                    CountryName::name
+                                    CountryNameProjection::id,
+                                    CountryNameProjection::name
                                 ));
     }
 

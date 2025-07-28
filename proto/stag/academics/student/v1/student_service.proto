@@ -7,7 +7,8 @@ option java_outer_classname = "UserServiceProto";
 option java_multiple_files = true;
 
 service StudentService {
-  rpc GetStudentPersonalNumbers (GetStudentPersonalNumbersRequest) returns (GetStudentPersonalNumbersResponse);
+  rpc GetStudentPersonalNumbers (GetStudentPersonalNumbersRequest)
+      returns (GetStudentPersonalNumbersResponse);
 }
 
 message GetStudentPersonalNumbersRequest {
