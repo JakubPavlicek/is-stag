@@ -1,7 +1,7 @@
 package com.stag.identity.user.grpc;
 
 import com.stag.identity.user.grpc.mapper.CodelistMapper;
-import com.stag.identity.user.repository.projection.AddressProjection;
+import com.stag.identity.user.model.Addresses.Address;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonProfileData;
@@ -17,19 +17,21 @@ public class CodelistServiceClient {
     @GrpcClient("codelist-service")
     private CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub;
 
-    private final CodelistMapper mapper;
+    private final CodelistMapper codelistMapper;
 
     /// Get codelist data specifically for person profile (GET /persons/{personId})
     public PersonProfileData getPersonProfileData(PersonProfileProjection personProfile) {
-        var request = mapper.toPersonProfileDataRequest(personProfile);
+        var request = codelistMapper.toPersonProfileDataRequest(personProfile);
         var response = codelistServiceStub.getPersonProfileData(request);
-        return mapper.toPersonProfileData(response);
+        return codelistMapper.toPersonProfileData(response);
     }
 
     /// Get codelist data specifically for person addresses (GET /persons/{personId}/addresses)
-    public PersonAddressData getPersonAddressData(AddressProjection permanentAddress, AddressProjection temporaryAddress) {
-        var request = mapper.toPersonAddressDataRequest(permanentAddress, temporaryAddress);
+    public PersonAddressData getPersonAddressData(Address permanentAddress, Address temporaryAddress) {
+        // TODO: the addresses might be null, handle this case
+        var request = codelistMapper.toPersonAddressDataRequest(permanentAddress, temporaryAddress);
         var response = codelistServiceStub.getPersonAddressData(request);
-        return mapper.toPersonAddressData(response, permanentAddress, temporaryAddress);
+        return codelistMapper.toPersonAddressData(response, permanentAddress, temporaryAddress);
     }
+
 }

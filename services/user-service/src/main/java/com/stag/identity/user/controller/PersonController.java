@@ -6,7 +6,7 @@ import com.stag.identity.user.dto.BankAccountsDTO;
 import com.stag.identity.user.dto.EducationDetailsDTO;
 import com.stag.identity.user.dto.PersonProfileDTO;
 import com.stag.identity.user.mapper.PersonMapper;
-import com.stag.identity.user.model.Addresses;
+import com.stag.identity.user.model.PersonAddresses;
 import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.service.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<AddressesDTO> getPersonAddresses(Integer personId) {
-        Addresses personAddresses = personService.getPersonAddresses(personId);
+        PersonAddresses personAddresses = personService.getPersonAddresses(personId);
         AddressesDTO addressesDTO = personMapper.toAddressesDTO(personAddresses);
 
         return ResponseEntity.ok(addressesDTO);

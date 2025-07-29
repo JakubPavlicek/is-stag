@@ -3,16 +3,16 @@ title: PersonAddresses
 description: Response containing person addresses.
 additionalProperties: false
 required:
-  - permanentResidence
-  - temporaryResidence
-  - foreignPermanentResidence
-  - foreignTemporaryResidence
+  - permanentAddress
+  - temporaryAddress
+  - foreignPermanentAddress
+  - foreignTemporaryAddress
 properties:
-  permanentResidence:
+  permanentAddress:
     $ref: './Address.yaml'
-  temporaryResidence:
+  temporaryAddress:
     $ref: './Address.yaml'
-  foreignPermanentResidence:
+  foreignPermanentAddress:
     $ref: './ForeignAddress.yaml'
-  foreignTemporaryResidence:
+  foreignTemporaryAddress:
     $ref: './ForeignAddress.yaml'

@@ -1,169 +1,178 @@
 package com.stag.identity.user.mapper;
 
 import com.stag.identity.user.dto.AddressesDTO;
-import com.stag.identity.user.model.Address;
-import com.stag.identity.user.model.Addresses;
-import com.stag.identity.user.model.BirthPlace;
-import com.stag.identity.user.model.Citizenship;
-import com.stag.identity.user.model.CodelistEntryId;
-import com.stag.identity.user.model.Contact;
 import com.stag.identity.user.dto.PersonProfileDTO;
-import com.stag.identity.user.model.ForeignAddress;
-import com.stag.identity.user.repository.projection.ForeignAddressProjection;
-import com.stag.identity.user.service.data.PersonAddressData;
-import com.stag.identity.user.service.data.PersonForeignAddressData;
-import com.stag.identity.user.service.data.PersonProfileData;
+import com.stag.identity.user.model.Addresses;
+import com.stag.identity.user.model.Addresses.Address;
+import com.stag.identity.user.model.Addresses.ForeignAddress;
+import com.stag.identity.user.model.CodelistDomain;
+import com.stag.identity.user.model.CodelistEntryId;
+import com.stag.identity.user.model.PersonAddresses;
+import com.stag.identity.user.model.PersonAddresses.PersonAddress;
 import com.stag.identity.user.model.PersonProfile;
-import com.stag.identity.user.model.Titles;
+import com.stag.identity.user.model.PersonProfile.BirthPlace;
+import com.stag.identity.user.model.PersonProfile.Citizenship;
+import com.stag.identity.user.model.PersonProfile.Contact;
+import com.stag.identity.user.model.PersonProfile.Titles;
+import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Context;
+import com.stag.identity.user.service.data.PersonAddressData;
+import com.stag.identity.user.service.data.PersonProfileData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
+import org.mapstruct.NullValueMappingStrategy;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
+)
 public abstract class PersonMapper {
 
     // --- API Mapping Methods ---
-
-    @Mapping(source = "personId", target = "personId")
-    @Mapping(source = "firstName", target = "firstName")
-    @Mapping(source = "lastName", target = "lastName")
-    @Mapping(source = "birthSurname", target = "birthSurname")
-    @Mapping(source = "birthNumber", target = "birthNumber")
-    @Mapping(source = "birthDate", target = "birthDate")
-    @Mapping(source = "passportNumber", target = "passportNumber")
-    @Mapping(source = "gender", target = "gender")
-    @Mapping(source = "maritalStatus", target = "maritalStatus")
-    @Mapping(source = "personalNumbers", target = "personalNumbers")
-    @Mapping(source = "contact", target = "contact")
-    @Mapping(source = "titles", target = "titles")
-    @Mapping(source = "birthPlace", target = "birthPlace")
-    @Mapping(source = "citizenship", target = "citizenship")
     public abstract PersonProfileDTO toPersonProfileDTO(PersonProfile personProfile);
+    public abstract AddressesDTO toAddressesDTO(PersonAddresses personAddresses);
 
     // --- Main Mapping Method ---
-
-    @Mapping(source = "personProfile.id", target = "personId")
-    @Mapping(source = "personProfile.firstName", target = "firstName")
-    @Mapping(source = "personProfile.lastName", target = "lastName")
-    @Mapping(source = "personProfile.birthName", target = "birthSurname")
-    @Mapping(source = "personProfile.birthNumber", target = "birthNumber")
-    @Mapping(source = "personProfile.birthDate", target = "birthDate")
-    @Mapping(source = "personProfile.passportNumber", target = "passportNumber")
-    @Mapping(source = "personProfile", target = "contact")
-    @Mapping(source = "personalNumbers", target = "personalNumbers")
-    @Mapping(target = "gender", ignore = true) // Handled in @AfterMapping
-    @Mapping(target = "maritalStatus", ignore = true) // Handled in @AfterMapping
-    @Mapping(target = "titles", ignore = true) // Handled in @AfterMapping
-    @Mapping(target = "birthPlace", ignore = true) // Handled in @AfterMapping
-    @Mapping(target = "citizenship", ignore = true) // Handled in @AfterMapping
-    public abstract PersonProfile toPersonProfile(
-        PersonProfileProjection personProfile,
+    public PersonProfile toPersonProfile(
+        PersonProfileProjection projection,
         List<String> personalNumbers,
-        @Context PersonProfileData codelistData
-    );
-
-    // --- Delegate Mappers for Nested Objects ---
-
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "phone", target = "phone")
-    @Mapping(source = "mobile", target = "mobile")
-    public abstract Contact toContact(PersonProfileProjection personProfile);
-
-    @AfterMapping
-    void afterMapping(
-        PersonProfileProjection personProfileProjection,
-        @MappingTarget PersonProfile personProfile,
-        @Context PersonProfileData codelistData
+        PersonProfileData codelistData
     ) {
         Map<CodelistEntryId, String> meanings = codelistData.getCodelistMeanings();
 
-        personProfile.setGender(lookupCodelistValue("POHLAVI", personProfileProjection.gender(), meanings));
-        personProfile.setMaritalStatus(lookupCodelistValue("STAV", personProfileProjection.maritalStatus(), meanings));
-
-        personProfile.setTitles(
-            new Titles(
-                lookupCodelistValue("TITUL_PRED", personProfileProjection.titlePrefix(), meanings),
-                lookupCodelistValue("TITUL_ZA", personProfileProjection.titleSuffix(), meanings)
-            ));
-
-        personProfile.setBirthPlace(
-            new BirthPlace(
-                personProfileProjection.birthPlace(),
-                codelistData.getBirthCountryName()
-            ));
-
-        personProfile.setCitizenship(
-            new Citizenship(
-                codelistData.getCitizenshipCountryName(),
-                lookupCodelistValue("KVANT_OBCAN", personProfileProjection.citizenshipQualification(), meanings)
-            ));
+        return PersonProfile.builder()
+                            .personId(projection.id())
+                            .firstName(projection.firstName())
+                            .lastName(projection.lastName())
+                            .birthSurname(projection.birthName())
+                            .birthNumber(projection.birthNumber())
+                            .birthDate(projection.birthDate())
+                            .passportNumber(projection.passportNumber())
+                            .personalNumbers(personalNumbers)
+                            .gender(lookupCodelistValue(CodelistDomain.POHLAVI, projection.gender(), meanings))
+                            .maritalStatus(lookupCodelistValue(CodelistDomain.STAV, projection.maritalStatus(), meanings))
+                            .contact(toContact(projection))
+                            .titles(toTitles(projection, meanings))
+                            .birthPlace(toBirthPlace(projection, codelistData))
+                            .citizenship(toCitizenship(projection, codelistData, meanings))
+                            .build();
     }
 
-    private String lookupCodelistValue(String domain, String lowValue, Map<CodelistEntryId, String> meanings) {
-        if (lowValue == null) {
-            return null;
-        }
-        CodelistEntryId key = new CodelistEntryId(domain, lowValue);
-        return meanings.get(key);
+    // --- Nested Object Builders ---
+    abstract Contact toContact(PersonProfileProjection projection);
+
+    @Mapping(source = "projection.birthPlace", target = "city")
+    @Mapping(source = "codelistData.birthCountryName", target = "country")
+    abstract BirthPlace toBirthPlace(PersonProfileProjection projection, PersonProfileData codelistData);
+
+    private Titles toTitles(PersonProfileProjection projection, Map<CodelistEntryId, String> meanings) {
+        return new Titles(
+            lookupCodelistValue(CodelistDomain.TITUL_PRED, projection.titlePrefix(), meanings),
+            lookupCodelistValue(CodelistDomain.TITUL_ZA, projection.titleSuffix(), meanings)
+        );
     }
 
-    public Addresses mapToAddresses(PersonAddressData addressData, PersonForeignAddressData foreignAddressData) {
-        Address permanentAddress = getPermanentAddress(addressData);
-        Address temporaryAddress = getTemporaryAddress(addressData);
-        ForeignAddress foreignPermanentAddress = getForeignAddress(foreignAddressData.getForeignPermanentAddress());
-        ForeignAddress foreignTemporaryAddress = getForeignAddress(foreignAddressData.getForeignTemporaryAddress());
-
-        return Addresses.builder()
-                        .permanentResidence(permanentAddress)
-                        .temporaryResidence(temporaryAddress)
-                        .foreignPermanentResidence(foreignPermanentAddress)
-                        .foreignTemporaryResidence(foreignTemporaryAddress)
-                        .build();
+    private Citizenship toCitizenship(
+        PersonProfileProjection projection,
+        PersonProfileData codelistData,
+        Map<CodelistEntryId, String> meanings
+    ) {
+        return new Citizenship(
+            codelistData.getCitizenshipCountryName(),
+            lookupCodelistValue(CodelistDomain.KVANT_OBCAN, projection.citizenshipQualification(), meanings)
+        );
     }
 
-    private Address getPermanentAddress(PersonAddressData addressData) {
-        return Address.builder()
-                      .street(addressData.getPermanentStreet())
-                      .streetNumber(addressData.getPermanentStreetNumber())
-                      .zipCode(addressData.getPermanentZipCode())
-                      .municipality(addressData.getPermanentMunicipality())
-                      .municipalityPart(addressData.getPermanentMunicipalityPart())
-                      .district(addressData.getPermanentDistrict())
-                      .country(addressData.getPermanentCountry())
-                      .build();
+    private String lookupCodelistValue(CodelistDomain domain, String lowValue, Map<CodelistEntryId, String> meanings) {
+        return Optional.ofNullable(lowValue)
+                       .map(value -> meanings.get(new CodelistEntryId(domain.name(), value)))
+                       .orElse(null);
     }
 
-    private Address getTemporaryAddress(PersonAddressData addressData) {
-        return Address.builder()
-                      .street(addressData.getTemporaryStreet())
-                      .streetNumber(addressData.getTemporaryStreetNumber())
-                      .zipCode(addressData.getTemporaryZipCode())
-                      .municipality(addressData.getTemporaryMunicipality())
-                      .municipalityPart(addressData.getTemporaryMunicipalityPart())
-                      .district(addressData.getTemporaryDistrict())
-                      .country(addressData.getTemporaryCountry())
-                      .build();
+    // --- Address Mapping Methods ---
+    public PersonAddresses toPersonAddresses(Addresses addresses, PersonAddressData personAddressData) {
+        return PersonAddresses.builder()
+                              .permanentAddress(buildPersonAddress(
+                                  addresses.permanentAddress(),
+                                  personAddressData.getPermanentMunicipality(),
+                                  personAddressData.getPermanentMunicipalityPart(),
+                                  personAddressData.getPermanentDistrict(),
+                                  personAddressData.getPermanentCountry()
+                              ))
+                              .temporaryAddress(buildPersonAddress(
+                                  addresses.temporaryAddress(),
+                                  personAddressData.getTemporaryMunicipality(),
+                                  personAddressData.getTemporaryMunicipalityPart(),
+                                  personAddressData.getTemporaryDistrict(),
+                                  personAddressData.getTemporaryCountry()
+                              ))
+                              .foreignPermanentAddress(addresses.foreignPermanentAddress())
+                              .foreignTemporaryAddress(addresses.foreignTemporaryAddress())
+                              .build();
     }
 
-    private ForeignAddress getForeignAddress(ForeignAddressProjection foreignAddress) {
-        return ForeignAddress.builder()
-                             .zipCode(foreignAddress.zipCode())
-                             .municipality(foreignAddress.municipality())
-                             .district(foreignAddress.district())
-                             .postOffice(foreignAddress.postOffice())
-                             .build();
+    private PersonAddress buildPersonAddress(
+        Address address,
+        String municipality,
+        String municipalityPart,
+        String district,
+        String country
+    ) {
+        return PersonAddress.builder()
+                            .street(address.street())
+                            .streetNumber(address.streetNumber())
+                            .zipCode(address.zipCode())
+                            .municipality(municipality)
+                            .municipalityPart(municipalityPart)
+                            .district(district)
+                            .country(country)
+                            .build();
     }
 
-    @Mapping(source = "permanentResidence", target = "permanentResidence")
-    @Mapping(source = "temporaryResidence", target = "temporaryResidence")
-    @Mapping(source = "foreignPermanentResidence", target = "foreignPermanentResidence")
-    @Mapping(source = "foreignTemporaryResidence", target = "foreignTemporaryResidence")
-    public abstract AddressesDTO toAddressesDTO(Addresses personAddresses);
+    // --- Address Projection Mapping ---
+    @Mapping(source = "projection", target = "permanentAddress", qualifiedByName = "mapPermanentAddress")
+    @Mapping(source = "projection", target = "temporaryAddress", qualifiedByName = "mapTemporaryAddress")
+    @Mapping(source = "projection", target = "foreignPermanentAddress", qualifiedByName = "mapForeignPermanentAddress")
+    @Mapping(source = "projection", target = "foreignTemporaryAddress", qualifiedByName = "mapForeignTemporaryAddress")
+    public abstract Addresses toAddresses(PersonAddressProjection projection);
+
+    @Named("mapPermanentAddress")
+    @Mapping(source = "permanentStreet", target = "street")
+    @Mapping(source = "permanentStreetNumber", target = "streetNumber")
+    @Mapping(source = "permanentZipCode", target = "zipCode")
+    @Mapping(source = "permanentMunicipalityId", target = "municipalityId")
+    @Mapping(source = "permanentMunicipalityPartId", target = "municipalityPartId")
+    @Mapping(source = "permanentDistrictId", target = "districtId")
+    @Mapping(source = "permanentCountryId", target = "countryId")
+    abstract Address mapPermanentAddress(PersonAddressProjection projection);
+
+    @Named("mapTemporaryAddress")
+    @Mapping(source = "temporaryStreet", target = "street")
+    @Mapping(source = "temporaryStreetNumber", target = "streetNumber")
+    @Mapping(source = "temporaryZipCode", target = "zipCode")
+    @Mapping(source = "temporaryMunicipalityId", target = "municipalityId")
+    @Mapping(source = "temporaryMunicipalityPartId", target = "municipalityPartId")
+    @Mapping(source = "temporaryDistrictId", target = "districtId")
+    @Mapping(source = "temporaryCountryId", target = "countryId")
+    abstract Address mapTemporaryAddress(PersonAddressProjection projection);
+
+    @Named("mapForeignPermanentAddress")
+    @Mapping(source = "foreignPermanentZipCode", target = "zipCode")
+    @Mapping(source = "foreignPermanentMunicipality", target = "municipality")
+    @Mapping(source = "foreignPermanentDistrict", target = "district")
+    @Mapping(source = "foreignPermanentPostOffice", target = "postOffice")
+    abstract ForeignAddress mapForeignPermanentAddress(PersonAddressProjection projection);
+
+    @Named("mapForeignTemporaryAddress")
+    @Mapping(source = "foreignTemporaryZipCode", target = "zipCode")
+    @Mapping(source = "foreignTemporaryMunicipality", target = "municipality")
+    @Mapping(source = "foreignTemporaryDistrict", target = "district")
+    @Mapping(source = "foreignTemporaryPostOffice", target = "postOffice")
+    abstract ForeignAddress mapForeignTemporaryAddress(PersonAddressProjection projection);
 
 }

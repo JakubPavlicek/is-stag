@@ -15,7 +15,6 @@ public interface CodelistEntryRepository extends JpaRepository<CodelistEntry, Co
 
     List<CodelistEntry> findAllByIdDomain(String domain);
 
-//    @Query("SELECT c FROM CodelistEntry c WHERE (c.id.domain, c.id.lowValue) IN :ids")
     List<CodelistEntryValue> findAllByIdIn(Collection<CodelistEntryId> ids);
 
 }

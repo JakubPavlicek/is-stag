@@ -3,11 +3,12 @@ package com.stag.identity.user.service;
 import com.stag.identity.user.exception.PersonNotFoundException;
 import com.stag.identity.user.mapper.PersonMapper;
 import com.stag.identity.user.model.Addresses;
+import com.stag.identity.user.model.PersonAddresses;
 import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.repository.PersonRepository;
+import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
-import com.stag.identity.user.service.data.PersonForeignAddressData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +25,13 @@ public class PersonService {
 
     private final PersonRepository personRepository;
     private final PersonMapper personMapper;
-
     private final PersonAsyncService personAsyncService;
 
     @Transactional(readOnly = true)
     public PersonProfile getPersonProfile(Integer personId) {
-        PersonProfileProjection personProfile = getPersonProfileById(personId);
+        PersonProfileProjection personProfile =
+            personRepository.findById(personId, PersonProfileProjection.class)
+                            .orElseThrow(() -> new PersonNotFoundException(personId));
 
         CompletableFuture<List<String>> personalNumbersFuture =
             personAsyncService.getStudentPersonalNumbers(personId);
@@ -43,25 +45,17 @@ public class PersonService {
     }
 
     @Transactional(readOnly = true)
-    public Addresses getPersonAddresses(Integer personId) {
-        if (!personRepository.existsById(personId)) {
-            throw new PersonNotFoundException(personId);
-        }
+    public PersonAddresses getPersonAddresses(Integer personId) {
+        PersonAddressProjection personAddressProjection =
+            personRepository.findAddressesByPersonId(personId)
+                            .orElseThrow(() -> new PersonNotFoundException(personId));
 
-        CompletableFuture<PersonAddressData> addressDataFuture =
-            personAsyncService.getPersonAddressData(personId);
+        Addresses addresses = personMapper.toAddresses(personAddressProjection);
 
-        CompletableFuture<PersonForeignAddressData> foreignAddressesFuture =
-            personAsyncService.getForeignAddressesByPersonId(personId);
+        CompletableFuture<PersonAddressData> addressCodelistDataFuture =
+            personAsyncService.getPersonAddressData(addresses.permanentAddress(), addresses.temporaryAddress());
 
-        CompletableFuture.allOf(addressDataFuture, foreignAddressesFuture).join();
-
-        return personMapper.mapToAddresses(addressDataFuture.join(), foreignAddressesFuture.join());
-    }
-
-    private PersonProfileProjection getPersonProfileById(Integer personId) {
-        return personRepository.findById(personId, PersonProfileProjection.class)
-                               .orElseThrow(() -> new PersonNotFoundException(personId));
+        return personMapper.toPersonAddresses(addresses, addressCodelistDataFuture.join());
     }
 
 }

@@ -25,4 +25,34 @@ public class PersonProfile {
     private String gender;
     private String maritalStatus;
 
+    public record Contact(
+        String email,
+        String phone,
+        String mobile
+    ) {
+
+    }
+
+    public record Titles(
+        String prefix,
+        String suffix
+    ) {
+
+    }
+
+    public record BirthPlace(
+        String city,
+        String country
+    ) {
+
+    }
+
+    public record Citizenship(
+        String country,
+        String qualifier
+    ) {
+
+    }
+
+
 }

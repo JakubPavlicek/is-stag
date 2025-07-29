@@ -1,9 +1,9 @@
 package com.stag.identity.user.grpc.mapper;
 
+import com.stag.identity.user.model.Addresses.Address;
 import com.stag.identity.user.model.AddressType;
 import com.stag.identity.user.model.CodelistDomain;
 import com.stag.identity.user.model.CodelistEntryId;
-import com.stag.identity.user.repository.projection.AddressProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonProfileData;
@@ -54,8 +54,8 @@ public class CodelistMapper {
     }
 
     public GetPersonAddressDataRequest toPersonAddressDataRequest(
-        AddressProjection permanentAddress,
-        AddressProjection temporaryAddress
+        Address permanentAddress,
+        Address temporaryAddress
     ) {
         var requestBuilder = GetPersonAddressDataRequest.newBuilder()
                                                         .setLanguage(LANGUAGE);
@@ -68,8 +68,8 @@ public class CodelistMapper {
 
     public PersonAddressData toPersonAddressData(
         GetPersonAddressDataResponse response,
-        AddressProjection permanentAddress,
-        AddressProjection temporaryAddress
+        Address permanentAddress,
+        Address temporaryAddress
     ) {
         return PersonAddressData.builder()
                                 .permanentStreet(permanentAddress.street())
@@ -127,7 +127,7 @@ public class CodelistMapper {
     }
 
     private void setAddressIfPresent(
-        AddressProjection address,
+        Address address,
         GetPersonAddressDataRequest.Builder requestBuilder,
         AddressType addressType
     ) {
