@@ -1,19 +1,27 @@
 package com.stag.identity.user.mapper;
 
 import com.stag.identity.user.dto.AddressesDTO;
+import com.stag.identity.user.dto.BankAccountDetailsDTO;
+import com.stag.identity.user.dto.BankAccountsDTO;
+import com.stag.identity.user.dto.EuroBankAccountDetailsDTO;
 import com.stag.identity.user.dto.PersonProfileDTO;
 import com.stag.identity.user.model.CodelistDomain;
 import com.stag.identity.user.model.CodelistEntryId;
 import com.stag.identity.user.model.PersonAddresses;
 import com.stag.identity.user.model.PersonAddresses.PersonAddress;
+import com.stag.identity.user.model.PersonBanking;
+import com.stag.identity.user.model.PersonBanking.BankAccount;
+import com.stag.identity.user.model.PersonBanking.EuroBankAccount;
 import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.model.PersonProfile.BirthPlace;
 import com.stag.identity.user.model.PersonProfile.Citizenship;
 import com.stag.identity.user.model.PersonProfile.Contact;
 import com.stag.identity.user.model.PersonProfile.Titles;
 import com.stag.identity.user.repository.projection.PersonAddressProjection;
+import com.stag.identity.user.repository.projection.PersonBankProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
+import com.stag.identity.user.service.data.PersonBankingData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -41,7 +49,7 @@ public abstract class PersonMapper {
         List<String> personalNumbers,
         PersonProfileData codelistData
     ) {
-        Map<CodelistEntryId, String> meanings = codelistData.getCodelistMeanings();
+        Map<CodelistEntryId, String> meanings = codelistData.codelistMeanings();
 
         return PersonProfile.builder()
                             .personId(projection.id())
@@ -81,7 +89,7 @@ public abstract class PersonMapper {
         Map<CodelistEntryId, String> meanings
     ) {
         return new Citizenship(
-            codelistData.getCitizenshipCountryName(),
+            codelistData.citizenshipCountryName(),
             lookupCodelistValue(CodelistDomain.KVANT_OBCAN, projection.citizenshipQualification(), meanings)
         );
     }
@@ -99,19 +107,19 @@ public abstract class PersonMapper {
                                   personAddress.permanentStreet(),
                                   personAddress.permanentStreetNumber(),
                                   personAddress.permanentZipCode(),
-                                  personAddressData.getPermanentMunicipality(),
-                                  personAddressData.getPermanentMunicipalityPart(),
-                                  personAddressData.getPermanentDistrict(),
-                                  personAddressData.getPermanentCountry()
+                                  personAddressData.permanentMunicipality(),
+                                  personAddressData.permanentMunicipalityPart(),
+                                  personAddressData.permanentDistrict(),
+                                  personAddressData.permanentCountry()
                               ))
                               .temporaryAddress(buildPersonAddress(
                                   personAddress.temporaryStreet(),
                                   personAddress.temporaryStreetNumber(),
                                   personAddress.temporaryZipCode(),
-                                  personAddressData.getTemporaryMunicipality(),
-                                  personAddressData.getTemporaryMunicipalityPart(),
-                                  personAddressData.getTemporaryDistrict(),
-                                  personAddressData.getTemporaryCountry()
+                                  personAddressData.temporaryMunicipality(),
+                                  personAddressData.temporaryMunicipalityPart(),
+                                  personAddressData.temporaryDistrict(),
+                                  personAddressData.temporaryCountry()
                               ))
                               .foreignPermanentAddress(buildPersonForeignAddress(
                                   personAddress.foreignPermanentZipCode(),
@@ -160,6 +168,82 @@ public abstract class PersonMapper {
                                    .district(district)
                                    .postOffice(postOffice)
                                    .build();
+    }
+
+    public PersonBanking toPersonBanking(PersonBankProjection personBank, PersonBankingData personBankingData) {
+        Map<CodelistEntryId, String> meanings = personBankingData.codelistMeanings();
+
+        return PersonBanking.builder()
+                            .account(toBankAccount(personBank, meanings))
+                            .euroAccount(toEuroBankAccount(personBank, personBankingData, meanings))
+                            .build();
+    }
+
+    private BankAccount toBankAccount(PersonBankProjection personBank, Map<CodelistEntryId, String> meanings) {
+       return BankAccount.builder()
+                         .owner(personBank.accountOwner())
+                         .address(personBank.accountAddress())
+                         .prefix(personBank.accountPrefix())
+                         .suffix(personBank.accountSuffix())
+                         .bankCode(personBank.accountBank())
+                         .bankName(lookupCodelistValue(CodelistDomain.CIS_BANK, personBank.accountBank(), meanings))
+                         .iban(personBank.accountIban())
+                         .currency(personBank.accountCurrency())
+                         .build();
+    }
+
+    private EuroBankAccount toEuroBankAccount(
+        PersonBankProjection personBank,
+        PersonBankingData personBankingData,
+        Map<CodelistEntryId, String> meanings
+    ) {
+        return EuroBankAccount.builder()
+                              .owner(personBank.euroAccountOwner())
+                              .address(personBank.euroAccountAddress())
+                              .prefix(personBank.euroAccountPrefix())
+                              .suffix(personBank.euroAccountSuffix())
+                              .bankCode(personBank.euroAccountBank())
+                              .bankName(lookupCodelistValue(CodelistDomain.CIS_BANK_EURO, personBank.euroAccountBank(), meanings))
+                              .iban(personBank.euroAccountIban())
+                              .currency(personBank.euroAccountCurrency())
+                              .country(personBankingData.euroAccountCountryName())
+                              .swift(personBank.euroAccountSwift())
+                              .build();
+    }
+
+    public BankAccountsDTO toBankAccountsDTO(PersonBanking personBanking) {
+        return BankAccountsDTO.builder()
+                              .account(toBankAccountDTO(personBanking.account()))
+                              .euroAccount(toEuroBankAccountDTO(personBanking.euroAccount()))
+                              .build();
+    }
+
+    private EuroBankAccountDetailsDTO toEuroBankAccountDTO(EuroBankAccount euroBankAccount) {
+        return EuroBankAccountDetailsDTO.builder()
+                                        .holderName(euroBankAccount.owner())
+                                        .holderAddress(euroBankAccount.address())
+                                        .bankAccountNumberPrefix(euroBankAccount.prefix())
+                                        .bankAccountNumberSuffix(euroBankAccount.suffix())
+                                        .bankCode(euroBankAccount.bankCode())
+                                        .bankName(euroBankAccount.bankName())
+                                        .iban(euroBankAccount.iban())
+                                        .currency(euroBankAccount.currency())
+                                        .country(euroBankAccount.country())
+                                        .swift(euroBankAccount.swift())
+                                        .build();
+    }
+
+    private BankAccountDetailsDTO toBankAccountDTO(BankAccount account) {
+        return BankAccountDetailsDTO.builder()
+                                    .holderName(account.owner())
+                                    .holderAddress(account.address())
+                                    .bankAccountNumberPrefix(account.prefix())
+                                    .bankAccountNumberSuffix(account.suffix())
+                                    .bankCode(account.bankCode())
+                                    .bankName(account.bankName())
+                                    .iban(account.iban())
+                                    .currency(account.currency())
+                                    .build();
     }
 
 }

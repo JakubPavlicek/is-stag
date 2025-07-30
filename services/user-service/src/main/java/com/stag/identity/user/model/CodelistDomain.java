@@ -5,5 +5,7 @@ public enum CodelistDomain {
     TITUL_ZA,
     POHLAVI,
     STAV,
-    KVANT_OBCAN
+    KVANT_OBCAN,
+    CIS_BANK,
+    CIS_BANK_EURO
 }

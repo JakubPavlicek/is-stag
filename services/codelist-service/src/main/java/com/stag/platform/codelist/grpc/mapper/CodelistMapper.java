@@ -7,6 +7,8 @@ import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistValue;
 import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
 import com.stag.platform.codelist.v1.GetPersonAddressDataResponse;
+import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
+import com.stag.platform.codelist.v1.GetPersonBankingDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
 import org.springframework.stereotype.Component;
@@ -49,6 +51,14 @@ public class CodelistMapper {
 
         addIfPresent(countryIds, request.hasPermanentCountryId(), request::getPermanentCountryId);
         addIfPresent(countryIds, request.hasTemporaryCountryId(), request::getTemporaryCountryId);
+
+        return countryIds;
+    }
+
+    public Set<Integer> extractCountryIds(GetPersonBankingDataRequest request) {
+        Set<Integer> countryIds = HashSet.newHashSet(1);
+
+        addIfPresent(countryIds, request.hasEuroAccountCountryId(), request::getEuroAccountCountryId);
 
         return countryIds;
     }
@@ -96,6 +106,22 @@ public class CodelistMapper {
         if (!countryNames.isEmpty()) {
             setCountryNameIfPresent(countryNames, request.getPermanentCountryId(), responseBuilder::setPermanentCountryName);
             setCountryNameIfPresent(countryNames, request.getTemporaryCountryId(), responseBuilder::setTemporaryCountryName);
+        }
+
+        return responseBuilder.build();
+    }
+
+    public GetPersonBankingDataResponse buildPersonBankingDataResponse(
+        GetPersonBankingDataRequest request,
+        List<CodelistValue> codelistValues,
+        Map<Integer, String> countryNames
+    ) {
+
+        var responseBuilder = GetPersonBankingDataResponse.newBuilder()
+                                                          .addAllCodelistValues(codelistValues);
+
+        if (!countryNames.isEmpty()) {
+            setCountryNameIfPresent(countryNames, request.getEuroAccountCountryId(), responseBuilder::setEuroAccountCountryName);
         }
 
         return responseBuilder.build();

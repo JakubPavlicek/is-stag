@@ -74,12 +74,14 @@ message GetPersonAddressDataResponse {
 
 // Banking specific request (for GET /persons/{id}/banking)
 message GetPersonBankingDataRequest {
-  repeated CodelistKey codelist_keys = 1; // bank codes, currency codes
-  string language = 2;
+  repeated CodelistKey codelist_keys = 1;
+  optional int32 euro_account_country_id = 2;
+  string language = 3;
 }
 
 message GetPersonBankingDataResponse {
   repeated CodelistValue codelist_values = 1;
+  optional string euro_account_country_name = 2;
 }
 
 // Education specific request (for GET /persons/{id}/education)

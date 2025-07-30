@@ -6,24 +6,23 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
 @Builder
-public class PersonProfile {
-
-    private Integer personId;
-    private List<String> personalNumbers;
-    private String firstName;
-    private String lastName;
-    private String birthSurname;
-    private Contact contact;
-    private Titles titles;
-    private String birthNumber;
-    private LocalDate birthDate;
-    private BirthPlace birthPlace;
-    private Citizenship citizenship;
-    private String passportNumber;
-    private String gender;
-    private String maritalStatus;
+public record PersonProfile(
+    Integer personId,
+    List<String> personalNumbers,
+    String firstName,
+    String lastName,
+    String birthSurname,
+    Contact contact,
+    Titles titles,
+    String birthNumber,
+    LocalDate birthDate,
+    BirthPlace birthPlace,
+    Citizenship citizenship,
+    String passportNumber,
+    String gender,
+    String maritalStatus
+) {
 
     public record Contact(
         String email,

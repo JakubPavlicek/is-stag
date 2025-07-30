@@ -1,26 +1,26 @@
 package com.stag.identity.user.service.data;
 
 import lombok.Builder;
-import lombok.Data;
 
-@Data
 @Builder
-public class PersonAddressData {
-    // Permanent residence
-    private String permanentStreet;
-    private String permanentStreetNumber;
-    private String permanentZipCode;
-    private String permanentMunicipality;
-    private String permanentMunicipalityPart;
-    private String permanentDistrict;
-    private String permanentCountry;
+public record PersonAddressData(
+    // Permanent address
+    String permanentStreet,
+    String permanentStreetNumber,
+    String permanentZipCode,
+    String permanentMunicipality,
+    String permanentMunicipalityPart,
+    String permanentDistrict,
+    String permanentCountry,
 
-    // Temporary residence
-    private String temporaryStreet;
-    private String temporaryStreetNumber;
-    private String temporaryZipCode;
-    private String temporaryMunicipality;
-    private String temporaryMunicipalityPart;
-    private String temporaryDistrict;
-    private String temporaryCountry;
+    // Temporary address
+    String temporaryStreet,
+    String temporaryStreetNumber,
+    String temporaryZipCode,
+    String temporaryMunicipality,
+    String temporaryMunicipalityPart,
+    String temporaryDistrict,
+    String temporaryCountry
+) {
+
 }

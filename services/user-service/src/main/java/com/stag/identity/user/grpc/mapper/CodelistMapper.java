@@ -4,13 +4,17 @@ import com.stag.identity.user.model.AddressType;
 import com.stag.identity.user.model.CodelistDomain;
 import com.stag.identity.user.model.CodelistEntryId;
 import com.stag.identity.user.repository.projection.PersonAddressProjection;
+import com.stag.identity.user.repository.projection.PersonBankProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
+import com.stag.identity.user.service.data.PersonBankingData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistValue;
 import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
 import com.stag.platform.codelist.v1.GetPersonAddressDataResponse;
+import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
+import com.stag.platform.codelist.v1.GetPersonBankingDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
 import org.springframework.stereotype.Component;
@@ -31,13 +35,33 @@ public class CodelistMapper {
         var requestBuilder = GetPersonProfileDataRequest.newBuilder()
                                                         .setLanguage(LANGUAGE);
 
-        // Build codelist keys for profile fields
         List<CodelistKey> codelistKeys = buildProfileCodelistKeys(personProfile);
         requestBuilder.addAllCodelistKeys(codelistKeys);
 
-        // Add country IDs if present
         setIfPresent(personProfile.birthCountryId(), requestBuilder::setBirthCountryId);
         setIfPresent(personProfile.residenceCountryId(), requestBuilder::setCitizenshipCountryId);
+
+        return requestBuilder.build();
+    }
+
+    public GetPersonAddressDataRequest toPersonAddressDataRequest(PersonAddressProjection personAddress) {
+        var requestBuilder = GetPersonAddressDataRequest.newBuilder()
+                                                        .setLanguage(LANGUAGE);
+
+        setAddressIfPresent(personAddress, requestBuilder, AddressType.PERMANENT);
+        setAddressIfPresent(personAddress, requestBuilder, AddressType.TEMPORARY);
+
+        return requestBuilder.build();
+    }
+
+    public GetPersonBankingDataRequest toPersonBankingDataRequest(PersonBankProjection personBank) {
+        var requestBuilder = GetPersonBankingDataRequest.newBuilder()
+                                                        .setLanguage(LANGUAGE);
+
+        List<CodelistKey> codelistKeys = buildBankingCodelistKeys(personBank);
+        requestBuilder.addAllCodelistKeys(codelistKeys);
+
+        setIfPresent(personBank.euroAccountCountryId(), requestBuilder::setEuroAccountCountryId);
 
         return requestBuilder.build();
     }
@@ -51,16 +75,6 @@ public class CodelistMapper {
                                 .birthCountryName(response.getBirthCountryName())
                                 .citizenshipCountryName(response.getCitizenshipCountryName())
                                 .build();
-    }
-
-    public GetPersonAddressDataRequest toPersonAddressDataRequest(PersonAddressProjection personAddress) {
-        var requestBuilder = GetPersonAddressDataRequest.newBuilder()
-                                                        .setLanguage(LANGUAGE);
-
-        setAddressIfPresent(personAddress, requestBuilder, AddressType.PERMANENT);
-        setAddressIfPresent(personAddress, requestBuilder, AddressType.TEMPORARY);
-
-        return requestBuilder.build();
     }
 
     public PersonAddressData toPersonAddressData(
@@ -85,6 +99,16 @@ public class CodelistMapper {
                                 .build();
     }
 
+    public PersonBankingData toPersonBankingData(GetPersonBankingDataResponse response) {
+        List<CodelistValue> codelistValues = response.getCodelistValuesList();
+        Map<CodelistEntryId, String> codelistMeanings = buildCodelistMeanings(codelistValues);
+
+        return PersonBankingData.builder()
+                                .codelistMeanings(codelistMeanings)
+                                .euroAccountCountryName(response.getEuroAccountCountryName())
+                                .build();
+    }
+
     private List<CodelistKey> buildProfileCodelistKeys(PersonProfileProjection personProfile) {
         List<CodelistKey> codelistKeys = new ArrayList<>();
 
@@ -93,6 +117,15 @@ public class CodelistMapper {
         addCodelistKeyIfPresent(codelistKeys, CodelistDomain.POHLAVI, personProfile.gender());
         addCodelistKeyIfPresent(codelistKeys, CodelistDomain.STAV, personProfile.maritalStatus());
         addCodelistKeyIfPresent(codelistKeys, CodelistDomain.KVANT_OBCAN, personProfile.citizenshipQualification());
+
+        return codelistKeys;
+    }
+
+    private List<CodelistKey> buildBankingCodelistKeys(PersonBankProjection personBank) {
+        List<CodelistKey> codelistKeys = new ArrayList<>();
+
+        addCodelistKeyIfPresent(codelistKeys, CodelistDomain.CIS_BANK, personBank.accountBank());
+        addCodelistKeyIfPresent(codelistKeys, CodelistDomain.CIS_BANK_EURO, personBank.euroAccountBank());
 
         return codelistKeys;
     }

@@ -10,6 +10,7 @@ import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonBankProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
+import com.stag.identity.user.service.data.PersonBankingData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,10 +52,10 @@ public class PersonService {
             personRepository.findAddressesByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
-        CompletableFuture<PersonAddressData> addressCodelistDataFuture =
+        CompletableFuture<PersonAddressData> addressDataFuture =
             personAsyncService.getPersonAddressData(personAddressProjection);
 
-        return personMapper.toPersonAddresses(personAddressProjection, addressCodelistDataFuture.join());
+        return personMapper.toPersonAddresses(personAddressProjection, addressDataFuture.join());
     }
 
     @Transactional(readOnly = true)
@@ -63,7 +64,10 @@ public class PersonService {
             personRepository.findBankingByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
-        return new PersonBanking(null, null);
+        CompletableFuture<PersonBankingData> personBankingDataFuture =
+            personAsyncService.getPersonBankingData(personBankProjection);
+
+        return personMapper.toPersonBanking(personBankProjection, personBankingDataFuture.join());
     }
 
 }

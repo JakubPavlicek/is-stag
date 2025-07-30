@@ -6,9 +6,9 @@ import lombok.Builder;
 import java.util.Map;
 
 @Builder
-public record PersonEducationCodelistData(
+public record PersonBankingData(
     Map<CodelistEntryId, String> codelistMeanings,
-    String highSchoolCountryName
+    String euroAccountCountryName
 ) {
 
 }

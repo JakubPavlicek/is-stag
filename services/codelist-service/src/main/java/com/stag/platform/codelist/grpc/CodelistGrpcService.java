@@ -14,6 +14,8 @@ import com.stag.platform.codelist.v1.GetCodelistValuesRequest;
 import com.stag.platform.codelist.v1.GetCodelistValuesResponse;
 import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
 import com.stag.platform.codelist.v1.GetPersonAddressDataResponse;
+import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
+import com.stag.platform.codelist.v1.GetPersonBankingDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
 import io.grpc.stub.StreamObserver;
@@ -38,7 +40,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     private final MunicipalityPartService municipalityPartService;
 
     private final Executor grpcExecutor;
-    private final CodelistMapper mapper;
+    private final CodelistMapper codelistMapper;
 
     @Override
     public void getCodelistValues(GetCodelistValuesRequest request, StreamObserver<GetCodelistValuesResponse> responseObserver) {
@@ -60,12 +62,12 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
         );
 
         CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCountryNames(mapper.extractCountryIds(request)),
+            () -> fetchCountryNames(codelistMapper.extractCountryIds(request)),
             grpcExecutor
         );
 
         codelistValuesFuture.thenCombine(countryNamesFuture, (codelistValues, countryNames) ->
-                                mapper.buildPersonProfileDataResponse(request, codelistValues, countryNames)
+                                codelistMapper.buildPersonProfileDataResponse(request, codelistValues, countryNames)
                             )
                             .thenAccept(response -> completeResponse(responseObserver, response))
                             .exceptionally(ex -> errorResponse(responseObserver, ex));
@@ -74,20 +76,39 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     @Override
     public void getPersonAddressData(GetPersonAddressDataRequest request, StreamObserver<GetPersonAddressDataResponse> responseObserver) {
         CompletableFuture<Map<Long, AddressPlaceNameProjection>> addressNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchAddressNames(mapper.extractMunicipalityPartIds(request)),
+            () -> fetchAddressNames(codelistMapper.extractMunicipalityPartIds(request)),
             grpcExecutor
         );
 
         CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCountryNames(mapper.extractCountryIds(request)),
+            () -> fetchCountryNames(codelistMapper.extractCountryIds(request)),
             grpcExecutor
         );
 
         addressNamesFuture.thenCombine(countryNamesFuture, (addressNames, countryNames) ->
-                              mapper.buildPersonAddressDataResponse(request, addressNames, countryNames)
+                              codelistMapper.buildPersonAddressDataResponse(request, addressNames, countryNames)
                           )
                           .thenAccept(response -> completeResponse(responseObserver, response))
                           .exceptionally(ex -> errorResponse(responseObserver, ex));
+    }
+
+    @Override
+    public void getPersonBankingData(GetPersonBankingDataRequest request, StreamObserver<GetPersonBankingDataResponse> responseObserver) {
+        CompletableFuture<List<CodelistValue>> codelistValuesFuture = CompletableFuture.supplyAsync(
+            () -> buildCodelistValues(request.getCodelistKeysList(), request.getLanguage()),
+            grpcExecutor
+        );
+
+        CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
+            () -> fetchCountryNames(codelistMapper.extractCountryIds(request)),
+            grpcExecutor
+        );
+
+        codelistValuesFuture.thenCombine(countryNamesFuture, (codelistValues, countryNames) ->
+                                codelistMapper.buildPersonBankingDataResponse(request, codelistValues, countryNames)
+                            )
+                            .thenAccept(response -> completeResponse(responseObserver, response))
+                            .exceptionally(ex -> errorResponse(responseObserver, ex));
     }
 
     private List<CodelistValue> buildCodelistValues(List<CodelistKey> codelistKeys, String language) {
@@ -95,9 +116,9 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             return Collections.emptyList();
         }
 
-        List<CodelistEntryId> entryIds = mapper.extractCodelistEntryIds(codelistKeys);
+        List<CodelistEntryId> entryIds = codelistMapper.extractCodelistEntryIds(codelistKeys);
         List<CodelistEntryValue> entries = codelistService.getCodelistEntryMeanings(entryIds);
-        return mapper.mapToCodelistValues(entries, language);
+        return codelistMapper.mapToCodelistValues(entries, language);
     }
 
     private Map<Integer, String> fetchCountryNames(Set<Integer> countryIds) {

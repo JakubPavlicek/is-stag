@@ -2,10 +2,11 @@ package com.stag.identity.user.service;
 
 import com.stag.identity.user.grpc.CodelistServiceClient;
 import com.stag.identity.user.grpc.StudentServiceClient;
-import com.stag.identity.user.repository.PersonRepository;
 import com.stag.identity.user.repository.projection.PersonAddressProjection;
+import com.stag.identity.user.repository.projection.PersonBankProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
+import com.stag.identity.user.service.data.PersonBankingData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +20,6 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @Service
 public class PersonAsyncService {
-
-    private final PersonRepository personRepository;
 
     private final StudentServiceClient studentServiceClient;
     private final CodelistServiceClient codelistServiceClient;
@@ -47,9 +46,18 @@ public class PersonAsyncService {
     public CompletableFuture<PersonAddressData> getPersonAddressData(PersonAddressProjection personAddressProjection) {
         log.info("getPersonAddressData thread: {}", Thread.currentThread());
 
-        PersonAddressData addressData = codelistServiceClient.getPersonAddressData(personAddressProjection);
+        PersonAddressData personAddressData = codelistServiceClient.getPersonAddressData(personAddressProjection);
 
-        return CompletableFuture.completedFuture(addressData);
+        return CompletableFuture.completedFuture(personAddressData);
+    }
+
+    @Async
+    public CompletableFuture<PersonBankingData> getPersonBankingData(PersonBankProjection personBankProjection) {
+        log.info("getPersonBankingData thread: {}", Thread.currentThread());
+
+        PersonBankingData personBankingData = codelistServiceClient.getPersonBankingData(personBankProjection);
+
+        return CompletableFuture.completedFuture(personBankingData);
     }
 
 }

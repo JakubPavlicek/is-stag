@@ -44,8 +44,9 @@ public class PersonController implements PersonsApi {
     @Override
     public ResponseEntity<BankAccountsDTO> getPersonBanking(Integer personId) {
         PersonBanking personBanking = personService.getPersonBanking(personId);
+        BankAccountsDTO bankAccountsDTO = personMapper.toBankAccountsDTO(personBanking);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(bankAccountsDTO);
     }
 
     @Override

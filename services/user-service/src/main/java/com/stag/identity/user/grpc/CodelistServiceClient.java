@@ -2,8 +2,10 @@ package com.stag.identity.user.grpc;
 
 import com.stag.identity.user.grpc.mapper.CodelistMapper;
 import com.stag.identity.user.repository.projection.PersonAddressProjection;
+import com.stag.identity.user.repository.projection.PersonBankProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
+import com.stag.identity.user.service.data.PersonBankingData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import com.stag.platform.codelist.v1.CodelistServiceGrpc;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,13 @@ public class CodelistServiceClient {
         var request = codelistMapper.toPersonAddressDataRequest(personAddressProjection);
         var response = codelistServiceStub.getPersonAddressData(request);
         return codelistMapper.toPersonAddressData(response, personAddressProjection);
+    }
+
+    /// Get codelist data specifically for person banking (GET /persons/{personId}/banking)
+    public PersonBankingData getPersonBankingData(PersonBankProjection personBankProjection) {
+        var request = codelistMapper.toPersonBankingDataRequest(personBankProjection);
+        var response = codelistServiceStub.getPersonBankingData(request);
+        return codelistMapper.toPersonBankingData(response);
     }
 
 }
