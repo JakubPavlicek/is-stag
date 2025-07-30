@@ -2,9 +2,6 @@ package com.stag.identity.user.mapper;
 
 import com.stag.identity.user.dto.AddressesDTO;
 import com.stag.identity.user.dto.PersonProfileDTO;
-import com.stag.identity.user.model.Addresses;
-import com.stag.identity.user.model.Addresses.Address;
-import com.stag.identity.user.model.Addresses.ForeignAddress;
 import com.stag.identity.user.model.CodelistDomain;
 import com.stag.identity.user.model.CodelistEntryId;
 import com.stag.identity.user.model.PersonAddresses;
@@ -20,12 +17,13 @@ import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.NullValueMappingStrategy;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.stag.identity.user.model.PersonAddresses.PersonForeignAddress;
 
 @Mapper(
     componentModel = "spring",
@@ -95,38 +93,54 @@ public abstract class PersonMapper {
     }
 
     // --- Address Mapping Methods ---
-    public PersonAddresses toPersonAddresses(Addresses addresses, PersonAddressData personAddressData) {
+    public PersonAddresses toPersonAddresses(PersonAddressProjection personAddress, PersonAddressData personAddressData) {
         return PersonAddresses.builder()
                               .permanentAddress(buildPersonAddress(
-                                  addresses.permanentAddress(),
+                                  personAddress.permanentStreet(),
+                                  personAddress.permanentStreetNumber(),
+                                  personAddress.permanentZipCode(),
                                   personAddressData.getPermanentMunicipality(),
                                   personAddressData.getPermanentMunicipalityPart(),
                                   personAddressData.getPermanentDistrict(),
                                   personAddressData.getPermanentCountry()
                               ))
                               .temporaryAddress(buildPersonAddress(
-                                  addresses.temporaryAddress(),
+                                  personAddress.temporaryStreet(),
+                                  personAddress.temporaryStreetNumber(),
+                                  personAddress.temporaryZipCode(),
                                   personAddressData.getTemporaryMunicipality(),
                                   personAddressData.getTemporaryMunicipalityPart(),
                                   personAddressData.getTemporaryDistrict(),
                                   personAddressData.getTemporaryCountry()
                               ))
-                              .foreignPermanentAddress(addresses.foreignPermanentAddress())
-                              .foreignTemporaryAddress(addresses.foreignTemporaryAddress())
+                              .foreignPermanentAddress(buildPersonForeignAddress(
+                                  personAddress.foreignPermanentZipCode(),
+                                  personAddress.foreignPermanentMunicipality(),
+                                  personAddress.foreignPermanentDistrict(),
+                                  personAddress.foreignPermanentPostOffice()
+                              ))
+                              .foreignTemporaryAddress(buildPersonForeignAddress(
+                                  personAddress.foreignTemporaryZipCode(),
+                                  personAddress.foreignTemporaryMunicipality(),
+                                  personAddress.foreignTemporaryDistrict(),
+                                  personAddress.foreignTemporaryPostOffice()
+                              ))
                               .build();
     }
 
     private PersonAddress buildPersonAddress(
-        Address address,
+        String street,
+        String streetNumber,
+        String zipCode,
         String municipality,
         String municipalityPart,
         String district,
         String country
     ) {
         return PersonAddress.builder()
-                            .street(address.street())
-                            .streetNumber(address.streetNumber())
-                            .zipCode(address.zipCode())
+                            .street(street)
+                            .streetNumber(streetNumber)
+                            .zipCode(zipCode)
                             .municipality(municipality)
                             .municipalityPart(municipalityPart)
                             .district(district)
@@ -134,45 +148,18 @@ public abstract class PersonMapper {
                             .build();
     }
 
-    // --- Address Projection Mapping ---
-    @Mapping(source = "projection", target = "permanentAddress", qualifiedByName = "mapPermanentAddress")
-    @Mapping(source = "projection", target = "temporaryAddress", qualifiedByName = "mapTemporaryAddress")
-    @Mapping(source = "projection", target = "foreignPermanentAddress", qualifiedByName = "mapForeignPermanentAddress")
-    @Mapping(source = "projection", target = "foreignTemporaryAddress", qualifiedByName = "mapForeignTemporaryAddress")
-    public abstract Addresses toAddresses(PersonAddressProjection projection);
-
-    @Named("mapPermanentAddress")
-    @Mapping(source = "permanentStreet", target = "street")
-    @Mapping(source = "permanentStreetNumber", target = "streetNumber")
-    @Mapping(source = "permanentZipCode", target = "zipCode")
-    @Mapping(source = "permanentMunicipalityId", target = "municipalityId")
-    @Mapping(source = "permanentMunicipalityPartId", target = "municipalityPartId")
-    @Mapping(source = "permanentDistrictId", target = "districtId")
-    @Mapping(source = "permanentCountryId", target = "countryId")
-    abstract Address mapPermanentAddress(PersonAddressProjection projection);
-
-    @Named("mapTemporaryAddress")
-    @Mapping(source = "temporaryStreet", target = "street")
-    @Mapping(source = "temporaryStreetNumber", target = "streetNumber")
-    @Mapping(source = "temporaryZipCode", target = "zipCode")
-    @Mapping(source = "temporaryMunicipalityId", target = "municipalityId")
-    @Mapping(source = "temporaryMunicipalityPartId", target = "municipalityPartId")
-    @Mapping(source = "temporaryDistrictId", target = "districtId")
-    @Mapping(source = "temporaryCountryId", target = "countryId")
-    abstract Address mapTemporaryAddress(PersonAddressProjection projection);
-
-    @Named("mapForeignPermanentAddress")
-    @Mapping(source = "foreignPermanentZipCode", target = "zipCode")
-    @Mapping(source = "foreignPermanentMunicipality", target = "municipality")
-    @Mapping(source = "foreignPermanentDistrict", target = "district")
-    @Mapping(source = "foreignPermanentPostOffice", target = "postOffice")
-    abstract ForeignAddress mapForeignPermanentAddress(PersonAddressProjection projection);
-
-    @Named("mapForeignTemporaryAddress")
-    @Mapping(source = "foreignTemporaryZipCode", target = "zipCode")
-    @Mapping(source = "foreignTemporaryMunicipality", target = "municipality")
-    @Mapping(source = "foreignTemporaryDistrict", target = "district")
-    @Mapping(source = "foreignTemporaryPostOffice", target = "postOffice")
-    abstract ForeignAddress mapForeignTemporaryAddress(PersonAddressProjection projection);
+    private PersonForeignAddress buildPersonForeignAddress(
+        String zipCode,
+        String municipality,
+        String district,
+        String postOffice
+    ) {
+        return PersonForeignAddress.builder()
+                                   .zipCode(zipCode)
+                                   .municipality(municipality)
+                                   .district(district)
+                                   .postOffice(postOffice)
+                                   .build();
+    }
 
 }

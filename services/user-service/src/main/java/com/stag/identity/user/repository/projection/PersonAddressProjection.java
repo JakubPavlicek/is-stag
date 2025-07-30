@@ -4,17 +4,13 @@ public record PersonAddressProjection(
     String permanentStreet,
     String permanentStreetNumber,
     String permanentZipCode,
-    Long permanentMunicipalityId,
     Long permanentMunicipalityPartId,
-    Integer permanentDistrictId,
     Integer permanentCountryId,
 
     String temporaryStreet,
     String temporaryStreetNumber,
     String temporaryZipCode,
-    Long temporaryMunicipalityId,
     Long temporaryMunicipalityPartId,
-    Integer temporaryDistrictId,
     Integer temporaryCountryId,
 
     String foreignPermanentZipCode,

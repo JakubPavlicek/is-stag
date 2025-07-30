@@ -1,9 +1,9 @@
 package com.stag.identity.user.grpc.mapper;
 
-import com.stag.identity.user.model.Addresses.Address;
 import com.stag.identity.user.model.AddressType;
 import com.stag.identity.user.model.CodelistDomain;
 import com.stag.identity.user.model.CodelistEntryId;
+import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonProfileData;
@@ -53,35 +53,31 @@ public class CodelistMapper {
                                 .build();
     }
 
-    public GetPersonAddressDataRequest toPersonAddressDataRequest(
-        Address permanentAddress,
-        Address temporaryAddress
-    ) {
+    public GetPersonAddressDataRequest toPersonAddressDataRequest(PersonAddressProjection personAddress) {
         var requestBuilder = GetPersonAddressDataRequest.newBuilder()
                                                         .setLanguage(LANGUAGE);
 
-        setAddressIfPresent(permanentAddress, requestBuilder, AddressType.PERMANENT);
-        setAddressIfPresent(temporaryAddress, requestBuilder, AddressType.TEMPORARY);
+        setAddressIfPresent(personAddress, requestBuilder, AddressType.PERMANENT);
+        setAddressIfPresent(personAddress, requestBuilder, AddressType.TEMPORARY);
 
         return requestBuilder.build();
     }
 
     public PersonAddressData toPersonAddressData(
         GetPersonAddressDataResponse response,
-        Address permanentAddress,
-        Address temporaryAddress
+        PersonAddressProjection personAddress
     ) {
         return PersonAddressData.builder()
-                                .permanentStreet(permanentAddress.street())
-                                .permanentStreetNumber(permanentAddress.streetNumber())
-                                .permanentZipCode(permanentAddress.zipCode())
+                                .permanentStreet(personAddress.permanentStreet())
+                                .permanentStreetNumber(personAddress.permanentStreetNumber())
+                                .permanentZipCode(personAddress.permanentZipCode())
                                 .permanentMunicipality(response.getPermanentMunicipalityName())
                                 .permanentMunicipalityPart(response.getPermanentMunicipalityPartName())
                                 .permanentDistrict(response.getPermanentDistrictName())
                                 .permanentCountry(response.getPermanentCountryName())
-                                .temporaryStreet(temporaryAddress.street())
-                                .temporaryStreetNumber(temporaryAddress.streetNumber())
-                                .temporaryZipCode(temporaryAddress.zipCode())
+                                .temporaryStreet(personAddress.temporaryStreet())
+                                .temporaryStreetNumber(personAddress.temporaryStreetNumber())
+                                .temporaryZipCode(personAddress.temporaryZipCode())
                                 .temporaryMunicipality(response.getTemporaryMunicipalityName())
                                 .temporaryMunicipalityPart(response.getTemporaryMunicipalityPartName())
                                 .temporaryDistrict(response.getTemporaryDistrictName())
@@ -127,25 +123,17 @@ public class CodelistMapper {
     }
 
     private void setAddressIfPresent(
-        Address address,
+        PersonAddressProjection personAddress,
         GetPersonAddressDataRequest.Builder requestBuilder,
         AddressType addressType
     ) {
-        if (address == null) {
-            return;
-        }
-
         if (addressType == AddressType.PERMANENT) {
-            setIfPresent(address.municipalityId(), requestBuilder::setPermanentMunicipalityId);
-            setIfPresent(address.municipalityPartId(), requestBuilder::setPermanentMunicipalityPartId);
-            setIfPresent(address.districtId(), requestBuilder::setPermanentDistrictId);
-            setIfPresent(address.countryId(), requestBuilder::setPermanentCountryId);
+            setIfPresent(personAddress.permanentMunicipalityPartId(), requestBuilder::setPermanentMunicipalityPartId);
+            setIfPresent(personAddress.permanentCountryId(), requestBuilder::setPermanentCountryId);
         }
         else if (addressType == AddressType.TEMPORARY) {
-            setIfPresent(address.municipalityId(), requestBuilder::setTemporaryMunicipalityId);
-            setIfPresent(address.municipalityPartId(), requestBuilder::setTemporaryMunicipalityPartId);
-            setIfPresent(address.districtId(), requestBuilder::setTemporaryDistrictId);
-            setIfPresent(address.countryId(), requestBuilder::setTemporaryCountryId);
+            setIfPresent(personAddress.temporaryMunicipalityPartId(), requestBuilder::setTemporaryMunicipalityPartId);
+            setIfPresent(personAddress.temporaryCountryId(), requestBuilder::setTemporaryCountryId);
         }
     }
 

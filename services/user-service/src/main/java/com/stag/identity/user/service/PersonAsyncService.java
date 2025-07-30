@@ -2,8 +2,8 @@ package com.stag.identity.user.service;
 
 import com.stag.identity.user.grpc.CodelistServiceClient;
 import com.stag.identity.user.grpc.StudentServiceClient;
-import com.stag.identity.user.model.Addresses.Address;
 import com.stag.identity.user.repository.PersonRepository;
+import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonProfileData;
@@ -44,10 +44,10 @@ public class PersonAsyncService {
     }
 
     @Async
-    public CompletableFuture<PersonAddressData> getPersonAddressData(Address permanentAddress, Address temporaryAddress) {
+    public CompletableFuture<PersonAddressData> getPersonAddressData(PersonAddressProjection personAddressProjection) {
         log.info("getPersonAddressData thread: {}", Thread.currentThread());
 
-        PersonAddressData addressData = codelistServiceClient.getPersonAddressData(permanentAddress, temporaryAddress);
+        PersonAddressData addressData = codelistServiceClient.getPersonAddressData(personAddressProjection);
 
         return CompletableFuture.completedFuture(addressData);
     }

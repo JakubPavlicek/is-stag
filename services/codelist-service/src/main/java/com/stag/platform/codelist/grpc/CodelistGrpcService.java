@@ -55,18 +55,12 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     @Override
     public void getPersonProfileData(GetPersonProfileDataRequest request, StreamObserver<GetPersonProfileDataResponse> responseObserver) {
         CompletableFuture<List<CodelistValue>> codelistValuesFuture = CompletableFuture.supplyAsync(
-            () -> {
-                log.info("codelistValuesFuture thread: {}", Thread.currentThread());
-                return buildCodelistValues(request.getCodelistKeysList(), request.getLanguage());
-            },
+            () -> buildCodelistValues(request.getCodelistKeysList(), request.getLanguage()),
             grpcExecutor
         );
 
         CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> {
-                log.info("countryNamesFuture thread: {}", Thread.currentThread());
-                return fetchCountryNames(mapper.extractCountryIds(request));
-            },
+            () -> fetchCountryNames(mapper.extractCountryIds(request)),
             grpcExecutor
         );
 
@@ -80,18 +74,12 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     @Override
     public void getPersonAddressData(GetPersonAddressDataRequest request, StreamObserver<GetPersonAddressDataResponse> responseObserver) {
         CompletableFuture<Map<Long, AddressPlaceNameProjection>> addressNamesFuture = CompletableFuture.supplyAsync(
-            () -> {
-                log.info("addressNamesFuture thread: {}", Thread.currentThread());
-                return fetchAddressNames(mapper.extractMunicipalityPartIds(request));
-            },
+            () -> fetchAddressNames(mapper.extractMunicipalityPartIds(request)),
             grpcExecutor
         );
 
         CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> {
-                log.info("countryNamesFuture thread: {}", Thread.currentThread());
-                return fetchCountryNames(mapper.extractCountryIds(request));
-            },
+            () -> fetchCountryNames(mapper.extractCountryIds(request)),
             grpcExecutor
         );
 

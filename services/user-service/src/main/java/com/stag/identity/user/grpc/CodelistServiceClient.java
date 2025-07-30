@@ -1,7 +1,7 @@
 package com.stag.identity.user.grpc;
 
 import com.stag.identity.user.grpc.mapper.CodelistMapper;
-import com.stag.identity.user.model.Addresses.Address;
+import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonProfileData;
@@ -27,11 +27,10 @@ public class CodelistServiceClient {
     }
 
     /// Get codelist data specifically for person addresses (GET /persons/{personId}/addresses)
-    public PersonAddressData getPersonAddressData(Address permanentAddress, Address temporaryAddress) {
-        // TODO: the addresses might be null, handle this case
-        var request = codelistMapper.toPersonAddressDataRequest(permanentAddress, temporaryAddress);
+    public PersonAddressData getPersonAddressData(PersonAddressProjection personAddressProjection) {
+        var request = codelistMapper.toPersonAddressDataRequest(personAddressProjection);
         var response = codelistServiceStub.getPersonAddressData(request);
-        return codelistMapper.toPersonAddressData(response, permanentAddress, temporaryAddress);
+        return codelistMapper.toPersonAddressData(response, personAddressProjection);
     }
 
 }

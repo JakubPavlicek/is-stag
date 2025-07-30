@@ -47,19 +47,15 @@ message GetPersonProfileDataResponse {
 
 // Person Address specific (only what's needed for GET /persons/{id}/addresses)
 message GetPersonAddressDataRequest {
-  // Permanent residence
-  optional int64 permanent_municipality_id = 1;
-  optional int64 permanent_municipality_part_id = 2;
-  optional int32 permanent_district_id = 3;
-  optional int32 permanent_country_id = 4;
+  // Permanent address
+  optional int64 permanent_municipality_part_id = 1;
+  optional int32 permanent_country_id = 2;
 
-  // Temporary residence
-  optional int64 temporary_municipality_id = 5;
-  optional int64 temporary_municipality_part_id = 6;
-  optional int32 temporary_district_id = 7;
-  optional int32 temporary_country_id = 8;
+  // Temporary address
+  optional int64 temporary_municipality_part_id = 3;
+  optional int32 temporary_country_id = 4;
 
-  string language = 9;
+  string language = 5;
 }
 
 message GetPersonAddressDataResponse {

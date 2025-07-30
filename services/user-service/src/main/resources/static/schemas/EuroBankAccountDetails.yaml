@@ -14,7 +14,7 @@ allOf:
         description: Country code of the Euro account.
         example: "Česká republika"
         maxLength: 70
-      swiftCode:
+      swift:
         type: string
         nullable: true
         description: SWIFT code of the bank for Euro transactions.

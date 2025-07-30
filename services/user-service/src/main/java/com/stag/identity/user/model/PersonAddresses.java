@@ -1,14 +1,13 @@
 package com.stag.identity.user.model;
 
-import com.stag.identity.user.model.Addresses.ForeignAddress;
 import lombok.Builder;
 
 @Builder
 public record PersonAddresses(
     PersonAddress permanentAddress,
     PersonAddress temporaryAddress,
-    ForeignAddress foreignPermanentAddress,
-    ForeignAddress foreignTemporaryAddress
+    PersonForeignAddress foreignPermanentAddress,
+    PersonForeignAddress foreignTemporaryAddress
 ) {
 
     @Builder
@@ -20,6 +19,16 @@ public record PersonAddresses(
         String municipalityPart,
         String district,
         String country
+    ) {
+
+    }
+
+    @Builder
+    public record PersonForeignAddress(
+        String zipCode,
+        String municipality,
+        String district,
+        String postOffice
     ) {
 
     }

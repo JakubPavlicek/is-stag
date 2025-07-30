@@ -7,6 +7,7 @@ import com.stag.identity.user.dto.EducationDetailsDTO;
 import com.stag.identity.user.dto.PersonProfileDTO;
 import com.stag.identity.user.mapper.PersonMapper;
 import com.stag.identity.user.model.PersonAddresses;
+import com.stag.identity.user.model.PersonBanking;
 import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.service.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class PersonController implements PersonsApi {
     private final PersonMapper personMapper;
 
     @Override
-    public ResponseEntity<PersonProfileDTO> getPerson(Integer personId) {
+    public ResponseEntity<PersonProfileDTO> getPersonProfile(Integer personId) {
         PersonProfile personProfile = personService.getPersonProfile(personId);
         PersonProfileDTO personProfileDTO = personMapper.toPersonProfileDTO(personProfile);
 
@@ -42,7 +43,9 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<BankAccountsDTO> getPersonBanking(Integer personId) {
-        return PersonsApi.super.getPersonBanking(personId);
+        PersonBanking personBanking = personService.getPersonBanking(personId);
+
+        return ResponseEntity.ok().build();
     }
 
     @Override

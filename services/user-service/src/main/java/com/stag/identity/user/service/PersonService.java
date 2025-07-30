@@ -2,11 +2,12 @@ package com.stag.identity.user.service;
 
 import com.stag.identity.user.exception.PersonNotFoundException;
 import com.stag.identity.user.mapper.PersonMapper;
-import com.stag.identity.user.model.Addresses;
 import com.stag.identity.user.model.PersonAddresses;
+import com.stag.identity.user.model.PersonBanking;
 import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.repository.PersonRepository;
 import com.stag.identity.user.repository.projection.PersonAddressProjection;
+import com.stag.identity.user.repository.projection.PersonBankProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonProfileData;
@@ -50,12 +51,19 @@ public class PersonService {
             personRepository.findAddressesByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
-        Addresses addresses = personMapper.toAddresses(personAddressProjection);
-
         CompletableFuture<PersonAddressData> addressCodelistDataFuture =
-            personAsyncService.getPersonAddressData(addresses.permanentAddress(), addresses.temporaryAddress());
+            personAsyncService.getPersonAddressData(personAddressProjection);
 
-        return personMapper.toPersonAddresses(addresses, addressCodelistDataFuture.join());
+        return personMapper.toPersonAddresses(personAddressProjection, addressCodelistDataFuture.join());
+    }
+
+    @Transactional(readOnly = true)
+    public PersonBanking getPersonBanking(Integer personId) {
+        PersonBankProjection personBankProjection =
+            personRepository.findBankingByPersonId(personId)
+                            .orElseThrow(() -> new PersonNotFoundException(personId));
+
+        return new PersonBanking(null, null);
     }
 
 }

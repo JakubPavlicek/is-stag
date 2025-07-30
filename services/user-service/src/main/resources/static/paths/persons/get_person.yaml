@@ -3,7 +3,7 @@ get:
     - persons
   summary: Get person
   description: Retrieve a person by their unique identifier.
-  operationId: getPerson
+  operationId: getPersonProfile
   parameters:
     - $ref: '../../parameters/path/personId.yaml'
   responses:
