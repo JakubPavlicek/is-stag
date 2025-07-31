@@ -4,14 +4,14 @@ import lombok.Builder;
 
 @Builder
 public record PersonAddresses(
-    PersonAddress permanentAddress,
-    PersonAddress temporaryAddress,
-    PersonForeignAddress foreignPermanentAddress,
-    PersonForeignAddress foreignTemporaryAddress
+    Address permanentAddress,
+    Address temporaryAddress,
+    ForeignAddress foreignPermanentAddress,
+    ForeignAddress foreignTemporaryAddress
 ) {
 
     @Builder
-    public record PersonAddress(
+    public record Address(
         String street,
         String streetNumber,
         String zipCode,
@@ -24,11 +24,23 @@ public record PersonAddresses(
     }
 
     @Builder
-    public record PersonForeignAddress(
+    public record ForeignAddress(
         String zipCode,
         String municipality,
         String district,
         String postOffice
+    ) {
+
+    }
+
+    @Builder
+    public record HighSchoolAddress(
+        String street,
+        String streetNumber,
+        String zipCode,
+        String municipality,
+        String district,
+        String country
     ) {
 
     }

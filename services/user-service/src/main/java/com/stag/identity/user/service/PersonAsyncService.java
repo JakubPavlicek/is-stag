@@ -4,9 +4,11 @@ import com.stag.identity.user.grpc.CodelistServiceClient;
 import com.stag.identity.user.grpc.StudentServiceClient;
 import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonBankProjection;
+import com.stag.identity.user.repository.projection.PersonEducationProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonBankingData;
+import com.stag.identity.user.service.data.PersonEducationData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,21 +45,30 @@ public class PersonAsyncService {
     }
 
     @Async
-    public CompletableFuture<PersonAddressData> getPersonAddressData(PersonAddressProjection personAddressProjection) {
+    public CompletableFuture<PersonAddressData> getPersonAddressData(PersonAddressProjection personAddress) {
         log.info("getPersonAddressData thread: {}", Thread.currentThread());
 
-        PersonAddressData personAddressData = codelistServiceClient.getPersonAddressData(personAddressProjection);
+        PersonAddressData personAddressData = codelistServiceClient.getPersonAddressData(personAddress);
 
         return CompletableFuture.completedFuture(personAddressData);
     }
 
     @Async
-    public CompletableFuture<PersonBankingData> getPersonBankingData(PersonBankProjection personBankProjection) {
+    public CompletableFuture<PersonBankingData> getPersonBankingData(PersonBankProjection personBank) {
         log.info("getPersonBankingData thread: {}", Thread.currentThread());
 
-        PersonBankingData personBankingData = codelistServiceClient.getPersonBankingData(personBankProjection);
+        PersonBankingData personBankingData = codelistServiceClient.getPersonBankingData(personBank);
 
         return CompletableFuture.completedFuture(personBankingData);
+    }
+
+    @Async
+    public CompletableFuture<PersonEducationData> getPersonEducationData(PersonEducationProjection personEducation) {
+        log.info("getPersonEducationData thread: {}", Thread.currentThread());
+
+        PersonEducationData personEducationData = codelistServiceClient.getPersonEducationData(personEducation);
+
+        return CompletableFuture.completedFuture(personEducationData);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.stag.identity.user.model;
 
 import lombok.Builder;
-import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -52,6 +51,5 @@ public record PersonProfile(
     ) {
 
     }
-
 
 }

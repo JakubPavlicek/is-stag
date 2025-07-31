@@ -5,6 +5,7 @@ get:
   description: Retrieve education information associated with a person by their unique identifier.
   operationId: getPersonEducation
   parameters:
+    - $ref: '../../parameters/header/AcceptLanguage.yaml'
     - $ref: '../../parameters/path/personId.yaml'
   responses:
     '200':

@@ -3,16 +3,9 @@ title: EducationDetails
 description: Education details of the person.
 additionalProperties: false
 required:
-  - previousInstitution
   - highSchool
   - foreignHighSchool
 properties:
-  previousInstitution:
-    type: string
-    nullable: true
-    description: Name of the previous educational institution attended.
-    example: "vysoká škola"
-    maxLength: 100
   highSchool:
     type: object
     description: Details of the high school attended by the person.
@@ -42,7 +35,7 @@ properties:
         description: Date of graduation from the educational institution.
         example: "2020-06-15"
       address:
-        $ref: './Address.yaml'
+        $ref: './HighSchoolAddress.yaml'
   foreignHighSchool:
     type: object
     description: Details of the foreign high school attended by the person.

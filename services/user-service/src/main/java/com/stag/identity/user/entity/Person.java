@@ -334,7 +334,7 @@ public class Person {
     private String phone;
 
     @Column(name = "IZO")
-    private String izo;
+    private String highSchoolId;
 
     @NotNull
     @ColumnDefault("203")
@@ -574,7 +574,7 @@ public class Person {
         name = "CISLO_OBORU",
         length = 10
     )
-    private String fieldOfStudyNumber;
+    private String highSchoolFieldOfStudyNumber;
 
     @Size(max = 10)
     @Column(

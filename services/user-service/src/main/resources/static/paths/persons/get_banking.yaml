@@ -5,6 +5,7 @@ get:
   description: Retrieve banking information associated with a person by their unique identifier.
   operationId: getPersonBanking
   parameters:
+    - $ref: '../../parameters/header/AcceptLanguage.yaml'
     - $ref: '../../parameters/path/personId.yaml'
   responses:
     '200':

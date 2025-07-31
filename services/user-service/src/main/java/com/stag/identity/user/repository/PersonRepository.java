@@ -3,6 +3,7 @@ package com.stag.identity.user.repository;
 import com.stag.identity.user.entity.Person;
 import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonBankProjection;
+import com.stag.identity.user.repository.projection.PersonEducationProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -68,9 +69,30 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
         )
         FROM
             Person p
-        WHERE p.id = :personId
+        WHERE
+            p.id = :personId
         """
     )
     Optional<PersonBankProjection> findBankingByPersonId(Integer personId);
+
+    @Query(
+        """
+        SELECT new com.stag.identity.user.repository.projection.PersonEducationProjection(
+            p.highSchoolId,
+            p.highSchoolFieldOfStudyNumber,
+            CAST(p.highSchoolCountryId AS Integer),
+            p.graduationDate,
+
+            p.highSchoolForeign,
+            p.highSchoolForeignPlace,
+            p.highSchoolForeignFieldOfStudy
+        )
+        FROM
+            Person p
+        WHERE
+            p.id = :personId
+        """
+    )
+    Optional<PersonEducationProjection> findEducationByPersonId(Integer personId);
 
 }

@@ -3,12 +3,15 @@ package com.stag.platform.codelist.grpc.mapper;
 import com.stag.platform.codelist.entity.CodelistEntryId;
 import com.stag.platform.codelist.repository.projection.AddressPlaceNameProjection;
 import com.stag.platform.codelist.repository.projection.CodelistEntryValue;
+import com.stag.platform.codelist.repository.projection.HighSchoolAddressProjection;
 import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistValue;
 import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
 import com.stag.platform.codelist.v1.GetPersonAddressDataResponse;
 import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
 import com.stag.platform.codelist.v1.GetPersonBankingDataResponse;
+import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
+import com.stag.platform.codelist.v1.GetPersonEducationDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
 import org.springframework.stereotype.Component;
@@ -59,6 +62,14 @@ public class CodelistMapper {
         Set<Integer> countryIds = HashSet.newHashSet(1);
 
         addIfPresent(countryIds, request.hasEuroAccountCountryId(), request::getEuroAccountCountryId);
+
+        return countryIds;
+    }
+
+    public Set<Integer> extractCountryIds(GetPersonEducationDataRequest request) {
+        Set<Integer> countryIds = HashSet.newHashSet(1);
+
+        addIfPresent(countryIds, request.hasHighSchoolCountryId(), request::getHighSchoolCountryId);
 
         return countryIds;
     }
@@ -116,12 +127,36 @@ public class CodelistMapper {
         List<CodelistValue> codelistValues,
         Map<Integer, String> countryNames
     ) {
-
         var responseBuilder = GetPersonBankingDataResponse.newBuilder()
                                                           .addAllCodelistValues(codelistValues);
 
         if (!countryNames.isEmpty()) {
             setCountryNameIfPresent(countryNames, request.getEuroAccountCountryId(), responseBuilder::setEuroAccountCountryName);
+        }
+
+        return responseBuilder.build();
+    }
+
+    public GetPersonEducationDataResponse buildPersonEducationDataResponse(
+        GetPersonEducationDataRequest request,
+        HighSchoolAddressProjection highSchoolAddress,
+        String fieldOfStudy,
+        Map<Integer, String> countryNames
+    ) {
+        var responseBuilder = GetPersonEducationDataResponse.newBuilder();
+
+        if (highSchoolAddress != null) {
+            responseBuilder.setHighSchoolName(highSchoolAddress.name())
+                           .setHighSchoolStreet(highSchoolAddress.street())
+                           .setHighSchoolZipCode(highSchoolAddress.zipCode())
+                           .setHighSchoolMunicipalityName(highSchoolAddress.municipality())
+                           .setHighSchoolDistrictName(highSchoolAddress.district());
+        }
+
+        responseBuilder.setHighSchoolFieldOfStudy(fieldOfStudy);
+
+        if (!countryNames.isEmpty()) {
+            setCountryNameIfPresent(countryNames, request.getHighSchoolCountryId(), responseBuilder::setHighSchoolCountryName);
         }
 
         return responseBuilder.build();

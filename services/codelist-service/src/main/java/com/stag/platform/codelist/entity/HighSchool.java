@@ -40,7 +40,7 @@ public class HighSchool {
         nullable = false,
         length = 10
     )
-    private String izo;
+    private String id;
 
     @Size(max = 150)
     @Column(
@@ -136,6 +136,6 @@ public class HighSchool {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "OBEC_IDNO")
-    private Municipality municipalityId;
+    private Municipality municipality;
 
 }

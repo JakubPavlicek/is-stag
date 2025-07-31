@@ -5,6 +5,7 @@ get:
   description: Retrieve addresses associated with a person by their unique identifier.
   operationId: getPersonAddresses
   parameters:
+    - $ref: '../../parameters/header/AcceptLanguage.yaml'
     - $ref: '../../parameters/path/personId.yaml'
   responses:
     '200':

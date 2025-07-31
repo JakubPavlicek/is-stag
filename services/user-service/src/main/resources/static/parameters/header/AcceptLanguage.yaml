@@ -1,0 +1,8 @@
+name: Accept-Language
+in: header
+description: Preferred language (Czech or English)
+required: false
+schema:
+  type: string
+  enum: [cs, en]
+  default: cs

@@ -3,15 +3,20 @@ package com.stag.identity.user.mapper;
 import com.stag.identity.user.dto.AddressesDTO;
 import com.stag.identity.user.dto.BankAccountDetailsDTO;
 import com.stag.identity.user.dto.BankAccountsDTO;
+import com.stag.identity.user.dto.EducationDetailsDTO;
+import com.stag.identity.user.dto.EducationDetailsForeignHighSchoolDTO;
+import com.stag.identity.user.dto.EducationDetailsHighSchoolDTO;
 import com.stag.identity.user.dto.EuroBankAccountDetailsDTO;
 import com.stag.identity.user.dto.PersonProfileDTO;
 import com.stag.identity.user.model.CodelistDomain;
 import com.stag.identity.user.model.CodelistEntryId;
 import com.stag.identity.user.model.PersonAddresses;
-import com.stag.identity.user.model.PersonAddresses.PersonAddress;
 import com.stag.identity.user.model.PersonBanking;
 import com.stag.identity.user.model.PersonBanking.BankAccount;
 import com.stag.identity.user.model.PersonBanking.EuroBankAccount;
+import com.stag.identity.user.model.PersonEducation;
+import com.stag.identity.user.model.PersonEducation.ForeignHighSchool;
+import com.stag.identity.user.model.PersonEducation.HighSchool;
 import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.model.PersonProfile.BirthPlace;
 import com.stag.identity.user.model.PersonProfile.Citizenship;
@@ -19,9 +24,11 @@ import com.stag.identity.user.model.PersonProfile.Contact;
 import com.stag.identity.user.model.PersonProfile.Titles;
 import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonBankProjection;
+import com.stag.identity.user.repository.projection.PersonEducationProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonBankingData;
+import com.stag.identity.user.service.data.PersonEducationData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -31,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.stag.identity.user.model.PersonAddresses.PersonForeignAddress;
+import static com.stag.identity.user.model.PersonAddresses.ForeignAddress;
 
 @Mapper(
     componentModel = "spring",
@@ -136,7 +143,7 @@ public abstract class PersonMapper {
                               .build();
     }
 
-    private PersonAddress buildPersonAddress(
+    private PersonAddresses.Address buildPersonAddress(
         String street,
         String streetNumber,
         String zipCode,
@@ -145,29 +152,29 @@ public abstract class PersonMapper {
         String district,
         String country
     ) {
-        return PersonAddress.builder()
-                            .street(street)
-                            .streetNumber(streetNumber)
-                            .zipCode(zipCode)
-                            .municipality(municipality)
-                            .municipalityPart(municipalityPart)
-                            .district(district)
-                            .country(country)
-                            .build();
+        return PersonAddresses.Address.builder()
+                                      .street(street)
+                                      .streetNumber(streetNumber)
+                                      .zipCode(zipCode)
+                                      .municipality(municipality)
+                                      .municipalityPart(municipalityPart)
+                                      .district(district)
+                                      .country(country)
+                                      .build();
     }
 
-    private PersonForeignAddress buildPersonForeignAddress(
+    private ForeignAddress buildPersonForeignAddress(
         String zipCode,
         String municipality,
         String district,
         String postOffice
     ) {
-        return PersonForeignAddress.builder()
-                                   .zipCode(zipCode)
-                                   .municipality(municipality)
-                                   .district(district)
-                                   .postOffice(postOffice)
-                                   .build();
+        return ForeignAddress.builder()
+                             .zipCode(zipCode)
+                             .municipality(municipality)
+                             .district(district)
+                             .postOffice(postOffice)
+                             .build();
     }
 
     public PersonBanking toPersonBanking(PersonBankProjection personBank, PersonBankingData personBankingData) {
@@ -245,5 +252,58 @@ public abstract class PersonMapper {
                                     .currency(account.currency())
                                     .build();
     }
+
+    public PersonEducation toPersonEducation(PersonEducationProjection personEducation, PersonEducationData personEducationData) {
+        return PersonEducation.builder()
+                              .highSchool(toHighSchool(personEducation, personEducationData))
+                              .foreignHighSchool(toForeignHighSchool(personEducation, personEducationData))
+                              .build();
+    }
+
+    private HighSchool toHighSchool(PersonEducationProjection personEducation, PersonEducationData personEducationData) {
+        return HighSchool.builder()
+                         .name(personEducationData.highSchoolName())
+                         .fieldOfStudy(personEducationData.highSchoolFieldOfStudy())
+                         .graduationDate(personEducation.graduationDate())
+                         .address(toAddressWithoutMunicipalityPart(personEducationData))
+                         .build();
+    }
+
+    private ForeignHighSchool toForeignHighSchool(PersonEducationProjection personEducation, PersonEducationData personEducationData) {
+        return ForeignHighSchool.builder()
+                                .name(personEducation.highSchoolForeign())
+                                .location(personEducation.highSchoolForeignPlace())
+                                .fieldOfStudy(personEducationData.highSchoolFieldOfStudy())
+                                .build();
+    }
+
+    private PersonAddresses.HighSchoolAddress toAddressWithoutMunicipalityPart(PersonEducationData personEducationData) {
+        return PersonAddresses.HighSchoolAddress.builder()
+                                                .street(personEducationData.highSchoolStreet())
+                                                .streetNumber(personEducationData.highSchoolStreetNumber())
+                                                .zipCode(personEducationData.highSchoolZipCode())
+                                                .municipality(personEducationData.highSchoolMunicipalityName())
+                                                .district(personEducationData.highSchoolDistrictName())
+                                                .country(personEducationData.highSchoolCountryName())
+                                                .build();
+    }
+
+    public EducationDetailsDTO toEducationDetailsDTO(PersonEducation personEducation) {
+        return EducationDetailsDTO.builder()
+                                  .highSchool(toEducationDetailsHighSchoolDTO(personEducation.highSchool()))
+                                  .foreignHighSchool(toEducationDetailsForeignHighSchoolDTO(personEducation.foreignHighSchool()))
+                                  .build();
+    }
+
+    @Mapping(source = "name", target = "institutionName")
+    @Mapping(source = "fieldOfStudy", target = "fieldOfStudy")
+    @Mapping(source = "graduationDate", target = "graduationDate")
+    @Mapping(source = "address", target = "address")
+    abstract EducationDetailsHighSchoolDTO toEducationDetailsHighSchoolDTO(HighSchool highSchool);
+
+    @Mapping(source = "name", target = "institutionName")
+    @Mapping(source = "location", target = "location")
+    @Mapping(source = "fieldOfStudy", target = "fieldOfStudy")
+    abstract EducationDetailsForeignHighSchoolDTO toEducationDetailsForeignHighSchoolDTO(ForeignHighSchool foreignHighSchool);
 
 }

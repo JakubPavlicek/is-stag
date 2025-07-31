@@ -4,13 +4,16 @@ import com.stag.identity.user.exception.PersonNotFoundException;
 import com.stag.identity.user.mapper.PersonMapper;
 import com.stag.identity.user.model.PersonAddresses;
 import com.stag.identity.user.model.PersonBanking;
+import com.stag.identity.user.model.PersonEducation;
 import com.stag.identity.user.model.PersonProfile;
 import com.stag.identity.user.repository.PersonRepository;
 import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonBankProjection;
+import com.stag.identity.user.repository.projection.PersonEducationProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonBankingData;
+import com.stag.identity.user.service.data.PersonEducationData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +49,7 @@ public class PersonService {
         return personMapper.toPersonProfile(personProfile, personalNumbersFuture.join(), profileDataFuture.join());
     }
 
+    // TODO: add postOffice to the PersonAddress (CIS_PSC.POSTA - Entity = ZipCode)
     @Transactional(readOnly = true)
     public PersonAddresses getPersonAddresses(Integer personId) {
         PersonAddressProjection personAddressProjection =
@@ -64,10 +68,21 @@ public class PersonService {
             personRepository.findBankingByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
-        CompletableFuture<PersonBankingData> personBankingDataFuture =
+        CompletableFuture<PersonBankingData> bankingDataFuture =
             personAsyncService.getPersonBankingData(personBankProjection);
 
-        return personMapper.toPersonBanking(personBankProjection, personBankingDataFuture.join());
+        return personMapper.toPersonBanking(personBankProjection, bankingDataFuture.join());
+    }
+
+    public PersonEducation getPersonEducation(Integer personId) {
+        PersonEducationProjection personEducationProjection =
+            personRepository.findEducationByPersonId(personId)
+                            .orElseThrow(() -> new PersonNotFoundException(personId));
+
+        CompletableFuture<PersonEducationData> educationDataFuture =
+            personAsyncService.getPersonEducationData(personEducationProjection);
+
+        return personMapper.toPersonEducation(personEducationProjection, educationDataFuture.join());
     }
 
 }

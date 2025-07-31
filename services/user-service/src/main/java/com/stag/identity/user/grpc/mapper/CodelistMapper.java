@@ -5,9 +5,11 @@ import com.stag.identity.user.model.CodelistDomain;
 import com.stag.identity.user.model.CodelistEntryId;
 import com.stag.identity.user.repository.projection.PersonAddressProjection;
 import com.stag.identity.user.repository.projection.PersonBankProjection;
+import com.stag.identity.user.repository.projection.PersonEducationProjection;
 import com.stag.identity.user.repository.projection.PersonProfileProjection;
 import com.stag.identity.user.service.data.PersonAddressData;
 import com.stag.identity.user.service.data.PersonBankingData;
+import com.stag.identity.user.service.data.PersonEducationData;
 import com.stag.identity.user.service.data.PersonProfileData;
 import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistValue;
@@ -15,6 +17,8 @@ import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
 import com.stag.platform.codelist.v1.GetPersonAddressDataResponse;
 import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
 import com.stag.platform.codelist.v1.GetPersonBankingDataResponse;
+import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
+import com.stag.platform.codelist.v1.GetPersonEducationDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
 import org.springframework.stereotype.Component;
@@ -66,6 +70,17 @@ public class CodelistMapper {
         return requestBuilder.build();
     }
 
+    public GetPersonEducationDataRequest toPersonEducationDataRequest(PersonEducationProjection personEducation) {
+        var requestBuilder = GetPersonEducationDataRequest.newBuilder()
+                                                          .setLanguage(LANGUAGE);
+
+        setIfPresent(personEducation.highSchoolId(), requestBuilder::setHighSchoolId);
+        setIfPresent(personEducation.highSchoolFieldOfStudyNumber(), requestBuilder::setHighSchoolFieldOfStudyNumber);
+        setIfPresent(personEducation.highSchoolCountryId(), requestBuilder::setHighSchoolCountryId);
+
+        return requestBuilder.build();
+    }
+
     public PersonProfileData toPersonProfileData(GetPersonProfileDataResponse response) {
         List<CodelistValue> codelistValues = response.getCodelistValuesList();
         Map<CodelistEntryId, String> codelistMeanings = buildCodelistMeanings(codelistValues);
@@ -107,6 +122,18 @@ public class CodelistMapper {
                                 .codelistMeanings(codelistMeanings)
                                 .euroAccountCountryName(response.getEuroAccountCountryName())
                                 .build();
+    }
+
+    public PersonEducationData toPersonEducationData(GetPersonEducationDataResponse response) {
+        return PersonEducationData.builder()
+                                  .highSchoolName(response.getHighSchoolName())
+                                  .highSchoolFieldOfStudy(response.getHighSchoolFieldOfStudy())
+                                  .highSchoolStreet(response.getHighSchoolStreet())
+                                  .highSchoolZipCode(response.getHighSchoolZipCode())
+                                  .highSchoolMunicipalityName(response.getHighSchoolMunicipalityName())
+                                  .highSchoolDistrictName(response.getHighSchoolDistrictName())
+                                  .highSchoolCountryName(response.getHighSchoolCountryName())
+                                  .build();
     }
 
     private List<CodelistKey> buildProfileCodelistKeys(PersonProfileProjection personProfile) {

@@ -5,6 +5,7 @@ get:
   description: Retrieve a person by their unique identifier.
   operationId: getPersonProfile
   parameters:
+    - $ref: '../../parameters/header/AcceptLanguage.yaml'
     - $ref: '../../parameters/path/personId.yaml'
   responses:
     '200':
