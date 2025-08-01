@@ -1,0 +1,14 @@
+package com.stag.identity.user.application.person.dto;
+
+import com.stag.identity.user.domain.shared.model.CodelistEntryId;
+import lombok.Builder;
+
+import java.util.Map;
+
+@Builder
+public record PersonBankingData(
+    Map<CodelistEntryId, String> codelistMeanings,
+    String euroAccountCountryName
+) {
+
+}
