@@ -1,4 +1,4 @@
-package com.stag.identity.user.infrastructure.person.adapter.out.persistence.entity;
+package com.stag.identity.user.infrastructure.adapter.out.persistence.person.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

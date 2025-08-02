@@ -1,4 +1,4 @@
-package com.stag.identity.user.infrastructure.person.adapter.in.web.mapper;
+package com.stag.identity.user.infrastructure.adapter.in.web.person.mapper;
 
 import com.stag.identity.user.application.person.dto.PersonAddressesResult;
 import com.stag.identity.user.application.person.dto.PersonBankingResult;
@@ -8,14 +8,14 @@ import com.stag.identity.user.application.person.dto.PersonEducationResult;
 import com.stag.identity.user.application.person.dto.PersonEducationResult.ForeignHighSchool;
 import com.stag.identity.user.application.person.dto.PersonEducationResult.HighSchool;
 import com.stag.identity.user.application.person.dto.PersonProfileResult;
-import com.stag.identity.user.infrastructure.dto.AddressesDTO;
-import com.stag.identity.user.infrastructure.dto.BankAccountDetailsDTO;
-import com.stag.identity.user.infrastructure.dto.BankAccountsDTO;
-import com.stag.identity.user.infrastructure.dto.EducationDetailsDTO;
-import com.stag.identity.user.infrastructure.dto.EducationDetailsForeignHighSchoolDTO;
-import com.stag.identity.user.infrastructure.dto.EducationDetailsHighSchoolDTO;
-import com.stag.identity.user.infrastructure.dto.EuroBankAccountDetailsDTO;
-import com.stag.identity.user.infrastructure.dto.PersonProfileDTO;
+import com.stag.identity.user.infrastructure.adapter.in.web.dto.AddressesDTO;
+import com.stag.identity.user.infrastructure.adapter.in.web.dto.BankAccountDetailsDTO;
+import com.stag.identity.user.infrastructure.adapter.in.web.dto.BankAccountsDTO;
+import com.stag.identity.user.infrastructure.adapter.in.web.dto.EducationDetailsDTO;
+import com.stag.identity.user.infrastructure.adapter.in.web.dto.EducationDetailsForeignHighSchoolDTO;
+import com.stag.identity.user.infrastructure.adapter.in.web.dto.EducationDetailsHighSchoolDTO;
+import com.stag.identity.user.infrastructure.adapter.in.web.dto.EuroBankAccountDetailsDTO;
+import com.stag.identity.user.infrastructure.adapter.in.web.dto.PersonProfileDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueMappingStrategy;

@@ -92,12 +92,6 @@ public abstract class PersonAppMapper {
         );
     }
 
-    private String lookupCodelistValue(CodelistDomain domain, String lowValue, Map<CodelistEntryId, String> meanings) {
-        return Optional.ofNullable(lowValue)
-                       .map(value -> meanings.get(new CodelistEntryId(domain.name(), value)))
-                       .orElse(null);
-    }
-
     // --- Address Mapping ---
 
     public PersonAddressesResult toPersonAddresses(PersonAddress personAddress, PersonAddressData personAddressData) {
@@ -247,6 +241,12 @@ public abstract class PersonAppMapper {
                                 .district(personEducationData.highSchoolDistrictName())
                                 .country(personEducationData.highSchoolCountryName())
                                 .build();
+    }
+
+    private String lookupCodelistValue(CodelistDomain domain, String lowValue, Map<CodelistEntryId, String> meanings) {
+        return Optional.ofNullable(lowValue)
+                       .map(value -> meanings.get(new CodelistEntryId(domain.name(), value)))
+                       .orElse(null);
     }
 
 }

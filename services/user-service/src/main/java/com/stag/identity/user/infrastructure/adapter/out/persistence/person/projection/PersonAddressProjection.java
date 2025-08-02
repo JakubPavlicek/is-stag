@@ -1,4 +1,4 @@
-package com.stag.identity.user.infrastructure.person.adapter.out.persistence.projection;
+package com.stag.identity.user.infrastructure.adapter.out.persistence.person.projection;
 
 public record PersonAddressProjection(
     String permanentStreet,

@@ -1,4 +1,4 @@
-package com.stag.identity.user.infrastructure.shared.adapter.out.grpc.client;
+package com.stag.identity.user.infrastructure.adapter.out.grpc.codelist;
 
 import com.stag.identity.user.application.person.dto.PersonAddressData;
 import com.stag.identity.user.application.person.dto.PersonBankingData;
@@ -9,7 +9,7 @@ import com.stag.identity.user.domain.person.model.PersonAddress;
 import com.stag.identity.user.domain.person.model.PersonBank;
 import com.stag.identity.user.domain.person.model.PersonEducation;
 import com.stag.identity.user.domain.person.model.PersonProfile;
-import com.stag.identity.user.infrastructure.shared.adapter.out.grpc.mapper.CodelistMapper;
+import com.stag.identity.user.infrastructure.adapter.out.grpc.codelist.mapper.CodelistMapper;
 import com.stag.platform.codelist.v1.CodelistServiceGrpc;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;

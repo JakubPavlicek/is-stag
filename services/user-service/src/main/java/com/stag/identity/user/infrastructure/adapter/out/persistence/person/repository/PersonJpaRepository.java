@@ -1,9 +1,9 @@
-package com.stag.identity.user.infrastructure.person.adapter.out.persistence.repository;
+package com.stag.identity.user.infrastructure.adapter.out.persistence.person.repository;
 
-import com.stag.identity.user.infrastructure.person.adapter.out.persistence.entity.Person;
-import com.stag.identity.user.infrastructure.person.adapter.out.persistence.projection.PersonAddressProjection;
-import com.stag.identity.user.infrastructure.person.adapter.out.persistence.projection.PersonBankProjection;
-import com.stag.identity.user.infrastructure.person.adapter.out.persistence.projection.PersonEducationProjection;
+import com.stag.identity.user.infrastructure.adapter.out.persistence.person.entity.Person;
+import com.stag.identity.user.infrastructure.adapter.out.persistence.person.projection.PersonAddressProjection;
+import com.stag.identity.user.infrastructure.adapter.out.persistence.person.projection.PersonBankProjection;
+import com.stag.identity.user.infrastructure.adapter.out.persistence.person.projection.PersonEducationProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

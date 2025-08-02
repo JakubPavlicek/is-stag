@@ -1,4 +1,4 @@
-package com.stag.identity.user.infrastructure.shared.adapter.out.grpc.mapper;
+package com.stag.identity.user.infrastructure.adapter.out.grpc.codelist.mapper;
 
 import com.stag.identity.user.application.person.dto.PersonAddressData;
 import com.stag.identity.user.application.person.dto.PersonBankingData;

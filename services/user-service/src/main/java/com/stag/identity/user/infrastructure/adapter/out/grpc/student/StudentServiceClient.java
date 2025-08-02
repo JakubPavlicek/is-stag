@@ -1,4 +1,4 @@
-package com.stag.identity.user.infrastructure.shared.adapter.out.grpc.client;
+package com.stag.identity.user.infrastructure.adapter.out.grpc.student;
 
 import com.stag.academics.student.v1.GetStudentPersonalNumbersRequest;
 import com.stag.academics.student.v1.StudentServiceGrpc;
@@ -20,8 +20,8 @@ public class StudentServiceClient implements StudentServicePort {
         var request = GetStudentPersonalNumbersRequest.newBuilder()
                                                       .setPersonId(personId.id())
                                                       .build();
-        var personalNumbers = studentServiceStub.getStudentPersonalNumbers(request);
-        return personalNumbers.getPersonalNumbersList();
+        var response = studentServiceStub.getStudentPersonalNumbers(request);
+        return response.getPersonalNumbersList();
     }
 
 }

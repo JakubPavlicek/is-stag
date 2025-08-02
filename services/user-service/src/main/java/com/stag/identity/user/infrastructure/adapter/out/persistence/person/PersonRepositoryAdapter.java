@@ -1,4 +1,4 @@
-package com.stag.identity.user.infrastructure.person.adapter.out.persistence;
+package com.stag.identity.user.infrastructure.adapter.out.persistence.person;
 
 import com.stag.identity.user.domain.person.model.PersonAddress;
 import com.stag.identity.user.domain.person.model.PersonBank;
@@ -6,9 +6,9 @@ import com.stag.identity.user.domain.person.model.PersonEducation;
 import com.stag.identity.user.domain.person.model.PersonProfile;
 import com.stag.identity.user.application.person.port.out.PersonRepositoryPort;
 import com.stag.identity.user.domain.person.model.PersonId;
-import com.stag.identity.user.infrastructure.person.adapter.out.persistence.mapper.PersonPersistenceMapper;
-import com.stag.identity.user.infrastructure.person.adapter.out.persistence.projection.PersonProfileProjection;
-import com.stag.identity.user.infrastructure.person.adapter.out.persistence.repository.PersonJpaRepository;
+import com.stag.identity.user.infrastructure.adapter.out.persistence.person.mapper.PersonPersistenceMapper;
+import com.stag.identity.user.infrastructure.adapter.out.persistence.person.projection.PersonProfileProjection;
+import com.stag.identity.user.infrastructure.adapter.out.persistence.person.repository.PersonJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
