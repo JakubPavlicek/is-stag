@@ -6,10 +6,10 @@ import build.buf.protovalidate.exceptions.CompilationException;
 import build.buf.protovalidate.exceptions.ExecutionException;
 import build.buf.protovalidate.exceptions.ValidationException;
 import com.google.protobuf.DescriptorProtos;
-import io.grpc.ClientCall;
 import io.grpc.Metadata;
 import io.grpc.ServerCall;
 import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,16 +17,15 @@ import java.util.List;
 
 @Slf4j
 @UtilityClass
-public class ProtoValidationUtils {
+class ProtoValidationUtils {
 
-    public static  <ReqT, RespT> void closeCallWithValidationException(ClientCall<ReqT,RespT> call, ValidationException e) {
+    public static void throwInvalidArgumentException(ValidationException e) {
         log.error("Validation error: {}", e.getMessage());
 
         String description = getValidationExceptionMessage(e);
 
-        call.cancel(
-            description,
-            Status.INVALID_ARGUMENT.withDescription(description).asException()
+        throw new StatusRuntimeException(
+            Status.INVALID_ARGUMENT.withDescription(description).withCause(e)
         );
     }
 
@@ -42,19 +41,18 @@ public class ProtoValidationUtils {
         );
     }
 
-    public static <ReqT, RespT> void closeCallWithValidationResult(ClientCall<ReqT, RespT> call, ValidationResult result) {
+    public static void throwInternalException(ValidationResult result) {
         List<Violation> violations = result.getViolations();
         String errorMessage = getValidationErrorMessage(violations);
 
         log.error(errorMessage);
 
-        call.cancel(
-            errorMessage,
-            Status.INTERNAL.withDescription(errorMessage).asException()
+        throw new StatusRuntimeException(
+            Status.INTERNAL.withDescription(errorMessage)
         );
     }
 
-    public static  <ReqT, RespT> void closeCallWithValidationException(ServerCall<ReqT, RespT> call, ValidationException e) {
+    public static <ReqT, RespT> void closeCallWithValidationException(ServerCall<ReqT, RespT> call, ValidationException e) {
         log.error("Validation error: {}", e.getMessage());
 
         String description = getValidationExceptionMessage(e);

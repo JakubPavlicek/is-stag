@@ -11,12 +11,12 @@ import io.grpc.ServerCallHandler;
 import io.grpc.ServerInterceptor;
 import lombok.RequiredArgsConstructor;
 
+/// @see <a href="https://github.com/DanielLiu1123/grpc-starter/blob/main/grpc-extensions/grpc-validation/src/main/java/grpcstarter/extensions/validation/ProtoValidateServerInterceptor.java">grpc-starter ProtoValidateServerInterceptor</a>
 @RequiredArgsConstructor
 public class ProtoValidateServerInterceptor implements ServerInterceptor {
 
     private final Validator validator;
 
-    /// @see <a href="https://github.com/DanielLiu1123/grpc-starter/blob/main/grpc-extensions/grpc-validation/src/main/java/grpcstarter/extensions/validation/ProtoValidateServerInterceptor.java">ProtoValidateServerInterceptor</a>
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
         ServerCall<ReqT, RespT> call,
