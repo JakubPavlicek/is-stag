@@ -1,5 +1,6 @@
 package com.stag.platform.codelist.grpc.mapper;
 
+import com.google.protobuf.Message;
 import com.stag.platform.codelist.entity.CodelistEntryId;
 import com.stag.platform.codelist.repository.projection.AddressPlaceNameProjection;
 import com.stag.platform.codelist.repository.projection.CodelistEntryValue;
@@ -14,6 +15,7 @@ import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
 import com.stag.platform.codelist.v1.GetPersonEducationDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -21,14 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Component
 public class CodelistMapper {
 
     public List<CodelistEntryId> extractCodelistEntryIds(List<CodelistKey> codelistKeys) {
         return codelistKeys.stream()
-                           .map(this::buildCodelistEntryId)
+                           .map(key -> new CodelistEntryId(key.getDomain(), key.getLowValue()))
                            .toList();
     }
 
@@ -38,47 +39,34 @@ public class CodelistMapper {
                       .toList();
     }
 
-    public Set<Integer> extractCountryIds(GetPersonProfileDataRequest request) {
-        Set<Integer> countryIds = HashSet.newHashSet(2);
-
-        addIfPresent(countryIds, request.hasBirthCountryId(), request::getBirthCountryId);
-        addIfPresent(countryIds, request.hasCitizenshipCountryId(), request::getCitizenshipCountryId);
-
-        return countryIds;
+    public Set<Integer> extractCountryIds(Message message) {
+        return switch (message) {
+            case GetPersonProfileDataRequest r -> extractValues(
+                Pair.of(r.hasBirthCountryId(), r.getBirthCountryId()),
+                Pair.of(r.hasCitizenshipCountryId(), r.getCitizenshipCountryId())
+            );
+            case GetPersonAddressDataRequest r -> extractValues(
+                Pair.of(r.hasPermanentCountryId(), r.getPermanentCountryId()),
+                Pair.of(r.hasTemporaryCountryId(), r.getTemporaryCountryId())
+            );
+            case GetPersonBankingDataRequest r -> extractValues(
+                Pair.of(r.hasEuroAccountCountryId(), r.getEuroAccountCountryId())
+            );
+            case GetPersonEducationDataRequest r -> extractValues(
+                Pair.of(r.hasHighSchoolCountryId(), r.getHighSchoolCountryId())
+            );
+            default -> throw new IllegalStateException("Unexpected value: " + message);
+        };
     }
 
-    public Set<Integer> extractCountryIds(GetPersonAddressDataRequest request) {
-        Set<Integer> countryIds = HashSet.newHashSet(2);
-
-        addIfPresent(countryIds, request.hasPermanentCountryId(), request::getPermanentCountryId);
-        addIfPresent(countryIds, request.hasTemporaryCountryId(), request::getTemporaryCountryId);
-
-        return countryIds;
-    }
-
-    public Set<Integer> extractCountryIds(GetPersonBankingDataRequest request) {
-        Set<Integer> countryIds = HashSet.newHashSet(1);
-
-        addIfPresent(countryIds, request.hasEuroAccountCountryId(), request::getEuroAccountCountryId);
-
-        return countryIds;
-    }
-
-    public Set<Integer> extractCountryIds(GetPersonEducationDataRequest request) {
-        Set<Integer> countryIds = HashSet.newHashSet(1);
-
-        addIfPresent(countryIds, request.hasHighSchoolCountryId(), request::getHighSchoolCountryId);
-
-        return countryIds;
-    }
-
-    public Set<Long> extractMunicipalityPartIds(GetPersonAddressDataRequest request) {
-        Set<Long> municipalityPartIds = HashSet.newHashSet(2);
-
-        addIfPresent(municipalityPartIds, request.hasPermanentMunicipalityPartId(), request::getPermanentMunicipalityPartId);
-        addIfPresent(municipalityPartIds, request.hasTemporaryMunicipalityPartId(), request::getTemporaryMunicipalityPartId);
-
-        return municipalityPartIds;
+    public Set<Long> extractMunicipalityPartIds(Message message) {
+        return switch (message) {
+            case GetPersonAddressDataRequest r -> extractValues(
+                Pair.of(r.hasPermanentMunicipalityPartId(), r.getPermanentMunicipalityPartId()),
+                Pair.of(r.hasTemporaryMunicipalityPartId(), r.getTemporaryMunicipalityPartId())
+            );
+            default -> throw new IllegalStateException("Unexpected value: " + message);
+        };
     }
 
     public GetPersonProfileDataResponse buildPersonProfileDataResponse(
@@ -86,7 +74,6 @@ public class CodelistMapper {
         List<CodelistValue> codelistValues,
         Map<Integer, String> countryNames
     ) {
-
         var responseBuilder = GetPersonProfileDataResponse.newBuilder()
                                                           .addAllCodelistValues(codelistValues);
 
@@ -103,7 +90,6 @@ public class CodelistMapper {
         Map<Long, AddressPlaceNameProjection> addressNames,
         Map<Integer, String> countryNames
     ) {
-
         var responseBuilder = GetPersonAddressDataResponse.newBuilder();
 
         // Set address place names
@@ -165,7 +151,6 @@ public class CodelistMapper {
         Map<Long, AddressPlaceNameProjection> addressNames,
         GetPersonAddressDataResponse.Builder responseBuilder
     ) {
-
         // Set permanent address place names
         if (request.hasPermanentMunicipalityPartId()) {
             AddressPlaceNameProjection permanentAddress = addressNames.get(request.getPermanentMunicipalityPartId());
@@ -192,7 +177,6 @@ public class CodelistMapper {
         Integer countryId,
         Consumer<String> setter
     ) {
-
         if (countryId != null) {
             String countryName = countryNames.get(countryId);
             if (countryName != null) {
@@ -201,14 +185,20 @@ public class CodelistMapper {
         }
     }
 
-    private <T> void addIfPresent(Set<T> collection, boolean hasValue, Supplier<T> valueSupplier) {
-        if (hasValue) {
-            collection.add(valueSupplier.get());
-        }
-    }
+    @SafeVarargs
+    private <T> Set<T> extractValues(Pair<Boolean, T>... pairs) {
+        Set<T> result = HashSet.newHashSet(pairs.length);
 
-    private CodelistEntryId buildCodelistEntryId(CodelistKey key) {
-        return new CodelistEntryId(key.getDomain(), key.getLowValue());
+        for (Pair<Boolean, T> pair : pairs) {
+            boolean hasValue = pair.getFirst();
+            T value = pair.getSecond();
+
+            if (hasValue) {
+                result.add(value);
+            }
+        }
+
+        return result;
     }
 
     private CodelistValue toCodelistValue(CodelistEntryValue entry) {
