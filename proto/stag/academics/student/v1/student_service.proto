@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package stag.academics.student.v1;
 
+import "buf/validate/validate.proto";
+
 option java_package = "com.stag.academics.student.v1";
 option java_outer_classname = "UserServiceProto";
 option java_multiple_files = true;
@@ -12,7 +14,11 @@ service StudentService {
 }
 
 message GetStudentPersonalNumbersRequest {
-  int32 person_id = 1;
+
+  int32 person_id = 1 [
+    (buf.validate.field).int32.gte = 0
+  ];
+
 }
 
 message GetStudentPersonalNumbersResponse {

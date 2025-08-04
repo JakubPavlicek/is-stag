@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package stag.platform.codelist.v1;
 
+import "buf/validate/validate.proto";
+
 option java_package = "com.stag.platform.codelist.v1";
 option java_outer_classname = "CodelistServiceProto";
 option java_multiple_files = true;
@@ -23,8 +25,17 @@ service CodelistService {
 }
 
 message GetCodelistValuesRequest {
-  repeated CodelistKey codelist_keys = 1;
-  string language = 2;
+
+  repeated CodelistKey codelist_keys = 1 [
+    (buf.validate.field).repeated.min_items = 1,
+    (buf.validate.field).repeated.max_items = 10
+  ];
+
+  string language = 2 [
+    (buf.validate.field).string.in = "cs",
+    (buf.validate.field).string.in = "en"
+  ];
+
 }
 
 message GetCodelistValuesResponse {
@@ -33,10 +44,25 @@ message GetCodelistValuesResponse {
 
 // Person Profile specific (only what's needed for GET /persons/{id})
 message GetPersonProfileDataRequest {
-  repeated CodelistKey codelist_keys = 1;
-  optional int32 birth_country_id = 2;
-  optional int32 citizenship_country_id = 3;
-  string language = 4;
+
+  repeated CodelistKey codelist_keys = 1 [
+    (buf.validate.field).repeated.min_items = 1,
+    (buf.validate.field).repeated.max_items = 10
+  ];
+
+  optional int32 birth_country_id = 2 [
+    (buf.validate.field).int32.gte = 0
+  ];
+
+  optional int32 citizenship_country_id = 3 [
+    (buf.validate.field).int32.gte = 0
+  ];
+
+  string language = 4 [
+    (buf.validate.field).string.in = "cs",
+    (buf.validate.field).string.in = "en"
+  ];
+
 }
 
 message GetPersonProfileDataResponse {
@@ -47,15 +73,30 @@ message GetPersonProfileDataResponse {
 
 // Person Address specific (only what's needed for GET /persons/{id}/addresses)
 message GetPersonAddressDataRequest {
+
   // Permanent address
-  optional int64 permanent_municipality_part_id = 1;
-  optional int32 permanent_country_id = 2;
+  optional int64 permanent_municipality_part_id = 1 [
+    (buf.validate.field).int64.gte = 0
+  ];
+
+  optional int32 permanent_country_id = 2 [
+    (buf.validate.field).int32.gte = 0
+  ];
 
   // Temporary address
-  optional int64 temporary_municipality_part_id = 3;
-  optional int32 temporary_country_id = 4;
+  optional int64 temporary_municipality_part_id = 3 [
+    (buf.validate.field).int64.gte = 0
+  ];
 
-  string language = 5;
+  optional int32 temporary_country_id = 4 [
+    (buf.validate.field).int32.gte = 0
+  ];
+
+  string language = 5 [
+    (buf.validate.field).string.in = "cs",
+    (buf.validate.field).string.in = "en"
+  ];
+
 }
 
 message GetPersonAddressDataResponse {
@@ -74,9 +115,21 @@ message GetPersonAddressDataResponse {
 
 // Banking specific request (for GET /persons/{id}/banking)
 message GetPersonBankingDataRequest {
-  repeated CodelistKey codelist_keys = 1;
-  optional int32 euro_account_country_id = 2;
-  string language = 3;
+
+  repeated CodelistKey codelist_keys = 1 [
+    (buf.validate.field).repeated.min_items = 1,
+    (buf.validate.field).repeated.max_items = 10
+  ];
+
+  optional int32 euro_account_country_id = 2 [
+    (buf.validate.field).int32.gte = 0
+  ];
+
+  string language = 3 [
+    (buf.validate.field).string.in = "cs",
+    (buf.validate.field).string.in = "en"
+  ];
+
 }
 
 message GetPersonBankingDataResponse {
@@ -86,10 +139,26 @@ message GetPersonBankingDataResponse {
 
 // Education specific request (for GET /persons/{id}/education)
 message GetPersonEducationDataRequest {
-  optional string high_school_id = 1;
-  optional string high_school_field_of_study_number = 2;
-  optional int32 high_school_country_id = 3;
-  string language = 4;
+
+  optional string high_school_id = 1 [
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 10
+  ];
+
+  optional string high_school_field_of_study_number = 2 [
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 10
+  ];
+
+  optional int32 high_school_country_id = 3 [
+    (buf.validate.field).int32.gte = 0
+  ];
+
+  string language = 4 [
+    (buf.validate.field).string.in = "cs",
+    (buf.validate.field).string.in = "en"
+  ];
+
 }
 
 message GetPersonEducationDataResponse {
@@ -104,8 +173,17 @@ message GetPersonEducationDataResponse {
 
 // Generic messages
 message CodelistKey {
-  string domain = 1;
-  string low_value = 2;
+
+  string domain = 1 [
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 100
+  ];
+
+  string low_value = 2 [
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 240
+  ];
+
 }
 
 message CodelistValue {

@@ -51,7 +51,6 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
     // TODO: Add proper null checks and validations for request parameters (hasX() methods)
     // TODO: Add proper null checks when retrieving data from repositories
-    // TODO: Handle the language parameter properly, defaulting to a specific language if not provided
 
     @Override
     public void getCodelistValues(GetCodelistValuesRequest request, StreamObserver<GetCodelistValuesResponse> responseObserver) {
@@ -73,12 +72,12 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
         );
 
         CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCountryNames(codelistMapper.extractCountryIds(request)),
+            () -> fetchCountryNames(codelistMapper.extractCountryIds(request), request.getLanguage()),
             grpcExecutor
         );
 
         CompletableFuture.allOf(codelistValuesFuture, countryNamesFuture)
-                         .thenApply(v -> codelistMapper.buildPersonProfileDataResponse(
+                         .thenApply(_ -> codelistMapper.buildPersonProfileDataResponse(
                              request,
                              codelistValuesFuture.join(),
                              countryNamesFuture.join()
@@ -95,12 +94,12 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
         );
 
         CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCountryNames(codelistMapper.extractCountryIds(request)),
+            () -> fetchCountryNames(codelistMapper.extractCountryIds(request), request.getLanguage()),
             grpcExecutor
         );
 
         CompletableFuture.allOf(addressNamesFuture, countryNamesFuture)
-                         .thenApply(v -> codelistMapper.buildPersonAddressDataResponse(
+                         .thenApply(_ -> codelistMapper.buildPersonAddressDataResponse(
                              request,
                              addressNamesFuture.join(),
                              countryNamesFuture.join()
@@ -117,12 +116,12 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
         );
 
         CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCountryNames(codelistMapper.extractCountryIds(request)),
+            () -> fetchCountryNames(codelistMapper.extractCountryIds(request), request.getLanguage()),
             grpcExecutor
         );
 
         CompletableFuture.allOf(codelistValuesFuture, countryNamesFuture)
-                         .thenApply(v -> codelistMapper.buildPersonBankingDataResponse(
+                         .thenApply(_ -> codelistMapper.buildPersonBankingDataResponse(
                              request,
                              codelistValuesFuture.join(),
                              countryNamesFuture.join()
@@ -144,12 +143,12 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
         );
 
         CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCountryNames(codelistMapper.extractCountryIds(request)),
+            () -> fetchCountryNames(codelistMapper.extractCountryIds(request), request.getLanguage()),
             grpcExecutor
         );
 
         CompletableFuture.allOf(highSchoolFuture, fieldOfStudyFuture, countryNamesFuture)
-                         .thenApply(v -> codelistMapper.buildPersonEducationDataResponse(
+                         .thenApply(_ -> codelistMapper.buildPersonEducationDataResponse(
                              request,
                              highSchoolFuture.join(),
                              fieldOfStudyFuture.join(),
@@ -179,14 +178,14 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
         }
 
         List<CodelistEntryId> entryIds = codelistMapper.extractCodelistEntryIds(codelistKeys);
-        List<CodelistEntryValue> entries = codelistService.getCodelistEntryMeanings(entryIds);
-        return codelistMapper.mapToCodelistValues(entries, language);
+        List<CodelistEntryValue> entries = codelistService.getCodelistEntryMeanings(entryIds, language);
+        return codelistMapper.mapToCodelistValues(entries);
     }
 
-    private Map<Integer, String> fetchCountryNames(Set<Integer> countryIds) {
+    private Map<Integer, String> fetchCountryNames(Set<Integer> countryIds, String language) {
         return countryIds.isEmpty()
             ? Collections.emptyMap()
-            : countryService.findNamesByIds(countryIds);
+            : countryService.findNamesByIds(countryIds, language);
     }
 
     private Map<Long, AddressPlaceNameProjection> fetchAddressNames(Set<Long> municipalityPartIds) {

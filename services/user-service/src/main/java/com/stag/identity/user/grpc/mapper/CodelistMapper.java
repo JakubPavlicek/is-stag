@@ -33,11 +33,9 @@ import java.util.stream.Collectors;
 @Component
 public class CodelistMapper {
 
-    private static final String LANGUAGE = "cs";
-
-    public GetPersonProfileDataRequest toPersonProfileDataRequest(PersonProfileProjection personProfile) {
+    public GetPersonProfileDataRequest toPersonProfileDataRequest(PersonProfileProjection personProfile, String language) {
         var requestBuilder = GetPersonProfileDataRequest.newBuilder()
-                                                        .setLanguage(LANGUAGE);
+                                                        .setLanguage(language);
 
         List<CodelistKey> codelistKeys = buildProfileCodelistKeys(personProfile);
         requestBuilder.addAllCodelistKeys(codelistKeys);
@@ -48,9 +46,9 @@ public class CodelistMapper {
         return requestBuilder.build();
     }
 
-    public GetPersonAddressDataRequest toPersonAddressDataRequest(PersonAddressProjection personAddress) {
+    public GetPersonAddressDataRequest toPersonAddressDataRequest(PersonAddressProjection personAddress, String language) {
         var requestBuilder = GetPersonAddressDataRequest.newBuilder()
-                                                        .setLanguage(LANGUAGE);
+                                                        .setLanguage(language);
 
         setAddressIfPresent(personAddress, requestBuilder, AddressType.PERMANENT);
         setAddressIfPresent(personAddress, requestBuilder, AddressType.TEMPORARY);
@@ -58,9 +56,9 @@ public class CodelistMapper {
         return requestBuilder.build();
     }
 
-    public GetPersonBankingDataRequest toPersonBankingDataRequest(PersonBankProjection personBank) {
+    public GetPersonBankingDataRequest toPersonBankingDataRequest(PersonBankProjection personBank, String language) {
         var requestBuilder = GetPersonBankingDataRequest.newBuilder()
-                                                        .setLanguage(LANGUAGE);
+                                                        .setLanguage(language);
 
         List<CodelistKey> codelistKeys = buildBankingCodelistKeys(personBank);
         requestBuilder.addAllCodelistKeys(codelistKeys);
@@ -70,9 +68,9 @@ public class CodelistMapper {
         return requestBuilder.build();
     }
 
-    public GetPersonEducationDataRequest toPersonEducationDataRequest(PersonEducationProjection personEducation) {
+    public GetPersonEducationDataRequest toPersonEducationDataRequest(PersonEducationProjection personEducation, String language) {
         var requestBuilder = GetPersonEducationDataRequest.newBuilder()
-                                                          .setLanguage(LANGUAGE);
+                                                          .setLanguage(language);
 
         setIfPresent(personEducation.highSchoolId(), requestBuilder::setHighSchoolId);
         setIfPresent(personEducation.highSchoolFieldOfStudyNumber(), requestBuilder::setHighSchoolFieldOfStudyNumber);

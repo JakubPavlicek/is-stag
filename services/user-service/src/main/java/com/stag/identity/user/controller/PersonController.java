@@ -30,7 +30,7 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<PersonProfileDTO> getPersonProfile(Integer personId, String language) {
-        PersonProfile personProfile = personService.getPersonProfile(personId);
+        PersonProfile personProfile = personService.getPersonProfile(personId, language);
         PersonProfileDTO personProfileDTO = personMapper.toPersonProfileDTO(personProfile);
 
         return ResponseEntity.ok(personProfileDTO);
@@ -38,7 +38,7 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<AddressesDTO> getPersonAddresses(Integer personId, String language) {
-        PersonAddresses personAddresses = personService.getPersonAddresses(personId);
+        PersonAddresses personAddresses = personService.getPersonAddresses(personId, language);
         AddressesDTO addressesDTO = personMapper.toAddressesDTO(personAddresses);
 
         return ResponseEntity.ok(addressesDTO);
@@ -46,7 +46,7 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<BankAccountsDTO> getPersonBanking(Integer personId, String language) {
-        PersonBanking personBanking = personService.getPersonBanking(personId);
+        PersonBanking personBanking = personService.getPersonBanking(personId, language);
         BankAccountsDTO bankAccountsDTO = personMapper.toBankAccountsDTO(personBanking);
 
         return ResponseEntity.ok(bankAccountsDTO);
@@ -54,7 +54,7 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<EducationDetailsDTO> getPersonEducation(Integer personId, String language) {
-        PersonEducation personEducation = personService.getPersonEducation(personId);
+        PersonEducation personEducation = personService.getPersonEducation(personId, language);
         EducationDetailsDTO educationDetailsDTO = personMapper.toEducationDetailsDTO(personEducation);
 
         return ResponseEntity.ok(educationDetailsDTO);

@@ -45,6 +45,10 @@
             <groupId>net.devh</groupId>
             <artifactId>grpc-spring-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>build.buf</groupId>
+            <artifactId>protovalidate</artifactId>
+        </dependency>
 
         <!-- Database -->
         <dependency>

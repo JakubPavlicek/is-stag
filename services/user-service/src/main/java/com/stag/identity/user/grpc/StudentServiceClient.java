@@ -1,7 +1,6 @@
 package com.stag.identity.user.grpc;
 
 import com.stag.academics.student.v1.GetStudentPersonalNumbersRequest;
-import com.stag.academics.student.v1.GetStudentPersonalNumbersResponse;
 import com.stag.academics.student.v1.StudentServiceGrpc;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -15,11 +14,11 @@ public class StudentServiceClient {
     private StudentServiceGrpc.StudentServiceBlockingStub studentServiceStub;
 
     public List<String> getStudentPersonalNumbers(Integer personId) {
-        GetStudentPersonalNumbersRequest request = GetStudentPersonalNumbersRequest.newBuilder()
-                                                                                   .setPersonId(personId)
-                                                                                   .build();
-        GetStudentPersonalNumbersResponse personalNumbers = studentServiceStub.getStudentPersonalNumbers(request);
-        return personalNumbers.getPersonalNumbersList();
+        var request = GetStudentPersonalNumbersRequest.newBuilder()
+                                                      .setPersonId(personId)
+                                                      .build();
+        var response = studentServiceStub.getStudentPersonalNumbers(request);
+        return response.getPersonalNumbersList();
     }
 
 }

@@ -26,17 +26,15 @@ import java.util.function.Supplier;
 @Component
 public class CodelistMapper {
 
-    private static final String CZECH_LANGUAGE = "cs";
-
     public List<CodelistEntryId> extractCodelistEntryIds(List<CodelistKey> codelistKeys) {
         return codelistKeys.stream()
                            .map(this::buildCodelistEntryId)
                            .toList();
     }
 
-    public List<CodelistValue> mapToCodelistValues(List<CodelistEntryValue> entries, String language) {
+    public List<CodelistValue> mapToCodelistValues(List<CodelistEntryValue> entries) {
         return entries.stream()
-                      .map(entry -> toCodelistValue(entry, language))
+                      .map(this::toCodelistValue)
                       .toList();
     }
 
@@ -213,15 +211,11 @@ public class CodelistMapper {
         return new CodelistEntryId(key.getDomain(), key.getLowValue());
     }
 
-    private CodelistValue toCodelistValue(CodelistEntryValue entry, String language) {
-        String meaning = CZECH_LANGUAGE.equalsIgnoreCase(language)
-            ? entry.getMeaningCz()
-            : entry.getMeaningEn();
-
+    private CodelistValue toCodelistValue(CodelistEntryValue entry) {
         return CodelistValue.newBuilder()
-                            .setDomain(entry.getId().getDomain())
-                            .setLowValue(entry.getId().getLowValue())
-                            .setMeaning(meaning)
+                            .setDomain(entry.id().getDomain())
+                            .setLowValue(entry.id().getLowValue())
+                            .setMeaning(entry.meaning())
                             .build();
     }
 

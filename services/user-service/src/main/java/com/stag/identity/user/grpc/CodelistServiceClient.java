@@ -24,29 +24,29 @@ public class CodelistServiceClient {
     private final CodelistMapper codelistMapper;
 
     /// Get codelist data specifically for person profile (GET /persons/{personId})
-    public PersonProfileData getPersonProfileData(PersonProfileProjection personProfile) {
-        var request = codelistMapper.toPersonProfileDataRequest(personProfile);
+    public PersonProfileData getPersonProfileData(PersonProfileProjection personProfile, String language) {
+        var request = codelistMapper.toPersonProfileDataRequest(personProfile, language);
         var response = codelistServiceStub.getPersonProfileData(request);
         return codelistMapper.toPersonProfileData(response);
     }
 
     /// Get codelist data specifically for person addresses (GET /persons/{personId}/addresses)
-    public PersonAddressData getPersonAddressData(PersonAddressProjection personAddressProjection) {
-        var request = codelistMapper.toPersonAddressDataRequest(personAddressProjection);
+    public PersonAddressData getPersonAddressData(PersonAddressProjection personAddressProjection, String language) {
+        var request = codelistMapper.toPersonAddressDataRequest(personAddressProjection, language);
         var response = codelistServiceStub.getPersonAddressData(request);
         return codelistMapper.toPersonAddressData(response, personAddressProjection);
     }
 
     /// Get codelist data specifically for person banking (GET /persons/{personId}/banking)
-    public PersonBankingData getPersonBankingData(PersonBankProjection personBankProjection) {
-        var request = codelistMapper.toPersonBankingDataRequest(personBankProjection);
+    public PersonBankingData getPersonBankingData(PersonBankProjection personBankProjection, String language) {
+        var request = codelistMapper.toPersonBankingDataRequest(personBankProjection, language);
         var response = codelistServiceStub.getPersonBankingData(request);
         return codelistMapper.toPersonBankingData(response);
     }
 
     /// Get codelist data specifically for person education (GET /persons/{personId}/education)
-    public PersonEducationData getPersonEducationData(PersonEducationProjection personEducation) {
-        var request = codelistMapper.toPersonEducationDataRequest(personEducation);
+    public PersonEducationData getPersonEducationData(PersonEducationProjection personEducation, String language) {
+        var request = codelistMapper.toPersonEducationDataRequest(personEducation, language);
         var response = codelistServiceStub.getPersonEducationData(request);
         return codelistMapper.toPersonEducationData(response);
     }

@@ -18,7 +18,6 @@ import com.stag.identity.user.service.data.PersonProfileData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -29,11 +28,10 @@ import java.util.concurrent.CompletableFuture;
 public class PersonService {
 
     private final PersonRepository personRepository;
-    private final PersonMapper personMapper;
     private final PersonAsyncService personAsyncService;
+    private final PersonMapper personMapper;
 
-    @Transactional(readOnly = true)
-    public PersonProfile getPersonProfile(Integer personId) {
+    public PersonProfile getPersonProfile(Integer personId, String language) {
         PersonProfileProjection personProfile =
             personRepository.findById(personId, PersonProfileProjection.class)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
@@ -42,45 +40,42 @@ public class PersonService {
             personAsyncService.getStudentPersonalNumbers(personId);
 
         CompletableFuture<PersonProfileData> profileDataFuture =
-            personAsyncService.getPersonProfileData(personProfile);
+            personAsyncService.getPersonProfileData(personProfile, language);
 
         CompletableFuture.allOf(personalNumbersFuture, profileDataFuture).join();
 
         return personMapper.toPersonProfile(personProfile, personalNumbersFuture.join(), profileDataFuture.join());
     }
 
-    // TODO: add postOffice to the PersonAddress (CIS_PSC.POSTA - Entity = ZipCode)
-    @Transactional(readOnly = true)
-    public PersonAddresses getPersonAddresses(Integer personId) {
+    public PersonAddresses getPersonAddresses(Integer personId, String language) {
         PersonAddressProjection personAddressProjection =
             personRepository.findAddressesByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
         CompletableFuture<PersonAddressData> addressDataFuture =
-            personAsyncService.getPersonAddressData(personAddressProjection);
+            personAsyncService.getPersonAddressData(personAddressProjection, language);
 
         return personMapper.toPersonAddresses(personAddressProjection, addressDataFuture.join());
     }
 
-    @Transactional(readOnly = true)
-    public PersonBanking getPersonBanking(Integer personId) {
+    public PersonBanking getPersonBanking(Integer personId, String language) {
         PersonBankProjection personBankProjection =
             personRepository.findBankingByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
         CompletableFuture<PersonBankingData> bankingDataFuture =
-            personAsyncService.getPersonBankingData(personBankProjection);
+            personAsyncService.getPersonBankingData(personBankProjection, language);
 
         return personMapper.toPersonBanking(personBankProjection, bankingDataFuture.join());
     }
 
-    public PersonEducation getPersonEducation(Integer personId) {
+    public PersonEducation getPersonEducation(Integer personId, String language) {
         PersonEducationProjection personEducationProjection =
             personRepository.findEducationByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
         CompletableFuture<PersonEducationData> educationDataFuture =
-            personAsyncService.getPersonEducationData(personEducationProjection);
+            personAsyncService.getPersonEducationData(personEducationProjection, language);
 
         return personMapper.toPersonEducation(personEducationProjection, educationDataFuture.join());
     }

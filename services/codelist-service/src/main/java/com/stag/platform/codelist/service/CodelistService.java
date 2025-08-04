@@ -16,8 +16,8 @@ public class CodelistService {
     private final CodelistEntryRepository codelistEntryRepository;
 
     @Transactional(readOnly = true)
-    public List<CodelistEntryValue> getCodelistEntryMeanings(List<CodelistEntryId> codelistEntryIds) {
-        return codelistEntryRepository.findAllByIdIn(codelistEntryIds);
+    public List<CodelistEntryValue> getCodelistEntryMeanings(List<CodelistEntryId> codelistEntryIds, String language) {
+        return codelistEntryRepository.findAllByIdIn(codelistEntryIds, language);
     }
 
 }
