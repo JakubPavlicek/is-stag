@@ -18,11 +18,13 @@ import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Component
 public class CodelistMapper {
@@ -177,28 +179,17 @@ public class CodelistMapper {
         Integer countryId,
         Consumer<String> setter
     ) {
-        if (countryId != null) {
-            String countryName = countryNames.get(countryId);
-            if (countryName != null) {
-                setter.accept(countryName);
-            }
-        }
+        Optional.ofNullable(countryId)
+                .map(countryNames::get)
+                .ifPresent(setter);
     }
 
     @SafeVarargs
     private <T> Set<T> extractValues(Pair<Boolean, T>... pairs) {
-        Set<T> result = HashSet.newHashSet(pairs.length);
-
-        for (Pair<Boolean, T> pair : pairs) {
-            boolean hasValue = pair.getFirst();
-            T value = pair.getSecond();
-
-            if (hasValue) {
-                result.add(value);
-            }
-        }
-
-        return result;
+        return Arrays.stream(pairs)
+                     .filter(Pair::getFirst)
+                     .map(Pair::getSecond)
+                     .collect(Collectors.toSet());
     }
 
     private CodelistValue toCodelistValue(CodelistEntryValue entry) {

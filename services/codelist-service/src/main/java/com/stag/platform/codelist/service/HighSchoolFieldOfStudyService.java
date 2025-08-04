@@ -10,7 +10,7 @@ public class HighSchoolFieldOfStudyService {
 
     private final HighSchoolFieldOfStudyRepository fieldOfStudyRepository;
 
-    public String getFieldOfStudy(String fieldOfStudyNumber) {
+    public String findFieldOfStudyName(String fieldOfStudyNumber) {
         return fieldOfStudyRepository.findNameById(fieldOfStudyNumber);
     }
 

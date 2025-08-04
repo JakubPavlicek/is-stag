@@ -55,7 +55,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
     @Override
     public void getCodelistValues(GetCodelistValuesRequest request, StreamObserver<GetCodelistValuesResponse> responseObserver) {
-        List<CodelistValue> codelistValues = buildCodelistValues(request.getCodelistKeysList(), request.getLanguage());
+        List<CodelistValue> codelistValues = fetchCodelistValues(request.getCodelistKeysList(), request.getLanguage());
 
         var response = GetCodelistValuesResponse.newBuilder()
                                                 .addAllCodelistValues(codelistValues)
@@ -68,7 +68,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     @Override
     public void getPersonProfileData(GetPersonProfileDataRequest request, StreamObserver<GetPersonProfileDataResponse> responseObserver) {
         CompletableFuture<List<CodelistValue>> codelistValuesFuture = CompletableFuture.supplyAsync(
-            () -> buildCodelistValues(request.getCodelistKeysList(), request.getLanguage()),
+            () -> fetchCodelistValues(request.getCodelistKeysList(), request.getLanguage()),
             grpcExecutor
         );
 
@@ -90,10 +90,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     @Override
     public void getPersonAddressData(GetPersonAddressDataRequest request, StreamObserver<GetPersonAddressDataResponse> responseObserver) {
         CompletableFuture<Map<Long, AddressPlaceNameProjection>> addressNamesFuture = CompletableFuture.supplyAsync(
-            () -> {
-                log.info("getPersonAddressData thread: {}", Thread.currentThread());
-                return fetchAddressNames(codelistMapper.extractMunicipalityPartIds(request));
-            },
+            () -> fetchAddressNames(codelistMapper.extractMunicipalityPartIds(request)),
             grpcExecutor
         );
 
@@ -115,7 +112,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     @Override
     public void getPersonBankingData(GetPersonBankingDataRequest request, StreamObserver<GetPersonBankingDataResponse> responseObserver) {
         CompletableFuture<List<CodelistValue>> codelistValuesFuture = CompletableFuture.supplyAsync(
-            () -> buildCodelistValues(request.getCodelistKeysList(), request.getLanguage()),
+            () -> fetchCodelistValues(request.getCodelistKeysList(), request.getLanguage()),
             grpcExecutor
         );
 
@@ -137,12 +134,12 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     @Override
     public void getPersonEducationData(GetPersonEducationDataRequest request, StreamObserver<GetPersonEducationDataResponse> responseObserver) {
         CompletableFuture<HighSchoolAddressProjection> highSchoolFuture = CompletableFuture.supplyAsync(
-            () -> fetchHighSchool(request.getHighSchoolId()),
+            () -> fetchHighSchool(request.hasHighSchoolId(), request.getHighSchoolId()),
             grpcExecutor
         );
 
         CompletableFuture<String> fieldOfStudyFuture = CompletableFuture.supplyAsync(
-            () -> fetchHighSchoolFieldOfStudy(request.getHighSchoolFieldOfStudyNumber()),
+            () -> fetchHighSchoolFieldOfStudy(request.hasHighSchoolFieldOfStudyNumber(), request.getHighSchoolFieldOfStudyNumber()),
             grpcExecutor
         );
 
@@ -162,27 +159,25 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                          .exceptionally(ex -> errorResponse(responseObserver, ex));
     }
 
-    // TODO: 'highSchoolId' may not be null, but '0'
-    private HighSchoolAddressProjection fetchHighSchool(String highSchoolId) {
-        return highSchoolId != null
+    private HighSchoolAddressProjection fetchHighSchool(boolean hasHighSchoolId, String highSchoolId) {
+        return hasHighSchoolId
             ? highSchoolService.getHighSchoolName(highSchoolId)
             : null;
     }
 
-    // TODO: 'fieldOfStudyNumber' may not be null, but '0'
-    private String fetchHighSchoolFieldOfStudy(String fieldOfStudyNumber) {
-        return fieldOfStudyNumber != null
-            ? highSchoolFieldOfStudyService.getFieldOfStudy(fieldOfStudyNumber)
+    private String fetchHighSchoolFieldOfStudy(boolean hasFieldOfStudyNumber, String fieldOfStudyNumber) {
+        return hasFieldOfStudyNumber
+            ? highSchoolFieldOfStudyService.findFieldOfStudyName(fieldOfStudyNumber)
             : null;
     }
 
-    private List<CodelistValue> buildCodelistValues(List<CodelistKey> codelistKeys, String language) {
+    private List<CodelistValue> fetchCodelistValues(List<CodelistKey> codelistKeys, String language) {
         if (codelistKeys.isEmpty()) {
             return Collections.emptyList();
         }
 
         List<CodelistEntryId> entryIds = codelistMapper.extractCodelistEntryIds(codelistKeys);
-        List<CodelistEntryValue> entries = codelistService.getCodelistEntryMeanings(entryIds, language);
+        List<CodelistEntryValue> entries = codelistService.findCodelistEntriesByIds(entryIds, language);
         return codelistMapper.mapToCodelistValues(entries);
     }
 

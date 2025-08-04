@@ -25,6 +25,6 @@ public interface CodelistEntryRepository extends JpaRepository<CodelistEntry, Co
             c.id IN :ids
         """
     )
-    List<CodelistEntryValue> findAllByIdIn(Collection<CodelistEntryId> ids, String language);
+    List<CodelistEntryValue> findCodelistEntriesByIds(Collection<CodelistEntryId> ids, String language);
 
 }
