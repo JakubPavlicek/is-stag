@@ -28,6 +28,7 @@
         <protobuf-java.version>3.25.3</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
         <protovalidate.version>1.0.0-rc.4</protovalidate.version>
+        <grpc-validation.version>0.0.1</grpc-validation.version>
 
         <!-- Tools -->
         <mapstruct.version>1.6.3</mapstruct.version>
@@ -44,6 +45,7 @@
         <module>subject-service</module>
         <module>codelist-service</module>
         <module>user-service</module>
+        <module>grpc-validation</module>
     </modules>
 
     <dependencyManagement>
@@ -57,7 +59,14 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- Spring gRPC -->
+            <!-- gRPC -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-bom</artifactId>
+                <version>${grpc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>net.devh</groupId>
                 <artifactId>grpc-spring-boot-starter</artifactId>
@@ -67,6 +76,11 @@
                 <groupId>build.buf</groupId>
                 <artifactId>protovalidate</artifactId>
                 <version>${protovalidate.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.stag</groupId>
+                <artifactId>grpc-validation</artifactId>
+                <version>${grpc-validation.version}</version>
             </dependency>
 
             <!-- OpenAPI -->

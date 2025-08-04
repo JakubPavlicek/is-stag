@@ -1,4 +1,4 @@
-package com.stag.platform.codelist.config;
+package com.stag.academics.student.config;
 
 import build.buf.protovalidate.Validator;
 import build.buf.protovalidate.ValidatorFactory;

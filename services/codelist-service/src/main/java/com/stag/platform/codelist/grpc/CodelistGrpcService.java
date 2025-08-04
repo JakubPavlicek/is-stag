@@ -89,7 +89,10 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     @Override
     public void getPersonAddressData(GetPersonAddressDataRequest request, StreamObserver<GetPersonAddressDataResponse> responseObserver) {
         CompletableFuture<Map<Long, AddressPlaceNameProjection>> addressNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchAddressNames(codelistMapper.extractMunicipalityPartIds(request)),
+            () -> {
+                log.info("getPersonAddressData thread: {}", Thread.currentThread());
+                return fetchAddressNames(codelistMapper.extractMunicipalityPartIds(request));
+            },
             grpcExecutor
         );
 

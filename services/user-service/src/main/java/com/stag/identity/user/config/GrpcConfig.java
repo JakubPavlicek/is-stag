@@ -1,9 +1,9 @@
-package com.stag.platform.codelist.config;
+package com.stag.identity.user.config;
 
 import build.buf.protovalidate.Validator;
 import build.buf.protovalidate.ValidatorFactory;
-import com.stag.platform.grpc.validation.ProtoValidateServerInterceptor;
-import net.devh.boot.grpc.server.interceptor.GrpcGlobalServerInterceptor;
+import com.stag.platform.grpc.validation.ProtoValidateClientInterceptor;
+import net.devh.boot.grpc.client.interceptor.GrpcGlobalClientInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,10 +18,10 @@ public class GrpcConfig {
         return Executors.newVirtualThreadPerTaskExecutor();
     }
 
-    @GrpcGlobalServerInterceptor
-    ProtoValidateServerInterceptor protoValidationInterceptor() {
+    @GrpcGlobalClientInterceptor
+    ProtoValidateClientInterceptor protoValidationInterceptor() {
         Validator validator = ValidatorFactory.newBuilder().build();
-        return new ProtoValidateServerInterceptor(validator);
+        return new ProtoValidateClientInterceptor(validator);
     }
 
 }

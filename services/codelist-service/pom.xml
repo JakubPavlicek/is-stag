@@ -47,8 +47,8 @@
             <artifactId>grpc-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>build.buf</groupId>
-            <artifactId>protovalidate</artifactId>
+            <groupId>com.stag</groupId>
+            <artifactId>grpc-validation</artifactId>
         </dependency>
 
         <!-- OpenAPI -->
