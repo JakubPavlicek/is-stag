@@ -15,6 +15,7 @@ import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
 import com.stag.platform.codelist.v1.GetPersonEducationDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class CodelistMapper {
 
@@ -42,6 +44,8 @@ public class CodelistMapper {
     }
 
     public Set<Integer> extractCountryIds(Message message) {
+        log.info("extractCountryIds thread: {}", Thread.currentThread());
+
         return switch (message) {
             case GetPersonProfileDataRequest r -> extractValues(
                 Pair.of(r.hasBirthCountryId(), r.getBirthCountryId()),
@@ -62,6 +66,8 @@ public class CodelistMapper {
     }
 
     public Set<Long> extractMunicipalityPartIds(Message message) {
+        log.info("extractMunicipalityPartIds thread: {}", Thread.currentThread());
+
         return switch (message) {
             case GetPersonAddressDataRequest r -> extractValues(
                 Pair.of(r.hasPermanentMunicipalityPartId(), r.getPermanentMunicipalityPartId()),
@@ -94,12 +100,10 @@ public class CodelistMapper {
     ) {
         var responseBuilder = GetPersonAddressDataResponse.newBuilder();
 
-        // Set address place names
         if (!addressNames.isEmpty()) {
             setAddressPlaceNames(request, addressNames, responseBuilder);
         }
 
-        // Set country names
         if (!countryNames.isEmpty()) {
             setCountryNameIfPresent(countryNames, request.getPermanentCountryId(), responseBuilder::setPermanentCountryName);
             setCountryNameIfPresent(countryNames, request.getTemporaryCountryId(), responseBuilder::setTemporaryCountryName);
@@ -132,14 +136,14 @@ public class CodelistMapper {
         var responseBuilder = GetPersonEducationDataResponse.newBuilder();
 
         if (highSchoolAddress != null) {
-            responseBuilder.setHighSchoolName(highSchoolAddress.name())
-                           .setHighSchoolStreet(highSchoolAddress.street())
-                           .setHighSchoolZipCode(highSchoolAddress.zipCode())
-                           .setHighSchoolMunicipalityName(highSchoolAddress.municipality())
-                           .setHighSchoolDistrictName(highSchoolAddress.district());
+            setIfPresent(highSchoolAddress.name(), responseBuilder::setHighSchoolName);
+            setIfPresent(highSchoolAddress.street(), responseBuilder::setHighSchoolStreet);
+            setIfPresent(highSchoolAddress.zipCode(), responseBuilder::setHighSchoolZipCode);
+            setIfPresent(highSchoolAddress.municipality(), responseBuilder::setHighSchoolMunicipalityName);
+            setIfPresent(highSchoolAddress.district(), responseBuilder::setHighSchoolDistrictName);
         }
 
-        responseBuilder.setHighSchoolFieldOfStudy(fieldOfStudy);
+        setIfPresent(fieldOfStudy, responseBuilder::setHighSchoolFieldOfStudy);
 
         if (!countryNames.isEmpty()) {
             setCountryNameIfPresent(countryNames, request.getHighSchoolCountryId(), responseBuilder::setHighSchoolCountryName);
@@ -157,9 +161,9 @@ public class CodelistMapper {
         if (request.hasPermanentMunicipalityPartId()) {
             AddressPlaceNameProjection permanentAddress = addressNames.get(request.getPermanentMunicipalityPartId());
             if (permanentAddress != null) {
-                responseBuilder.setPermanentMunicipalityName(permanentAddress.municipalityName())
-                               .setPermanentMunicipalityPartName(permanentAddress.municipalityPartName())
-                               .setPermanentDistrictName(permanentAddress.districtName());
+                setIfPresent(permanentAddress.municipalityName(), responseBuilder::setPermanentMunicipalityName);
+                setIfPresent(permanentAddress.municipalityPartName(), responseBuilder::setPermanentMunicipalityPartName);
+                setIfPresent(permanentAddress.districtName(), responseBuilder::setPermanentDistrictName);
             }
         }
 
@@ -167,9 +171,9 @@ public class CodelistMapper {
         if (request.hasTemporaryMunicipalityPartId()) {
             AddressPlaceNameProjection temporaryAddress = addressNames.get(request.getTemporaryMunicipalityPartId());
             if (temporaryAddress != null) {
-                responseBuilder.setTemporaryMunicipalityName(temporaryAddress.municipalityName())
-                               .setTemporaryMunicipalityPartName(temporaryAddress.municipalityPartName())
-                               .setTemporaryDistrictName(temporaryAddress.districtName());
+                setIfPresent(temporaryAddress.municipalityName(), responseBuilder::setTemporaryMunicipalityName);
+                setIfPresent(temporaryAddress.municipalityPartName(), responseBuilder::setTemporaryMunicipalityPartName);
+                setIfPresent(temporaryAddress.districtName(), responseBuilder::setTemporaryDistrictName);
             }
         }
     }
@@ -182,6 +186,10 @@ public class CodelistMapper {
         Optional.ofNullable(countryId)
                 .map(countryNames::get)
                 .ifPresent(setter);
+    }
+
+    private <T> void setIfPresent(T value, Consumer<T> setter) {
+        Optional.ofNullable(value).ifPresent(setter);
     }
 
     @SafeVarargs

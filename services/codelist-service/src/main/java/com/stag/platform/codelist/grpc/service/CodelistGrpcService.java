@@ -1,16 +1,8 @@
-package com.stag.platform.codelist.grpc;
+package com.stag.platform.codelist.grpc.service;
 
-import com.stag.platform.codelist.entity.CodelistEntryId;
 import com.stag.platform.codelist.grpc.mapper.CodelistMapper;
 import com.stag.platform.codelist.repository.projection.AddressPlaceNameProjection;
-import com.stag.platform.codelist.repository.projection.CodelistEntryValue;
 import com.stag.platform.codelist.repository.projection.HighSchoolAddressProjection;
-import com.stag.platform.codelist.service.CodelistService;
-import com.stag.platform.codelist.service.CountryService;
-import com.stag.platform.codelist.service.HighSchoolFieldOfStudyService;
-import com.stag.platform.codelist.service.HighSchoolService;
-import com.stag.platform.codelist.service.MunicipalityPartService;
-import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistServiceGrpc;
 import com.stag.platform.codelist.v1.CodelistValue;
 import com.stag.platform.codelist.v1.GetCodelistValuesRequest;
@@ -28,26 +20,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 @Slf4j
-@GrpcService
 @RequiredArgsConstructor
+@GrpcService
 public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImplBase {
 
-    private final CodelistService codelistService;
-    private final CountryService countryService;
-    private final MunicipalityPartService municipalityPartService;
-    private final HighSchoolService highSchoolService;
-    private final HighSchoolFieldOfStudyService highSchoolFieldOfStudyService;
+    private final CodelistGrpcAsyncService asyncService;
+    private final CodelistMapper codelistMapper;
 
     private final Executor grpcExecutor;
-    private final CodelistMapper codelistMapper;
 
     // TODO: Add proper null checks and validations for request parameters (hasX() methods)
     // TODO: Add proper null checks when retrieving data from repositories
@@ -55,27 +41,23 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
     @Override
     public void getCodelistValues(GetCodelistValuesRequest request, StreamObserver<GetCodelistValuesResponse> responseObserver) {
-        List<CodelistValue> codelistValues = fetchCodelistValues(request.getCodelistKeysList(), request.getLanguage());
+        CompletableFuture<List<CodelistValue>> codelistValues =
+            asyncService.fetchCodelistValuesAsync(request.getCodelistKeysList(), request.getLanguage());
 
         var response = GetCodelistValuesResponse.newBuilder()
-                                                .addAllCodelistValues(codelistValues)
+                                                .addAllCodelistValues(codelistValues.join())
                                                 .build();
 
         completeResponse(responseObserver, response);
     }
 
-    // TODO: Consider using @Async instead of grpcExecutor for better integration with Spring's async capabilities
     @Override
     public void getPersonProfileData(GetPersonProfileDataRequest request, StreamObserver<GetPersonProfileDataResponse> responseObserver) {
-        CompletableFuture<List<CodelistValue>> codelistValuesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCodelistValues(request.getCodelistKeysList(), request.getLanguage()),
-            grpcExecutor
-        );
+        CompletableFuture<List<CodelistValue>> codelistValuesFuture =
+            asyncService.fetchCodelistValuesAsync(request.getCodelistKeysList(), request.getLanguage());
 
-        CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCountryNames(codelistMapper.extractCountryIds(request), request.getLanguage()),
-            grpcExecutor
-        );
+        CompletableFuture<Map<Integer, String>> countryNamesFuture =
+            asyncService.fetchCountryNamesAsync(request, request.getLanguage());
 
         CompletableFuture.allOf(codelistValuesFuture, countryNamesFuture)
                          .thenApply(_ -> codelistMapper.buildPersonProfileDataResponse(
@@ -89,15 +71,11 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
     @Override
     public void getPersonAddressData(GetPersonAddressDataRequest request, StreamObserver<GetPersonAddressDataResponse> responseObserver) {
-        CompletableFuture<Map<Long, AddressPlaceNameProjection>> addressNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchAddressNames(codelistMapper.extractMunicipalityPartIds(request)),
-            grpcExecutor
-        );
+        CompletableFuture<Map<Long, AddressPlaceNameProjection>> addressNamesFuture =
+            asyncService.fetchAddressNamesAsync(request);
 
-        CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCountryNames(codelistMapper.extractCountryIds(request), request.getLanguage()),
-            grpcExecutor
-        );
+        CompletableFuture<Map<Integer, String>> countryNamesFuture =
+            asyncService.fetchCountryNamesAsync(request, request.getLanguage());
 
         CompletableFuture.allOf(addressNamesFuture, countryNamesFuture)
                          .thenApply(_ -> codelistMapper.buildPersonAddressDataResponse(
@@ -111,15 +89,11 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
     @Override
     public void getPersonBankingData(GetPersonBankingDataRequest request, StreamObserver<GetPersonBankingDataResponse> responseObserver) {
-        CompletableFuture<List<CodelistValue>> codelistValuesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCodelistValues(request.getCodelistKeysList(), request.getLanguage()),
-            grpcExecutor
-        );
+        CompletableFuture<List<CodelistValue>> codelistValuesFuture =
+            asyncService.fetchCodelistValuesAsync(request.getCodelistKeysList(), request.getLanguage());
 
-        CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCountryNames(codelistMapper.extractCountryIds(request), request.getLanguage()),
-            grpcExecutor
-        );
+        CompletableFuture<Map<Integer, String>> countryNamesFuture =
+            asyncService.fetchCountryNamesAsync(request, request.getLanguage());
 
         CompletableFuture.allOf(codelistValuesFuture, countryNamesFuture)
                          .thenApply(_ -> codelistMapper.buildPersonBankingDataResponse(
@@ -133,20 +107,14 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
     @Override
     public void getPersonEducationData(GetPersonEducationDataRequest request, StreamObserver<GetPersonEducationDataResponse> responseObserver) {
-        CompletableFuture<HighSchoolAddressProjection> highSchoolFuture = CompletableFuture.supplyAsync(
-            () -> fetchHighSchool(request.hasHighSchoolId(), request.getHighSchoolId()),
-            grpcExecutor
-        );
+        CompletableFuture<HighSchoolAddressProjection> highSchoolFuture =
+            asyncService.fetchHighSchoolAsync(request.hasHighSchoolId(), request.getHighSchoolId());
 
-        CompletableFuture<String> fieldOfStudyFuture = CompletableFuture.supplyAsync(
-            () -> fetchHighSchoolFieldOfStudy(request.hasHighSchoolFieldOfStudyNumber(), request.getHighSchoolFieldOfStudyNumber()),
-            grpcExecutor
-        );
+        CompletableFuture<String> fieldOfStudyFuture =
+            asyncService.fetchHighSchoolFieldOfStudyAsync(request.hasHighSchoolFieldOfStudyNumber(), request.getHighSchoolFieldOfStudyNumber());
 
-        CompletableFuture<Map<Integer, String>> countryNamesFuture = CompletableFuture.supplyAsync(
-            () -> fetchCountryNames(codelistMapper.extractCountryIds(request), request.getLanguage()),
-            grpcExecutor
-        );
+        CompletableFuture<Map<Integer, String>> countryNamesFuture =
+            asyncService.fetchCountryNamesAsync(request, request.getLanguage());
 
         CompletableFuture.allOf(highSchoolFuture, fieldOfStudyFuture, countryNamesFuture)
                          .thenApply(_ -> codelistMapper.buildPersonEducationDataResponse(
@@ -157,40 +125,6 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                          ))
                          .thenAccept(response -> completeResponse(responseObserver, response))
                          .exceptionally(ex -> errorResponse(responseObserver, ex));
-    }
-
-    private HighSchoolAddressProjection fetchHighSchool(boolean hasHighSchoolId, String highSchoolId) {
-        return hasHighSchoolId
-            ? highSchoolService.getHighSchoolName(highSchoolId)
-            : null;
-    }
-
-    private String fetchHighSchoolFieldOfStudy(boolean hasFieldOfStudyNumber, String fieldOfStudyNumber) {
-        return hasFieldOfStudyNumber
-            ? highSchoolFieldOfStudyService.findFieldOfStudyName(fieldOfStudyNumber)
-            : null;
-    }
-
-    private List<CodelistValue> fetchCodelistValues(List<CodelistKey> codelistKeys, String language) {
-        if (codelistKeys.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        List<CodelistEntryId> entryIds = codelistMapper.extractCodelistEntryIds(codelistKeys);
-        List<CodelistEntryValue> entries = codelistService.findCodelistEntriesByIds(entryIds, language);
-        return codelistMapper.mapToCodelistValues(entries);
-    }
-
-    private Map<Integer, String> fetchCountryNames(Set<Integer> countryIds, String language) {
-        return countryIds.isEmpty()
-            ? Collections.emptyMap()
-            : countryService.findNamesByIds(countryIds, language);
-    }
-
-    private Map<Long, AddressPlaceNameProjection> fetchAddressNames(Set<Long> municipalityPartIds) {
-        return municipalityPartIds.isEmpty()
-            ? Collections.emptyMap()
-            : municipalityPartService.findAddressNamesByIds(municipalityPartIds);
     }
 
     private <T> void completeResponse(StreamObserver<T> responseObserver, T response) {

@@ -11,12 +11,13 @@ import java.util.List;
 
 public interface CodelistEntryRepository extends JpaRepository<CodelistEntry, CodelistEntryId> {
 
+    /// Using COALESCE because not all values have their English translation
     @Query(
         """
         SELECT
             c.id,
             CASE
-                WHEN :language = 'en' THEN c.meaningEn
+                WHEN :language = 'en' THEN COALESCE(c.meaningEn, c.meaningCz)
                 ELSE c.meaningCz
             END AS meaning
         FROM
