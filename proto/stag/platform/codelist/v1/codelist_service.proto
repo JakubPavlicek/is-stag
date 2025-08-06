@@ -39,7 +39,7 @@ message GetCodelistValuesRequest {
 }
 
 message GetCodelistValuesResponse {
-  repeated CodelistValue codelist_values = 1;
+  repeated CodelistMeaning codelist_meanings = 1;
 }
 
 // Person Profile specific (only what's needed for GET /persons/{id})
@@ -66,7 +66,7 @@ message GetPersonProfileDataRequest {
 }
 
 message GetPersonProfileDataResponse {
-  repeated CodelistValue codelist_values = 1;
+  repeated CodelistMeaning codelist_meanings = 1;
   optional string birth_country_name = 2;
   optional string citizenship_country_name = 3;
 }
@@ -133,7 +133,7 @@ message GetPersonBankingDataRequest {
 }
 
 message GetPersonBankingDataResponse {
-  repeated CodelistValue codelist_values = 1;
+  repeated CodelistMeaning codelist_meanings = 1;
   optional string euro_account_country_name = 2;
 }
 
@@ -186,7 +186,7 @@ message CodelistKey {
 
 }
 
-message CodelistValue {
+message CodelistMeaning {
   string domain = 1;
   string low_value = 2;
   string meaning = 3;

@@ -102,8 +102,8 @@
                         <artifactId>openapi-generator-maven-plugin</artifactId>
                         <configuration>
                             <configOptions>
-                                <apiPackage>com.stag.platform.codelist</apiPackage>
-                                <modelPackage>com.stag.platform.codelist.dto</modelPackage>
+                                <apiPackage>com.stag.platform</apiPackage>
+                                <modelPackage>com.stag.platform.dto</modelPackage>
                             </configOptions>
                         </configuration>
                     </plugin>
