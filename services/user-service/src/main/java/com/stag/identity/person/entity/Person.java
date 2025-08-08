@@ -342,7 +342,7 @@ public class Person {
         name = "STATIDNO_OBCA",
         nullable = false
     )
-    private Integer residenceCountryId;
+    private Integer citizenshipCountryId;
 
     @NotNull
     @ColumnDefault("203")

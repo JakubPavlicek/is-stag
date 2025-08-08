@@ -66,6 +66,7 @@
         <dependency>
             <groupId>com.oracle.database.nls</groupId>
             <artifactId>orai18n</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Tools -->

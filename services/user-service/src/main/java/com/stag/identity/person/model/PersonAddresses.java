@@ -33,16 +33,4 @@ public record PersonAddresses(
 
     }
 
-    @Builder
-    public record HighSchoolAddress(
-        String street,
-        String streetNumber,
-        String zipCode,
-        String municipality,
-        String district,
-        String country
-    ) {
-
-    }
-
 }

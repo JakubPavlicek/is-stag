@@ -16,7 +16,7 @@ public record PersonProfileProjection(
     LocalDate birthDate,
     Integer birthCountryId,
     String birthPlace,
-    Integer residenceCountryId,
+    Integer citizenshipCountryId,
     String citizenshipQualification,
     String passportNumber,
     String gender,

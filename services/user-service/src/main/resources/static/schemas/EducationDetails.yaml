@@ -42,8 +42,8 @@ properties:
     additionalProperties: false
     required:
       - institutionName
-      - location
       - fieldOfStudy
+      - location
     properties:
       institutionName:
         type: string
@@ -51,15 +51,15 @@ properties:
         description: Name of the foreign high school.
         example: "International School"
         maxLength: 75
-      location:
-        type: string
-        nullable: true
-        description: Location of the foreign high school.
-        example: "Paris"
-        maxLength: 75
       fieldOfStudy:
         type: string
         nullable: true
         description: Field of study at the foreign high school.
         example: "Computer Science"
         maxLength: 255
+      location:
+        type: string
+        nullable: true
+        description: Location of the foreign high school.
+        example: "Paris"
+        maxLength: 75

@@ -1,6 +1,5 @@
 package com.stag.identity.person.model;
 
-import com.stag.identity.person.model.PersonAddresses.HighSchoolAddress;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -26,6 +25,17 @@ public record PersonEducation(
         String name,
         String location,
         String fieldOfStudy
+    ) {
+
+    }
+
+    @Builder
+    public record HighSchoolAddress(
+        String street,
+        String zipCode,
+        String municipality,
+        String district,
+        String country
     ) {
 
     }

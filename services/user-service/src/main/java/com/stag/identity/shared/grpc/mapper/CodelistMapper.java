@@ -1,6 +1,5 @@
 package com.stag.identity.shared.grpc.mapper;
 
-import com.stag.identity.person.model.AddressType;
 import com.stag.identity.person.model.CodelistDomain;
 import com.stag.identity.person.model.CodelistEntryId;
 import com.stag.identity.person.repository.projection.PersonAddressProjection;
@@ -21,121 +20,117 @@ import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
 import com.stag.platform.codelist.v1.GetPersonEducationDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
-import org.springframework.stereotype.Component;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.CollectionMappingStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
+import org.mapstruct.NullValueCheckStrategy;
+import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-@Component
-public class CodelistMapper {
+//@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+public interface CodelistMapper {
 
-    public GetPersonProfileDataRequest toPersonProfileDataRequest(PersonProfileProjection personProfile, String language) {
-        var requestBuilder = GetPersonProfileDataRequest.newBuilder()
-                                                        .setLanguage(language);
+    CodelistMapper INSTANCE = Mappers.getMapper(CodelistMapper.class);
 
-        List<CodelistKey> codelistKeys = buildProfileCodelistKeys(personProfile);
-        requestBuilder.addAllCodelistKeys(codelistKeys);
+    @Mapping(source = "language", target = "language")
+    @Mapping(source = "personProfile.birthCountryId", target = "birthCountryId")
+    @Mapping(source = "personProfile.citizenshipCountryId", target = "citizenshipCountryId")
+    @Mapping(target = "codelistKeysList", ignore = true)
+    GetPersonProfileDataRequest toPersonProfileDataRequest(PersonProfileProjection personProfile, String language);
 
-        setIfPresent(personProfile.birthCountryId(), requestBuilder::setBirthCountryId);
-        setIfPresent(personProfile.residenceCountryId(), requestBuilder::setCitizenshipCountryId);
+    @Mapping(source = "language", target = "language")
+    @Mapping(source = "personAddress.permanentCountryId", target = "permanentCountryId")
+    @Mapping(source = "personAddress.permanentMunicipalityPartId", target = "permanentMunicipalityPartId")
+    @Mapping(source = "personAddress.temporaryCountryId", target = "temporaryCountryId")
+    @Mapping(source = "personAddress.temporaryMunicipalityPartId", target = "temporaryMunicipalityPartId")
+    GetPersonAddressDataRequest toPersonAddressDataRequest(PersonAddressProjection personAddress, String language);
 
-        return requestBuilder.build();
-    }
+    @Mapping(source = "language", target = "language")
+    @Mapping(source = "personBank.euroAccountCountryId", target = "euroAccountCountryId")
+    @Mapping(target = "codelistKeysList", ignore = true)
+    GetPersonBankingDataRequest toPersonBankingDataRequest(PersonBankProjection personBank, String language);
 
-    public GetPersonAddressDataRequest toPersonAddressDataRequest(PersonAddressProjection personAddress, String language) {
-        var requestBuilder = GetPersonAddressDataRequest.newBuilder()
-                                                        .setLanguage(language);
+    @Mapping(source = "language", target = "language")
+    @Mapping(source = "personEducation.highSchoolId", target = "highSchoolId")
+    @Mapping(source = "personEducation.highSchoolFieldOfStudyNumber", target = "highSchoolFieldOfStudyNumber")
+    @Mapping(source = "personEducation.highSchoolCountryId", target = "highSchoolCountryId")
+    GetPersonEducationDataRequest toPersonEducationDataRequest(PersonEducationProjection personEducation, String language);
 
-        setAddressIfPresent(personAddress, requestBuilder, AddressType.PERMANENT);
-        setAddressIfPresent(personAddress, requestBuilder, AddressType.TEMPORARY);
+    @Mapping(source = "codelistMeaningsList", target = "codelistMeanings", qualifiedByName = "toMeaningMap")
+    @Mapping(source = "birthCountryName", target = "birthCountryName")
+    @Mapping(source = "citizenshipCountryName", target = "citizenshipCountryName")
+    PersonProfileData toPersonProfileData(GetPersonProfileDataResponse response);
 
-        return requestBuilder.build();
-    }
-
-    public GetPersonBankingDataRequest toPersonBankingDataRequest(PersonBankProjection personBank, String language) {
-        var requestBuilder = GetPersonBankingDataRequest.newBuilder()
-                                                        .setLanguage(language);
-
-        List<CodelistKey> codelistKeys = buildBankingCodelistKeys(personBank);
-        requestBuilder.addAllCodelistKeys(codelistKeys);
-
-        setIfPresent(personBank.euroAccountCountryId(), requestBuilder::setEuroAccountCountryId);
-
-        return requestBuilder.build();
-    }
-
-    public GetPersonEducationDataRequest toPersonEducationDataRequest(PersonEducationProjection personEducation, String language) {
-        var requestBuilder = GetPersonEducationDataRequest.newBuilder()
-                                                          .setLanguage(language);
-
-        setIfPresent(personEducation.highSchoolId(), requestBuilder::setHighSchoolId);
-        setIfPresent(personEducation.highSchoolFieldOfStudyNumber(), requestBuilder::setHighSchoolFieldOfStudyNumber);
-        setIfPresent(personEducation.highSchoolCountryId(), requestBuilder::setHighSchoolCountryId);
-
-        return requestBuilder.build();
-    }
-
-    public PersonProfileData toPersonProfileData(GetPersonProfileDataResponse response) {
-        List<CodelistMeaning> codelistMeanings = response.getCodelistMeaningsList();
-        Map<CodelistEntryId, String> codelistMeaningsMap = buildCodelistMeanings(codelistMeanings);
-
-        return PersonProfileData.builder()
-                                .codelistMeanings(codelistMeaningsMap)
-                                .birthCountryName(response.getBirthCountryName())
-                                .citizenshipCountryName(response.getCitizenshipCountryName())
-                                .build();
-    }
-
-    public PersonAddressData toPersonAddressData(
+    @Mapping(source = "personAddress.permanentStreet", target = "permanentStreet")
+    @Mapping(source = "personAddress.permanentStreetNumber", target = "permanentStreetNumber")
+    @Mapping(source = "personAddress.permanentZipCode", target = "permanentZipCode")
+    @Mapping(source = "response.permanentMunicipalityName", target = "permanentMunicipality")
+    @Mapping(source = "response.permanentMunicipalityPartName", target = "permanentMunicipalityPart")
+    @Mapping(source = "response.permanentDistrictName", target = "permanentDistrict")
+    @Mapping(source = "response.permanentCountryName", target = "permanentCountry")
+    @Mapping(source = "personAddress.temporaryStreet", target = "temporaryStreet")
+    @Mapping(source = "personAddress.temporaryStreetNumber", target = "temporaryStreetNumber")
+    @Mapping(source = "personAddress.temporaryZipCode", target = "temporaryZipCode")
+    @Mapping(source = "response.temporaryMunicipalityName", target = "temporaryMunicipality")
+    @Mapping(source = "response.temporaryMunicipalityPartName", target = "temporaryMunicipalityPart")
+    @Mapping(source = "response.temporaryDistrictName", target = "temporaryDistrict")
+    @Mapping(source = "response.temporaryCountryName", target = "temporaryCountry")
+    PersonAddressData toPersonAddressData(
         GetPersonAddressDataResponse response,
         PersonAddressProjection personAddress
+    );
+
+    @Mapping(source = "codelistMeaningsList", target = "codelistMeanings", qualifiedByName = "toMeaningMap")
+    @Mapping(source = "euroAccountCountryName", target = "euroAccountCountryName")
+    PersonBankingData toPersonBankingData(GetPersonBankingDataResponse response);
+
+    PersonEducationData toPersonEducationData(GetPersonEducationDataResponse response);
+
+    @AfterMapping
+    default void addPersonProfileCodelistKeys(
+        PersonProfileProjection personProfile,
+        @MappingTarget GetPersonProfileDataRequest.Builder builder
     ) {
-        return PersonAddressData.builder()
-                                .permanentStreet(personAddress.permanentStreet())
-                                .permanentStreetNumber(personAddress.permanentStreetNumber())
-                                .permanentZipCode(personAddress.permanentZipCode())
-                                .permanentMunicipality(response.getPermanentMunicipalityName())
-                                .permanentMunicipalityPart(response.getPermanentMunicipalityPartName())
-                                .permanentDistrict(response.getPermanentDistrictName())
-                                .permanentCountry(response.getPermanentCountryName())
-                                .temporaryStreet(personAddress.temporaryStreet())
-                                .temporaryStreetNumber(personAddress.temporaryStreetNumber())
-                                .temporaryZipCode(personAddress.temporaryZipCode())
-                                .temporaryMunicipality(response.getTemporaryMunicipalityName())
-                                .temporaryMunicipalityPart(response.getTemporaryMunicipalityPartName())
-                                .temporaryDistrict(response.getTemporaryDistrictName())
-                                .temporaryCountry(response.getTemporaryCountryName())
-                                .build();
+        if (personProfile == null) {
+            return;
+        }
+
+        List<CodelistKey> keys = buildProfileCodelistKeys(personProfile);
+        builder.addAllCodelistKeys(keys);
     }
 
-    public PersonBankingData toPersonBankingData(GetPersonBankingDataResponse response) {
-        List<CodelistMeaning> codelistMeanings = response.getCodelistMeaningsList();
-        Map<CodelistEntryId, String> codelistMeaningsMap = buildCodelistMeanings(codelistMeanings);
+    @AfterMapping
+    default void addPersonBankingCodelistKeys(
+        PersonBankProjection personBank,
+        @MappingTarget GetPersonBankingDataRequest.Builder builder
+    ) {
+        if (personBank == null) {
+            return;
+        }
 
-        return PersonBankingData.builder()
-                                .codelistMeanings(codelistMeaningsMap)
-                                .euroAccountCountryName(response.getEuroAccountCountryName())
-                                .build();
+        List<CodelistKey> keys = buildBankingCodelistKeys(personBank);
+        builder.addAllCodelistKeys(keys);
     }
 
-    public PersonEducationData toPersonEducationData(GetPersonEducationDataResponse response) {
-        return PersonEducationData.builder()
-                                  .highSchoolName(response.getHighSchoolName())
-                                  .highSchoolFieldOfStudy(response.getHighSchoolFieldOfStudy())
-                                  .highSchoolStreet(response.getHighSchoolStreet())
-                                  .highSchoolZipCode(response.getHighSchoolZipCode())
-                                  .highSchoolMunicipalityName(response.getHighSchoolMunicipalityName())
-                                  .highSchoolDistrictName(response.getHighSchoolDistrictName())
-                                  .highSchoolCountryName(response.getHighSchoolCountryName())
-                                  .build();
+    @Named("toMeaningMap")
+    default Map<CodelistEntryId, String> toMeaningMap(List<CodelistMeaning> codelistMeanings) {
+        return codelistMeanings.stream()
+                               .collect(Collectors.toMap(
+                                   cm -> new CodelistEntryId(cm.getDomain(), cm.getLowValue()),
+                                   CodelistMeaning::getMeaning
+                               ));
     }
 
     private List<CodelistKey> buildProfileCodelistKeys(PersonProfileProjection personProfile) {
-        List<CodelistKey> codelistKeys = new ArrayList<>();
+        List<CodelistKey> codelistKeys = new ArrayList<>(5);
 
         addCodelistKeyIfPresent(codelistKeys, CodelistDomain.TITUL_PRED, personProfile.titlePrefix());
         addCodelistKeyIfPresent(codelistKeys, CodelistDomain.TITUL_ZA, personProfile.titleSuffix());
@@ -147,7 +142,7 @@ public class CodelistMapper {
     }
 
     private List<CodelistKey> buildBankingCodelistKeys(PersonBankProjection personBank) {
-        List<CodelistKey> codelistKeys = new ArrayList<>();
+        List<CodelistKey> codelistKeys = new ArrayList<>(2);
 
         addCodelistKeyIfPresent(codelistKeys, CodelistDomain.CIS_BANK, personBank.accountBank());
         addCodelistKeyIfPresent(codelistKeys, CodelistDomain.CIS_BANK_EURO, personBank.euroAccountBank());
@@ -166,37 +161,6 @@ public class CodelistMapper {
                           .setDomain(domain.name())
                           .setLowValue(lowValue)
                           .build();
-    }
-
-    private Map<CodelistEntryId, String> buildCodelistMeanings(List<CodelistMeaning> codelistMeanings) {
-        return codelistMeanings.stream()
-                             .collect(Collectors.toMap(
-                                 this::buildCodelistEntryId,
-                                 CodelistMeaning::getMeaning
-                             ));
-    }
-
-    private CodelistEntryId buildCodelistEntryId(CodelistMeaning codelistMeaning) {
-        return new CodelistEntryId(codelistMeaning.getDomain(), codelistMeaning.getLowValue());
-    }
-
-    private void setAddressIfPresent(
-        PersonAddressProjection personAddress,
-        GetPersonAddressDataRequest.Builder requestBuilder,
-        AddressType addressType
-    ) {
-        if (addressType == AddressType.PERMANENT) {
-            setIfPresent(personAddress.permanentMunicipalityPartId(), requestBuilder::setPermanentMunicipalityPartId);
-            setIfPresent(personAddress.permanentCountryId(), requestBuilder::setPermanentCountryId);
-        }
-        else if (addressType == AddressType.TEMPORARY) {
-            setIfPresent(personAddress.temporaryMunicipalityPartId(), requestBuilder::setTemporaryMunicipalityPartId);
-            setIfPresent(personAddress.temporaryCountryId(), requestBuilder::setTemporaryCountryId);
-        }
-    }
-
-    private <T> void setIfPresent(T value, Consumer<T> setter) {
-        Optional.ofNullable(value).ifPresent(setter);
     }
 
 }

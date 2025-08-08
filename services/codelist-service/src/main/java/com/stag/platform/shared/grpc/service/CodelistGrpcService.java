@@ -35,9 +35,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
     private final Executor grpcExecutor;
 
-    // TODO: Add proper null checks and validations for request parameters (hasX() methods)
-    // TODO: Add proper null checks when retrieving data from repositories
-    // TODO: Errors are then handled in @GrpcAdvice of the client module
+    // TODO: Create custom Exceptions -> Errors are then handled in @GrpcAdvice
 
     @Override
     public void getCodelistValues(GetCodelistValuesRequest request, StreamObserver<GetCodelistValuesResponse> responseObserver) {

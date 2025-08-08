@@ -39,6 +39,14 @@ spring:
       hibernate:
         format_sql: true
         generate_statistics: true
+        order_inserts: true
+        order_updates: true
+        connection:
+          provider_disables_autocommit: true
+        query:
+          in_clause_parameter_padding: true
+          fail_on_pagination_over_collection_fetch: true
+          plan_cache_max_size: 4096
     hibernate:
       ddl-auto: none
     open-in-view: false
@@ -49,7 +57,7 @@ spring:
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
       auto-commit: false
-      minimum-idle: 10
+      minimum-idle: 5
       maximum-pool-size: 20
       idle-timeout: 600000
       connection-timeout: 30000
@@ -58,6 +66,7 @@ spring:
         oracle:
           jdbc:
             defaultConnectionValidation: LOCAL
+            implicitStatementCacheSize: 200
   threads:
     virtual:
       enabled: true
