@@ -28,44 +28,34 @@ public class MunicipalityPartService {
         ensureAllMunicipalityPartsWereFound(ids, foundMunicipalityParts);
 
         return foundMunicipalityParts.stream()
-                                   .collect(Collectors.toMap(
-                                       AddressPlaceNameProjection::municipalityPartId,
-                                       addressPlaceNameProjection -> addressPlaceNameProjection
-                                   ));
+                                     .collect(Collectors.toMap(
+                                         AddressPlaceNameProjection::municipalityPartId,
+                                         addressPlaceNameProjection -> addressPlaceNameProjection
+                                     ));
     }
 
     private void ensureAllMunicipalityPartsWereFound(Collection<Long> requestedIds, List<AddressPlaceNameProjection> foundMunicipalityParts) {
+        // If counts match, all municipality parts were found (assumes no duplicates in requestedIds)
         if (requestedIds.size() == foundMunicipalityParts.size()) {
             return;
         }
 
         List<Long> missingIds = getMissingIds(requestedIds, foundMunicipalityParts);
 
-        if (missingIds.isEmpty()) {
-            return;
+        // If, after filtering, there are IDs still missing, throw an exception
+        if (!missingIds.isEmpty()) {
+            throw new MunicipalityPartsNotFoundException(missingIds);
         }
-
-        String formattedMissingIds = formatMissingIdsForError(missingIds);
-        String errorMessage = "Unable to find municipality parts for IDs: [" + formattedMissingIds + "]";
-
-        log.warn(errorMessage);
-        throw new MunicipalityPartsNotFoundException(errorMessage);
     }
 
     private List<Long> getMissingIds(Collection<Long> requestedIds, List<AddressPlaceNameProjection> foundMunicipalityParts) {
         Set<Long> foundIds = foundMunicipalityParts.stream()
-                                                  .map(AddressPlaceNameProjection::municipalityPartId)
-                                                  .collect(Collectors.toSet());
+                                                   .map(AddressPlaceNameProjection::municipalityPartId)
+                                                   .collect(Collectors.toSet());
 
         return requestedIds.stream()
                            .filter(id -> !foundIds.contains(id))
                            .toList();
-    }
-
-    private String formatMissingIdsForError(List<Long> missingIds) {
-        return missingIds.stream()
-                         .map(String::valueOf)
-                         .collect(Collectors.joining(", "));
     }
 
 }

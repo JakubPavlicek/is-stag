@@ -40,19 +40,12 @@ public class CountryService {
             return;
         }
 
-        // Determine which IDs are missing
         List<Integer> missingIds = getMissingIds(requestedIds, foundCountries);
 
-        // If, after filtering, no IDs are missing (e.g., due to duplicates in the original request), then we can return successfully
-        if (missingIds.isEmpty()) {
-            return;
+        // If, after filtering, there are IDs still missing, throw an exception
+        if (!missingIds.isEmpty()) {
+            throw new CountriesNotFoundException(missingIds);
         }
-
-        String formattedMissingIds = formatMissingIdsForError(missingIds);
-        String errorMessage = "Unable to find countries for IDs: [" + formattedMissingIds + "]";
-
-        log.warn(errorMessage);
-        throw new CountriesNotFoundException(errorMessage);
     }
 
     private List<Integer> getMissingIds(Collection<Integer> requestedIds, List<CountryNameProjection> foundCountries) {
@@ -64,12 +57,6 @@ public class CountryService {
         return requestedIds.stream()
                            .filter(id -> !foundIds.contains(id))
                            .toList();
-    }
-
-    private String formatMissingIdsForError(List<Integer> missingIds) {
-        return missingIds.stream()
-                         .map(String::valueOf)
-                         .collect(Collectors.joining(", "));
     }
 
 }

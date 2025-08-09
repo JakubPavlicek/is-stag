@@ -35,23 +35,15 @@ public class CodelistEntryService {
             return;
         }
 
-        // Determine which IDs are missing
         List<CodelistEntryId> missingIds = getMissingIds(requestedIds, entryMeanings);
 
-        // If, after filtering, no IDs are missing (e.g., due to duplicates in the original request), then we can return successfully
-        if (missingIds.isEmpty()) {
-            return;
+        // If, after filtering, there are IDs still missing, throw an exception
+        if (!missingIds.isEmpty()) {
+            throw new CodelistEntriesNotFoundException(missingIds);
         }
-
-        String formattedMissingIds = formatMissingIdsForError(missingIds);
-        String errorMessage = "Unable to find codelist entries for IDs: [" + formattedMissingIds + "]";
-
-        log.warn(errorMessage);
-        throw new CodelistEntriesNotFoundException(errorMessage);
     }
 
     private List<CodelistEntryId> getMissingIds(List<CodelistEntryId> requestedIds, List<CodelistEntryMeaningProjection> entryMeanings) {
-        // Determine which IDs are missing
         Set<CodelistEntryId> foundIds = entryMeanings.stream()
                                                      .map(CodelistEntryMeaningProjection::id)
                                                      .collect(Collectors.toSet());
@@ -59,12 +51,6 @@ public class CodelistEntryService {
         return requestedIds.stream()
                            .filter(id -> !foundIds.contains(id))
                            .toList();
-    }
-
-    private String formatMissingIdsForError(List<CodelistEntryId> missingIds) {
-        return missingIds.stream()
-                         .map(id -> id.getDomain() + ":" + id.getLowValue())
-                         .collect(Collectors.joining(", "));
     }
 
 }
