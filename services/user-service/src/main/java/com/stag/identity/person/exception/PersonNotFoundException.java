@@ -1,4 +1,4 @@
-package com.stag.identity.shared.exception;
+package com.stag.identity.person.exception;
 
 import lombok.Getter;
 
@@ -8,7 +8,7 @@ public class PersonNotFoundException extends RuntimeException {
     private final Integer personId;
 
     public PersonNotFoundException(Integer personId) {
-        super("Person with ID: " + personId + " not found.");
+        super("Person with ID: " + personId + " not found");
         this.personId = personId;
     }
 
