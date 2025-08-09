@@ -10,7 +10,7 @@ import org.mapstruct.Named;
 import java.util.Map;
 import java.util.Optional;
 
-public class Qualifiers {
+class Qualifiers {
 
     @Named("lookupGender")
     String lookupGender(String gender, @Context PersonProfileData codelistData) {
@@ -47,7 +47,11 @@ public class Qualifiers {
         return lookupCodelistValue(CodelistDomain.CIS_BANK_EURO, bankCode, data.codelistMeanings());
     }
 
-    private String lookupCodelistValue(CodelistDomain domain, String lowValue, Map<CodelistEntryId, String> meanings) {
+    private String lookupCodelistValue(
+        CodelistDomain domain,
+        String lowValue,
+        Map<CodelistEntryId, String> meanings
+    ) {
         return Optional.ofNullable(lowValue)
                        .map(value -> meanings.get(new CodelistEntryId(domain.name(), value)))
                        .orElse(null);

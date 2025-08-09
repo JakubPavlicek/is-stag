@@ -24,26 +24,26 @@ public interface PersonAddressMapper {
     );
 
     @Named("toPermanentAddress")
-    @Mapping(target = "street", source = "personAddress.permanentStreet")
-    @Mapping(target = "streetNumber", source = "personAddress.permanentStreetNumber")
-    @Mapping(target = "zipCode", source = "personAddress.permanentZipCode")
-    @Mapping(target = "municipality", expression = "java(data.permanentMunicipality())")
-    @Mapping(target = "municipalityPart", expression = "java(data.permanentMunicipalityPart())")
-    @Mapping(target = "district", expression = "java(data.permanentDistrict())")
-    @Mapping(target = "country", expression = "java(data.permanentCountry())")
+    @Mapping(target = "street", source = "permanentStreet")
+    @Mapping(target = "streetNumber", source = "permanentStreetNumber")
+    @Mapping(target = "zipCode", source = "permanentZipCode")
+    @Mapping(target = "municipality", source = "personAddress", qualifiedByName = "permanentMunicipalityName")
+    @Mapping(target = "municipalityPart", source = "personAddress", qualifiedByName = "permanentMunicipalityPartName")
+    @Mapping(target = "district", source = "personAddress", qualifiedByName = "permanentDistrictName")
+    @Mapping(target = "country", source = "personAddress", qualifiedByName = "permanentCountryName")
     PersonAddresses.Address toPermanentAddress(
         PersonAddressProjection personAddress,
         @Context PersonAddressData data
     );
 
     @Named("toTemporaryAddress")
-    @Mapping(target = "street", source = "personAddress.temporaryStreet")
-    @Mapping(target = "streetNumber", source = "personAddress.temporaryStreetNumber")
-    @Mapping(target = "zipCode", source = "personAddress.temporaryZipCode")
-    @Mapping(target = "municipality", expression = "java(data.temporaryMunicipality())")
-    @Mapping(target = "municipalityPart", expression = "java(data.temporaryMunicipalityPart())")
-    @Mapping(target = "district", expression = "java(data.temporaryDistrict())")
-    @Mapping(target = "country", expression = "java(data.temporaryCountry())")
+    @Mapping(target = "street", source = "temporaryStreet")
+    @Mapping(target = "streetNumber", source = "temporaryStreetNumber")
+    @Mapping(target = "zipCode", source = "temporaryZipCode")
+    @Mapping(target = "municipality", source = "personAddress", qualifiedByName = "temporaryMunicipalityName")
+    @Mapping(target = "municipalityPart", source = "personAddress", qualifiedByName = "temporaryMunicipalityPartName")
+    @Mapping(target = "district", source = "personAddress", qualifiedByName = "temporaryDistrictName")
+    @Mapping(target = "country", source = "personAddress", qualifiedByName = "temporaryCountryName")
     PersonAddresses.Address toTemporaryAddress(
         PersonAddressProjection personAddress,
         @Context PersonAddressData data
@@ -62,4 +62,68 @@ public interface PersonAddressMapper {
     @Mapping(target = "district", source = "foreignTemporaryDistrict")
     @Mapping(target = "postOffice", source = "foreignTemporaryPostOffice")
     PersonAddresses.ForeignAddress toForeignTemporaryAddress(PersonAddressProjection personAddress);
+
+    @Named("permanentMunicipalityName")
+    default String permanentMunicipalityName(
+        PersonAddressProjection personAddress,
+        @Context PersonAddressData data
+    ) {
+        return data.permanentMunicipality();
+    }
+
+    @Named("permanentMunicipalityPartName")
+    default String permanentMunicipalityPartName(
+        PersonAddressProjection personAddress,
+        @Context PersonAddressData data
+    ) {
+        return data.permanentMunicipalityPart();
+    }
+
+    @Named("permanentDistrictName")
+    default String permanentDistrictName(
+        PersonAddressProjection personAddress,
+        @Context PersonAddressData data
+    ) {
+        return data.permanentDistrict();
+    }
+
+    @Named("permanentCountryName")
+    default String permanentCountryName(
+        PersonAddressProjection personAddress,
+        @Context PersonAddressData data
+    ) {
+        return data.permanentCountry();
+    }
+
+    @Named("temporaryMunicipalityName")
+    default String temporaryMunicipalityName(
+        PersonAddressProjection personAddress,
+        @Context PersonAddressData data
+    ) {
+        return data.temporaryMunicipality();
+    }
+
+    @Named("temporaryMunicipalityPartName")
+    default String temporaryMunicipalityPartName(
+        PersonAddressProjection personAddress,
+        @Context PersonAddressData data
+    ) {
+        return data.temporaryMunicipalityPart();
+    }
+
+    @Named("temporaryDistrictName")
+    default String temporaryDistrictName(
+        PersonAddressProjection personAddress,
+        @Context PersonAddressData data
+    ) {
+        return data.temporaryDistrict();
+    }
+
+    @Named("temporaryCountryName")
+    default String temporaryCountryName(
+        PersonAddressProjection personAddress,
+        @Context PersonAddressData data
+    ) {
+        return data.temporaryCountry();
+    }
 }

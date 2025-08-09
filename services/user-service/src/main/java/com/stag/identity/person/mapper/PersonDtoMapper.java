@@ -33,37 +33,22 @@ public interface PersonDtoMapper {
 
     EducationDetailsDTO toEducationDetailsDTO(PersonEducation personEducation);
 
-    @Mapping(source = "owner", target = "holderName")
-    @Mapping(source = "address", target = "holderAddress")
-    @Mapping(source = "prefix", target = "bankAccountNumberPrefix")
-    @Mapping(source = "suffix", target = "bankAccountNumberSuffix")
-    @Mapping(source = "bankCode", target = "bankCode")
-    @Mapping(source = "bankName", target = "bankName")
-    @Mapping(source = "iban", target = "iban")
-    @Mapping(source = "currency", target = "currency")
+    @Mapping(target = "holderName", source = "owner")
+    @Mapping(target = "holderAddress", source = "address")
+    @Mapping(target = "bankAccountNumberPrefix", source = "prefix")
+    @Mapping(target = "bankAccountNumberSuffix", source = "suffix")
     BankAccountDetailsDTO toBankAccountDTO(BankAccount account);
 
-    @Mapping(source = "owner", target = "holderName")
-    @Mapping(source = "address", target = "holderAddress")
-    @Mapping(source = "prefix", target = "bankAccountNumberPrefix")
-    @Mapping(source = "suffix", target = "bankAccountNumberSuffix")
-    @Mapping(source = "bankCode", target = "bankCode")
-    @Mapping(source = "bankName", target = "bankName")
-    @Mapping(source = "iban", target = "iban")
-    @Mapping(source = "currency", target = "currency")
-    @Mapping(source = "country", target = "country")
-    @Mapping(source = "swift", target = "swift")
+    @Mapping(target = "holderName", source = "owner")
+    @Mapping(target = "holderAddress", source = "address")
+    @Mapping(target = "bankAccountNumberPrefix", source = "prefix")
+    @Mapping(target = "bankAccountNumberSuffix", source = "suffix")
     EuroBankAccountDetailsDTO toEuroBankAccountDTO(EuroBankAccount euroBankAccount);
 
-    @Mapping(source = "name", target = "institutionName")
-    @Mapping(source = "fieldOfStudy", target = "fieldOfStudy")
-    @Mapping(source = "graduationDate", target = "graduationDate")
-    @Mapping(source = "address", target = "address")
+    @Mapping(target = "institutionName", source = "name")
     EducationDetailsHighSchoolDTO toEducationDetailsHighSchoolDTO(HighSchool highSchool);
 
-    @Mapping(source = "name", target = "institutionName")
-    @Mapping(source = "location", target = "location")
-    @Mapping(source = "fieldOfStudy", target = "fieldOfStudy")
+    @Mapping(target = "institutionName", source = "name")
     EducationDetailsForeignHighSchoolDTO toEducationDetailsForeignHighSchoolDTO(ForeignHighSchool foreignHighSchool);
 
 }

@@ -8,6 +8,7 @@ import com.stag.identity.person.service.data.PersonBankingData;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(uses = { Qualifiers.class })
@@ -22,32 +23,40 @@ public interface PersonBankingMapper {
         @Context PersonBankingData data
     );
 
-    @Mapping(target = "owner", source = "personBank.accountOwner")
-    @Mapping(target = "address", source = "personBank.accountAddress")
-    @Mapping(target = "prefix", source = "personBank.accountPrefix")
-    @Mapping(target = "suffix", source = "personBank.accountSuffix")
-    @Mapping(target = "bankCode", source = "personBank.accountBank")
-    @Mapping(target = "bankName", source = "personBank.accountBank", qualifiedByName = "lookupBankName")
-    @Mapping(target = "iban", source = "personBank.accountIban")
-    @Mapping(target = "currency", source = "personBank.accountCurrency")
+    @Mapping(target = "owner", source = "accountOwner")
+    @Mapping(target = "address", source = "accountAddress")
+    @Mapping(target = "prefix", source = "accountPrefix")
+    @Mapping(target = "suffix", source = "accountSuffix")
+    @Mapping(target = "bankCode", source = "accountBank")
+    @Mapping(target = "bankName", source = "accountBank", qualifiedByName = "lookupBankName")
+    @Mapping(target = "iban", source = "accountIban")
+    @Mapping(target = "currency", source = "accountCurrency")
     BankAccount toBankAccount(
         PersonBankProjection personBank,
         @Context PersonBankingData data
     );
 
-    @Mapping(target = "owner", source = "personBank.euroAccountOwner")
-    @Mapping(target = "address", source = "personBank.euroAccountAddress")
-    @Mapping(target = "prefix", source = "personBank.euroAccountPrefix")
-    @Mapping(target = "suffix", source = "personBank.euroAccountSuffix")
-    @Mapping(target = "bankCode", source = "personBank.euroAccountBank")
-    @Mapping(target = "bankName", source = "personBank.euroAccountBank", qualifiedByName = "lookupEuroBankName")
-    @Mapping(target = "iban", source = "personBank.euroAccountIban")
-    @Mapping(target = "currency", source = "personBank.euroAccountCurrency")
-    @Mapping(target = "country", expression = "java(data.euroAccountCountryName())")
-    @Mapping(target = "swift", source = "personBank.euroAccountSwift")
-    EuroBankAccount mapEuroBankAccount(
+    @Mapping(target = "owner", source = "euroAccountOwner")
+    @Mapping(target = "address", source = "euroAccountAddress")
+    @Mapping(target = "prefix", source = "euroAccountPrefix")
+    @Mapping(target = "suffix", source = "euroAccountSuffix")
+    @Mapping(target = "bankCode", source = "euroAccountBank")
+    @Mapping(target = "bankName", source = "euroAccountBank", qualifiedByName = "lookupEuroBankName")
+    @Mapping(target = "iban", source = "euroAccountIban")
+    @Mapping(target = "currency", source = "euroAccountCurrency")
+    @Mapping(target = "country", source = "personBank", qualifiedByName = "euroAccountCountryName")
+    @Mapping(target = "swift", source = "euroAccountSwift")
+    EuroBankAccount toEuroBankAccount(
         PersonBankProjection personBank,
         @Context PersonBankingData data
     );
+
+    @Named("euroAccountCountryName")
+    default String euroAccountCountryName(
+        PersonBankProjection personBank,
+        @Context PersonBankingData data
+    ) {
+        return data.euroAccountCountryName();
+    }
 
 }
