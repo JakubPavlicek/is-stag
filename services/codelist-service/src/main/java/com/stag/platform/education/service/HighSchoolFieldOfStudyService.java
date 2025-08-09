@@ -17,11 +17,7 @@ public class HighSchoolFieldOfStudyService {
     @Transactional(readOnly = true)
     public String findFieldOfStudyName(String fieldOfStudyNumber) {
         return fieldOfStudyRepository.findNameById(fieldOfStudyNumber)
-                                     .orElseThrow(() -> {
-                                         String errorMessage = "Field of study not found for ID: " + fieldOfStudyNumber;
-                                         log.warn(errorMessage);
-                                         return new HighSchoolFieldOfStudyNotFoundException(errorMessage);
-                                     });
+                                     .orElseThrow(() -> new HighSchoolFieldOfStudyNotFoundException(fieldOfStudyNumber));
     }
 
 }

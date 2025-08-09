@@ -18,11 +18,7 @@ public class HighSchoolService {
     @Transactional(readOnly = true)
     public HighSchoolAddressProjection findHighSchoolAddressById(String highSchoolId) {
         return highSchoolRepository.findHighSchoolAddressById(highSchoolId)
-                                   .orElseThrow(() -> {
-                                       String errorMessage = "High School not found for ID: " + highSchoolId;
-                                       log.warn(errorMessage);
-                                       return new HighSchoolNotFoundException(errorMessage);
-                                   });
+                                   .orElseThrow(() -> new HighSchoolNotFoundException(highSchoolId));
     }
 
 }
