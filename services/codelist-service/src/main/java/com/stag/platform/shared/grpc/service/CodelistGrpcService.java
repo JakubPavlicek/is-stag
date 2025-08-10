@@ -23,7 +23,6 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,11 +30,6 @@ import java.util.concurrent.Executor;
 public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImplBase {
 
     private final CodelistGrpcAsyncService asyncService;
-    private final CodelistMapper codelistMapper;
-
-    private final Executor grpcExecutor;
-
-    // TODO: Create custom Exceptions -> Errors are then handled in @GrpcAdvice
 
     @Override
     public void getCodelistValues(GetCodelistValuesRequest request, StreamObserver<GetCodelistValuesResponse> responseObserver) {
@@ -58,7 +52,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             asyncService.fetchCountryNamesAsync(request, request.getLanguage());
 
         CompletableFuture.allOf(codelistMeaningsFuture, countryNamesFuture)
-                         .thenApply(_ -> codelistMapper.buildPersonProfileDataResponse(
+                         .thenApply(_ -> CodelistMapper.INSTANCE.buildPersonProfileDataResponse(
                              request,
                              codelistMeaningsFuture.join(),
                              countryNamesFuture.join()
@@ -76,7 +70,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             asyncService.fetchCountryNamesAsync(request, request.getLanguage());
 
         CompletableFuture.allOf(addressNamesFuture, countryNamesFuture)
-                         .thenApply(_ -> codelistMapper.buildPersonAddressDataResponse(
+                         .thenApply(_ -> CodelistMapper.INSTANCE.buildPersonAddressDataResponse(
                              request,
                              addressNamesFuture.join(),
                              countryNamesFuture.join()
@@ -94,7 +88,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             asyncService.fetchCountryNamesAsync(request, request.getLanguage());
 
         CompletableFuture.allOf(codelistMeaningsFuture, countryNamesFuture)
-                         .thenApply(_ -> codelistMapper.buildPersonBankingDataResponse(
+                         .thenApply(_ -> CodelistMapper.INSTANCE.buildPersonBankingDataResponse(
                              request,
                              codelistMeaningsFuture.join(),
                              countryNamesFuture.join()
@@ -115,7 +109,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             asyncService.fetchCountryNamesAsync(request, request.getLanguage());
 
         CompletableFuture.allOf(highSchoolAddressFuture, fieldOfStudyFuture, countryNamesFuture)
-                         .thenApply(_ -> codelistMapper.buildPersonEducationDataResponse(
+                         .thenApply(_ -> CodelistMapper.INSTANCE.buildPersonEducationDataResponse(
                              request,
                              highSchoolAddressFuture.join(),
                              fieldOfStudyFuture.join(),

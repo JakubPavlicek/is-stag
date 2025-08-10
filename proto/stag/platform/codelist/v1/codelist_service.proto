@@ -27,7 +27,6 @@ service CodelistService {
 message GetCodelistValuesRequest {
 
   repeated CodelistKey codelist_keys = 1 [
-    (buf.validate.field).repeated.min_items = 1,
     (buf.validate.field).repeated.max_items = 10
   ];
 
@@ -46,7 +45,6 @@ message GetCodelistValuesResponse {
 message GetPersonProfileDataRequest {
 
   repeated CodelistKey codelist_keys = 1 [
-    (buf.validate.field).repeated.min_items = 1,
     (buf.validate.field).repeated.max_items = 10
   ];
 
@@ -117,7 +115,6 @@ message GetPersonAddressDataResponse {
 message GetPersonBankingDataRequest {
 
   repeated CodelistKey codelist_keys = 1 [
-    (buf.validate.field).repeated.min_items = 1,
     (buf.validate.field).repeated.max_items = 10
   ];
 
@@ -141,7 +138,6 @@ message GetPersonBankingDataResponse {
 message GetPersonEducationDataRequest {
 
   optional string high_school_id = 1 [
-    (buf.validate.field).string.min_len = 1,
     (buf.validate.field).string.max_len = 10
   ];
 

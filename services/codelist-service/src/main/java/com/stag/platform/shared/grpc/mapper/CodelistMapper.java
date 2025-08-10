@@ -15,37 +15,29 @@ import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
 import com.stag.platform.education.repository.projection.HighSchoolAddressProjection;
 import com.stag.platform.entry.entity.CodelistEntryId;
 import com.stag.platform.entry.repository.projection.CodelistEntryMeaningProjection;
-import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
+import org.mapstruct.NullValueCheckStrategy;
+import org.mapstruct.factory.Mappers;
 import org.springframework.data.util.Pair;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-@Slf4j
-@Component
-public class CodelistMapper {
+@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+public interface CodelistMapper {
 
-    public List<CodelistEntryId> extractCodelistEntryIds(List<CodelistKey> codelistKeys) {
-        return codelistKeys.stream()
-                           .map(key -> new CodelistEntryId(key.getDomain(), key.getLowValue()))
-                           .toList();
-    }
+    CodelistMapper INSTANCE = Mappers.getMapper(CodelistMapper.class);
 
-    public List<CodelistMeaning> mapToCodelistMeanings(List<CodelistEntryMeaningProjection> entries) {
-        return entries.stream()
-                      .map(this::toCodelistMeaning)
-                      .toList();
-    }
-
-    public Set<Integer> extractCountryIds(Message message) {
-        log.info("extractCountryIds thread: {}", Thread.currentThread());
-
+    default Set<Integer> extractCountryIds(Message message) {
         return switch (message) {
             case GetPersonProfileDataRequest r -> extractValues(
                 Pair.of(r.hasBirthCountryId(), r.getBirthCountryId()),
@@ -65,9 +57,7 @@ public class CodelistMapper {
         };
     }
 
-    public Set<Long> extractMunicipalityPartIds(Message message) {
-        log.info("extractMunicipalityPartIds thread: {}", Thread.currentThread());
-
+    default Set<Long> extractMunicipalityPartIds(Message message) {
         return switch (message) {
             case GetPersonAddressDataRequest r -> extractValues(
                 Pair.of(r.hasPermanentMunicipalityPartId(), r.getPermanentMunicipalityPartId()),
@@ -77,119 +67,122 @@ public class CodelistMapper {
         };
     }
 
-    public GetPersonProfileDataResponse buildPersonProfileDataResponse(
+    List<CodelistEntryId> toCodelistEntryIds(List<CodelistKey> codelistKeys);
+
+    List<CodelistMeaning> toCodelistMeanings(List<CodelistEntryMeaningProjection> entries);
+
+    @Mapping(target = "birthCountryName", source = "birthCountryId", qualifiedByName = "getCountryName")
+    @Mapping(target = "citizenshipCountryName", source = "citizenshipCountryId", qualifiedByName = "getCountryName")
+    @Mapping(target = "codelistMeaningsList", ignore = true)
+    @Mapping(target = "allFields", ignore = true)
+    @Mapping(target = "unknownFields", ignore = true)
+    GetPersonProfileDataResponse buildPersonProfileDataResponse(
         GetPersonProfileDataRequest request,
-        List<CodelistMeaning> codelistMeanings,
-        Map<Integer, String> countryNames
-    ) {
-        var responseBuilder = GetPersonProfileDataResponse.newBuilder()
-                                                          .addAllCodelistMeanings(codelistMeanings);
+        @Context List<CodelistMeaning> codelistMeanings,
+        @Context Map<Integer, String> countryNames
+    );
 
-        if (!countryNames.isEmpty()) {
-            setCountryNameIfPresent(countryNames, request.getBirthCountryId(), responseBuilder::setBirthCountryName);
-            setCountryNameIfPresent(countryNames, request.getCitizenshipCountryId(), responseBuilder::setCitizenshipCountryName);
-        }
-
-        return responseBuilder.build();
-    }
-
-    public GetPersonAddressDataResponse buildPersonAddressDataResponse(
+    @Mapping(target = "permanentCountryName", source = "permanentCountryId", qualifiedByName = "getCountryName")
+    @Mapping(target = "temporaryCountryName", source = "temporaryCountryId", qualifiedByName = "getCountryName")
+    @Mapping(target = "permanentMunicipalityName", source = "permanentMunicipalityPartId", qualifiedByName = "getMunicipalityName")
+    @Mapping(target = "permanentMunicipalityPartName", source = "permanentMunicipalityPartId", qualifiedByName = "getMunicipalityPartName")
+    @Mapping(target = "permanentDistrictName", source = "permanentMunicipalityPartId", qualifiedByName = "getDistrictName")
+    @Mapping(target = "temporaryMunicipalityName", source = "temporaryMunicipalityPartId", qualifiedByName = "getMunicipalityName")
+    @Mapping(target = "temporaryMunicipalityPartName", source = "temporaryMunicipalityPartId", qualifiedByName = "getMunicipalityPartName")
+    @Mapping(target = "temporaryDistrictName", source = "temporaryMunicipalityPartId", qualifiedByName = "getDistrictName")
+    @Mapping(target = "allFields", ignore = true)
+    @Mapping(target = "unknownFields", ignore = true)
+    GetPersonAddressDataResponse buildPersonAddressDataResponse(
         GetPersonAddressDataRequest request,
-        Map<Long, AddressPlaceNameProjection> addressNames,
-        Map<Integer, String> countryNames
-    ) {
-        var responseBuilder = GetPersonAddressDataResponse.newBuilder();
+        @Context Map<Long, AddressPlaceNameProjection> addressNames,
+        @Context Map<Integer, String> countryNames
+    );
 
-        if (!addressNames.isEmpty()) {
-            setAddressPlaceNames(request, addressNames, responseBuilder);
-        }
-
-        if (!countryNames.isEmpty()) {
-            setCountryNameIfPresent(countryNames, request.getPermanentCountryId(), responseBuilder::setPermanentCountryName);
-            setCountryNameIfPresent(countryNames, request.getTemporaryCountryId(), responseBuilder::setTemporaryCountryName);
-        }
-
-        return responseBuilder.build();
-    }
-
-    public GetPersonBankingDataResponse buildPersonBankingDataResponse(
+    @Mapping(target = "euroAccountCountryName", source = "euroAccountCountryId", qualifiedByName = "getCountryName")
+    @Mapping(target = "codelistMeaningsList", ignore = true)
+    @Mapping(target = "allFields", ignore = true)
+    @Mapping(target = "unknownFields", ignore = true)
+    GetPersonBankingDataResponse buildPersonBankingDataResponse(
         GetPersonBankingDataRequest request,
-        List<CodelistMeaning> codelistMeanings,
-        Map<Integer, String> countryNames
-    ) {
-        var responseBuilder = GetPersonBankingDataResponse.newBuilder()
-                                                          .addAllCodelistMeanings(codelistMeanings);
+        @Context List<CodelistMeaning> codelistMeanings,
+        @Context Map<Integer, String> countryNames
+    );
 
-        if (!countryNames.isEmpty()) {
-            setCountryNameIfPresent(countryNames, request.getEuroAccountCountryId(), responseBuilder::setEuroAccountCountryName);
-        }
-
-        return responseBuilder.build();
-    }
-
-    public GetPersonEducationDataResponse buildPersonEducationDataResponse(
+    @Mapping(target = "highSchoolName", source = "highSchoolAddress.name")
+    @Mapping(target = "highSchoolStreet", source = "highSchoolAddress.street")
+    @Mapping(target = "highSchoolZipCode", source = "highSchoolAddress.zipCode")
+    @Mapping(target = "highSchoolMunicipalityName", source = "highSchoolAddress.municipality")
+    @Mapping(target = "highSchoolDistrictName", source = "highSchoolAddress.district")
+    @Mapping(target = "highSchoolFieldOfStudy", source = "fieldOfStudy")
+    @Mapping(target = "highSchoolCountryName", source = "request.highSchoolCountryId", qualifiedByName = "getCountryName")
+    @Mapping(target = "allFields", ignore = true)
+    @Mapping(target = "unknownFields", ignore = true)
+    GetPersonEducationDataResponse buildPersonEducationDataResponse(
         GetPersonEducationDataRequest request,
         HighSchoolAddressProjection highSchoolAddress,
         String fieldOfStudy,
-        Map<Integer, String> countryNames
+        @Context Map<Integer, String> countryNames
+    );
+
+    @Mapping(target = "domain", source = "id.domain")
+    @Mapping(target = "lowValue", source = "id.lowValue")
+    @Mapping(target = "meaning", source = "meaning")
+    CodelistMeaning toCodelistMeaning(CodelistEntryMeaningProjection entry);
+
+    @AfterMapping
+    default void addCodelistMeanings(
+        @Context List<CodelistMeaning> codelistMeanings,
+        @MappingTarget Message.Builder builder
     ) {
-        var responseBuilder = GetPersonEducationDataResponse.newBuilder();
-
-        if (highSchoolAddress != null) {
-            setIfPresent(highSchoolAddress.name(), responseBuilder::setHighSchoolName);
-            setIfPresent(highSchoolAddress.street(), responseBuilder::setHighSchoolStreet);
-            setIfPresent(highSchoolAddress.zipCode(), responseBuilder::setHighSchoolZipCode);
-            setIfPresent(highSchoolAddress.municipality(), responseBuilder::setHighSchoolMunicipalityName);
-            setIfPresent(highSchoolAddress.district(), responseBuilder::setHighSchoolDistrictName);
+        if (codelistMeanings == null) {
+            return;
         }
 
-        setIfPresent(fieldOfStudy, responseBuilder::setHighSchoolFieldOfStudy);
-
-        if (!countryNames.isEmpty()) {
-            setCountryNameIfPresent(countryNames, request.getHighSchoolCountryId(), responseBuilder::setHighSchoolCountryName);
-        }
-
-        return responseBuilder.build();
-    }
-
-    private void setAddressPlaceNames(
-        GetPersonAddressDataRequest request,
-        Map<Long, AddressPlaceNameProjection> addressNames,
-        GetPersonAddressDataResponse.Builder responseBuilder
-    ) {
-        // Set permanent address place names
-        if (request.hasPermanentMunicipalityPartId()) {
-            AddressPlaceNameProjection permanentAddress = addressNames.get(request.getPermanentMunicipalityPartId());
-            if (permanentAddress != null) {
-                setIfPresent(permanentAddress.municipalityName(), responseBuilder::setPermanentMunicipalityName);
-                setIfPresent(permanentAddress.municipalityPartName(), responseBuilder::setPermanentMunicipalityPartName);
-                setIfPresent(permanentAddress.districtName(), responseBuilder::setPermanentDistrictName);
-            }
-        }
-
-        // Set temporary address place names
-        if (request.hasTemporaryMunicipalityPartId()) {
-            AddressPlaceNameProjection temporaryAddress = addressNames.get(request.getTemporaryMunicipalityPartId());
-            if (temporaryAddress != null) {
-                setIfPresent(temporaryAddress.municipalityName(), responseBuilder::setTemporaryMunicipalityName);
-                setIfPresent(temporaryAddress.municipalityPartName(), responseBuilder::setTemporaryMunicipalityPartName);
-                setIfPresent(temporaryAddress.districtName(), responseBuilder::setTemporaryDistrictName);
-            }
+        switch (builder) {
+            case GetPersonProfileDataResponse.Builder b -> b.addAllCodelistMeanings(codelistMeanings);
+            case GetPersonBankingDataResponse.Builder b -> b.addAllCodelistMeanings(codelistMeanings);
+            default -> throw new IllegalStateException("Unexpected value: " + builder);
         }
     }
 
-    private void setCountryNameIfPresent(
-        Map<Integer, String> countryNames,
-        Integer countryId,
-        Consumer<String> setter
-    ) {
-        Optional.ofNullable(countryId)
-                .map(countryNames::get)
-                .ifPresent(setter);
+    @Named("getCountryName")
+    default String getCountryName(Integer countryId, @Context Map<Integer, String> countryNames) {
+        return Optional.ofNullable(countryNames)
+                       .map(names -> names.get(countryId))
+                       .orElse(null);
     }
 
-    private <T> void setIfPresent(T value, Consumer<T> setter) {
-        Optional.ofNullable(value).ifPresent(setter);
+    @Named("getMunicipalityName")
+    default String getMunicipalityName(
+        Long municipalityPartId,
+        @Context Map<Long, AddressPlaceNameProjection> addressNames
+    ) {
+        return Optional.ofNullable(addressNames)
+                       .map(names -> names.get(municipalityPartId))
+                       .map(AddressPlaceNameProjection::municipalityName)
+                       .orElse(null);
+    }
+
+    @Named("getMunicipalityPartName")
+    default String getMunicipalityPartName(
+        Long municipalityPartId,
+        @Context Map<Long, AddressPlaceNameProjection> addressNames
+    ) {
+        return Optional.ofNullable(addressNames)
+                       .map(names -> names.get(municipalityPartId))
+                       .map(AddressPlaceNameProjection::municipalityPartName)
+                       .orElse(null);
+    }
+
+    @Named("getDistrictName")
+    default String getDistrictName(
+        Long municipalityPartId,
+        @Context Map<Long, AddressPlaceNameProjection> addressNames
+    ) {
+        return Optional.ofNullable(addressNames)
+                       .map(names -> names.get(municipalityPartId))
+                       .map(AddressPlaceNameProjection::districtName)
+                       .orElse(null);
     }
 
     @SafeVarargs
@@ -198,14 +191,6 @@ public class CodelistMapper {
                      .filter(Pair::getFirst)
                      .map(Pair::getSecond)
                      .collect(Collectors.toSet());
-    }
-
-    private CodelistMeaning toCodelistMeaning(CodelistEntryMeaningProjection entry) {
-        return CodelistMeaning.newBuilder()
-                              .setDomain(entry.id().getDomain())
-                              .setLowValue(entry.id().getLowValue())
-                              .setMeaning(entry.meaning())
-                              .build();
     }
 
 }

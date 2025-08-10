@@ -35,8 +35,6 @@ class CodelistGrpcAsyncService {
     private final HighSchoolService highSchoolService;
     private final HighSchoolFieldOfStudyService highSchoolFieldOfStudyService;
 
-    private final CodelistMapper codelistMapper;
-
     @Async("grpcExecutor")
     public CompletableFuture<List<CodelistMeaning>> fetchCodelistMeaningsAsync(List<CodelistKey> codelistKeys, String language) {
         List<CodelistMeaning> codelistValues = fetchCodelistMeanings(codelistKeys, language);
@@ -45,14 +43,14 @@ class CodelistGrpcAsyncService {
 
     @Async("grpcExecutor")
     public CompletableFuture<Map<Integer, String>> fetchCountryNamesAsync(Message request, String language) {
-        Set<Integer> countryIds = codelistMapper.extractCountryIds(request);
+        Set<Integer> countryIds = CodelistMapper.INSTANCE.extractCountryIds(request);
         Map<Integer, String> countryNames = fetchCountryNames(countryIds, language);
         return CompletableFuture.completedFuture(countryNames);
     }
 
     @Async("grpcExecutor")
     public CompletableFuture<Map<Long, AddressPlaceNameProjection>> fetchAddressNamesAsync(Message request) {
-        Set<Long> municipalityPartIds = codelistMapper.extractMunicipalityPartIds(request);
+        Set<Long> municipalityPartIds = CodelistMapper.INSTANCE.extractMunicipalityPartIds(request);
         Map<Long, AddressPlaceNameProjection> addressNames = fetchAddressNames(municipalityPartIds);
         return CompletableFuture.completedFuture(addressNames);
     }
@@ -70,9 +68,9 @@ class CodelistGrpcAsyncService {
     }
 
     private List<CodelistMeaning> fetchCodelistMeanings(List<CodelistKey> codelistKeys, String language) {
-        List<CodelistEntryId> entryIds = codelistMapper.extractCodelistEntryIds(codelistKeys);
+        List<CodelistEntryId> entryIds = CodelistMapper.INSTANCE.toCodelistEntryIds(codelistKeys);
         List<CodelistEntryMeaningProjection> entries = codelistEntryService.findMeaningsByIds(entryIds, language);
-        return codelistMapper.mapToCodelistMeanings(entries);
+        return CodelistMapper.INSTANCE.toCodelistMeanings(entries);
     }
 
     private Map<Integer, String> fetchCountryNames(Set<Integer> countryIds, String language) {

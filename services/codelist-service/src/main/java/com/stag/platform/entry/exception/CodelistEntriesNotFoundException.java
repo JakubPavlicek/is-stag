@@ -12,11 +12,11 @@ public class CodelistEntriesNotFoundException extends RuntimeException {
     private final List<CodelistEntryId> missingIds;
 
     public CodelistEntriesNotFoundException(List<CodelistEntryId> missingIds) {
-        super("Unable to find codelist entries for IDs: [" + formatMissingIdsForError(missingIds) + "]");
+        super("Unable to find codelist entries for IDs: [" + formatMissingIdsMessage(missingIds) + "]");
         this.missingIds = missingIds;
     }
 
-    private static String formatMissingIdsForError(List<CodelistEntryId> missingIds) {
+    private static String formatMissingIdsMessage(List<CodelistEntryId> missingIds) {
         return missingIds.stream()
                          .map(id -> id.getDomain() + ":" + id.getLowValue())
                          .collect(Collectors.joining(", "));

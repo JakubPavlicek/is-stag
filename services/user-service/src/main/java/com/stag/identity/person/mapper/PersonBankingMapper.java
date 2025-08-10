@@ -9,9 +9,10 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = { Qualifiers.class })
+@Mapper(uses = { Qualifiers.class }, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface PersonBankingMapper {
 
     PersonBankingMapper INSTANCE = Mappers.getMapper(PersonBankingMapper.class);
@@ -56,6 +57,10 @@ public interface PersonBankingMapper {
         PersonBankProjection personBank,
         @Context PersonBankingData data
     ) {
+        if (data == null) {
+            return null;
+        }
+
         return data.euroAccountCountryName();
     }
 

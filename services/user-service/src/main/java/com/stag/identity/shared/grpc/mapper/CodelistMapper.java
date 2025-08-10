@@ -21,7 +21,6 @@ import com.stag.platform.codelist.v1.GetPersonEducationDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
 import org.mapstruct.AfterMapping;
-import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -34,62 +33,54 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface CodelistMapper {
 
     CodelistMapper INSTANCE = Mappers.getMapper(CodelistMapper.class);
 
-    @Mapping(source = "language", target = "language")
-    @Mapping(source = "personProfile.birthCountryId", target = "birthCountryId")
-    @Mapping(source = "personProfile.citizenshipCountryId", target = "citizenshipCountryId")
+    @Mapping(target = "birthCountryId", source = "personProfile.birthCountryId")
+    @Mapping(target = "citizenshipCountryId", source = "personProfile.citizenshipCountryId")
     @Mapping(target = "codelistKeysList", ignore = true)
     GetPersonProfileDataRequest toPersonProfileDataRequest(PersonProfileProjection personProfile, String language);
 
-    @Mapping(source = "language", target = "language")
-    @Mapping(source = "personAddress.permanentCountryId", target = "permanentCountryId")
-    @Mapping(source = "personAddress.permanentMunicipalityPartId", target = "permanentMunicipalityPartId")
-    @Mapping(source = "personAddress.temporaryCountryId", target = "temporaryCountryId")
-    @Mapping(source = "personAddress.temporaryMunicipalityPartId", target = "temporaryMunicipalityPartId")
+    @Mapping(target = "permanentCountryId", source = "personAddress.permanentCountryId")
+    @Mapping(target = "permanentMunicipalityPartId", source = "personAddress.permanentMunicipalityPartId")
+    @Mapping(target = "temporaryCountryId", source = "personAddress.temporaryCountryId")
+    @Mapping(target = "temporaryMunicipalityPartId", source = "personAddress.temporaryMunicipalityPartId")
     GetPersonAddressDataRequest toPersonAddressDataRequest(PersonAddressProjection personAddress, String language);
 
-    @Mapping(source = "language", target = "language")
-    @Mapping(source = "personBank.euroAccountCountryId", target = "euroAccountCountryId")
+    @Mapping(target = "euroAccountCountryId", source = "personBank.euroAccountCountryId")
     @Mapping(target = "codelistKeysList", ignore = true)
     GetPersonBankingDataRequest toPersonBankingDataRequest(PersonBankProjection personBank, String language);
 
-    @Mapping(source = "language", target = "language")
-    @Mapping(source = "personEducation.highSchoolId", target = "highSchoolId")
-    @Mapping(source = "personEducation.highSchoolFieldOfStudyNumber", target = "highSchoolFieldOfStudyNumber")
-    @Mapping(source = "personEducation.highSchoolCountryId", target = "highSchoolCountryId")
+    @Mapping(target = "highSchoolId", source = "personEducation.highSchoolId")
+    @Mapping(target = "highSchoolFieldOfStudyNumber", source = "personEducation.highSchoolFieldOfStudyNumber")
+    @Mapping(target = "highSchoolCountryId", source = "personEducation.highSchoolCountryId")
     GetPersonEducationDataRequest toPersonEducationDataRequest(PersonEducationProjection personEducation, String language);
 
-    @Mapping(source = "codelistMeaningsList", target = "codelistMeanings", qualifiedByName = "toMeaningMap")
-    @Mapping(source = "birthCountryName", target = "birthCountryName")
-    @Mapping(source = "citizenshipCountryName", target = "citizenshipCountryName")
+    @Mapping(target = "codelistMeanings", source = "codelistMeaningsList", qualifiedByName = "toMeaningMap")
     PersonProfileData toPersonProfileData(GetPersonProfileDataResponse response);
 
-    @Mapping(source = "personAddress.permanentStreet", target = "permanentStreet")
-    @Mapping(source = "personAddress.permanentStreetNumber", target = "permanentStreetNumber")
-    @Mapping(source = "personAddress.permanentZipCode", target = "permanentZipCode")
-    @Mapping(source = "response.permanentMunicipalityName", target = "permanentMunicipality")
-    @Mapping(source = "response.permanentMunicipalityPartName", target = "permanentMunicipalityPart")
-    @Mapping(source = "response.permanentDistrictName", target = "permanentDistrict")
-    @Mapping(source = "response.permanentCountryName", target = "permanentCountry")
-    @Mapping(source = "personAddress.temporaryStreet", target = "temporaryStreet")
-    @Mapping(source = "personAddress.temporaryStreetNumber", target = "temporaryStreetNumber")
-    @Mapping(source = "personAddress.temporaryZipCode", target = "temporaryZipCode")
-    @Mapping(source = "response.temporaryMunicipalityName", target = "temporaryMunicipality")
-    @Mapping(source = "response.temporaryMunicipalityPartName", target = "temporaryMunicipalityPart")
-    @Mapping(source = "response.temporaryDistrictName", target = "temporaryDistrict")
-    @Mapping(source = "response.temporaryCountryName", target = "temporaryCountry")
+    @Mapping(target = "permanentStreet", source = "personAddress.permanentStreet")
+    @Mapping(target = "permanentStreetNumber", source = "personAddress.permanentStreetNumber")
+    @Mapping(target = "permanentZipCode", source = "personAddress.permanentZipCode")
+    @Mapping(target = "permanentMunicipality", source = "response.permanentMunicipalityName")
+    @Mapping(target = "permanentMunicipalityPart", source = "response.permanentMunicipalityPartName")
+    @Mapping(target = "permanentDistrict", source = "response.permanentDistrictName")
+    @Mapping(target = "permanentCountry", source = "response.permanentCountryName")
+    @Mapping(target = "temporaryStreet", source = "personAddress.temporaryStreet")
+    @Mapping(target = "temporaryStreetNumber", source = "personAddress.temporaryStreetNumber")
+    @Mapping(target = "temporaryZipCode", source = "personAddress.temporaryZipCode")
+    @Mapping(target = "temporaryMunicipality", source = "response.temporaryMunicipalityName")
+    @Mapping(target = "temporaryMunicipalityPart", source = "response.temporaryMunicipalityPartName")
+    @Mapping(target = "temporaryDistrict", source = "response.temporaryDistrictName")
+    @Mapping(target = "temporaryCountry", source = "response.temporaryCountryName")
     PersonAddressData toPersonAddressData(
         GetPersonAddressDataResponse response,
         PersonAddressProjection personAddress
     );
 
-    @Mapping(source = "codelistMeaningsList", target = "codelistMeanings", qualifiedByName = "toMeaningMap")
-    @Mapping(source = "euroAccountCountryName", target = "euroAccountCountryName")
+    @Mapping(target = "codelistMeanings", source = "codelistMeaningsList", qualifiedByName = "toMeaningMap")
     PersonBankingData toPersonBankingData(GetPersonBankingDataResponse response);
 
     PersonEducationData toPersonEducationData(GetPersonEducationDataResponse response);
