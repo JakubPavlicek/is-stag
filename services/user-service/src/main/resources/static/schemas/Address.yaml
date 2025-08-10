@@ -11,44 +11,44 @@ required:
   - district
   - country
 properties:
-  street: # ulice
+  street:
     type: string
     nullable: true
     description: Street name of the address.
     example: "Příchovice"
     maxLength: 48
-  streetNumber: # cislo ulice
+  streetNumber:
     type: string
     nullable: true
     description: Street number of the address.
     example: "97"
     maxLength: 10
-  zipCode: # postovni smerovaci cislo
+  zipCode:
     type: string
     nullable: true
     description: Zip code of the address.
     example: "34901"
     pattern: "^\\d{1,5}$"
     maxLength: 5
-  municipality: # obec
+  municipality:
     type: string
     nullable: true
     description: Municipality of the address.
     example: "Stříbro"
     maxLength: 255
-  municipalityPart: # cast obce
+  municipalityPart:
     type: string
     nullable: true
     description: Part of the municipality.
     example: "Stříbro I"
     maxLength: 255
-  district: # okres
+  district:
     type: string
     nullable: true
     description: District of the address.
     example: "Tachov"
     maxLength: 100
-  country: # stat
+  country:
     type: string
     nullable: true
     description: Country of the address.

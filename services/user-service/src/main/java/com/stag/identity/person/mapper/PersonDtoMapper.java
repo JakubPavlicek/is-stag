@@ -35,20 +35,20 @@ public interface PersonDtoMapper {
 
     @Mapping(target = "holderName", source = "owner")
     @Mapping(target = "holderAddress", source = "address")
-    @Mapping(target = "bankAccountNumberPrefix", source = "prefix")
-    @Mapping(target = "bankAccountNumberSuffix", source = "suffix")
+    @Mapping(target = "accountNumberPrefix", source = "prefix")
+    @Mapping(target = "accountNumberSuffix", source = "suffix")
     BankAccountDetailsDTO toBankAccountDTO(BankAccount account);
 
     @Mapping(target = "holderName", source = "owner")
     @Mapping(target = "holderAddress", source = "address")
-    @Mapping(target = "bankAccountNumberPrefix", source = "prefix")
-    @Mapping(target = "bankAccountNumberSuffix", source = "suffix")
+    @Mapping(target = "accountNumberPrefix", source = "prefix")
+    @Mapping(target = "accountNumberSuffix", source = "suffix")
     EuroBankAccountDetailsDTO toEuroBankAccountDTO(EuroBankAccount euroBankAccount);
 
-    @Mapping(target = "institutionName", source = "name")
+    @Mapping(target = "schoolName", source = "name")
     EducationDetailsHighSchoolDTO toEducationDetailsHighSchoolDTO(HighSchool highSchool);
 
-    @Mapping(target = "institutionName", source = "name")
+    @Mapping(target = "schoolName", source = "name")
     EducationDetailsForeignHighSchoolDTO toEducationDetailsForeignHighSchoolDTO(ForeignHighSchool foreignHighSchool);
 
 }

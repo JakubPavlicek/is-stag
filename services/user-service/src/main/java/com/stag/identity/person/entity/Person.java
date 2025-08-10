@@ -683,7 +683,7 @@ public class Person {
         name = "UCET_EURO_SWIFT",
         length = 11
     )
-    private String euroAccountSwift;
+    private String euroAccountSwiftCode;
 
     @Size(max = 4000)
     @Column(

@@ -46,7 +46,7 @@ public interface PersonBankingMapper {
     @Mapping(target = "iban", source = "euroAccountIban")
     @Mapping(target = "currency", source = "euroAccountCurrency")
     @Mapping(target = "country", source = "personBank", qualifiedByName = "euroAccountCountryName")
-    @Mapping(target = "swift", source = "euroAccountSwift")
+    @Mapping(target = "swiftCode", source = "euroAccountSwiftCode")
     EuroBankAccount toEuroBankAccount(
         PersonBankProjection personBank,
         @Context PersonBankingData data

@@ -17,7 +17,7 @@ public record PersonBankProjection(
     String euroAccountIban,
     String euroAccountCurrency,
     Integer euroAccountCountryId,
-    String euroAccountSwift
+    String euroAccountSwiftCode
 ) {
 
 }

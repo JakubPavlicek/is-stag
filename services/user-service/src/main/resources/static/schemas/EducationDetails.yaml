@@ -11,12 +11,12 @@ properties:
     description: Details of the high school attended by the person.
     additionalProperties: false
     required:
-      - institutionName
+      - schoolName
       - fieldOfStudy
       - graduationDate
       - address
     properties:
-      institutionName:
+      schoolName:
         type: string
         nullable: true
         description: Name of the high school.
@@ -41,11 +41,11 @@ properties:
     description: Details of the foreign high school attended by the person.
     additionalProperties: false
     required:
-      - institutionName
+      - schoolName
       - fieldOfStudy
       - location
     properties:
-      institutionName:
+      schoolName:
         type: string
         nullable: true
         description: Name of the foreign high school.

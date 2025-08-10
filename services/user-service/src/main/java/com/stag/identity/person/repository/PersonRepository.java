@@ -65,7 +65,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             p.euroAccountIban,
             p.euroAccountCurrency,
             CAST(p.euroAccountCountryId AS Integer),
-            p.euroAccountSwift
+            p.euroAccountSwiftCode
         )
         FROM
             Person p

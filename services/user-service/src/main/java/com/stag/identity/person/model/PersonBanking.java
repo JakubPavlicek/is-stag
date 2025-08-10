@@ -33,7 +33,7 @@ public record PersonBanking(
         String iban,
         String currency,
         String country,
-        String swift
+        String swiftCode
     ) {
 
     }
