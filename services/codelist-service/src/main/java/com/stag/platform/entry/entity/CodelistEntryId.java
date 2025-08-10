@@ -27,12 +27,6 @@ public class CodelistEntryId implements Serializable {
     @Serial
     private static final long serialVersionUID = -4080125746614352067L;
 
-    public CodelistEntryId(String domain, String lowValue) {
-        this.domain = domain;
-        this.lowValue = lowValue;
-        this.subsystemCode = "STA";
-    }
-
     @Size(max = 100)
     @NotNull
     @Column(

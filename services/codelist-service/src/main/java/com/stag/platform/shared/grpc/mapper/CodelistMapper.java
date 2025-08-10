@@ -73,9 +73,7 @@ public interface CodelistMapper {
 
     @Mapping(target = "birthCountryName", source = "birthCountryId", qualifiedByName = "getCountryName")
     @Mapping(target = "citizenshipCountryName", source = "citizenshipCountryId", qualifiedByName = "getCountryName")
-    @Mapping(target = "codelistMeaningsList", ignore = true)
-    @Mapping(target = "allFields", ignore = true)
-    @Mapping(target = "unknownFields", ignore = true)
+    @Mapping(target = "codelistMeanings", ignore = true)
     GetPersonProfileDataResponse buildPersonProfileDataResponse(
         GetPersonProfileDataRequest request,
         @Context List<CodelistMeaning> codelistMeanings,
@@ -90,8 +88,6 @@ public interface CodelistMapper {
     @Mapping(target = "temporaryMunicipalityName", source = "temporaryMunicipalityPartId", qualifiedByName = "getMunicipalityName")
     @Mapping(target = "temporaryMunicipalityPartName", source = "temporaryMunicipalityPartId", qualifiedByName = "getMunicipalityPartName")
     @Mapping(target = "temporaryDistrictName", source = "temporaryMunicipalityPartId", qualifiedByName = "getDistrictName")
-    @Mapping(target = "allFields", ignore = true)
-    @Mapping(target = "unknownFields", ignore = true)
     GetPersonAddressDataResponse buildPersonAddressDataResponse(
         GetPersonAddressDataRequest request,
         @Context Map<Long, AddressPlaceNameProjection> addressNames,
@@ -99,9 +95,7 @@ public interface CodelistMapper {
     );
 
     @Mapping(target = "euroAccountCountryName", source = "euroAccountCountryId", qualifiedByName = "getCountryName")
-    @Mapping(target = "codelistMeaningsList", ignore = true)
-    @Mapping(target = "allFields", ignore = true)
-    @Mapping(target = "unknownFields", ignore = true)
+    @Mapping(target = "codelistMeanings", ignore = true)
     GetPersonBankingDataResponse buildPersonBankingDataResponse(
         GetPersonBankingDataRequest request,
         @Context List<CodelistMeaning> codelistMeanings,
@@ -115,8 +109,6 @@ public interface CodelistMapper {
     @Mapping(target = "highSchoolDistrictName", source = "highSchoolAddress.district")
     @Mapping(target = "highSchoolFieldOfStudy", source = "fieldOfStudy")
     @Mapping(target = "highSchoolCountryName", source = "request.highSchoolCountryId", qualifiedByName = "getCountryName")
-    @Mapping(target = "allFields", ignore = true)
-    @Mapping(target = "unknownFields", ignore = true)
     GetPersonEducationDataResponse buildPersonEducationDataResponse(
         GetPersonEducationDataRequest request,
         HighSchoolAddressProjection highSchoolAddress,

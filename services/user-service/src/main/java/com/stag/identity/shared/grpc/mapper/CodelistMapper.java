@@ -40,7 +40,7 @@ public interface CodelistMapper {
 
     @Mapping(target = "birthCountryId", source = "personProfile.birthCountryId")
     @Mapping(target = "citizenshipCountryId", source = "personProfile.citizenshipCountryId")
-    @Mapping(target = "codelistKeysList", ignore = true)
+    @Mapping(target = "codelistKeys", ignore = true)
     GetPersonProfileDataRequest toPersonProfileDataRequest(PersonProfileProjection personProfile, String language);
 
     @Mapping(target = "permanentCountryId", source = "personAddress.permanentCountryId")
@@ -50,7 +50,7 @@ public interface CodelistMapper {
     GetPersonAddressDataRequest toPersonAddressDataRequest(PersonAddressProjection personAddress, String language);
 
     @Mapping(target = "euroAccountCountryId", source = "personBank.euroAccountCountryId")
-    @Mapping(target = "codelistKeysList", ignore = true)
+    @Mapping(target = "codelistKeys", ignore = true)
     GetPersonBankingDataRequest toPersonBankingDataRequest(PersonBankProjection personBank, String language);
 
     @Mapping(target = "highSchoolId", source = "personEducation.highSchoolId")
@@ -58,7 +58,7 @@ public interface CodelistMapper {
     @Mapping(target = "highSchoolCountryId", source = "personEducation.highSchoolCountryId")
     GetPersonEducationDataRequest toPersonEducationDataRequest(PersonEducationProjection personEducation, String language);
 
-    @Mapping(target = "codelistMeanings", source = "codelistMeaningsList", qualifiedByName = "toMeaningMap")
+    @Mapping(target = "codelistMeanings", source = "codelistMeanings", qualifiedByName = "toMeaningMap")
     PersonProfileData toPersonProfileData(GetPersonProfileDataResponse response);
 
     @Mapping(target = "permanentStreet", source = "personAddress.permanentStreet")
@@ -80,7 +80,7 @@ public interface CodelistMapper {
         PersonAddressProjection personAddress
     );
 
-    @Mapping(target = "codelistMeanings", source = "codelistMeaningsList", qualifiedByName = "toMeaningMap")
+    @Mapping(target = "codelistMeanings", source = "codelistMeanings", qualifiedByName = "toMeaningMap")
     PersonBankingData toPersonBankingData(GetPersonBankingDataResponse response);
 
     PersonEducationData toPersonEducationData(GetPersonEducationDataResponse response);
