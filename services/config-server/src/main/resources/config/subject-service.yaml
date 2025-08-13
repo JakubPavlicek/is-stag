@@ -40,6 +40,27 @@ spring:
     virtual:
       enabled: true
 
+otel:
+  service:
+    name: ${spring.application.name}
+  resource:
+    attributes:
+      service.namespace: ${project.groupId}
+      service.version: ${project.version}
+      deployment.environment: ${spring.profiles.active}
+  traces:
+    exporter: otlp
+    sampler: parentbased_traceidratio
+    sampler.arg: 1
+  metrics:
+    exporter: otlp
+  logs:
+    exporter: otlp
+  exporter:
+    otlp:
+      endpoint: http://otel:4318
+      protocol: http/protobuf
+
 logging:
   level:
     com:

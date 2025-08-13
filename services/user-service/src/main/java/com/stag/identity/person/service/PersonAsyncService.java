@@ -1,7 +1,5 @@
 package com.stag.identity.person.service;
 
-import com.stag.identity.shared.grpc.CodelistServiceClient;
-import com.stag.identity.shared.grpc.StudentServiceClient;
 import com.stag.identity.person.repository.projection.PersonAddressProjection;
 import com.stag.identity.person.repository.projection.PersonBankProjection;
 import com.stag.identity.person.repository.projection.PersonEducationProjection;
@@ -10,6 +8,8 @@ import com.stag.identity.person.service.data.PersonAddressData;
 import com.stag.identity.person.service.data.PersonBankingData;
 import com.stag.identity.person.service.data.PersonEducationData;
 import com.stag.identity.person.service.data.PersonProfileData;
+import com.stag.identity.shared.grpc.CodelistServiceClient;
+import com.stag.identity.shared.grpc.StudentServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;

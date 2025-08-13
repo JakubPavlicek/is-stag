@@ -158,6 +158,71 @@ services:
     networks:
       - is-stag-network
 
+  # --- Observability ---
+
+  otel:
+    container_name: otel
+    image: otel/opentelemetry-collector-contrib:latest
+    command: [ --config=/etc/otel-config.yml ]
+    volumes:
+      - ./otelcol-config.yaml:/etc/otel-config.yml
+    ports:
+      - "4318:4318"
+      - "4317:4317"
+      - "55679:55679"
+    networks:
+      - is-stag-network
+  loki:
+    container_name: loki
+    image: grafana/loki:latest
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - /Users/kuba/Downloads/data:/data
+    ports:
+      - "3100"
+    networks:
+      - is-stag-network
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+#    environment:
+#      - GF_AUTH_ANONYMOUS_ENABLED=true
+#      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - ./grafana-datasources.yaml:/etc/grafana/provisioning/datasources/default.yml
+      - ./grafana-datasources.yaml:/etc/grafana/provisioning/dashboards/default.yml
+    ports:
+      - "3000:3000"
+    networks:
+      - is-stag-network
+  tempo:
+    container_name: tempo
+    image: grafana/tempo:latest
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./tempo-config.yaml:/etc/tempo.yaml
+      - /Users/kuba/Downloads/data:/data
+    ports:
+      - "4317"  # otlp grpc
+      - "4318"
+    networks:
+      - is-stag-network
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    command: [
+      --config.file=/etc/prometheus/prometheus.yml,
+      --web.enable-otlp-receiver,
+      --web.enable-remote-write-receiver
+    ]
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9091:9090"
+    networks:
+      - is-stag-network
+
 networks:
   is-stag-network:
     driver: bridge

@@ -1,5 +1,6 @@
 package com.stag.identity.person.service;
 
+import com.stag.identity.person.exception.PersonNotFoundException;
 import com.stag.identity.person.mapper.PersonAddressMapper;
 import com.stag.identity.person.mapper.PersonBankingMapper;
 import com.stag.identity.person.mapper.PersonEducationMapper;
@@ -17,7 +18,6 @@ import com.stag.identity.person.service.data.PersonAddressData;
 import com.stag.identity.person.service.data.PersonBankingData;
 import com.stag.identity.person.service.data.PersonEducationData;
 import com.stag.identity.person.service.data.PersonProfileData;
-import com.stag.identity.person.exception.PersonNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

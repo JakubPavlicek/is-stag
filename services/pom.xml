@@ -16,8 +16,14 @@
     <description>Aggregator for microservices</description>
 
     <properties>
-        <!-- Spring -->
+        <!-- Java -->
         <java.version>24</java.version>
+
+        <!-- OpenTelemetry -->
+        <opentelemetry-instrumentation.version>2.18.1-alpha</opentelemetry-instrumentation.version>
+        <opentelemetry-samplers.version>1.48.0-alpha</opentelemetry-samplers.version>
+
+        <!-- Spring -->
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <springdoc.version>2.8.9</springdoc.version>
         <oracle.jdbc.version>23.9.0.25.07</oracle.jdbc.version>
@@ -49,6 +55,26 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- OpenTelemetry -->
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-instrumentation-bom-alpha</artifactId>
+                <version>${opentelemetry-instrumentation.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-grpc-1.6</artifactId>
+                <version>${opentelemetry-instrumentation.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.contrib</groupId>
+                <artifactId>opentelemetry-samplers</artifactId>
+                <version>${opentelemetry-samplers.version}</version>
+            </dependency>
+
             <!-- Spring Cloud -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
