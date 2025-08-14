@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableAsync
-@Import({ GrpcConfig.class, AsyncConfig.class})
+@Import({ GrpcConfig.class, AsyncConfig.class })
 @SpringBootApplication
 public class CodelistServiceApplication {
 

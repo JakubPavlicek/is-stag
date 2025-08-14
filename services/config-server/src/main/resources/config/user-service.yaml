@@ -72,6 +72,15 @@ spring:
       enabled: true
 
 otel:
+  instrumentation:
+    spring-webflux:
+      enabled: false
+    kafka:
+      enabled: false
+    mongo:
+      enabled: false
+    r2dbc:
+      enabled: false
   traces:
     exporter: otlp
     sampler: parentbased_traceidratio
