@@ -28,8 +28,6 @@ public class PersonAsyncService {
 
     @Async
     public CompletableFuture<List<String>> getStudentPersonalNumbers(Integer personId) {
-        log.info("getStudentPersonalNumbers thread: {}", Thread.currentThread());
-
         List<String> personalNumbers = studentServiceClient.getStudentPersonalNumbers(personId);
 
         return CompletableFuture.completedFuture(personalNumbers);
@@ -37,8 +35,6 @@ public class PersonAsyncService {
 
     @Async
     public CompletableFuture<PersonProfileData> getPersonProfileData(PersonProfileProjection personProfile, String language) {
-        log.info("getPersonProfileData thread: {}", Thread.currentThread());
-
         PersonProfileData personProfileData = codelistServiceClient.getPersonProfileData(personProfile, language);
 
         return CompletableFuture.completedFuture(personProfileData);
@@ -46,8 +42,6 @@ public class PersonAsyncService {
 
     @Async
     public CompletableFuture<PersonAddressData> getPersonAddressData(PersonAddressProjection personAddress, String language) {
-        log.info("getPersonAddressData thread: {}", Thread.currentThread());
-
         PersonAddressData personAddressData = codelistServiceClient.getPersonAddressData(personAddress, language);
 
         return CompletableFuture.completedFuture(personAddressData);
@@ -55,8 +49,6 @@ public class PersonAsyncService {
 
     @Async
     public CompletableFuture<PersonBankingData> getPersonBankingData(PersonBankProjection personBank, String language) {
-        log.info("getPersonBankingData thread: {}", Thread.currentThread());
-
         PersonBankingData personBankingData = codelistServiceClient.getPersonBankingData(personBank, language);
 
         return CompletableFuture.completedFuture(personBankingData);
@@ -64,8 +56,6 @@ public class PersonAsyncService {
 
     @Async
     public CompletableFuture<PersonEducationData> getPersonEducationData(PersonEducationProjection personEducation, String language) {
-        log.info("getPersonEducationData thread: {}", Thread.currentThread());
-
         PersonEducationData personEducationData = codelistServiceClient.getPersonEducationData(personEducation, language);
 
         return CompletableFuture.completedFuture(personEducationData);

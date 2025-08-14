@@ -8,6 +8,7 @@
         <version>3.5.4</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.stag</groupId>
     <artifactId>services</artifactId>
     <version>0.0.1</version>
@@ -33,7 +34,6 @@
         <protobuf-java.version>4.31.1</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
         <protovalidate.version>1.0.0-rc.4</protovalidate.version>
-        <grpc-validation.version>0.0.1</grpc-validation.version>
 
         <!-- Tools -->
         <mapstruct.version>1.6.3</mapstruct.version>
@@ -43,14 +43,19 @@
     </properties>
 
     <modules>
+        <!-- Shared modules -->
+        <module>shared/grpc-common</module>
+
+        <!-- Infrastructure services -->
+        <module>api-gateway</module>
         <module>config-server</module>
         <module>discovery-server</module>
-        <module>api-gateway</module>
+
+        <!-- Business services -->
         <module>student-service</module>
         <module>subject-service</module>
         <module>codelist-service</module>
         <module>user-service</module>
-        <module>grpc-validation</module>
     </modules>
 
     <dependencyManagement>
@@ -98,14 +103,19 @@
                 <version>${grpc-starter.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf-java.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>build.buf</groupId>
                 <artifactId>protovalidate</artifactId>
                 <version>${protovalidate.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.stag</groupId>
-                <artifactId>grpc-validation</artifactId>
-                <version>${grpc-validation.version}</version>
+                <artifactId>grpc-common</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- OpenAPI -->

@@ -12,11 +12,19 @@ public class OtelConfig {
 
     @Bean
     public AutoConfigurationCustomizerProvider otelCustomizer() {
-        return p -> p.addSamplerCustomizer((fallback, config) ->
-            RuleBasedRoutingSampler.builder(SpanKind.SERVER, fallback)
-                                   .drop(UrlAttributes.URL_PATH, "^/actuator")
-                                   .build()
-        );
+        return p -> {
+            p.addSamplerCustomizer((fallback, _) ->
+                RuleBasedRoutingSampler.builder(SpanKind.SERVER, fallback)
+                                       .drop(UrlAttributes.URL_PATH, "^/actuator")
+                                       .build()
+            );
+
+            p.addSamplerCustomizer((fallback, _) ->
+                RuleBasedRoutingSampler.builder(SpanKind.CLIENT, fallback)
+                                       .drop(UrlAttributes.URL_FULL, ".*/eureka(/.*)?$")
+                                       .build()
+            );
+        };
     }
 
 }

@@ -47,7 +47,7 @@
         </dependency>
         <dependency>
             <groupId>com.stag</groupId>
-            <artifactId>grpc-validation</artifactId>
+            <artifactId>grpc-common</artifactId>
         </dependency>
 
         <!-- Database -->
@@ -66,6 +66,10 @@
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.opentelemetry.contrib</groupId>
+            <artifactId>opentelemetry-samplers</artifactId>
         </dependency>
 
         <!-- Tools -->
@@ -117,10 +121,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>io.github.ascopes</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

@@ -48,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>com.stag</groupId>
-            <artifactId>grpc-validation</artifactId>
+            <artifactId>grpc-common</artifactId>
         </dependency>
 
         <!-- OpenAPI -->
@@ -73,11 +73,6 @@
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.opentelemetry.instrumentation</groupId>
-            <artifactId>opentelemetry-grpc-1.6</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.opentelemetry.contrib</groupId>
@@ -137,15 +132,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>io.github.ascopes</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>stag/platform/codelist/v1/*.proto</include>
-                    </includes>
-                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -72,13 +72,6 @@ spring:
       enabled: true
 
 otel:
-  service:
-    name: ${spring.application.name}
-  resource:
-    attributes:
-      service.namespace: ${project.groupId}
-      service.version: ${project.version}
-      deployment.environment: ${spring.profiles.active}
   traces:
     exporter: otlp
     sampler: parentbased_traceidratio

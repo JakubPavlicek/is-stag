@@ -1,4 +1,4 @@
-package com.stag.identity.shared.config;
+package com.stag.platform.grpc.config;
 
 import io.opentelemetry.context.Context;
 import org.springframework.beans.factory.annotation.Qualifier;

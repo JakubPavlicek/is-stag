@@ -35,33 +35,33 @@ class CodelistGrpcAsyncService {
     private final HighSchoolService highSchoolService;
     private final HighSchoolFieldOfStudyService highSchoolFieldOfStudyService;
 
-    @Async("grpcExecutor")
+    @Async
     public CompletableFuture<List<CodelistMeaning>> fetchCodelistMeaningsAsync(List<CodelistKey> codelistKeys, String language) {
         List<CodelistMeaning> codelistValues = fetchCodelistMeanings(codelistKeys, language);
         return CompletableFuture.completedFuture(codelistValues);
     }
 
-    @Async("grpcExecutor")
+    @Async
     public CompletableFuture<Map<Integer, String>> fetchCountryNamesAsync(Message request, String language) {
         Set<Integer> countryIds = CodelistMapper.INSTANCE.extractCountryIds(request);
         Map<Integer, String> countryNames = fetchCountryNames(countryIds, language);
         return CompletableFuture.completedFuture(countryNames);
     }
 
-    @Async("grpcExecutor")
+    @Async
     public CompletableFuture<Map<Long, AddressPlaceNameProjection>> fetchAddressNamesAsync(Message request) {
         Set<Long> municipalityPartIds = CodelistMapper.INSTANCE.extractMunicipalityPartIds(request);
         Map<Long, AddressPlaceNameProjection> addressNames = fetchAddressNames(municipalityPartIds);
         return CompletableFuture.completedFuture(addressNames);
     }
 
-    @Async("grpcExecutor")
+    @Async
     public CompletableFuture<HighSchoolAddressProjection> fetchHighSchoolAddressAsync(boolean hasHighSchoolId, String highSchoolId) {
         HighSchoolAddressProjection highSchool = fetchHighSchoolAddress(hasHighSchoolId, highSchoolId);
         return CompletableFuture.completedFuture(highSchool);
     }
 
-    @Async("grpcExecutor")
+    @Async
     public CompletableFuture<String> fetchHighSchoolFieldOfStudyAsync(boolean hasFieldOfStudyNumber, String fieldOfStudyNumber) {
         String fieldOfStudyName = fetchHighSchoolFieldOfStudy(hasFieldOfStudyNumber, fieldOfStudyNumber);
         return CompletableFuture.completedFuture(fieldOfStudyName);
