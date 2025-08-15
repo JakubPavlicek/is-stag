@@ -48,6 +48,15 @@
   "roles": {
     "realm": [
       {
+        "id": "34003053-4d4c-4a59-99f2-3228b4871999",
+        "name": "ANONYMOUS",
+        "description": "Anonymous user",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "ba630922-5bf6-4080-93d1-0cce0e8989a3",
+        "attributes": {}
+      },
+      {
         "id": "8adc187d-e35e-4c7b-b606-bfb6c0482155",
         "name": "AM",
         "description": "Admin e-learningových systémů",
@@ -910,6 +919,38 @@
           "realm-admin"
         ]
       }
+    },
+    {
+      "username": "anonymous",
+      "enabled": true,
+      "email": "anonymous@anonymous.cz",
+      "emailVerified": false,
+      "firstName": "Anonymous",
+      "lastName": "User",
+      "createdTimestamp": 1752300000000,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "anonymous"
+        }
+      ],
+      "realmRoles": [
+        "ANONYMOUS"
+      ],
+      "attributes": {
+        "readOnly": ["true"],
+        "profileEditable": ["false"],
+        "passwordChangeAllowed": ["false"],
+        "emailChangeAllowed": ["false"]
+      },
+      "access": {
+        "manageGroupMembership": false,
+        "view": true,
+        "mapRoles": false,
+        "impersonate": false,
+        "manage": false
+      },
+      "requiredActions": []
     }
   ],
   "clients": [
@@ -942,15 +983,29 @@
       "frontchannelLogout": true,
       "protocol": "openid-connect",
       "attributes": {
-        "realm_client": "false",
-        "oidc.ciba.grant.enabled": "false",
-        "backchannel.logout.session.required": "true",
+        "request.object.signature.alg": "any",
+        "request.object.encryption.alg": "any",
+        "client.introspection.response.allow.jwt.claim.enabled": "false",
         "standard.token.exchange.enabled": "false",
         "post.logout.redirect.uris": "http://localhost:5173/*",
         "frontchannel.logout.session.required": "true",
         "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "use.refresh.tokens": "true",
+        "realm_client": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "client.use.lightweight.access.token.enabled": "false",
+        "backchannel.logout.session.required": "true",
+        "request.object.required": "not required",
+        "client_credentials.use_refresh_token": "false",
+        "access.token.header.type.rfc9068": "false",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "require.pushed.authorization.requests": "false",
+        "acr.loa.map": "{}",
         "display.on.consent.screen": "false",
-        "backchannel.logout.revoke.offline.tokens": "false"
+        "request.object.encryption.enc": "any",
+        "pkce.code.challenge.method": "S256",
+        "token.response.type.bearer.lower-case": "false"
       },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
@@ -3054,7 +3109,7 @@
       "name": "Update Password",
       "providerId": "UPDATE_PASSWORD",
       "enabled": true,
-      "defaultAction": false,
+      "defaultAction": true,
       "priority": 30,
       "config": {}
     },

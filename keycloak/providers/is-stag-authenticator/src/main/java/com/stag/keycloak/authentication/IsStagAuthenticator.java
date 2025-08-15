@@ -28,7 +28,9 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
     // Configuration constants
     private static final String STAG_LOGIN_URL = "https://stag-demo.zcu.cz/ws/login";
     private static final String STAG_REDIRECT_PARAM = "originalURL";
+    private static final String STAG_USER_TICKET = "stagUserTicket";
     private static final String STAG_USER_INFO = "stagUserInfo";
+    private static final String ANONYMOUS = "anonymous";
     private static final String STAG_LOGIN = "stag_login";
     private static final String STAG_LOGIN_TRIGGER = "true";
 
@@ -46,6 +48,13 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
 
         // Check if we are handling a STAG login response
         if (queryParams.containsKey(STAG_USER_INFO)) {
+            // The user is trying to log in as an anonymous user
+            if (ANONYMOUS.equals(queryParams.getFirst(STAG_USER_TICKET))) {
+                handleAnonymousLogin(context);
+                return;
+            }
+
+            // The user is trying to log in as a regular user
             handleStagLoginResponse(context, queryParams.getFirst(STAG_USER_INFO));
             return;
         }
@@ -73,6 +82,17 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
 
         // Redirect user to STAG login
         context.challenge(Response.seeOther(stagLoginUri).build());
+    }
+
+    private void handleAnonymousLogin(AuthenticationFlowContext context) {
+        RealmModel realm = context.getRealm();
+        UserProvider userProvider = context.getSession().users();
+
+        // Always use the same anonymous user
+        UserModel anonymousUser = userProvider.getUserByUsername(realm, ANONYMOUS);
+
+        context.setUser(anonymousUser);
+        context.success();
     }
 
     private void handleStagLoginResponse(AuthenticationFlowContext context, String stagUserInfo) {
@@ -119,7 +139,7 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         // Set additional attributes (student has osCislo, teacher has ucitIdno)
         isStagUserDetails.personalNumber()
                          .ifPresent(num -> user.setSingleAttribute(PERSONAL_NUM_ATTR, num));
-        isStagUserDetails.teacherIdentifier()
+        isStagUserDetails.teacherId()
                          .ifPresent(id -> user.setSingleAttribute(TEACHER_ID_ATTR, id.toString()));
 
         // Assign a role to the user
@@ -137,7 +157,7 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
             isStagUser.name(),
             isStagUser.lastname(),
             isStagUserDetails.role(),
-            isStagUserDetails.teacherIdentifier().orElse(null),
+            isStagUserDetails.teacherId().orElse(null),
             isStagUserDetails.personalNumber().orElse(null)
         );
         log.info(message);
