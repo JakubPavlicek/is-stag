@@ -1,5 +1,5 @@
 # Start from the official Keycloak image
-FROM quay.io/keycloak/keycloak:26.3.1
+FROM quay.io/keycloak/keycloak:26.3.2
 
 # Copy provider JAR into the providers directory in the image
 COPY ./providers/is-stag-authenticator/target/is-stag-authenticator.jar /opt/keycloak/providers/

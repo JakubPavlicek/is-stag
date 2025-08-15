@@ -6,6 +6,16 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_HEALTH_ENABLED: true
+
+      # OpenTelemetry Tracing
+      KC_TRACING_ENABLED: true
+      KC_TRACING_ENDPOINT: http://otel:4317
+      KC_TRACING_PROTOCOL: grpc
+      KC_TRACING_SAMPLER_TYPE: parentbased_traceidratio
+      KC_TRACING_SAMPLER_RATIO: 1.0
+      KC_TRACING_SERVICE_NAME: keycloak
+      KC_TRACING_COMPRESSION: gzip
+      KC_TRACING_RESOURCE_ATTRIBUTES: service.name=keycloak,service.version=latest,environment=dev
     healthcheck:
       test: [
         "CMD-SHELL",
