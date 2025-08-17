@@ -31,7 +31,7 @@ spring:
     hikari:
       auto-commit: false
       minimum-idle: 5
-      maximum-pool-size: 20
+      maximum-pool-size: 30
       idle-timeout: 600000
       connection-timeout: 30000
       max-lifetime: 1800000
@@ -46,8 +46,6 @@ spring:
 
 otel:
   instrumentation:
-    spring-webflux:
-      enabled: false
     kafka:
       enabled: false
     mongo:

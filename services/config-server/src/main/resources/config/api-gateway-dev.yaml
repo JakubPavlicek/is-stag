@@ -12,6 +12,8 @@ spring:
     gateway:
       server:
         webflux:
+          metrics:
+            enabled: true
           routes:
             - id: student-service
               uri: lb://student-service
@@ -27,8 +29,6 @@ spring:
 
 otel:
   instrumentation:
-    spring-webflux:
-      enabled: false
     kafka:
       enabled: false
     mongo:

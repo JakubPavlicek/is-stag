@@ -42,8 +42,6 @@ spring:
 
 otel:
   instrumentation:
-    spring-webflux:
-      enabled: false
     kafka:
       enabled: false
     mongo:

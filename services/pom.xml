@@ -164,9 +164,10 @@
                             <enabled>true</enabled>
                         </layers>
                         <image>
-                            <builder>paketobuildpacks/builder-noble-java-tiny:0.0.47</builder>
+                            <builder>paketobuildpacks/builder-noble-java-tiny:0.0.56</builder>
                             <buildpacks>
-                                <buildpack>paketobuildpacks/java:18.11.0</buildpack>
+                                <buildpack>paketobuildpacks/java:18.12.0</buildpack>
+                                <buildpack>docker.io/paketobuildpacks/spring-boot:5.33.3</buildpack>
                                 <buildpack>paketobuildpacks/health-checker:2.10.1</buildpack>
                             </buildpacks>
                             <env>
