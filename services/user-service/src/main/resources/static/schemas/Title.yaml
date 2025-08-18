@@ -1,5 +1,0 @@
-type: string
-nullable: true
-description: Title of the person.
-example: "Ing."
-maxLength: 240

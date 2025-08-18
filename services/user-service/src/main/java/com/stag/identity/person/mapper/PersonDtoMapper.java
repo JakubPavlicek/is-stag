@@ -4,9 +4,9 @@ import com.stag.identity.dto.AddressesDTO;
 import com.stag.identity.dto.BankAccountDetailsDTO;
 import com.stag.identity.dto.BankAccountsDTO;
 import com.stag.identity.dto.EducationDetailsDTO;
-import com.stag.identity.dto.EducationDetailsForeignHighSchoolDTO;
-import com.stag.identity.dto.EducationDetailsHighSchoolDTO;
 import com.stag.identity.dto.EuroBankAccountDetailsDTO;
+import com.stag.identity.dto.ForeignHighSchoolDTO;
+import com.stag.identity.dto.HighSchoolDTO;
 import com.stag.identity.dto.PersonProfileDTO;
 import com.stag.identity.person.model.PersonAddresses;
 import com.stag.identity.person.model.PersonBanking;
@@ -46,9 +46,9 @@ public interface PersonDtoMapper {
     EuroBankAccountDetailsDTO toEuroBankAccountDTO(EuroBankAccount euroBankAccount);
 
     @Mapping(target = "schoolName", source = "name")
-    EducationDetailsHighSchoolDTO toEducationDetailsHighSchoolDTO(HighSchool highSchool);
+    HighSchoolDTO toHighSchoolDTO(HighSchool highSchool);
 
     @Mapping(target = "schoolName", source = "name")
-    EducationDetailsForeignHighSchoolDTO toEducationDetailsForeignHighSchoolDTO(ForeignHighSchool foreignHighSchool);
+    ForeignHighSchoolDTO toForeignHighSchoolDTO(ForeignHighSchool foreignHighSchool);
 
 }

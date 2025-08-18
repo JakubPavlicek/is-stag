@@ -85,6 +85,6 @@ eureka:
 
 springdoc:
   api-docs:
-    version: openapi_3_0
+    enabled: false
   swagger-ui:
-    url: openapi.yaml
+    url: /openapi.yaml

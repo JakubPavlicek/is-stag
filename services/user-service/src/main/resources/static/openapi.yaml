@@ -12,7 +12,7 @@ info:
 
 servers:
   - url: /api/v1
-    description: Main API server
+    description: User Service API through API Gateway
 
 tags:
   - name: users
@@ -21,14 +21,712 @@ tags:
     description: Operations for managing persons
 
 paths:
+
   /persons/{personId}:
-    $ref: './paths/persons/get_person.yaml'
+    get:
+      tags:
+        - persons
+      summary: Get person
+      description: Retrieve a person by their unique identifier.
+      operationId: getPersonProfile
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/personId'
+      responses:
+        '200':
+          description: Person details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonProfile'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
 
   /persons/{personId}/addresses:
-    $ref: './paths/persons/get_addresses.yaml'
+    get:
+      tags:
+        - persons
+      summary: Get person addresses
+      description: Retrieve addresses associated with a person by their unique identifier.
+      operationId: getPersonAddresses
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/personId'
+      responses:
+        '200':
+          description: Person addresses retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Addresses'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
 
   /persons/{personId}/banking:
-    $ref: './paths/persons/get_banking.yaml'
+    get:
+      tags:
+        - persons
+      summary: Get person banking information
+      description: Retrieve banking information associated with a person by their unique identifier.
+      operationId: getPersonBanking
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/personId'
+      responses:
+        '200':
+          description: Person banking information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccounts'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
 
   /persons/{personId}/education:
-    $ref: './paths/persons/get_education.yaml'
+    get:
+      tags:
+        - persons
+      summary: Get person education information
+      description: Retrieve education information associated with a person by their unique identifier.
+      operationId: getPersonEducation
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/personId'
+      responses:
+        '200':
+          description: Person education information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EducationDetails'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+components:
+
+  parameters:
+
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      description: Preferred language
+      required: false
+      schema:
+        type: string
+        enum:
+          - cs
+          - en
+        default: cs
+
+    personId:
+      name: personId
+      in: path
+      required: true
+      description: Unique identifier of the person.
+      schema:
+        $ref: '#/components/schemas/PersonId'
+
+  schemas:
+
+    PersonId:
+      type: integer
+      format: int32
+      title: Person ID
+      description: Unique identifier of the person.
+      example: 221264
+
+    Title:
+      type: string
+      nullable: true
+      description: Title of the person.
+      example: Ing.
+      maxLength: 240
+
+    PersonProfile:
+      type: object
+      title: PersonProfileResponse
+      description: Response containing person profile details.
+      additionalProperties: false
+      required:
+        - personId
+        - personalNumbers
+        - firstName
+        - lastName
+        - birthSurname
+        - contact
+        - titles
+        - birthNumber
+        - birthDate
+        - birthPlace
+        - citizenship
+        - passportNumber
+        - gender
+        - maritalStatus
+      properties:
+        personId:
+          $ref: '#/components/schemas/PersonId'
+        personalNumbers:
+          type: array
+          description: List of personal numbers associated with the person.
+          items:
+            type: string
+            description: Personal number of the person.
+            example: K24B4302P
+            pattern: ^[A-Z0-9]{9}$
+            maxLength: 9
+        firstName:
+          type: string
+          description: First name of the person.
+          example: John
+          maxLength: 100
+        lastName:
+          type: string
+          description: Last name of the person.
+          example: Doe
+          maxLength: 100
+        birthSurname:
+          type: string
+          nullable: true
+          description: Birth surename of the person.
+          example: Smith
+          maxLength: 100
+        contact:
+          type: object
+          title: Contact
+          description: Contact information of the person.
+          additionalProperties: false
+          required:
+            - email
+            - phone
+            - mobile
+          properties:
+            email:
+              type: string
+              nullable: true
+              format: email
+              description: Email address of the person.
+              example: Martin95043186@xxx.cz
+            phone:
+              type: string
+              nullable: true
+              description: Phone number of the person.
+              example: '+420123456789'
+              pattern: ^\+?\d{1,20}$
+              maxLength: 20
+            mobile:
+              type: string
+              nullable: true
+              description: Mobile number of the person.
+              example: '+420987654321'
+              pattern: ^\+?\d{1,30}$
+              maxLength: 30
+        titles:
+          type: object
+          title: Titles
+          description: Title of the person.
+          additionalProperties: false
+          required:
+            - prefix
+            - suffix
+          properties:
+            prefix:
+              $ref: '#/components/schemas/Title'
+            suffix:
+              $ref: '#/components/schemas/Title'
+        birthNumber:
+          type: string
+          description: Birth number of the person.
+          example: '7061030163'
+          pattern: ^\d{10}$
+          maxLength: 10
+        birthDate:
+          type: string
+          format: date
+          description: Birth date of the person.
+          example: '1990-01-01'
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          maxLength: 10
+        birthPlace:
+          type: object
+          title: BirthPlace
+          description: Birth place of the person.
+          additionalProperties: false
+          required:
+            - city
+            - country
+          properties:
+            city:
+              type: string
+              nullable: true
+              description: Birth place of the person.
+              example: Prague
+              maxLength: 100
+            country:
+              type: string
+              description: Country of birth.
+              example: Czech Republic
+              maxLength: 70
+        citizenship:
+          type: object
+          title: Citizenship
+          description: Citizenship details of the person.
+          additionalProperties: false
+          required:
+            - country
+            - qualifier
+          properties:
+            country:
+              type: string
+              description: Country of citizenship.
+              example: Czech Republic
+              maxLength: 70
+            qualifier:
+              type: string
+              nullable: true
+              description: Citizenship qualifier of the person.
+              example: Občan
+              maxLength: 240
+        passportNumber:
+          type: string
+          nullable: true
+          description: Passport number of the person.
+          example: '16128791799'
+          pattern: ^[A-Z0-9]{1,11}$
+          maxLength: 11
+        gender:
+          type: string
+          description: Gender of the person.
+          example: male
+          maxLength: 240
+        maritalStatus:
+          type: string
+          nullable: true
+          description: Marital status of the person.
+          example: single
+          maxLength: 240
+
+    ProblemDetail:
+      type: object
+      title: ProblemDetail
+      description: A generic error.
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+      properties:
+        type:
+          type: string
+          description: A URI reference that identifies the problem type.
+          example: http://localhost:8080/person-not-found
+          pattern: ^((about:blank)|(https?://[^\s]+$))
+          maxLength: 1000
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type.
+          example: Domain Not Found
+          pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
+          maxLength: 255
+        status:
+          type: number
+          description: The HTTP status code.
+          example: 404
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: 'Person with ID: 221264 not found'
+          pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
+          maxLength: 1000
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /persons/221264
+          pattern: ^(/[^\s]*)+$
+          maxLength: 1000
+        contextInfo:
+          type: object
+          additionalProperties: true
+          maxProperties: 5
+          description: A free-form based object that contains additional context about the error.
+      example:
+        type: http://localhost:8080/api/v1/person-not-found
+        title: Person Not Found
+        status: 404
+        detail: 'Person with ID: 221264 not found'
+        instance: /api/v1/persons/221264
+        contextInfo:
+          person: Person 221264 not found
+
+    Address:
+      type: object
+      title: Address
+      description: Address details of the person.
+      additionalProperties: false
+      required:
+        - street
+        - streetNumber
+        - zipCode
+        - municipality
+        - municipalityPart
+        - district
+        - country
+      properties:
+        street:
+          type: string
+          nullable: true
+          description: Street name of the address.
+          example: Příchovice
+          maxLength: 48
+        streetNumber:
+          type: string
+          nullable: true
+          description: Street number of the address.
+          example: '97'
+          maxLength: 10
+        zipCode:
+          type: string
+          nullable: true
+          description: Zip code of the address.
+          example: '34901'
+          pattern: ^\d{1,5}$
+          maxLength: 5
+        municipality:
+          type: string
+          nullable: true
+          description: Municipality of the address.
+          example: Stříbro
+          maxLength: 255
+        municipalityPart:
+          type: string
+          nullable: true
+          description: Part of the municipality.
+          example: Stříbro I
+          maxLength: 255
+        district:
+          type: string
+          nullable: true
+          description: District of the address.
+          example: Tachov
+          maxLength: 100
+        country:
+          type: string
+          nullable: true
+          description: Country of the address.
+          example: Česká republika
+          maxLength: 70
+
+    ForeignAddress:
+      type: object
+      title: ForeignAddress
+      description: Address details of the person when they have a foreign residence.
+      additionalProperties: false
+      required:
+        - zipCode
+        - municipality
+        - district
+        - postOffice
+      properties:
+        zipCode:
+          type: string
+          nullable: true
+          description: Zip code of the address.
+          example: '1110'
+          pattern: ^\d{1,10}$
+          maxLength: 10
+        municipality:
+          type: string
+          nullable: true
+          description: Municipality of the address.
+          example: Mornaguia
+          maxLength: 75
+        district:
+          type: string
+          nullable: true
+          description: District of the address.
+          example: manouba
+          maxLength: 50
+        postOffice:
+          type: string
+          nullable: true
+          description: Post office of the foreign address.
+          example: Mornaguia
+          maxLength: 75
+
+    Addresses:
+      type: object
+      title: PersonAddresses
+      description: Response containing person addresses.
+      additionalProperties: false
+      required:
+        - permanentAddress
+        - temporaryAddress
+        - foreignPermanentAddress
+        - foreignTemporaryAddress
+      properties:
+        permanentAddress:
+          $ref: '#/components/schemas/Address'
+        temporaryAddress:
+          $ref: '#/components/schemas/Address'
+        foreignPermanentAddress:
+          $ref: '#/components/schemas/ForeignAddress'
+        foreignTemporaryAddress:
+          $ref: '#/components/schemas/ForeignAddress'
+
+    BankAccountDetails:
+      type: object
+      title: BankAccountDetails
+      description: Response containing bank account details.
+      additionalProperties: false
+      required:
+        - accountNumberPrefix
+        - accountNumberSuffix
+        - bankCode
+        - bankName
+        - iban
+        - currency
+        - holderName
+        - holderAddress
+      properties:
+        accountNumberPrefix:
+          type: string
+          nullable: true
+          description: Prefix of the bank account number.
+          example: '295538'
+          pattern: ^\d{1,6}$
+          minLength: 1
+          maxLength: 6
+        accountNumberSuffix:
+          type: string
+          nullable: true
+          description: Main part of the bank account number.
+          example: '4167197191'
+          pattern: ^\d{1,10}$
+          minLength: 1
+          maxLength: 10
+        bankCode:
+          type: string
+          nullable: true
+          description: Bank code of the bank where the account is held.
+          example: '0100'
+          pattern: ^\d{4}$
+          maxLength: 4
+        bankName:
+          type: string
+          description: Name of the bank where the account is held.
+          example: Česká spořitelna, a.s.
+          maxLength: 240
+        iban:
+          type: string
+          nullable: true
+          description: International Bank Account Number (IBAN).
+          example: CZ6508000000002000145399
+          maxLength: 30
+        currency:
+          type: string
+          nullable: true
+          description: Currency of the bank account.
+          example: CZK
+          pattern: ^[A-Z]{3}$
+          maxLength: 3
+        holderName:
+          type: string
+          nullable: true
+          description: Name of the account holder.
+          example: Jan Novák
+          maxLength: 255
+        holderAddress:
+          type: string
+          nullable: true
+          description: Address of the account holder.
+          example: Příchovice 97, 34901 Stříbro, Česká republika
+          maxLength: 255
+
+    EuroBankAccountDetails:
+      allOf:
+        - $ref: '#/components/schemas/BankAccountDetails'
+        - type: object
+          title: BankAccountDetails
+          description: Bank account details for Euro transactions.
+          additionalProperties: false
+          required:
+            - country
+            - swiftCode
+          properties:
+            country:
+              type: string
+              nullable: true
+              description: Country code of the Euro account.
+              example: Česká republika
+              maxLength: 70
+            swiftCode:
+              type: string
+              nullable: true
+              description: SWIFT code of the bank for Euro transactions.
+              example: KOMBCZPPXXX
+              pattern: ^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$
+              maxLength: 11
+
+    BankAccounts:
+      type: object
+      title: BankAccounts
+      description: Bank accounts of the person.
+      additionalProperties: false
+      required:
+        - account
+        - euroAccount
+      properties:
+        account:
+          $ref: '#/components/schemas/BankAccountDetails'
+        euroAccount:
+          $ref: '#/components/schemas/EuroBankAccountDetails'
+
+    HighSchoolAddress:
+      type: object
+      title: HighSchoolAddress
+      description: High School address details.
+      additionalProperties: false
+      required:
+        - street
+        - zipCode
+        - municipality
+        - district
+        - country
+      properties:
+        street:
+          type: string
+          nullable: true
+          description: Street name of the address.
+          example: Příchovice
+          maxLength: 48
+        zipCode:
+          type: string
+          nullable: true
+          description: Zip code of the address.
+          example: '34901'
+          pattern: ^\d{1,5}$
+          maxLength: 5
+        municipality:
+          type: string
+          nullable: true
+          description: Municipality of the address.
+          example: Stříbro
+          maxLength: 255
+        district:
+          type: string
+          nullable: true
+          description: District of the address.
+          example: Tachov
+          maxLength: 100
+        country:
+          type: string
+          nullable: true
+          description: Country of the address.
+          example: Česká republika
+          maxLength: 70
+
+    EducationDetails:
+      type: object
+      title: EducationDetails
+      description: Education details of the person.
+      additionalProperties: false
+      required:
+        - highSchool
+        - foreignHighSchool
+      properties:
+        highSchool:
+          type: object
+          title: HighSchool
+          description: Details of the high school attended by the person.
+          additionalProperties: false
+          required:
+            - schoolName
+            - fieldOfStudy
+            - graduationDate
+            - address
+          properties:
+            schoolName:
+              type: string
+              nullable: true
+              description: Name of the high school.
+              example: Gymnázium
+              maxLength: 150
+            fieldOfStudy:
+              type: string
+              nullable: true
+              description: Field of study at the high school.
+              example: Výpočetní technika a informatika
+              maxLength: 240
+            graduationDate:
+              type: string
+              format: date
+              nullable: true
+              description: Date of graduation from the educational institution.
+              example: '2020-06-15'
+            address:
+              $ref: '#/components/schemas/HighSchoolAddress'
+        foreignHighSchool:
+          type: object
+          title: ForeignHighSchool
+          description: Details of the foreign high school attended by the person.
+          additionalProperties: false
+          required:
+            - schoolName
+            - fieldOfStudy
+            - location
+          properties:
+            schoolName:
+              type: string
+              nullable: true
+              description: Name of the foreign high school.
+              example: International School
+              maxLength: 75
+            fieldOfStudy:
+              type: string
+              nullable: true
+              description: Field of study at the foreign high school.
+              example: Computer Science
+              maxLength: 255
+            location:
+              type: string
+              nullable: true
+              description: Location of the foreign high school.
+              example: Paris
+              maxLength: 75
+
+  responses:
+
+    404NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/person-not-found
+            title: Person Not Found
+            status: 404
+            detail: 'Person with ID: 221264 not found'
+            instance: /api/v1/persons/221264
+
+    500InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/internal-server-error
+            title: Internal server error
+            status: 500
+            detail: An unexpected error occurred
+            instance: /api/v1/persons/221264

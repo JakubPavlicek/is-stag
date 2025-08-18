@@ -1,6 +1,0 @@
-name: personId
-in: path
-required: true
-description: Unique identifier of the person.
-schema:
-  $ref: '../../schemas/PersonId.yaml'

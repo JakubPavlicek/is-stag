@@ -15,6 +15,8 @@ public class OtelConfig {
         return p -> p.addSamplerCustomizer((fallback, _) ->
             RuleBasedRoutingSampler.builder(SpanKind.SERVER, fallback)
                                    .drop(UrlAttributes.URL_PATH, "^/actuator")
+                                   .drop(UrlAttributes.URL_PATH, "^/swagger-ui")
+                                   .drop(UrlAttributes.URL_PATH, "^/v3/api-docs")
                                    .build()
         );
     }

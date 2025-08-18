@@ -27,6 +27,7 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<PersonProfileDTO> getPersonProfile(Integer personId, String language) {
+        log.info("Get person profile for personId: {}", personId);
         PersonProfile personProfile = personService.getPersonProfile(personId, language);
         PersonProfileDTO personProfileDTO = PersonDtoMapper.INSTANCE.toPersonProfileDTO(personProfile);
 
@@ -35,6 +36,7 @@ public class PersonController implements PersonsApi {
 
     @Override
     public ResponseEntity<AddressesDTO> getPersonAddresses(Integer personId, String language) {
+        log.info("Get person addresses for personId: {}", personId);
         PersonAddresses personAddresses = personService.getPersonAddresses(personId, language);
         AddressesDTO addressesDTO = PersonDtoMapper.INSTANCE.toAddressesDTO(personAddresses);
 

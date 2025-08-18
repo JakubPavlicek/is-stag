@@ -1,5 +1,0 @@
-type: integer
-format: int32
-title: Person ID
-description: Unique identifier of the person.
-example: 221264

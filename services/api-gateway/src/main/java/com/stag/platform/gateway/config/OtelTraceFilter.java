@@ -1,6 +1,7 @@
 package com.stag.platform.gateway.config;
 
 import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.propagation.TextMapSetter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -12,6 +13,8 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
+
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_PREDICATE_MATCHED_PATH_ATTR;
 
 @Component
 public class OtelTraceFilter implements GlobalFilter, Ordered {
@@ -31,6 +34,10 @@ public class OtelTraceFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         // Get the current context, which should contain the SERVER span created by auto-instrumentation
         final Context currentContext = Context.current();
+        final Span span = Span.fromContext(currentContext);
+
+        // Update the span name and http.route attribute
+        updateSpanAttributes(span, exchange);
 
         // Create a mutable request builder to add the trace headers
         ServerHttpRequest.Builder requestBuilder = exchange.getRequest()
@@ -55,6 +62,16 @@ public class OtelTraceFilter implements GlobalFilter, Ordered {
         // This filter needs to run after the initial OpenTelemetry filter
         // but before the routing filter sends the request downstream
         return -1;
+    }
+
+    private void updateSpanAttributes(Span span, ServerWebExchange exchange) {
+        String gatewayPath = exchange.getAttribute(GATEWAY_PREDICATE_MATCHED_PATH_ATTR);
+
+        if (gatewayPath != null) {
+            String newName = exchange.getRequest().getMethod().name() + " " + gatewayPath;
+            span.updateName(newName);
+            span.setAttribute("http.route", gatewayPath);
+        }
     }
 
 }

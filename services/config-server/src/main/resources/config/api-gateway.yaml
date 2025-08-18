@@ -15,19 +15,68 @@ spring:
           metrics:
             enabled: true
           routes:
+            # Service routes
+            - id: codelist-service
+              uri: lb://codelist-service
+              predicates:
+                - Path=/api/v1/codelists/**
             - id: student-service
               uri: lb://student-service
               predicates:
                 - Path=/api/v1/students/**
+            - id: subject-service
+              uri: lb://subject-service
+              predicates:
+                - Path=/api/v1/subjects/**
             - id: user-service
               uri: lb://user-service
               predicates:
                 - Path=/api/v1/users/**,/api/v1/persons/**
+
+            # OpenAPI routes for aggregation
+            - id: codelist-service-openapi
+              uri: lb://codelist-service
+              predicates:
+                - Path=/codelist-service/**
+              filters:
+                - RewritePath=/codelist-service/openapi.yaml, /openapi.yaml
+            - id: student-service-openapi
+              uri: lb://student-service
+              predicates:
+                - Path=/student-service/**
+              filters:
+                - RewritePath=/student-service/openapi.yaml, /openapi.yaml
+            - id: subject-service-openapi
+              uri: lb://subject-service
+              predicates:
+                - Path=/subject-service/**
+              filters:
+                - RewritePath=/subject-service/openapi.yaml, /openapi.yaml
+            - id: user-service-openapi
+              uri: lb://user-service
+              predicates:
+                - Path=/user-service/**
+              filters:
+                - RewritePath=/user-service/openapi.yaml, /openapi.yaml
   threads:
     virtual:
       enabled: true
-  reactor:
-    context-propagation: auto
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - name: Codelist Service
+        url: /codelist-service/openapi.yaml
+      - name: Student Service
+        url: /student-service/openapi.yaml
+      - name: Subject Service
+        url: /subject-service/openapi.yaml
+      - name: User Service
+        url: /user-service/openapi.yaml
+  api-docs:
+    enabled: false
 
 otel:
   instrumentation:
