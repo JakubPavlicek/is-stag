@@ -41,11 +41,11 @@ services:
       - is-stag-network
 
   react-client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+    image: react-client:0.0.1
+    pull_policy: never
     container_name: react-client
     environment:
+      PORT: 5173
       VITE_KEYCLOAK_URL: http://localhost:8180/
     ports:
       - "5173:5173"

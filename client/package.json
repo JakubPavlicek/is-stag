@@ -1,13 +1,17 @@
 {
-  "name": "client",
+  "name": "react-client",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pack": "pack build $(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --builder paketobuildpacks/builder-jammy-base --buildpack paketo-buildpacks/web-servers --env BP_NPM_VERSION=11.5.2 --env BP_NODE_RUN_SCRIPTS=build --env NODE_ENV=dev --env BP_WEB_SERVER=nginx --env BP_WEB_SERVER_ENABLE_PUSH_STATE=true --env BP_WEB_SERVER=nginx --env BP_WEB_SERVER_ROOT=/workspace/dist --env VITE_KEYCLOAK_URL=http://localhost:8180/"
+  },
+  "engines": {
+    "npm": ">=11.5.2"
   },
   "dependencies": {
     "@react-keycloak/web": "^3.4.0",
@@ -20,12 +24,12 @@
     "@eslint/js": "^9.30.1",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
+    "@vitejs/plugin-react": "^5.0.1",
     "eslint": "^9.30.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
-    "typescript": "~5.8.3",
+    "typescript": "~5.9.2",
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.4"
   }
