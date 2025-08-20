@@ -20,6 +20,7 @@ import com.stag.identity.person.service.data.PersonEducationData;
 import com.stag.identity.person.service.data.PersonProfileData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PersonAsyncService personAsyncService;
 
+    @Cacheable(value = "person_profile", key = "#personId")
     public PersonProfile getPersonProfile(Integer personId, String language) {
         PersonProfileProjection personProfile =
             personRepository.findById(personId, PersonProfileProjection.class)
@@ -49,6 +51,7 @@ public class PersonService {
         return PersonProfileMapper.INSTANCE.toPersonProfile(personProfile, personalNumbersFuture.join(), profileDataFuture.join());
     }
 
+    @Cacheable(value = "person_addresses", key = "#personId")
     public PersonAddresses getPersonAddresses(Integer personId, String language) {
         PersonAddressProjection personAddressProjection =
             personRepository.findAddressesByPersonId(personId)
@@ -60,6 +63,7 @@ public class PersonService {
         return PersonAddressMapper.INSTANCE.toPersonAddresses(personAddressProjection, addressDataFuture.join());
     }
 
+    @Cacheable(value = "person_banking", key = "#personId")
     public PersonBanking getPersonBanking(Integer personId, String language) {
         PersonBankProjection personBankProjection =
             personRepository.findBankingByPersonId(personId)
@@ -71,6 +75,7 @@ public class PersonService {
         return PersonBankingMapper.INSTANCE.toPersonBanking(personBankProjection, bankingDataFuture.join());
     }
 
+    @Cacheable(value = "person_education", key = "#personId")
     public PersonEducation getPersonEducation(Integer personId, String language) {
         PersonEducationProjection personEducationProjection =
             personRepository.findEducationByPersonId(personId)

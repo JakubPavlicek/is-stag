@@ -1,7 +1,7 @@
 services:
   keycloak:
-    build: ./keycloak
     container_name: keycloak
+    build: ./keycloak
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
@@ -40,10 +40,25 @@ services:
     networks:
       - is-stag-network
 
+  redis:
+    container_name: redis
+    image: redis:8.2.1-alpine
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "6379:6379"
+    networks:
+      - is-stag-network
+
   react-client:
+    container_name: react-client
     image: react-client:0.0.1
     pull_policy: never
-    container_name: react-client
     environment:
       PORT: 5173
       VITE_KEYCLOAK_URL: http://localhost:8180/
@@ -52,16 +67,25 @@ services:
     depends_on:
       keycloak:
         condition: service_healthy
+      api-gateway:
+        condition: service_healthy
     networks:
       - is-stag-network
 
   config-server:
+    container_name: config-server
     image: config-server:0.0.1
     pull_policy: never
-    container_name: config-server
     environment:
       THC_PATH: /actuator/health
       THC_PORT: 8888
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_SERVICE_NAME: config-server
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_traceidratio
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     healthcheck:
       test: ["CMD", "/workspace/health-check"]
       start_period: 10s
@@ -73,14 +97,21 @@ services:
       - is-stag-network
 
   discovery-server:
+    container_name: discovery-server
     image: discovery-server:0.0.1
     pull_policy: never
-    container_name: discovery-server
     ports:
       - "8761:8761"
     environment:
       THC_PATH: /actuator/health
       THC_PORT: 8761
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_SERVICE_NAME: discovery-server
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_traceidratio
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     healthcheck:
       test: [ "CMD", "/workspace/health-check" ]
       start_period: 10s
@@ -93,14 +124,21 @@ services:
       - is-stag-network
 
   api-gateway:
+    container_name: api-gateway
     image: api-gateway:0.0.1
     pull_policy: never
-    container_name: api-gateway
     ports:
       - "8100:8100"
     environment:
       THC_PATH: /actuator/health
       THC_PORT: 8100
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_SERVICE_NAME: api-gateway
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_traceidratio
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     healthcheck:
       test: [ "CMD", "/workspace/health-check" ]
       start_period: 30s
@@ -117,54 +155,102 @@ services:
       - is-stag-network
 
   student-service:
+    container_name: student-service
     image: student-service:0.0.1
     pull_policy: never
-    container_name: student-service
+    environment:
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_SERVICE_NAME: student-service
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_traceidratio
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     ports:
       - "8030:8030"
       - "9030:9030"
     depends_on:
       api-gateway:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+      otel:
+        condition: service_started
     networks:
       - is-stag-network
 
   subject-service:
+    container_name: subject-service
     image: subject-service:0.0.1
     pull_policy: never
-    container_name: subject-service
+    environment:
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_SERVICE_NAME: subject-service
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_traceidratio
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     ports:
       - "8040:8040"
-#      - "9040:9040"
+      - "9040:9040"
     depends_on:
       api-gateway:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+      otel:
+        condition: service_started
     networks:
       - is-stag-network
 
   user-service:
+    container_name: user-service
     image: user-service:0.0.1
     pull_policy: never
-    container_name: user-service
+    environment:
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_SERVICE_NAME: user-service
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_traceidratio
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     ports:
       - "8020:8020"
       - "9020:9020"
     depends_on:
       api-gateway:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+      otel:
+        condition: service_started
     networks:
       - is-stag-network
 
   codelist-service:
+    container_name: codelist-service
     image: codelist-service:0.0.1
     pull_policy: never
-    container_name: codelist-service
+    environment:
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_SERVICE_NAME: codelist-service
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_traceidratio
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     ports:
       - "8010:8010"
       - "9010:9010"
     depends_on:
       api-gateway:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+      otel:
+        condition: service_started
     networks:
       - is-stag-network
 
@@ -191,6 +277,9 @@ services:
       - /Users/kuba/Downloads/data:/data
     ports:
       - "3100"
+    depends_on:
+      otel:
+        condition: service_started
     networks:
       - is-stag-network
   grafana:
@@ -204,6 +293,9 @@ services:
       - ./grafana-datasources.yaml:/etc/grafana/provisioning/dashboards/default.yml
     ports:
       - "3000:3000"
+    depends_on:
+      otel:
+        condition: service_started
     networks:
       - is-stag-network
   tempo:
@@ -216,6 +308,9 @@ services:
     ports:
       - "4317"  # otlp grpc
       - "4318"
+    depends_on:
+      otel:
+        condition: service_started
     networks:
       - is-stag-network
   prometheus:
@@ -230,6 +325,9 @@ services:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yml
     ports:
       - "9091:9090"
+    depends_on:
+      otel:
+        condition: service_started
     networks:
       - is-stag-network
 

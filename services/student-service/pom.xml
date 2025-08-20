@@ -68,16 +68,6 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- OpenTelemetry -->
-        <dependency>
-            <groupId>io.opentelemetry.instrumentation</groupId>
-            <artifactId>opentelemetry-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.opentelemetry.contrib</groupId>
-            <artifactId>opentelemetry-samplers</artifactId>
-        </dependency>
-
         <!-- Tools -->
         <dependency>
             <groupId>org.projectlombok</groupId>

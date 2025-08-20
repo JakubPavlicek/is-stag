@@ -16,7 +16,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(PersonNotFoundException.class)
     public ProblemDetail handlePersonNotFoundException(PersonNotFoundException ex) {
-        log.error(ex.getMessage());
+        log.warn(ex.getMessage());
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setTitle("Person not found");
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(StatusRuntimeException.class)
     public ProblemDetail handleGrpcException(StatusRuntimeException ex) {
-        log.error("gRPC call failed: {}", ex.getMessage());
+        log.warn("gRPC call failed: {}", ex.getMessage());
 
         Status grpcStatus = ex.getStatus();
         HttpStatus httpStatus = mapGrpcStatusToHttp(grpcStatus);

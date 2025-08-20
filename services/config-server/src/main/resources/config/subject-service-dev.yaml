@@ -40,27 +40,6 @@ spring:
     virtual:
       enabled: true
 
-otel:
-  instrumentation:
-    kafka:
-      enabled: false
-    mongo:
-      enabled: false
-    r2dbc:
-      enabled: false
-  traces:
-    exporter: otlp
-    sampler: parentbased_traceidratio
-    sampler.arg: 1
-  metrics:
-    exporter: otlp
-  logs:
-    exporter: otlp
-  exporter:
-    otlp:
-      endpoint: http://otel:4318
-      protocol: http/protobuf
-
 logging:
   level:
     com:

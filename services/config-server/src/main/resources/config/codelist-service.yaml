@@ -5,13 +5,19 @@ grpc:
   server:
     port: 9010
 
+#logging:
+#  level:
+#    com:
+#      zaxxer:
+#        hikari: DEBUG
+
 spring:
   jpa:
-    show-sql: true
+#    show-sql: true
     properties:
       hibernate:
-        format_sql: true
-        generate_statistics: true
+#        format_sql: true
+#        generate_statistics: true
         order_inserts: true
         order_updates: true
         connection:
@@ -43,33 +49,6 @@ spring:
   threads:
     virtual:
       enabled: true
-
-otel:
-  instrumentation:
-    kafka:
-      enabled: false
-    mongo:
-      enabled: false
-    r2dbc:
-      enabled: false
-  traces:
-    exporter: otlp
-    sampler: parentbased_traceidratio
-    sampler.arg: 1
-  metrics:
-    exporter: otlp
-  logs:
-    exporter: otlp
-  exporter:
-    otlp:
-      endpoint: http://otel:4318
-      protocol: http/protobuf
-
-logging:
-  level:
-    com:
-      zaxxer:
-        hikari: DEBUG
 
 eureka:
   instance:

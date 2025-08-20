@@ -552,6 +552,10 @@ components:
           maxLength: 255
 
     EuroBankAccountDetails:
+      type: object
+      title: EuroBankAccountDetails
+      description: Bank account details for Euro transactions.
+      additionalProperties: false
       allOf:
         - $ref: '#/components/schemas/BankAccountDetails'
         - type: object

@@ -1,5 +1,12 @@
 server:
   port: 8100
+  http2:
+    enabled: true
+
+#logging:
+#  level:
+#    reactor:
+#      netty: DEBUG
 
 spring:
   security:
@@ -77,27 +84,6 @@ springdoc:
         url: /user-service/openapi.yaml
   api-docs:
     enabled: false
-
-otel:
-  instrumentation:
-    kafka:
-      enabled: false
-    mongo:
-      enabled: false
-    r2dbc:
-      enabled: false
-  traces:
-    exporter: otlp
-    sampler: parentbased_traceidratio
-    sampler.arg: 1
-  metrics:
-    exporter: otlp
-  logs:
-    exporter: otlp
-  exporter:
-    otlp:
-      endpoint: http://otel:4318
-      protocol: http/protobuf
 
 eureka:
   instance:

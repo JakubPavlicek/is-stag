@@ -24,12 +24,6 @@
             <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
 
-        <!-- OpenTelemetry -->
-        <dependency>
-            <groupId>io.opentelemetry.instrumentation</groupId>
-            <artifactId>opentelemetry-spring-boot-starter</artifactId>
-        </dependency>
-
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
