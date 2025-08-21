@@ -2,13 +2,14 @@ package com.stag.identity.person.model;
 
 import lombok.Builder;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Builder
 public record PersonEducation(
     HighSchool highSchool,
     ForeignHighSchool foreignHighSchool
-) {
+) implements Serializable {
 
     @Builder
     public record HighSchool(
@@ -16,7 +17,7 @@ public record PersonEducation(
         String fieldOfStudy,
         LocalDate graduationDate,
         HighSchoolAddress address
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -25,7 +26,7 @@ public record PersonEducation(
         String name,
         String location,
         String fieldOfStudy
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -36,7 +37,7 @@ public record PersonEducation(
         String municipality,
         String district,
         String country
-    ) {
+    ) implements Serializable {
 
     }
 

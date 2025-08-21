@@ -2,11 +2,13 @@ package com.stag.identity.person.model;
 
 import lombok.Builder;
 
+import java.io.Serializable;
+
 @Builder
 public record PersonBanking(
     BankAccount account,
     EuroBankAccount euroAccount
-) {
+) implements Serializable {
 
     @Builder
     public record BankAccount(
@@ -18,7 +20,7 @@ public record PersonBanking(
         String bankName,
         String iban,
         String currency
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -34,7 +36,7 @@ public record PersonBanking(
         String currency,
         String country,
         String swiftCode
-    ) {
+    ) implements Serializable {
 
     }
 

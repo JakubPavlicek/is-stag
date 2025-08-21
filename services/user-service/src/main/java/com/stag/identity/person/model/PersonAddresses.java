@@ -2,13 +2,15 @@ package com.stag.identity.person.model;
 
 import lombok.Builder;
 
+import java.io.Serializable;
+
 @Builder
 public record PersonAddresses(
     Address permanentAddress,
     Address temporaryAddress,
     ForeignAddress foreignPermanentAddress,
     ForeignAddress foreignTemporaryAddress
-) {
+) implements Serializable {
 
     @Builder
     public record Address(
@@ -19,7 +21,7 @@ public record PersonAddresses(
         String municipalityPart,
         String district,
         String country
-    ) {
+    ) implements Serializable {
 
     }
 
@@ -29,7 +31,7 @@ public record PersonAddresses(
         String municipality,
         String district,
         String postOffice
-    ) {
+    ) implements Serializable {
 
     }
 
