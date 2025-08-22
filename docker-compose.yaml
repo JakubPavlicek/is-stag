@@ -11,11 +11,11 @@ services:
       KC_TRACING_ENABLED: true
       KC_TRACING_ENDPOINT: http://otel:4317
       KC_TRACING_PROTOCOL: grpc
+      KC_TRACING_COMPRESSION: gzip
+      KC_TRACING_SERVICE_NAME: keycloak
+      KC_TRACING_RESOURCE_ATTRIBUTES: service.name=keycloak,service.version=latest,environment=dev
       KC_TRACING_SAMPLER_TYPE: parentbased_traceidratio
       KC_TRACING_SAMPLER_RATIO: 1.0
-      KC_TRACING_SERVICE_NAME: keycloak
-      KC_TRACING_COMPRESSION: gzip
-      KC_TRACING_RESOURCE_ATTRIBUTES: service.name=keycloak,service.version=latest,environment=dev
     healthcheck:
       test: [
         "CMD-SHELL",
@@ -80,7 +80,10 @@ services:
       THC_PATH: /actuator/health
       THC_PORT: 8888
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_TRACES_SAMPLER_ARG: 1.0
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: config-server
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
@@ -106,10 +109,13 @@ services:
       THC_PATH: /actuator/health
       THC_PORT: 8761
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: discovery-server
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
+      OTEL_TRACES_SAMPLER_ARG: 1.0
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     healthcheck:
@@ -133,10 +139,13 @@ services:
       THC_PATH: /actuator/health
       THC_PORT: 8100
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: api-gateway
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
+      OTEL_TRACES_SAMPLER_ARG: 1.0
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     healthcheck:
@@ -160,10 +169,13 @@ services:
     pull_policy: never
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: student-service
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
+      OTEL_TRACES_SAMPLER_ARG: 1.0
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     ports:
@@ -185,10 +197,13 @@ services:
     pull_policy: never
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: subject-service
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
+      OTEL_TRACES_SAMPLER_ARG: 1.0
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     ports:
@@ -210,10 +225,13 @@ services:
     pull_policy: never
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: user-service
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
+      OTEL_TRACES_SAMPLER_ARG: 1.0
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     ports:
@@ -235,10 +253,13 @@ services:
     pull_policy: never
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4318"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: codelist-service
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
+      OTEL_TRACES_SAMPLER_ARG: 1.0
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     ports:

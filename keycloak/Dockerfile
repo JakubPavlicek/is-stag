@@ -1,5 +1,5 @@
 # Start from the official Keycloak image
-FROM quay.io/keycloak/keycloak:26.3.2
+FROM quay.io/keycloak/keycloak:26.3.3
 
 # TODO: move this to docker compose ?
 

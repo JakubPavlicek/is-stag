@@ -34,6 +34,8 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PersonAsyncService personAsyncService;
 
+    // TODO: add language to the cache key
+
     @Cacheable(value = "person_profile", key = "#personId")
     public PersonProfile getPersonProfile(Integer personId, String language) {
         PersonProfileProjection personProfile =

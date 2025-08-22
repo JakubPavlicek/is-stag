@@ -14,9 +14,9 @@
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <keycloak.version>26.3.2</keycloak.version>
+        <keycloak.version>26.3.3</keycloak.version>
         <httpclient.version>5.5</httpclient.version>
-        <jackson.version>2.19.1</jackson.version>
+        <jackson.version>2.20.0-rc1</jackson.version>
     </properties>
 
     <dependencies>
