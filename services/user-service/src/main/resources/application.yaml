@@ -6,4 +6,4 @@ spring:
 
 logging:
   level:
-    com.stag.identity.shared.config.RequestLoggingFilterConfig: DEBUG
+    com.stag.identity: DEBUG

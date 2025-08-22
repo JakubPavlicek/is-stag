@@ -287,7 +287,7 @@ services:
     image: otel/opentelemetry-collector-contrib:latest
     command: [ --config=/etc/otel-config.yml ]
     volumes:
-      - ./otelcol-config.yaml:/etc/otel-config.yml
+      - ./opentel-config.yaml:/etc/otel-config.yml
     ports:
       - "4318:4318"
       - "4317:4317"
@@ -307,7 +307,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
-      - /Users/kuba/Downloads/data:/data
+      - ./data:/data
     ports:
       - "3100"
     networks:
@@ -331,7 +331,7 @@ services:
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./tempo-config.yaml:/etc/tempo.yaml
-      - /Users/kuba/Downloads/data:/data
+      - ./data:/data
     ports:
       - "4317"  # otlp grpc
       - "4318"
@@ -346,7 +346,7 @@ services:
       --web.enable-remote-write-receiver
     ]
     volumes:
-      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ./prometheus-config.yaml:/etc/prometheus/prometheus.yml
     ports:
       - "9091:9090"
     networks:
