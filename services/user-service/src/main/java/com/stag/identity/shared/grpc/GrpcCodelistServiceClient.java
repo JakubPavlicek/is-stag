@@ -15,12 +15,14 @@ import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
 import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
-@Service
+@Slf4j
 @RequiredArgsConstructor
-public class CodelistServiceClient {
+@Service
+public class GrpcCodelistServiceClient {
 
     @GrpcClient("codelist-service")
     private CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub;
@@ -31,6 +33,7 @@ public class CodelistServiceClient {
 
         // Skip call if no meaningful data to fetch
         if (shouldSkipRequest(request)) {
+            log.debug("Skipping codelist-service call for person profile data - no meaningful data to fetch");
             return null;
         }
 
@@ -44,6 +47,7 @@ public class CodelistServiceClient {
 
         // Skip call if no meaningful data to fetch
         if (shouldSkipRequest(request)) {
+            log.debug("Skipping codelist-service call for person address data - no meaningful data to fetch");
             return null;
         }
 
@@ -57,6 +61,7 @@ public class CodelistServiceClient {
 
         // Skip call if no meaningful data to fetch
         if (shouldSkipRequest(request)) {
+            log.debug("Skipping codelist-service call for person banking data - no meaningful data to fetch");
             return null;
         }
 
@@ -70,6 +75,7 @@ public class CodelistServiceClient {
 
         // Skip call if no meaningful data to fetch
         if (shouldSkipRequest(request)) {
+            log.debug("Skipping codelist-service call for person education data - no meaningful data to fetch");
             return null;
         }
 

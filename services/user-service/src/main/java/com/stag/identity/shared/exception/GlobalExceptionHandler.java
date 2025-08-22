@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Optional;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -29,10 +31,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn("gRPC call failed: {}", ex.getMessage());
 
         Status grpcStatus = ex.getStatus();
-        HttpStatus httpStatus = mapGrpcStatusToHttp(grpcStatus);
-        String description = grpcStatus.getDescription() != null
-            ? grpcStatus.getDescription()
-            : "gRPC service error";
+        HttpStatus httpStatus = toHttpStatus(grpcStatus);
+        String description = Optional.ofNullable(grpcStatus.getDescription())
+                                     .orElse("gRPC service error");
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(httpStatus, description);
         problemDetail.setTitle("Service communication error");
@@ -40,7 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    private HttpStatus mapGrpcStatusToHttp(Status grpcStatus) {
+    private HttpStatus toHttpStatus(Status grpcStatus) {
         return switch (grpcStatus.getCode()) {
             case NOT_FOUND -> HttpStatus.NOT_FOUND;
             case INVALID_ARGUMENT -> HttpStatus.BAD_REQUEST;

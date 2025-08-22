@@ -34,59 +34,103 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PersonAsyncService personAsyncService;
 
-    // TODO: add language to the cache key
-
-    @Cacheable(value = "person_profile", key = "#personId")
+    @Cacheable(value = "person-profile", key = "#personId + ':' + #language")
     public PersonProfile getPersonProfile(Integer personId, String language) {
-        PersonProfileProjection personProfile =
+        log.info("Fetching person profile for personId: {} with language: {}", personId, language);
+        
+        PersonProfileProjection personProfileProjection =
             personRepository.findById(personId, PersonProfileProjection.class)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
+        log.debug("Person profile found, fetching additional data for personId: {}", personId);
+        
         CompletableFuture<List<String>> personalNumbersFuture =
             personAsyncService.getStudentPersonalNumbers(personId);
 
         CompletableFuture<PersonProfileData> profileDataFuture =
-            personAsyncService.getPersonProfileData(personProfile, language);
+            personAsyncService.getPersonProfileData(personProfileProjection, language);
 
         CompletableFuture.allOf(personalNumbersFuture, profileDataFuture).join();
 
-        return PersonProfileMapper.INSTANCE.toPersonProfile(personProfile, personalNumbersFuture.join(), profileDataFuture.join());
+        log.debug("Additional data fetched, mapping to PersonProfile for personId: {}", personId);
+        PersonProfile personProfile = PersonProfileMapper.INSTANCE.toPersonProfile(
+            personProfileProjection, personalNumbersFuture.join(), profileDataFuture.join()
+        );
+        
+        log.info("Successfully fetched person profile for personId: {}", personId);
+        return personProfile;
     }
 
-    @Cacheable(value = "person_addresses", key = "#personId")
+    @Cacheable(value = "person-addresses", key = "#personId + ':' + #language")
     public PersonAddresses getPersonAddresses(Integer personId, String language) {
+        log.info("Fetching person addresses for personId: {} with language: {}", personId, language);
+        
         PersonAddressProjection personAddressProjection =
             personRepository.findAddressesByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
+        log.debug("Person addresses found, fetching additional data for personId: {}", personId);
+        
         CompletableFuture<PersonAddressData> addressDataFuture =
             personAsyncService.getPersonAddressData(personAddressProjection, language);
 
-        return PersonAddressMapper.INSTANCE.toPersonAddresses(personAddressProjection, addressDataFuture.join());
+        PersonAddressData addressData = addressDataFuture.join();
+        
+        log.debug("Additional data fetched, mapping to PersonAddresses for personId: {}", personId);
+        PersonAddresses personAddresses = PersonAddressMapper.INSTANCE.toPersonAddresses(
+            personAddressProjection, addressData
+        );
+        
+        log.info("Successfully fetched person addresses for personId: {}", personId);
+        return personAddresses;
     }
 
-    @Cacheable(value = "person_banking", key = "#personId")
+    @Cacheable(value = "person-banking", key = "#personId + ':' + #language")
     public PersonBanking getPersonBanking(Integer personId, String language) {
+        log.info("Fetching person banking information for personId: {} with language: {}", personId, language);
+        
         PersonBankProjection personBankProjection =
             personRepository.findBankingByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
+        log.debug("Person banking information found, fetching additional data for personId: {}", personId);
+        
         CompletableFuture<PersonBankingData> bankingDataFuture =
             personAsyncService.getPersonBankingData(personBankProjection, language);
 
-        return PersonBankingMapper.INSTANCE.toPersonBanking(personBankProjection, bankingDataFuture.join());
+        PersonBankingData bankingData = bankingDataFuture.join();
+        
+        log.debug("Additional data fetched, mapping to PersonBanking for personId: {}", personId);
+        PersonBanking personBanking = PersonBankingMapper.INSTANCE.toPersonBanking(
+            personBankProjection, bankingData
+        );
+        
+        log.info("Successfully fetched person banking information for personId: {}", personId);
+        return personBanking;
     }
 
-    @Cacheable(value = "person_education", key = "#personId")
+    @Cacheable(value = "person-education", key = "#personId + ':' + #language")
     public PersonEducation getPersonEducation(Integer personId, String language) {
+        log.info("Fetching person education information for personId: {} with language: {}", personId, language);
+        
         PersonEducationProjection personEducationProjection =
             personRepository.findEducationByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
+        log.debug("Person education information found, fetching additional data for personId: {}", personId);
+        
         CompletableFuture<PersonEducationData> educationDataFuture =
             personAsyncService.getPersonEducationData(personEducationProjection, language);
 
-        return PersonEducationMapper.INSTANCE.toPersonEducation(personEducationProjection, educationDataFuture.join());
+        PersonEducationData educationData = educationDataFuture.join();
+        
+        log.debug("Additional data fetched, mapping to PersonEducation for personId: {}", personId);
+        PersonEducation personEducation = PersonEducationMapper.INSTANCE.toPersonEducation(
+            personEducationProjection, educationData
+        );
+        
+        log.info("Successfully fetched person education information for personId: {}", personId);
+        return personEducation;
     }
 
 }

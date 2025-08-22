@@ -75,6 +75,17 @@ spring:
           jdbc:
             defaultConnectionValidation: LOCAL
             implicitStatementCacheSize: 200
+  data:
+    redis:
+      host: redis
+      port: 6379
+    #      username: user
+    #      password: password
+    cache:
+      type: redis
+      redis:
+        time-to-live: 60000
+        enable-statistics: true
   threads:
     virtual:
       enabled: true

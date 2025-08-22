@@ -23,6 +23,8 @@ import java.util.Optional;
 public class IsStagAuthenticator extends UsernamePasswordForm {
 
     private static final Logger log = Logger.getLogger(IsStagAuthenticator.class.getName());
+
+    /** Object mapper for JSON processing - Jdk8Module is needed because of Optional<> usage */
     private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new Jdk8Module());
 
     // Configuration constants

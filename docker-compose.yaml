@@ -1,7 +1,7 @@
 services:
   keycloak:
     container_name: keycloak
-    build: ./keycloak
+    image: quay.io/keycloak/keycloak:26.3.3
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
@@ -32,11 +32,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    depends_on:
+      otel:
+        condition: service_started
     ports:
       - "8180:8080"
     command: start-dev --import-realm
     volumes:
       - ./keycloak/is-stag-realm-export.json:/opt/keycloak/data/import/is-stag-realm.json
+      - ./keycloak/providers/is-stag-authenticator/target/is-stag-authenticator.jar:/opt/keycloak/providers/is-stag-authenticator.jar
+      - ./keycloak/theme/is-stag-theme:/opt/keycloak/themes/is-stag-theme
     networks:
       - is-stag-network
 
@@ -287,6 +292,13 @@ services:
       - "4318:4318"
       - "4317:4317"
       - "55679:55679"
+    depends_on:
+      loki:
+        condition: service_started
+      prometheus:
+        condition: service_started
+      tempo:
+        condition: service_started
     networks:
       - is-stag-network
   loki:
@@ -298,9 +310,6 @@ services:
       - /Users/kuba/Downloads/data:/data
     ports:
       - "3100"
-    depends_on:
-      otel:
-        condition: service_started
     networks:
       - is-stag-network
   grafana:
@@ -314,9 +323,6 @@ services:
       - ./grafana-datasources.yaml:/etc/grafana/provisioning/dashboards/default.yml
     ports:
       - "3000:3000"
-    depends_on:
-      otel:
-        condition: service_started
     networks:
       - is-stag-network
   tempo:
@@ -329,9 +335,6 @@ services:
     ports:
       - "4317"  # otlp grpc
       - "4318"
-    depends_on:
-      otel:
-        condition: service_started
     networks:
       - is-stag-network
   prometheus:
@@ -346,9 +349,6 @@ services:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yml
     ports:
       - "9091:9090"
-    depends_on:
-      otel:
-        condition: service_started
     networks:
       - is-stag-network
 
