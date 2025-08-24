@@ -73,7 +73,7 @@ services:
       keycloak:
         condition: service_healthy
       api-gateway:
-        condition: service_healthy
+        condition: service_started
     networks:
       - is-stag-network
 
@@ -140,7 +140,10 @@ services:
     pull_policy: never
     ports:
       - "8100:8100"
+    env_file:
+      - .env
     environment:
+      BP_HEALTH_CHECKER_ENABLED: false
       THC_PATH: /actuator/health
       THC_PORT: 8100
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
@@ -153,11 +156,11 @@ services:
       OTEL_TRACES_SAMPLER_ARG: 1.0
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
-    healthcheck:
-      test: [ "CMD", "/workspace/health-check" ]
-      start_period: 30s
-      timeout: 10s
-      retries: 5
+#    healthcheck:
+#      test: [ "CMD", "/workspace/health-check" ]
+#      start_period: 30s
+#      timeout: 10s
+#      retries: 5
     depends_on:
       config-server:
         condition: service_healthy
@@ -188,7 +191,8 @@ services:
       - "9030:9030"
     depends_on:
       api-gateway:
-        condition: service_healthy
+#        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_healthy
       otel:
@@ -216,7 +220,8 @@ services:
       - "9040:9040"
     depends_on:
       api-gateway:
-        condition: service_healthy
+#        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_healthy
       otel:
@@ -244,7 +249,8 @@ services:
       - "9020:9020"
     depends_on:
       api-gateway:
-        condition: service_healthy
+#        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_healthy
       otel:
@@ -272,7 +278,8 @@ services:
       - "9010:9010"
     depends_on:
       api-gateway:
-        condition: service_healthy
+#        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_healthy
       otel:

@@ -5,6 +5,7 @@ target/
 otel/
 data/
 *.p12
+.env
 
 ### STS ###
 .apt_generated

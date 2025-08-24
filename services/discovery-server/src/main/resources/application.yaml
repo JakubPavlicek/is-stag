@@ -3,3 +3,7 @@ spring:
     name: discovery-server
   config:
     import: optional:configserver:http://config-server:8888
+
+eureka:
+  server:
+    response-cache-update-interval-ms: 10000

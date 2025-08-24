@@ -2,11 +2,11 @@ server:
   port: 8100
   http2:
     enabled: true
-
-#logging:
-#  level:
-#    reactor:
-#      netty: DEBUG
+  ssl:
+    key-store: classpath:gateway-keystore.p12
+    key-store-type: PKCS12
+    key-store-password: ${API_GATEWAY_SSL_KEY_STORE_PASSWORD}
+    key-alias: api-gateway
 
 spring:
   security:
@@ -16,6 +16,9 @@ spring:
           issuer-uri: http://localhost:8180/realms/is-stag
           jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
   cloud:
+    loadbalancer:
+      cache:
+        ttl: 15s
     gateway:
       server:
         webflux:

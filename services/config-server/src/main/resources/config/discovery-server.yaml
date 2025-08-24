@@ -1,5 +1,7 @@
 server:
   port: 8761
+  http2:
+    enabled: true
 
 eureka:
   instance:
