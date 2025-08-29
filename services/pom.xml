@@ -37,10 +37,15 @@
 
         <!-- Tools -->
         <mapstruct.version>1.6.3</mapstruct.version>
-        <jackson-datatype.version>2.20.0-rc1</jackson-datatype.version>
+        <mapstruct-protobuf-spi.version>1.50.0</mapstruct-protobuf-spi.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <openapi-generator.version>7.15.0</openapi-generator.version>
         <protobuf-maven-plugin.version>3.8.1</protobuf-maven-plugin.version>
+
+        <!-- Cloud Native Buildpacks -->
+        <image.builder.version>0.0.60</image.builder.version>
+        <buildpack-java.version>18.13.0</buildpack-java.version>
+        <buildpack-health-checker.version>2.10.2</buildpack-health-checker.version>
     </properties>
 
     <modules>
@@ -185,11 +190,10 @@
                             <enabled>true</enabled>
                         </layers>
                         <image>
-                            <builder>paketobuildpacks/builder-noble-java-tiny:0.0.56</builder>
+                            <builder>paketobuildpacks/builder-noble-java-tiny:${image.builder.version}</builder>
                             <buildpacks>
-                                <buildpack>paketobuildpacks/java:18.12.0</buildpack>
-                                <buildpack>docker.io/paketobuildpacks/spring-boot:5.33.3</buildpack>
-                                <buildpack>paketobuildpacks/health-checker:2.10.1</buildpack>
+                                <buildpack>paketobuildpacks/java:${buildpack-java.version}</buildpack>
+                                <buildpack>paketobuildpacks/health-checker:${buildpack-health-checker.version}</buildpack>
                             </buildpacks>
                             <env>
                                 <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
@@ -217,7 +221,7 @@
                             <path>
                                 <groupId>no.entur.mapstruct.spi</groupId>
                                 <artifactId>protobuf-spi-impl</artifactId>
-                                <version>1.50.0</version>
+                                <version>${mapstruct-protobuf-spi.version}</version>
                             </path>
                             <path>
                                 <groupId>org.projectlombok</groupId>

@@ -1,5 +1,8 @@
 services:
   keycloak:
+    profiles:
+      - dev
+      - prod
     container_name: keycloak
     image: quay.io/keycloak/keycloak:26.3.3
     environment:
@@ -46,6 +49,9 @@ services:
       - is-stag-network
 
   redis:
+    profiles:
+      - dev
+      - prod
     container_name: redis
     image: redis:8.2.1-alpine
     environment:
@@ -61,6 +67,8 @@ services:
       - is-stag-network
 
   react-client:
+    profiles:
+      - prod
     container_name: react-client
     image: react-client:0.0.1
     pull_policy: never
@@ -78,6 +86,8 @@ services:
       - is-stag-network
 
   config-server:
+    profiles:
+      - prod
     container_name: config-server
     image: config-server:0.0.1
     pull_policy: never
@@ -105,6 +115,8 @@ services:
       - is-stag-network
 
   discovery-server:
+    profiles:
+      - prod
     container_name: discovery-server
     image: discovery-server:0.0.1
     pull_policy: never
@@ -135,6 +147,8 @@ services:
       - is-stag-network
 
   api-gateway:
+    profiles:
+      - prod
     container_name: api-gateway
     image: api-gateway:0.0.1
     pull_policy: never
@@ -172,6 +186,8 @@ services:
       - is-stag-network
 
   student-service:
+    profiles:
+      - prod
     container_name: student-service
     image: student-service:0.0.1
     pull_policy: never
@@ -201,6 +217,8 @@ services:
       - is-stag-network
 
   subject-service:
+    profiles:
+      - prod
     container_name: subject-service
     image: subject-service:0.0.1
     pull_policy: never
@@ -230,6 +248,8 @@ services:
       - is-stag-network
 
   user-service:
+    profiles:
+      - prod
     container_name: user-service
     image: user-service:0.0.1
     pull_policy: never
@@ -259,6 +279,8 @@ services:
       - is-stag-network
 
   codelist-service:
+    profiles:
+      - prod
     container_name: codelist-service
     image: codelist-service:0.0.1
     pull_policy: never
@@ -290,6 +312,9 @@ services:
   # --- Observability ---
 
   otel:
+    profiles:
+      - dev
+      - prod
     container_name: otel
     image: otel/opentelemetry-collector-contrib:latest
     command: [ --config=/etc/otel-config.yml ]
@@ -309,6 +334,9 @@ services:
     networks:
       - is-stag-network
   loki:
+    profiles:
+      - dev
+      - prod
     container_name: loki
     image: grafana/loki:latest
     command: -config.file=/etc/loki/local-config.yaml
@@ -320,6 +348,9 @@ services:
     networks:
       - is-stag-network
   grafana:
+    profiles:
+      - dev
+      - prod
     container_name: grafana
     image: grafana/grafana:latest
     environment:
@@ -333,6 +364,9 @@ services:
     networks:
       - is-stag-network
   tempo:
+    profiles:
+      - dev
+      - prod
     container_name: tempo
     image: grafana/tempo:latest
     command: [ "-config.file=/etc/tempo.yaml" ]
@@ -345,6 +379,9 @@ services:
     networks:
       - is-stag-network
   prometheus:
+    profiles:
+      - dev
+      - prod
     container_name: prometheus
     image: prom/prometheus:latest
     command: [

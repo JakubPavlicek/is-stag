@@ -94,8 +94,6 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
 
         // Redirect user to STAG login
         context.challenge(Response.seeOther(stagLoginUri).build());
-
-        log.debug("STAG redirect challenge sent");
     }
 
     private void handleAnonymousLogin(AuthenticationFlowContext context) {
@@ -110,8 +108,7 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         UserModel anonymousUser = userProvider.getUserByUsername(realm, ANONYMOUS);
 
         if (anonymousUser == null) {
-            log.error("Anonymous user not found in realm: " + realm.getName());
-            handleAuthenticationError(context, "Anonymous user not found");
+            handleAuthenticationError("Anonymous user not found in realm: " + realm.getName(), context);
             return;
         }
 
@@ -150,7 +147,7 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
             context.setUser(user);
             context.success();
         } catch (Exception e) {
-            handleAuthenticationError(context, "Error during STAG login handling: " + e.getMessage());
+            handleAuthenticationError("Error during STAG login handling: " + e.getMessage(), context);
         }
     }
 
@@ -195,8 +192,8 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         return user;
     }
 
-    private void handleAuthenticationError(AuthenticationFlowContext context, String message) {
-        log.error(message);
+    private void handleAuthenticationError(String message, AuthenticationFlowContext context) {
+        log.warn(message);
 
         context.failureChallenge(
             AuthenticationFlowError.INVALID_CREDENTIALS,
@@ -204,8 +201,6 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
                    .addError(new FormMessage("login-error", message))
                    .createErrorPage(Response.Status.BAD_REQUEST)
         );
-
-        log.debug("Authentication error challenge sent to client");
     }
 
 }

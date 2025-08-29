@@ -3,12 +3,6 @@ server:
   http2:
     enabled: true
 
-#logging:
-#  level:
-#    com:
-#      zaxxer:
-#        hikari: DEBUG
-
 grpc:
   server:
     port: 9020
@@ -39,6 +33,12 @@ grpc:
       enable-retry: true
       max-retry-attempts: 3
       retry-delay: 100ms
+
+#logging:
+#  level:
+#    com:
+#      zaxxer:
+#        hikari: DEBUG
 
 spring:
   jpa:

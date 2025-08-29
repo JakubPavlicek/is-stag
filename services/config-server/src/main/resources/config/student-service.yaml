@@ -1,5 +1,7 @@
 server:
   port: 8030
+  http2:
+    enabled: true
 
 grpc:
   server:

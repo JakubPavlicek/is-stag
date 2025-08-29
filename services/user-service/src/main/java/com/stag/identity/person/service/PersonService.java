@@ -37,13 +37,13 @@ public class PersonService {
     @Cacheable(value = "person-profile", key = "#personId + ':' + #language")
     public PersonProfile getPersonProfile(Integer personId, String language) {
         log.info("Fetching person profile for personId: {} with language: {}", personId, language);
-        
+
         PersonProfileProjection personProfileProjection =
             personRepository.findById(personId, PersonProfileProjection.class)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
         log.debug("Person profile found, fetching additional data for personId: {}", personId);
-        
+
         CompletableFuture<List<String>> personalNumbersFuture =
             personAsyncService.getStudentPersonalNumbers(personId);
 
@@ -56,7 +56,7 @@ public class PersonService {
         PersonProfile personProfile = PersonProfileMapper.INSTANCE.toPersonProfile(
             personProfileProjection, personalNumbersFuture.join(), profileDataFuture.join()
         );
-        
+
         log.info("Successfully fetched person profile for personId: {}", personId);
         return personProfile;
     }
@@ -64,23 +64,23 @@ public class PersonService {
     @Cacheable(value = "person-addresses", key = "#personId + ':' + #language")
     public PersonAddresses getPersonAddresses(Integer personId, String language) {
         log.info("Fetching person addresses for personId: {} with language: {}", personId, language);
-        
+
         PersonAddressProjection personAddressProjection =
             personRepository.findAddressesByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
         log.debug("Person addresses found, fetching additional data for personId: {}", personId);
-        
+
         CompletableFuture<PersonAddressData> addressDataFuture =
             personAsyncService.getPersonAddressData(personAddressProjection, language);
 
         PersonAddressData addressData = addressDataFuture.join();
-        
+
         log.debug("Additional data fetched, mapping to PersonAddresses for personId: {}", personId);
         PersonAddresses personAddresses = PersonAddressMapper.INSTANCE.toPersonAddresses(
             personAddressProjection, addressData
         );
-        
+
         log.info("Successfully fetched person addresses for personId: {}", personId);
         return personAddresses;
     }
@@ -88,23 +88,23 @@ public class PersonService {
     @Cacheable(value = "person-banking", key = "#personId + ':' + #language")
     public PersonBanking getPersonBanking(Integer personId, String language) {
         log.info("Fetching person banking information for personId: {} with language: {}", personId, language);
-        
+
         PersonBankProjection personBankProjection =
             personRepository.findBankingByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
         log.debug("Person banking information found, fetching additional data for personId: {}", personId);
-        
+
         CompletableFuture<PersonBankingData> bankingDataFuture =
             personAsyncService.getPersonBankingData(personBankProjection, language);
 
         PersonBankingData bankingData = bankingDataFuture.join();
-        
+
         log.debug("Additional data fetched, mapping to PersonBanking for personId: {}", personId);
         PersonBanking personBanking = PersonBankingMapper.INSTANCE.toPersonBanking(
             personBankProjection, bankingData
         );
-        
+
         log.info("Successfully fetched person banking information for personId: {}", personId);
         return personBanking;
     }
@@ -112,23 +112,23 @@ public class PersonService {
     @Cacheable(value = "person-education", key = "#personId + ':' + #language")
     public PersonEducation getPersonEducation(Integer personId, String language) {
         log.info("Fetching person education information for personId: {} with language: {}", personId, language);
-        
+
         PersonEducationProjection personEducationProjection =
             personRepository.findEducationByPersonId(personId)
                             .orElseThrow(() -> new PersonNotFoundException(personId));
 
         log.debug("Person education information found, fetching additional data for personId: {}", personId);
-        
+
         CompletableFuture<PersonEducationData> educationDataFuture =
             personAsyncService.getPersonEducationData(personEducationProjection, language);
 
         PersonEducationData educationData = educationDataFuture.join();
-        
+
         log.debug("Additional data fetched, mapping to PersonEducation for personId: {}", personId);
         PersonEducation personEducation = PersonEducationMapper.INSTANCE.toPersonEducation(
             personEducationProjection, educationData
         );
-        
+
         log.info("Successfully fetched person education information for personId: {}", personId);
         return personEducation;
     }

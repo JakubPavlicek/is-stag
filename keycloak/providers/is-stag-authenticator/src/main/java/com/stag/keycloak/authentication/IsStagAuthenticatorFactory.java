@@ -8,6 +8,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 
+import java.util.Collections;
 import java.util.List;
 
 public class IsStagAuthenticatorFactory implements AuthenticatorFactory {
@@ -57,7 +58,7 @@ public class IsStagAuthenticatorFactory implements AuthenticatorFactory {
 
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

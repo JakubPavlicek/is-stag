@@ -1,17 +1,25 @@
 server:
   port: 8030
+  http2:
+    enabled: true
 
 grpc:
   server:
     port: 9030
 
+#logging:
+#  level:
+#    com:
+#      zaxxer:
+#        hikari: DEBUG
+
 spring:
   jpa:
-    show-sql: true
+#    show-sql: true
     properties:
       hibernate:
-        format_sql: true
-        generate_statistics: true
+#        format_sql: true
+#        generate_statistics: true
         order_inserts: true
         order_updates: true
         connection:
@@ -44,20 +52,21 @@ spring:
     virtual:
       enabled: true
 
-logging:
-  level:
-    com:
-      zaxxer:
-        hikari: DEBUG
-
 eureka:
   instance:
     prefer-ip-address: true
+    # Reduce service discovery delays
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka/
+    # Cache registry locally to avoid repeated lookups
+    registry-fetch-interval-seconds: 10
+    cache-refresh-executor-thread-pool-size: 2
+    initial-instance-info-replication-interval-seconds: 10
 
 springdoc:
   api-docs:
