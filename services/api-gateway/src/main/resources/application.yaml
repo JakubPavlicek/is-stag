@@ -8,3 +8,11 @@ spring:
 #  level:
 #    com.stag.platform.gateway: DEBUG
 #    reactor.netty: DEBUG
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+    import: optional:configserver:http://localhost:8888

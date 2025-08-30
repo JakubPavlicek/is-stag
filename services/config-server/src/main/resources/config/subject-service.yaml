@@ -69,3 +69,14 @@ springdoc:
     enabled: false
   swagger-ui:
     url: /openapi.yaml
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

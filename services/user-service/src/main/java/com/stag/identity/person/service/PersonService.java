@@ -21,6 +21,7 @@ import com.stag.identity.person.service.data.PersonProfileData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class PersonService {
     private final PersonAsyncService personAsyncService;
 
     @Cacheable(value = "person-profile", key = "#personId + ':' + #language")
+    @PreAuthorize("hasAnyRole('PR', 'AD', 'SP', 'SR') || @authorizationService.canAccessPerson(authentication, #personId)")
     public PersonProfile getPersonProfile(Integer personId, String language) {
         log.info("Fetching person profile for personId: {} with language: {}", personId, language);
 
@@ -62,6 +64,7 @@ public class PersonService {
     }
 
     @Cacheable(value = "person-addresses", key = "#personId + ':' + #language")
+    @PreAuthorize("hasAnyRole('PR', 'AD', 'SP', 'SR') || @authorizationService.canAccessPerson(authentication, #personId)")
     public PersonAddresses getPersonAddresses(Integer personId, String language) {
         log.info("Fetching person addresses for personId: {} with language: {}", personId, language);
 
@@ -86,6 +89,7 @@ public class PersonService {
     }
 
     @Cacheable(value = "person-banking", key = "#personId + ':' + #language")
+    @PreAuthorize("hasAnyRole('PR', 'AD', 'SP', 'SR') || @authorizationService.canAccessPerson(authentication, #personId)")
     public PersonBanking getPersonBanking(Integer personId, String language) {
         log.info("Fetching person banking information for personId: {} with language: {}", personId, language);
 
@@ -110,6 +114,7 @@ public class PersonService {
     }
 
     @Cacheable(value = "person-education", key = "#personId + ':' + #language")
+    @PreAuthorize("hasAnyRole('PR', 'AD', 'SP', 'SR') || @authorizationService.canAccessPerson(authentication, #personId)")
     public PersonEducation getPersonEducation(Integer personId, String language) {
         log.info("Fetching person education information for personId: {} with language: {}", personId, language);
 

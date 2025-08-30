@@ -1,6 +1,8 @@
 package com.stag.academics.student.grpc;
 
 import com.stag.academics.student.service.StudentService;
+import com.stag.academics.student.v1.GetStudentPersonIdRequest;
+import com.stag.academics.student.v1.GetStudentPersonIdResponse;
 import com.stag.academics.student.v1.GetStudentPersonalNumbersRequest;
 import com.stag.academics.student.v1.GetStudentPersonalNumbersResponse;
 import com.stag.academics.student.v1.StudentServiceGrpc;
@@ -19,16 +21,30 @@ public class StudentGrpcService extends StudentServiceGrpc.StudentServiceImplBas
     private final StudentService studentService;
 
     @Override
-    public void getStudentPersonalNumbers(GetStudentPersonalNumbersRequest request, StreamObserver<GetStudentPersonalNumbersResponse> responseObserver) {
-        log.info("getStudentPersonalNumbers thread: {}", Thread.currentThread().toString());
-        Integer personId = request.getPersonId();
+    public void getStudentPersonalNumbers(
+        GetStudentPersonalNumbersRequest request,
+        StreamObserver<GetStudentPersonalNumbersResponse> responseObserver
+    ) {
+        List<String> personalNumbers = studentService.findAllPersonalNumbers(request.getPersonId());
 
-        // TODO: Implement error handling for invalid personId
-        List<String> personalNumbers = studentService.findAllPersonalNumbers(personId);
+        var response = GetStudentPersonalNumbersResponse.newBuilder()
+                                                        .addAllPersonalNumbers(personalNumbers)
+                                                        .build();
 
-        GetStudentPersonalNumbersResponse response = GetStudentPersonalNumbersResponse.newBuilder()
-                                                                                      .addAllPersonalNumbers(personalNumbers)
-                                                                                      .build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getStudentPersonId(
+        GetStudentPersonIdRequest request,
+        StreamObserver<GetStudentPersonIdResponse> responseObserver
+    ) {
+        Integer personId = studentService.findPersonIdByPersonalNumber(request.getPersonalNumber());
+
+        var response = GetStudentPersonIdResponse.newBuilder()
+                                                 .setPersonId(personId)
+                                                 .build();
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();

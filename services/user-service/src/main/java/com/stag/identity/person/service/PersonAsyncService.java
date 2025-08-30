@@ -12,6 +12,7 @@ import com.stag.identity.shared.grpc.GrpcCodelistServiceClient;
 import com.stag.identity.shared.grpc.GrpcStudentServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,16 @@ public class PersonAsyncService {
         log.debug("Completed fetching student personal numbers");
 
         return CompletableFuture.completedFuture(personalNumbers);
+    }
+
+    @Async
+    @Cacheable(value = "student-person-id", key = "#personalNumber")
+    public CompletableFuture<Integer> getStudentPersonId(String personalNumber) {
+        log.info("Fetching student person id");
+        Integer personId = grpcStudentServiceClient.getStudentPersonId(personalNumber);
+        log.debug("Completed fetching student person id");
+
+        return CompletableFuture.completedFuture(personId);
     }
 
     @Async

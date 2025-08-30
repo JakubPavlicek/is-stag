@@ -2,10 +2,14 @@ package com.stag.platform.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import reactor.core.publisher.Mono;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -17,25 +21,29 @@ public class SecurityConfig {
         "/v3/api-docs/swagger-config"
     };
 
-    private static final String[] SERVICE_OPENAPI_URLS = {
-        "/codelist-service/openapi.yaml",
-        "/student-service/openapi.yaml",
-        "/subject-service/openapi.yaml",
-        "/user-service/openapi.yaml"
-    };
-
     // TODO: make the actuator endpoints protected by an ADMIN role
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(ex -> ex
                 .pathMatchers("/actuator/health").permitAll()
+                .pathMatchers("/*/openapi.yaml").permitAll()
                 .pathMatchers(SWAGGER_URLS).permitAll()
-                .pathMatchers(SERVICE_OPENAPI_URLS).permitAll()
                 .anyExchange().authenticated()
             )
-            .oauth2ResourceServer(jwt -> jwt.jwt(Customizer.withDefaults()))
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
+                jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
+            ))
             .build();
+    }
+
+    @Bean
+    public Converter<Jwt, ? extends Mono<? extends AbstractAuthenticationToken>> jwtAuthenticationConverter() {
+        ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
+        // Set a custom converter to extract authorities from the JWT
+        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
+        return converter;
     }
 
 }

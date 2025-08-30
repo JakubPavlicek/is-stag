@@ -18,4 +18,10 @@ public class StudentService {
         return studentRepository.findAllPersonalNumbers(personId);
     }
 
+    @Transactional(readOnly = true)
+    public Integer findPersonIdByPersonalNumber(String personalNumber) {
+        return studentRepository.findPersonIdByPersonalNumber(personalNumber)
+                                .orElseThrow(() -> new RuntimeException("Student not found for personal number: " + personalNumber));
+    }
+
 }

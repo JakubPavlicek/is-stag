@@ -11,6 +11,9 @@ option java_multiple_files = true;
 service StudentService {
   rpc GetStudentPersonalNumbers (GetStudentPersonalNumbersRequest)
       returns (GetStudentPersonalNumbersResponse);
+
+  rpc GetStudentPersonId (GetStudentPersonIdRequest)
+      returns (GetStudentPersonIdResponse);
 }
 
 message GetStudentPersonalNumbersRequest {
@@ -23,4 +26,18 @@ message GetStudentPersonalNumbersRequest {
 
 message GetStudentPersonalNumbersResponse {
   repeated string personal_numbers = 1;
+}
+
+message GetStudentPersonIdRequest {
+
+  string personal_number = 1 [
+    (buf.validate.field).string.min_len = 1
+  ];
+
+}
+
+message GetStudentPersonIdResponse {
+
+  int32 person_id = 1;
+
 }

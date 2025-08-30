@@ -41,6 +41,13 @@ grpc:
 #        hikari: DEBUG
 
 spring:
+  spring:
+    security:
+      oauth2:
+        resourceserver:
+          jwt:
+            issuer-uri: http://localhost:8180/realms/is-stag
+            jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
   jpa:
 #    show-sql: true
     properties:
@@ -111,3 +118,23 @@ springdoc:
     enabled: false
   swagger-ui:
     url: /openapi.yaml
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8180/realms/is-stag/protocol/openid-connect/certs
+  data:
+    redis:
+      host: localhost
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
