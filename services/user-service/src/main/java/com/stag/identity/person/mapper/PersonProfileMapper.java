@@ -17,7 +17,7 @@ public interface PersonProfileMapper {
     PersonProfileMapper INSTANCE = Mappers.getMapper(PersonProfileMapper.class);
 
     @Mapping(target = "personId", source = "profile.id")
-    @Mapping(target = "personalNumbers", source = "personalNumbers")
+    @Mapping(target = "studentIds", source = "studentIds")
     @Mapping(target = "birthSurname", source = "profile.birthName")
     @Mapping(target = "gender", source = "profile.gender", qualifiedByName = "lookupGender")
     @Mapping(target = "maritalStatus", source = "profile.maritalStatus", qualifiedByName = "lookupMaritalStatus")
@@ -27,7 +27,7 @@ public interface PersonProfileMapper {
     @Mapping(target = "citizenship", source = "profile")
     PersonProfile toPersonProfile(
         PersonProfileProjection profile,
-        List<String> personalNumbers,
+        List<String> studentIds,
         @Context PersonProfileData data
     );
 

@@ -121,7 +121,7 @@ public class Student {
         nullable = false,
         length = 10
     )
-    private String personalNumber;
+    private String studentId;
 
     @Size(max = 30)
     @NotNull
@@ -196,7 +196,7 @@ public class Student {
         nullable = false,
         length = 1
     )
-    private String status;
+    private String studyStatus;
 
     @NotNull
     @Column(

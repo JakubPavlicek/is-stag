@@ -14,14 +14,16 @@ public class StudentService {
     private final StudentRepository studentRepository;
 
     @Transactional(readOnly = true)
-    public List<String> findAllPersonalNumbers(Integer personId) {
-        return studentRepository.findAllPersonalNumbers(personId);
+    public List<String> findAllStudentIds(Integer personId) {
+        return studentRepository.findAllStudentIds(personId);
     }
 
+    // TODO: create own exception
+
     @Transactional(readOnly = true)
-    public Integer findPersonIdByPersonalNumber(String personalNumber) {
-        return studentRepository.findPersonIdByPersonalNumber(personalNumber)
-                                .orElseThrow(() -> new RuntimeException("Student not found for personal number: " + personalNumber));
+    public Integer findPersonId(String studentId) {
+        return studentRepository.findPersonId(studentId)
+                                .orElseThrow(() -> new RuntimeException("Student not found for ID: " + studentId));
     }
 
 }

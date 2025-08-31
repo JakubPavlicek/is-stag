@@ -46,17 +46,17 @@ public class PersonService {
 
         log.debug("Person profile found, fetching additional data for personId: {}", personId);
 
-        CompletableFuture<List<String>> personalNumbersFuture =
-            personAsyncService.getStudentPersonalNumbers(personId);
+        CompletableFuture<List<String>> studentIdsFuture =
+            personAsyncService.getStudentids(personId);
 
         CompletableFuture<PersonProfileData> profileDataFuture =
             personAsyncService.getPersonProfileData(personProfileProjection, language);
 
-        CompletableFuture.allOf(personalNumbersFuture, profileDataFuture).join();
+        CompletableFuture.allOf(studentIdsFuture, profileDataFuture).join();
 
         log.debug("Additional data fetched, mapping to PersonProfile for personId: {}", personId);
         PersonProfile personProfile = PersonProfileMapper.INSTANCE.toPersonProfile(
-            personProfileProjection, personalNumbersFuture.join(), profileDataFuture.join()
+            personProfileProjection, studentIdsFuture.join(), profileDataFuture.join()
         );
 
         log.info("Successfully fetched person profile for personId: {}", personId);

@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 public record PersonProfile(
     Integer personId,
-    List<String> personalNumbers,
+    List<String> studentIds,
     String firstName,
     String lastName,
     String birthSurname,

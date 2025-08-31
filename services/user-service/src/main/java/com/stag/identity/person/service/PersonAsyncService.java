@@ -28,10 +28,10 @@ public class PersonAsyncService {
     private final GrpcCodelistServiceClient grpcCodelistServiceClient;
 
     @Async
-    public CompletableFuture<List<String>> getStudentPersonalNumbers(Integer personId) {
-        log.info("Fetching student personal numbers");
-        List<String> personalNumbers = grpcStudentServiceClient.getStudentPersonalNumbers(personId);
-        log.debug("Completed fetching student personal numbers");
+    public CompletableFuture<List<String>> getStudentids(Integer personId) {
+        log.info("Fetching student ids");
+        List<String> personalNumbers = grpcStudentServiceClient.getStudentIds(personId);
+        log.debug("Completed fetching student ids");
 
         return CompletableFuture.completedFuture(personalNumbers);
     }

@@ -9,14 +9,14 @@ option java_outer_classname = "UserServiceProto";
 option java_multiple_files = true;
 
 service StudentService {
-  rpc GetStudentPersonalNumbers (GetStudentPersonalNumbersRequest)
-      returns (GetStudentPersonalNumbersResponse);
+  rpc GetStudentIds (GetStudentIdsRequest)
+      returns (GetStudentIdsResponse);
 
   rpc GetStudentPersonId (GetStudentPersonIdRequest)
       returns (GetStudentPersonIdResponse);
 }
 
-message GetStudentPersonalNumbersRequest {
+message GetStudentIdsRequest {
 
   int32 person_id = 1 [
     (buf.validate.field).int32.gte = 0
@@ -24,13 +24,13 @@ message GetStudentPersonalNumbersRequest {
 
 }
 
-message GetStudentPersonalNumbersResponse {
-  repeated string personal_numbers = 1;
+message GetStudentIdsResponse {
+  repeated string student_ids = 1;
 }
 
 message GetStudentPersonIdRequest {
 
-  string personal_number = 1 [
+  string student_id = 1 [
     (buf.validate.field).string.min_len = 1
   ];
 

@@ -1,0 +1,351 @@
+openapi: 3.0.3
+info:
+  title: Student Service API
+  description: |
+    This API provides access to student-related functionalities in the IS/STAG system.
+    It allows for the management and retrieval of student data.
+  version: 1.0.0
+  contact:
+    name: STAG Support
+    email: stag@service.zcu.cz
+    url: https://is-stag.zcu.cz/zakaznici/Support.html
+
+servers:
+  - url: /api/v1
+    description: Student Service API through API Gateway
+
+tags:
+  - name: students
+    description: Operations for managing students
+
+paths:
+
+  /students/{studentId}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - students
+      summary: Get student
+      description: Retrieve a person by their unique identifier.
+      operationId: getPersonProfile
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/studentId'
+      responses:
+        '200':
+          description: Student details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentProfile'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+components:
+
+  securitySchemes:
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token issued by Keycloak
+
+  parameters:
+
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      description: Preferred language
+      required: false
+      schema:
+        type: string
+        enum:
+          - cs
+          - en
+        default: cs
+
+    studentId:
+      name: studentId
+      in: path
+      required: true
+      description: Unique identifier of the student.
+      schema:
+        $ref: '#/components/schemas/StudentId'
+
+  schemas:
+
+    StudentId:
+      type: string
+      title: Person ID
+      description: Unique identifier of the student.
+      maxLength: 10
+      example: K24B4302P
+
+    PersonId:
+      type: integer
+      format: int32
+      title: Person ID
+      description: Unique identifier of the person.
+      example: 221264
+
+    Title:
+      type: string
+      nullable: true
+      description: Title of the student.
+      example: Ing.
+      maxLength: 240
+
+    StudentProfile:
+      type: object
+      title: StudentProfileResponse
+      description: Response containing student profile details.
+      additionalProperties: false
+      required:
+        - studentId
+        - personId
+        - firstName
+        - lastName
+        - titles
+        - studyStatus
+        - studyProgram
+        - fieldOfStudy
+      properties:
+        studentId:
+          $ref: '#/components/schemas/StudentId'
+        personId:
+          $ref: '#/components/schemas/PersonId'
+        firstName:
+          type: string
+          description: First name of the student.
+          example: John
+          maxLength: 100
+        lastName:
+          type: string
+          description: Last name of the student.
+          example: Doe
+          maxLength: 100
+        titles:
+          type: object
+          title: Titles
+          description: Title of the person.
+          additionalProperties: false
+          required:
+            - prefix
+            - suffix
+          properties:
+            prefix:
+              $ref: '#/components/schemas/Title'
+            suffix:
+              $ref: '#/components/schemas/Title'
+        gender:
+          type: string
+          description: Gender of the student.
+          example: male
+          maxLength: 240
+        studyStatus:
+          type: string
+          description: Study status of the student.
+          example: Studuje
+          maxLength: 240
+        studyProgram:
+          type: object
+          title: StudyProgramResponse
+          description: Object containing student's study program details.
+          additionalProperties: false
+          required:
+            - studyProgramId
+            - name
+            - faculty
+            - code
+            - form
+            - type
+          properties:
+            studyProgramId:
+              type: integer
+              format: int32
+              description: Unique identifier of the study program.
+              example: 1966
+            name:
+              type: string
+              description: Name of the study program.
+              example: Ekonomická a regionální geografie
+              maxLength: 200
+            faculty:
+              type: string
+              description: Faculty of the study program.
+              example: FEK
+              maxLength: 6
+            code:
+              type: string
+              description: Code of the study program.
+              example: B0532A330036
+              maxLength: 12
+            form:
+              type: string
+              description: Form of the study program.
+              example: Prezenční
+              maxLength: 240
+            type:
+              type: string
+              description: Type of the study program.
+              example: Bakalářský
+              maxLength: 240
+        fieldOfStudy:
+          type: object
+          title: FieldOfStudyResponse
+          description: Object containing student's field of study details.
+          additionalProperties: false
+          required:
+            - fieldOfStudyId
+            - name
+            - abbreviation
+            - faculty
+            - department
+            - code
+          properties:
+            fieldOfStudyId:
+              type: integer
+              format: int32
+              description: Unique identifier of the field of study.
+              example: 4343
+            name:
+              type: string
+              description: Name of the field of study.
+              example: Ekonomická a regionální geografie
+              maxLength: 200
+            abbreviation:
+              type: string
+              description: Abbreviation of the field of study.
+              example: ERG-B
+              maxLength: 10
+            faculty:
+              type: string
+              description: Faculty of the field of study.
+              example: FEK
+              maxLength: 6
+            department:
+              type: string
+              description: Department of the field of study.
+              example: KGE
+              maxLength: 6
+            code:
+              type: string
+              description: Code of the field of study.
+              example: B0532A330036
+              maxLength: 15
+
+    ProblemDetail:
+      type: object
+      title: ProblemDetail
+      description: A generic error.
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+      properties:
+        type:
+          type: string
+          description: A URI reference that identifies the problem type.
+          example: http://localhost:8080/student-not-found
+          pattern: ^((about:blank)|(https?://[^\s]+$))
+          maxLength: 1000
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type.
+          example: Domain Not Found
+          pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
+          maxLength: 255
+        status:
+          type: number
+          description: The HTTP status code.
+          example: 404
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: 'Student with ID: 221264 not found'
+          pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
+          maxLength: 1000
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+          example: /students/K24B4302P
+          pattern: ^(/[^\s]*)+$
+          maxLength: 1000
+        contextInfo:
+          type: object
+          additionalProperties: true
+          maxProperties: 5
+          description: A free-form based object that contains additional context about the error.
+      example:
+        type: http://localhost:8080/api/v1/student-not-found
+        title: Student Not Found
+        status: 404
+        detail: 'Student with ID: K24B4302P not found'
+        instance: /api/v1/students/K24B4302P
+        contextInfo:
+          student: Student K24B4302P not found
+
+  responses:
+
+    401Unauthorized:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/student-not-found
+            title: Unauthorized
+            status: 401
+            detail: Access token is missing or invalid
+            instance: /api/v1/students/K24B4302P
+
+    403Forbidden:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/student-not-found
+            title: Forbidden
+            status: 403
+            detail: You do not have permission to access this resource
+            instance: /api/v1/students/K24B4302P
+
+    404NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/student-not-found
+            title: Person Not Found
+            status: 404
+            detail: 'Student with ID: 221264 not found'
+            instance: /api/v1/students/K24B4302P
+
+    500InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/internal-server-error
+            title: Internal server error
+            status: 500
+            detail: An unexpected error occurred
+            instance: /api/v1/persons/221264
