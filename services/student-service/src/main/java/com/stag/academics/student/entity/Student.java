@@ -121,7 +121,7 @@ public class Student {
         nullable = false,
         length = 10
     )
-    private String studentId;
+    private String id;
 
     @Size(max = 30)
     @NotNull

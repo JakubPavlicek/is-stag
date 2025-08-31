@@ -28,7 +28,7 @@ paths:
         - students
       summary: Get student
       description: Retrieve a person by their unique identifier.
-      operationId: getPersonProfile
+      operationId: getStudentProfile
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
         - $ref: '#/components/parameters/studentId'
