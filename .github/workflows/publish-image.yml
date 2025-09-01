@@ -4,6 +4,9 @@ on: push
 jobs:
   build-spring-boot-images:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
@@ -16,10 +19,13 @@ jobs:
           cache: maven
 
       - name: Build with Maven Wrapper
-        run: ./mvnw clean package spring-boot:build-image -DskipTests
+        run: ../mvnw clean package spring-boot:build-image -DskipTests
 
   build-react-images:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
