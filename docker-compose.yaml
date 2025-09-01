@@ -89,7 +89,7 @@ services:
     profiles:
       - prod
     container_name: config-server
-    image: config-server:0.0.1
+    image: jakubpavlicek/config-server:0.0.1
     pull_policy: never
     environment:
       THC_PATH: /actuator/health
@@ -118,7 +118,7 @@ services:
     profiles:
       - prod
     container_name: discovery-server
-    image: discovery-server:0.0.1
+    image: jakubpavlicek/discovery-server:0.0.1
     pull_policy: never
     ports:
       - "8761:8761"
@@ -150,7 +150,7 @@ services:
     profiles:
       - prod
     container_name: api-gateway
-    image: api-gateway:0.0.1
+    image: jakubpavlicek/api-gateway:0.0.1
     pull_policy: never
     ports:
       - "8100:8100"
@@ -189,7 +189,7 @@ services:
     profiles:
       - prod
     container_name: student-service
-    image: student-service:0.0.1
+    image: jakubpavlicek/student-service:0.0.1
     pull_policy: never
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
@@ -220,7 +220,7 @@ services:
     profiles:
       - prod
     container_name: subject-service
-    image: subject-service:0.0.1
+    image: jakubpavlicek/subject-service:0.0.1
     pull_policy: never
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
@@ -251,7 +251,7 @@ services:
     profiles:
       - prod
     container_name: user-service
-    image: user-service:0.0.1
+    image: jakubpavlicek/user-service:0.0.1
     pull_policy: never
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
@@ -282,7 +282,7 @@ services:
     profiles:
       - prod
     container_name: codelist-service
-    image: codelist-service:0.0.1
+    image: jakubpavlicek/codelist-service:0.0.1
     pull_policy: never
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"

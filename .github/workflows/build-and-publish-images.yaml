@@ -1,5 +1,9 @@
 name: Build and Publish Docker Images
-on: push
+on:
+  push:
+    paths:
+      - 'services/**'
+      - 'client/**'
 
 jobs:
   build-push-services:
