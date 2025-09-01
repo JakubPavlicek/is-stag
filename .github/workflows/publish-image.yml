@@ -3,7 +3,7 @@ on: push
 
 jobs:
   build-spring-boot-images:
-    runs-on: ubuntu-24.04 [Beta]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
@@ -19,7 +19,7 @@ jobs:
         run: ./mvnw spring-boot:build-image -DskipTests
 
   build-react-images:
-    runs-on: ubuntu-24.04 [Beta]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
