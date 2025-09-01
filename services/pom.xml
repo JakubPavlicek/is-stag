@@ -20,6 +20,12 @@
         <!-- Java -->
         <java.version>24</java.version>
 
+        <!-- Docker -->
+        <!-- Default username for local builds; override in CI with -Ddocker.username=... -->
+        <docker.username>jakubpavlicek</docker.username>
+        <!-- Empty by default; override in CI with -Ddocker.password=... -->
+        <docker.password></docker.password>
+
         <!-- Maven -->
         <maven-enforcer.version>3.6.1</maven-enforcer.version>
         <maven-compiler.version>3.14.0</maven-compiler.version>

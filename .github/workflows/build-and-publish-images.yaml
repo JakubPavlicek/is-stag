@@ -1,8 +1,8 @@
-name: Publish Docker Image
+name: Build and Publish Docker Images
 on: push
 
 jobs:
-  build-services:
+  build-push-services:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -41,7 +41,7 @@ jobs:
             -Ddocker.username=${{ secrets.DOCKERHUB_USERNAME }} \
             -Ddocker.password=${{ secrets.DOCKERHUB_TOKEN }}
 
-  build-client:
+  build-push-client:
     runs-on: ubuntu-latest
     defaults:
       run:
