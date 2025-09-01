@@ -20,7 +20,7 @@ jobs:
 
       - name: Install mvnd
         run: |
-          MVND_VERSION=1.0.2
+          MVND_VERSION=2.0.0-rc-3
           curl -sL https://downloads.apache.org/maven/mvnd/${MVND_VERSION}/maven-mvnd-${MVND_VERSION}-linux-amd64.zip -o mvnd.zip
           unzip -q mvnd.zip
           echo "$PWD/maven-mvnd-${MVND_VERSION}-linux-amd64/bin" >> $GITHUB_PATH
