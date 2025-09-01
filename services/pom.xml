@@ -201,7 +201,14 @@
                                 <BPL_JAVA_NMT_ENABLED>false</BPL_JAVA_NMT_ENABLED>
                                 <JAVA_TOOL_OPTIONS>-Duser.timezone=Europe/Prague</JAVA_TOOL_OPTIONS>
                             </env>
+                            <name>docker.io/${docker.username}/${project.artifactId}:${project.version}</name>
                         </image>
+                        <docker>
+                            <publishRegistry>
+                                <username>${docker.username}</username>
+                                <password>${docker.password}</password>
+                            </publishRegistry>
+                        </docker>
                     </configuration>
                 </plugin>
 

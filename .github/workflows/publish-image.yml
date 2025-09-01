@@ -2,7 +2,7 @@ name: Publish Docker Image
 on: push
 
 jobs:
-  build-spring-boot-images:
+  build-services:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -10,6 +10,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
+
+      - name: Docker Login
+        uses: docker/login-action@v3.5.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Setup Java JDK
         uses: actions/setup-java@v5.0.0
@@ -25,13 +31,17 @@ jobs:
           unzip -q mvnd.zip
           echo "$PWD/maven-mvnd-${MVND_VERSION}-linux-amd64/bin" >> $GITHUB_PATH
 
-      - name: Warm up dependencies
+      - name: Warm Up Dependencies
         run: mvnd -B -T 1C dependency:go-offline
 
-      - name: Build Spring Boot image
-        run: mvnd -B -T 1C -DskipTests spring-boot:build-image
+      - name: Build and Push Spring Boot Docker Images
+        run: |
+          mvnd -B -T 1C -DskipTests spring-boot:build-image \
+            -Dspring-boot.build-image.publish=true \
+            -Ddocker.username=${{ secrets.DOCKERHUB_USERNAME }} \
+            -Ddocker.password=${{ secrets.DOCKERHUB_TOKEN }}
 
-  build-react-images:
+  build-client:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -40,20 +50,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Setup Node.js environment
+      - name: Docker Login
+        uses: docker/login-action@v3.5.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Setup Node.js Environment
         uses: actions/setup-node@v4.4.0
         with:
           node-version: 24.7.0
           cache: npm
           cache-dependency-path: client/package-lock.json
 
-      - name: Setup Buildpacks tools
+      - name: Setup Buildpacks Tools
         uses: buildpacks/github-actions/setup-tools@v5.1.0
 
-      - name: Setup Buildpacks pack
+      - name: Setup Buildpacks Pack
         uses: buildpacks/github-actions/setup-pack@v5.1.0
 
-      - name: Build with Buildpacks
+      # TODO: Change NODE_ENV to prod
+
+      - name: Build Docker Image with Buildpacks
         run: |
-          npm install
-          npm run pack
+          npm ci
+          NAME=$(npm pkg get name | tr -d '"')
+          VER=$(npm pkg get version | tr -d '"')
+          IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/${NAME}
+          pack build ${IMAGE_NAME}:${VER} \
+            --builder paketobuildpacks/builder-jammy-base \
+            --buildpack paketo-buildpacks/web-servers \
+            --env BP_NPM_VERSION=11.5.2 \
+            --env BP_NODE_RUN_SCRIPTS=build \
+            --env NODE_ENV=dev \
+            --env BP_WEB_SERVER=nginx \
+            --env BP_WEB_SERVER_ENABLE_PUSH_STATE=true \
+            --env BP_WEB_SERVER_ROOT=/workspace/dist \
+            --publish
