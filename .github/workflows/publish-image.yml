@@ -1,0 +1,40 @@
+name: Publish Docker Image
+on: push
+
+jobs:
+  build-spring-boot-images:
+    runs-on: ubuntu-24.04 [Beta]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v5.0.0
+        with:
+          distribution: liberica
+          java-version: 24.0.2
+          cache: maven
+
+      - name: Build with Maven Wrapper
+        run: ./mvnw spring-boot:build-image -DskipTests
+
+  build-react-images:
+    runs-on: ubuntu-24.04 [Beta]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: 24.7.0
+          cache: npm
+
+      - name: Setup Buildpacks tools
+        uses: buildpacks/github-actions/setup-tools@v5.1.0
+
+      - name: Setup Buildpacks pack
+        uses: buildpacks/github-actions/setup-pack@v5.1.0
+
+      - name: Build with Buildpacks
+        run: npm run pack
