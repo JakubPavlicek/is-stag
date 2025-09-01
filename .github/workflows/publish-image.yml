@@ -18,8 +18,18 @@ jobs:
           java-version: 24.0.2
           cache: maven
 
-      - name: Build with Maven Wrapper
-        run: ../mvnw clean package spring-boot:build-image -DskipTests
+      - name: Install mvnd
+        run: |
+          MVND_VERSION=1.0.2
+          curl -sL https://downloads.apache.org/maven/mvnd/${MVND_VERSION}/maven-mvnd-${MVND_VERSION}-linux-amd64.zip -o mvnd.zip
+          unzip -q mvnd.zip
+          echo "$PWD/maven-mvnd-${MVND_VERSION}-linux-amd64/bin" >> $GITHUB_PATH
+
+      - name: Warm up dependencies
+        run: mvnd -B -T 1C dependency:go-offline
+
+      - name: Build Spring Boot image
+        run: mvnd -B -T 1C -DskipTests spring-boot:build-image
 
   build-react-images:
     runs-on: ubuntu-latest
@@ -35,6 +45,7 @@ jobs:
         with:
           node-version: 24.7.0
           cache: npm
+          cache-dependency-path: client/package-lock.json
 
       - name: Setup Buildpacks tools
         uses: buildpacks/github-actions/setup-tools@v5.1.0
