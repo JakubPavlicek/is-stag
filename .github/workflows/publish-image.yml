@@ -16,7 +16,7 @@ jobs:
           cache: maven
 
       - name: Build with Maven Wrapper
-        run: ./mvnw spring-boot:build-image -DskipTests
+        run: ./mvnw clean package spring-boot:build-image -DskipTests
 
   build-react-images:
     runs-on: ubuntu-latest
@@ -37,4 +37,6 @@ jobs:
         uses: buildpacks/github-actions/setup-pack@v5.1.0
 
       - name: Build with Buildpacks
-        run: npm run pack
+        run: |
+          npm install
+          npm run pack
