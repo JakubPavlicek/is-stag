@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: study-plan-service
+  config:
+    import: optional:configserver:http://config-server:8888
+
+logging:
+  level:
+    com.stag.academics: DEBUG
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+    import: optional:configserver:http://localhost:8888

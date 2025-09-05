@@ -15,7 +15,7 @@ public record StudentProfile(
     String studyStatus,
     StudyProgram studyProgram,
     FieldOfStudy fieldOfStudy
-) {
+) implements Serializable {
 
     public record Titles(
         String prefix,
@@ -25,7 +25,7 @@ public record StudentProfile(
     }
 
     public record StudyProgram(
-        Integer studyProgramId,
+        Integer id,
         String name,
         String faculty,
         String code,
@@ -36,7 +36,7 @@ public record StudentProfile(
     }
 
     public record FieldOfStudy(
-        Integer fieldOfStudyId,
+        Integer id,
         String name,
         String abbreviation,
         String faculty,

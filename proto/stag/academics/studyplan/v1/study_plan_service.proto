@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package stag.academics.studyplan.v1;
+
+import "buf/validate/validate.proto";
+
+option java_package = "com.stag.academics.studyplan.v1";
+option java_outer_classname = "StudyPlanServiceProto";
+option java_multiple_files = true;
+
+service StudyPlanService {
+  rpc GetStudyProgramAndField (GetStudyProgramAndFieldRequest)
+      returns (GetStudyProgramAndFieldResponse);
+}
+
+message GetStudyProgramAndFieldRequest {
+  int64 study_program_id = 1 [
+    (buf.validate.field).int64.gte = 1
+  ];
+
+  int64 study_plan_id = 2 [
+    (buf.validate.field).int64.gte = 1
+  ];
+
+  string language = 3 [
+    (buf.validate.field).string.in = "cs",
+    (buf.validate.field).string.in = "en"
+  ];
+}
+
+message GetStudyProgramAndFieldResponse {
+  StudyProgram study_program = 1;
+  FieldOfStudy field_of_study = 2;
+}
+
+message StudyProgram {
+  int64 id = 1;
+  string name = 2;
+  string faculty = 3;
+  optional string code = 4;
+  string form = 5;
+  string type = 6;
+}
+
+message FieldOfStudy {
+  int64 id = 1;
+  string name = 2;
+  string faculty = 3;
+  string department = 4;
+  string code = 5;
+}

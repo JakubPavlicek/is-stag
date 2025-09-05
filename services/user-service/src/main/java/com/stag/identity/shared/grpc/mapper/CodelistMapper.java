@@ -1,17 +1,21 @@
 package com.stag.identity.shared.grpc.mapper;
 
-import com.stag.identity.person.model.CodelistDomain;
-import com.stag.identity.person.model.CodelistEntryId;
-import com.stag.identity.person.repository.projection.PersonAddressProjection;
-import com.stag.identity.person.repository.projection.PersonBankProjection;
-import com.stag.identity.person.repository.projection.PersonEducationProjection;
-import com.stag.identity.person.repository.projection.PersonProfileProjection;
-import com.stag.identity.person.service.data.PersonAddressData;
-import com.stag.identity.person.service.data.PersonBankingData;
-import com.stag.identity.person.service.data.PersonEducationData;
-import com.stag.identity.person.service.data.PersonProfileData;
+import com.stag.identity.shared.grpc.model.CodelistDomain;
+import com.stag.identity.shared.grpc.model.CodelistEntryId;
+import com.stag.identity.person.repository.projection.AddressView;
+import com.stag.identity.person.repository.projection.BankView;
+import com.stag.identity.person.repository.projection.EducationView;
+import com.stag.identity.person.repository.projection.ProfileView;
+import com.stag.identity.person.repository.projection.SimpleProfileView;
+import com.stag.identity.person.service.data.AddressLookupData;
+import com.stag.identity.person.service.data.BankingLookupData;
+import com.stag.identity.person.service.data.CodelistMeaningsLookupData;
+import com.stag.identity.person.service.data.EducationLookupData;
+import com.stag.identity.person.service.data.ProfileLookupData;
 import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistMeaning;
+import com.stag.platform.codelist.v1.GetCodelistValuesRequest;
+import com.stag.platform.codelist.v1.GetCodelistValuesResponse;
 import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
 import com.stag.platform.codelist.v1.GetPersonAddressDataResponse;
 import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
@@ -38,28 +42,34 @@ public interface CodelistMapper {
 
     CodelistMapper INSTANCE = Mappers.getMapper(CodelistMapper.class);
 
+    @Mapping(target = "codelistKeys", ignore = true)
+    GetCodelistValuesRequest toCodelistValuesRequest(SimpleProfileView simpleProfile, String language);
+
     @Mapping(target = "birthCountryId", source = "personProfile.birthCountryId")
     @Mapping(target = "citizenshipCountryId", source = "personProfile.citizenshipCountryId")
     @Mapping(target = "codelistKeys", ignore = true)
-    GetPersonProfileDataRequest toPersonProfileDataRequest(PersonProfileProjection personProfile, String language);
+    GetPersonProfileDataRequest toPersonProfileDataRequest(ProfileView personProfile, String language);
 
     @Mapping(target = "permanentCountryId", source = "personAddress.permanentCountryId")
     @Mapping(target = "permanentMunicipalityPartId", source = "personAddress.permanentMunicipalityPartId")
     @Mapping(target = "temporaryCountryId", source = "personAddress.temporaryCountryId")
     @Mapping(target = "temporaryMunicipalityPartId", source = "personAddress.temporaryMunicipalityPartId")
-    GetPersonAddressDataRequest toPersonAddressDataRequest(PersonAddressProjection personAddress, String language);
+    GetPersonAddressDataRequest toPersonAddressDataRequest(AddressView personAddress, String language);
 
     @Mapping(target = "euroAccountCountryId", source = "personBank.euroAccountCountryId")
     @Mapping(target = "codelistKeys", ignore = true)
-    GetPersonBankingDataRequest toPersonBankingDataRequest(PersonBankProjection personBank, String language);
+    GetPersonBankingDataRequest toPersonBankingDataRequest(BankView personBank, String language);
 
     @Mapping(target = "highSchoolId", source = "personEducation.highSchoolId")
     @Mapping(target = "highSchoolFieldOfStudyNumber", source = "personEducation.highSchoolFieldOfStudyNumber")
     @Mapping(target = "highSchoolCountryId", source = "personEducation.highSchoolCountryId")
-    GetPersonEducationDataRequest toPersonEducationDataRequest(PersonEducationProjection personEducation, String language);
+    GetPersonEducationDataRequest toPersonEducationDataRequest(EducationView personEducation, String language);
 
     @Mapping(target = "codelistMeanings", source = "codelistMeanings", qualifiedByName = "toMeaningMap")
-    PersonProfileData toPersonProfileData(GetPersonProfileDataResponse response);
+    CodelistMeaningsLookupData toCodelistMeaningsData(GetCodelistValuesResponse response);
+
+    @Mapping(target = "codelistMeanings", source = "codelistMeanings", qualifiedByName = "toMeaningMap")
+    ProfileLookupData toPersonProfileData(GetPersonProfileDataResponse response);
 
     @Mapping(target = "permanentStreet", source = "personAddress.permanentStreet")
     @Mapping(target = "permanentStreetNumber", source = "personAddress.permanentStreetNumber")
@@ -75,19 +85,32 @@ public interface CodelistMapper {
     @Mapping(target = "temporaryMunicipalityPart", source = "response.temporaryMunicipalityPartName")
     @Mapping(target = "temporaryDistrict", source = "response.temporaryDistrictName")
     @Mapping(target = "temporaryCountry", source = "response.temporaryCountryName")
-    PersonAddressData toPersonAddressData(
+    AddressLookupData toPersonAddressData(
         GetPersonAddressDataResponse response,
-        PersonAddressProjection personAddress
+        AddressView personAddress
     );
 
     @Mapping(target = "codelistMeanings", source = "codelistMeanings", qualifiedByName = "toMeaningMap")
-    PersonBankingData toPersonBankingData(GetPersonBankingDataResponse response);
+    BankingLookupData toPersonBankingData(GetPersonBankingDataResponse response);
 
-    PersonEducationData toPersonEducationData(GetPersonEducationDataResponse response);
+    EducationLookupData toPersonEducationData(GetPersonEducationDataResponse response);
+
+    @AfterMapping
+    default void addSimpleProfileCodelistKeys(
+        SimpleProfileView simpleProfile,
+        @MappingTarget GetCodelistValuesRequest.Builder builder
+    ) {
+        if (simpleProfile == null) {
+            return;
+        }
+
+        List<CodelistKey> keys = buildSimpleProfileCodelistKeys(simpleProfile);
+        builder.addAllCodelistKeys(keys);
+    }
 
     @AfterMapping
     default void addPersonProfileCodelistKeys(
-        PersonProfileProjection personProfile,
+        ProfileView personProfile,
         @MappingTarget GetPersonProfileDataRequest.Builder builder
     ) {
         if (personProfile == null) {
@@ -100,7 +123,7 @@ public interface CodelistMapper {
 
     @AfterMapping
     default void addPersonBankingCodelistKeys(
-        PersonBankProjection personBank,
+        BankView personBank,
         @MappingTarget GetPersonBankingDataRequest.Builder builder
     ) {
         if (personBank == null) {
@@ -120,7 +143,17 @@ public interface CodelistMapper {
                                ));
     }
 
-    private List<CodelistKey> buildProfileCodelistKeys(PersonProfileProjection personProfile) {
+    private List<CodelistKey> buildSimpleProfileCodelistKeys(SimpleProfileView simpleProfile) {
+        List<CodelistKey> codelistKeys = new ArrayList<>(3);
+
+        addCodelistKeyIfPresent(codelistKeys, CodelistDomain.TITUL_PRED, simpleProfile.titlePrefix());
+        addCodelistKeyIfPresent(codelistKeys, CodelistDomain.TITUL_ZA, simpleProfile.titleSuffix());
+        addCodelistKeyIfPresent(codelistKeys, CodelistDomain.POHLAVI, simpleProfile.gender());
+
+        return codelistKeys;
+    }
+
+    private List<CodelistKey> buildProfileCodelistKeys(ProfileView personProfile) {
         List<CodelistKey> codelistKeys = new ArrayList<>(5);
 
         addCodelistKeyIfPresent(codelistKeys, CodelistDomain.TITUL_PRED, personProfile.titlePrefix());
@@ -132,7 +165,7 @@ public interface CodelistMapper {
         return codelistKeys;
     }
 
-    private List<CodelistKey> buildBankingCodelistKeys(PersonBankProjection personBank) {
+    private List<CodelistKey> buildBankingCodelistKeys(BankView personBank) {
         List<CodelistKey> codelistKeys = new ArrayList<>(2);
 
         addCodelistKeyIfPresent(codelistKeys, CodelistDomain.CIS_BANK, personBank.accountBank());

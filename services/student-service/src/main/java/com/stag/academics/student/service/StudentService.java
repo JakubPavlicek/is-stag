@@ -1,9 +1,12 @@
 package com.stag.academics.student.service;
 
 import com.stag.academics.student.exception.StudentNotFoundException;
+import com.stag.academics.student.mapper.ProfileMapper;
 import com.stag.academics.student.model.StudentProfile;
-import com.stag.academics.student.repository.StudentProfileProjection;
 import com.stag.academics.student.repository.StudentRepository;
+import com.stag.academics.student.repository.projection.ProfileView;
+import com.stag.academics.student.service.data.SimpleProfileLookupData;
+import com.stag.academics.student.service.data.StudyProgramAndFieldLookupData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,13 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final StudentAsyncService studentAsyncService;
 
     @Transactional(readOnly = true)
     public List<String> findAllStudentIds(Integer personId) {
@@ -30,20 +35,34 @@ public class StudentService {
                                 .orElseThrow(() -> new StudentNotFoundException(studentId));
     }
 
+    // TODO: Other students can also fetch the student profile, but they should not see StudyProgram and FieldOfStudy of the student
+    //  we can make this work by annotating the get methods / gRPC calls with @PreAuthorize and then providing null if not satisfied
+    //  see https://www.youtube.com/watch?v=-x8-s3QnhMQ&list=PLa1A960Nosoe5yT4Uj_LdrtgtZH8c7vfR&index=109&ab_channel=SpringI%2FO at 27:35
+
     @Cacheable(value = "student-profile", key = "#studentId + ':' + #language")
     public StudentProfile getStudentProfile(String studentId, String language) {
         log.info("Fetching student profile for studentId: {} with language: {}", studentId, language);
 
-        StudentProfileProjection studentProfileProjection =
-            studentRepository.findById(studentId, StudentProfileProjection.class)
-                             .orElseThrow(() -> new StudentNotFoundException(studentId));
+        ProfileView profileView = studentRepository.findStudentProfileById(studentId)
+                                                   .orElseThrow(() -> new StudentNotFoundException(studentId));
 
         log.debug("Student profile found, fetching additional data for studentId: {}", studentId);
 
-        // TODO: 1 StudyProgram can have multiple FieldOfStudies -> see Obsidian notes (probably use StudyPlan)
-        //  see view VOBORY_STUDENTA DDL -> we will use this logic
+        CompletableFuture<SimpleProfileLookupData> personSimpleProfileDataFuture =
+            studentAsyncService.getPersonSimpleProfileData(profileView.personId(), language);
 
-        return null;
+        CompletableFuture<StudyProgramAndFieldLookupData> studyProgramAndFieldFuture =
+            studentAsyncService.getStudyProgramAndField(profileView.studyProgramId(), profileView.studyPlanId(), language);
+
+        CompletableFuture.allOf(personSimpleProfileDataFuture, studyProgramAndFieldFuture);
+
+        log.debug("Additional data fetched, mapping to StudentProfile for studentId: {}", studentId);
+        StudentProfile profile = ProfileMapper.INSTANCE.toStudentProfile(
+            profileView, personSimpleProfileDataFuture.join(), studyProgramAndFieldFuture.join()
+        );
+
+        log.info("Successfully fetched student profile for studentId: {}", studentId);
+        return profile;
     }
 
 }

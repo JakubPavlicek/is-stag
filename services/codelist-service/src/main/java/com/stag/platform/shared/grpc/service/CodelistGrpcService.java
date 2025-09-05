@@ -32,19 +32,26 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     private final CodelistGrpcAsyncService asyncService;
 
     @Override
-    public void getCodelistValues(GetCodelistValuesRequest request, StreamObserver<GetCodelistValuesResponse> responseObserver) {
-        CompletableFuture<List<CodelistMeaning>> codelistMeaningsFuture =
-            asyncService.fetchCodelistMeaningsAsync(request.getCodelistKeysList(), request.getLanguage());
+    public void getCodelistValues(
+        GetCodelistValuesRequest request,
+        StreamObserver<GetCodelistValuesResponse> responseObserver
+    ) {
+        List<CodelistMeaning> codelistMeanings = asyncService.fetchCodelistMeanings(
+            request.getCodelistKeysList(), request.getLanguage()
+        );
 
         var response = GetCodelistValuesResponse.newBuilder()
-                                                .addAllCodelistMeanings(codelistMeaningsFuture.join())
+                                                .addAllCodelistMeanings(codelistMeanings)
                                                 .build();
 
         completeResponse(responseObserver, response);
     }
 
     @Override
-    public void getPersonProfileData(GetPersonProfileDataRequest request, StreamObserver<GetPersonProfileDataResponse> responseObserver) {
+    public void getPersonProfileData(
+        GetPersonProfileDataRequest request,
+        StreamObserver<GetPersonProfileDataResponse> responseObserver
+    ) {
         CompletableFuture<List<CodelistMeaning>> codelistMeaningsFuture =
             asyncService.fetchCodelistMeaningsAsync(request.getCodelistKeysList(), request.getLanguage());
 
@@ -62,7 +69,10 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     }
 
     @Override
-    public void getPersonAddressData(GetPersonAddressDataRequest request, StreamObserver<GetPersonAddressDataResponse> responseObserver) {
+    public void getPersonAddressData(
+        GetPersonAddressDataRequest request,
+        StreamObserver<GetPersonAddressDataResponse> responseObserver
+    ) {
         CompletableFuture<Map<Long, AddressPlaceNameProjection>> addressNamesFuture =
             asyncService.fetchAddressNamesAsync(request);
 
@@ -80,7 +90,10 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     }
 
     @Override
-    public void getPersonBankingData(GetPersonBankingDataRequest request, StreamObserver<GetPersonBankingDataResponse> responseObserver) {
+    public void getPersonBankingData(
+        GetPersonBankingDataRequest request,
+        StreamObserver<GetPersonBankingDataResponse> responseObserver
+    ) {
         CompletableFuture<List<CodelistMeaning>> codelistMeaningsFuture =
             asyncService.fetchCodelistMeaningsAsync(request.getCodelistKeysList(), request.getLanguage());
 
@@ -98,7 +111,10 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
     }
 
     @Override
-    public void getPersonEducationData(GetPersonEducationDataRequest request, StreamObserver<GetPersonEducationDataResponse> responseObserver) {
+    public void getPersonEducationData(
+        GetPersonEducationDataRequest request,
+        StreamObserver<GetPersonEducationDataResponse> responseObserver
+    ) {
         CompletableFuture<HighSchoolAddressProjection> highSchoolAddressFuture =
             asyncService.fetchHighSchoolAddressAsync(request.hasHighSchoolId(), request.getHighSchoolId());
 

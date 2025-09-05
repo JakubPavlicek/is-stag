@@ -216,6 +216,37 @@ services:
     networks:
       - is-stag-network
 
+  study-plan-service:
+    profiles:
+      - prod
+    container_name: study-plan-service
+    image: jakubpavlicek/study-plan-service:0.0.1
+    pull_policy: never
+    environment:
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
+      OTEL_SERVICE_NAME: study-plan-service
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_traceidratio
+      OTEL_TRACES_SAMPLER_ARG: 1.0
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
+    ports:
+      - "8050:8050"
+      - "9050:9050"
+    depends_on:
+      api-gateway:
+#        condition: service_healthy
+        condition: service_started
+      redis:
+        condition: service_healthy
+      otel:
+        condition: service_started
+    networks:
+      - is-stag-network
+
   subject-service:
     profiles:
       - prod
@@ -333,6 +364,7 @@ services:
         condition: service_started
     networks:
       - is-stag-network
+
   loki:
     profiles:
       - dev
@@ -347,6 +379,7 @@ services:
       - "3100"
     networks:
       - is-stag-network
+
   grafana:
     profiles:
       - dev
@@ -363,6 +396,7 @@ services:
       - "3000:3000"
     networks:
       - is-stag-network
+
   tempo:
     profiles:
       - dev
@@ -378,6 +412,7 @@ services:
       - "4318"
     networks:
       - is-stag-network
+
   prometheus:
     profiles:
       - dev

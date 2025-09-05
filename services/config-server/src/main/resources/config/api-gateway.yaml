@@ -34,6 +34,10 @@ spring:
               uri: lb://student-service
               predicates:
                 - Path=/api/v1/students/**
+            - id: study-plan-service
+              uri: lb://study-plan-service
+              predicates:
+                - Path=/api/v1/study-plan/**
             - id: subject-service
               uri: lb://subject-service
               predicates:
@@ -54,6 +58,12 @@ spring:
               uri: lb://student-service
               predicates:
                 - Path=/student-service/**
+              filters:
+                - RewritePath=/student-service/openapi.yaml, /openapi.yaml
+            - id: study-plan-service-openapi
+              uri: lb://study-plan-service
+              predicates:
+                - Path=/study-plan-service/**
               filters:
                 - RewritePath=/student-service/openapi.yaml, /openapi.yaml
             - id: subject-service-openapi
@@ -81,6 +91,8 @@ springdoc:
         url: /codelist-service/openapi.yaml
       - name: Student Service
         url: /student-service/openapi.yaml
+      - name: Study Plan Service
+        url: /study-plan-service/openapi.yaml
       - name: Subject Service
         url: /subject-service/openapi.yaml
       - name: User Service

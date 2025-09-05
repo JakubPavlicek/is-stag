@@ -5,12 +5,15 @@ import com.stag.identity.dto.AddressesDTO;
 import com.stag.identity.dto.BankAccountsDTO;
 import com.stag.identity.dto.EducationDetailsDTO;
 import com.stag.identity.dto.PersonProfileDTO;
-import com.stag.identity.person.mapper.PersonDtoMapper;
-import com.stag.identity.person.model.PersonAddresses;
-import com.stag.identity.person.model.PersonBanking;
-import com.stag.identity.person.model.PersonEducation;
-import com.stag.identity.person.model.PersonProfile;
-import com.stag.identity.person.service.PersonService;
+import com.stag.identity.person.mapper.PersonApiMapper;
+import com.stag.identity.person.model.Addresses;
+import com.stag.identity.person.model.Banking;
+import com.stag.identity.person.model.Education;
+import com.stag.identity.person.model.Profile;
+import com.stag.identity.person.service.AddressService;
+import com.stag.identity.person.service.BankingService;
+import com.stag.identity.person.service.EducationService;
+import com.stag.identity.person.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +26,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PersonController implements PersonsApi {
 
-    private final PersonService personService;
+    private final ProfileService profileService;
+    private final AddressService addressService;
+    private final BankingService bankingService;
+    private final EducationService educationService;
 
     @Override
     public ResponseEntity<PersonProfileDTO> getPersonProfile(Integer personId, String language) {
         log.info("Person profile requested for personId: {} with language: {}", personId, language);
 
-        PersonProfile personProfile = personService.getPersonProfile(personId, language);
-        PersonProfileDTO personProfileDTO = PersonDtoMapper.INSTANCE.toPersonProfileDTO(personProfile);
+        Profile profile = profileService.getPersonProfile(personId, language);
+        PersonProfileDTO personProfileDTO = PersonApiMapper.INSTANCE.toPersonProfileDTO(profile);
 
         return ResponseEntity.ok(personProfileDTO);
     }
@@ -39,8 +45,8 @@ public class PersonController implements PersonsApi {
     public ResponseEntity<AddressesDTO> getPersonAddresses(Integer personId, String language) {
         log.info("Person addresses requested for personId: {} with language: {}", personId, language);
 
-        PersonAddresses personAddresses = personService.getPersonAddresses(personId, language);
-        AddressesDTO addressesDTO = PersonDtoMapper.INSTANCE.toAddressesDTO(personAddresses);
+        Addresses addresses = addressService.getPersonAddresses(personId, language);
+        AddressesDTO addressesDTO = PersonApiMapper.INSTANCE.toAddressesDTO(addresses);
 
         return ResponseEntity.ok(addressesDTO);
     }
@@ -49,8 +55,8 @@ public class PersonController implements PersonsApi {
     public ResponseEntity<BankAccountsDTO> getPersonBanking(Integer personId, String language) {
         log.info("Person banking requested for personId: {} with language: {}", personId, language);
 
-        PersonBanking personBanking = personService.getPersonBanking(personId, language);
-        BankAccountsDTO bankAccountsDTO = PersonDtoMapper.INSTANCE.toBankAccountsDTO(personBanking);
+        Banking banking = bankingService.getPersonBanking(personId, language);
+        BankAccountsDTO bankAccountsDTO = PersonApiMapper.INSTANCE.toBankAccountsDTO(banking);
 
         return ResponseEntity.ok(bankAccountsDTO);
     }
@@ -59,8 +65,8 @@ public class PersonController implements PersonsApi {
     public ResponseEntity<EducationDetailsDTO> getPersonEducation(Integer personId, String language) {
         log.info("Person education requested for personId: {} with language: {}", personId, language);
 
-        PersonEducation personEducation = personService.getPersonEducation(personId, language);
-        EducationDetailsDTO educationDetailsDTO = PersonDtoMapper.INSTANCE.toEducationDetailsDTO(personEducation);
+        Education education = educationService.getPersonEducation(personId, language);
+        EducationDetailsDTO educationDetailsDTO = PersonApiMapper.INSTANCE.toEducationDetailsDTO(education);
 
         return ResponseEntity.ok(educationDetailsDTO);
     }

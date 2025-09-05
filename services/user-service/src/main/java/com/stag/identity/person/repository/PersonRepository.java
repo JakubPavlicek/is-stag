@@ -1,9 +1,9 @@
 package com.stag.identity.person.repository;
 
 import com.stag.identity.person.entity.Person;
-import com.stag.identity.person.repository.projection.PersonAddressProjection;
-import com.stag.identity.person.repository.projection.PersonBankProjection;
-import com.stag.identity.person.repository.projection.PersonEducationProjection;
+import com.stag.identity.person.repository.projection.AddressView;
+import com.stag.identity.person.repository.projection.BankView;
+import com.stag.identity.person.repository.projection.EducationView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,7 +15,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     @Query(
         """
-        SELECT new com.stag.identity.person.repository.projection.PersonAddressProjection(
+        SELECT new com.stag.identity.person.repository.projection.AddressView(
            p.street,
            p.streetNumber,
            p.domicileZipCode,
@@ -44,11 +44,11 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
            p.id = :personId
         """
     )
-    Optional<PersonAddressProjection> findAddressesByPersonId(Integer personId);
+    Optional<AddressView> findAddressesByPersonId(Integer personId);
 
     @Query(
         """
-        SELECT new com.stag.identity.person.repository.projection.PersonBankProjection(
+        SELECT new com.stag.identity.person.repository.projection.BankView(
             p.accountOwner,
             p.accountAddress,
             p.accountPrefix,
@@ -73,11 +73,11 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             p.id = :personId
         """
     )
-    Optional<PersonBankProjection> findBankingByPersonId(Integer personId);
+    Optional<BankView> findBankingByPersonId(Integer personId);
 
     @Query(
         """
-        SELECT new com.stag.identity.person.repository.projection.PersonEducationProjection(
+        SELECT new com.stag.identity.person.repository.projection.EducationView(
             p.highSchoolId,
             p.highSchoolFieldOfStudyNumber,
             CAST(p.highSchoolCountryId AS Integer),
@@ -93,6 +93,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             p.id = :personId
         """
     )
-    Optional<PersonEducationProjection> findEducationByPersonId(Integer personId);
+    Optional<EducationView> findEducationByPersonId(Integer personId);
 
 }

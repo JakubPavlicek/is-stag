@@ -240,8 +240,8 @@ components:
           properties:
             email:
               type: string
-              nullable: true
               format: email
+              nullable: true
               description: Email address of the person.
               example: Martin95043186@xxx.cz
             phone:

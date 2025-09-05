@@ -25,7 +25,6 @@ service CodelistService {
 }
 
 message GetCodelistValuesRequest {
-
   repeated CodelistKey codelist_keys = 1 [
     (buf.validate.field).repeated.max_items = 10
   ];
@@ -34,7 +33,6 @@ message GetCodelistValuesRequest {
     (buf.validate.field).string.in = "cs",
     (buf.validate.field).string.in = "en"
   ];
-
 }
 
 message GetCodelistValuesResponse {
@@ -43,7 +41,6 @@ message GetCodelistValuesResponse {
 
 // Person Profile specific (only what's needed for GET /persons/{id})
 message GetPersonProfileDataRequest {
-
   repeated CodelistKey codelist_keys = 1 [
     (buf.validate.field).repeated.max_items = 10
   ];
@@ -60,7 +57,6 @@ message GetPersonProfileDataRequest {
     (buf.validate.field).string.in = "cs",
     (buf.validate.field).string.in = "en"
   ];
-
 }
 
 message GetPersonProfileDataResponse {
@@ -71,7 +67,6 @@ message GetPersonProfileDataResponse {
 
 // Person Address specific (only what's needed for GET /persons/{id}/addresses)
 message GetPersonAddressDataRequest {
-
   // Permanent address
   optional int64 permanent_municipality_part_id = 1 [
     (buf.validate.field).int64.gte = 0
@@ -94,7 +89,6 @@ message GetPersonAddressDataRequest {
     (buf.validate.field).string.in = "cs",
     (buf.validate.field).string.in = "en"
   ];
-
 }
 
 message GetPersonAddressDataResponse {
@@ -113,7 +107,6 @@ message GetPersonAddressDataResponse {
 
 // Banking specific request (for GET /persons/{id}/banking)
 message GetPersonBankingDataRequest {
-
   repeated CodelistKey codelist_keys = 1 [
     (buf.validate.field).repeated.max_items = 10
   ];
@@ -126,7 +119,6 @@ message GetPersonBankingDataRequest {
     (buf.validate.field).string.in = "cs",
     (buf.validate.field).string.in = "en"
   ];
-
 }
 
 message GetPersonBankingDataResponse {
@@ -136,7 +128,6 @@ message GetPersonBankingDataResponse {
 
 // Education specific request (for GET /persons/{id}/education)
 message GetPersonEducationDataRequest {
-
   optional string high_school_id = 1 [
     (buf.validate.field).string.max_len = 10
   ];
@@ -154,7 +145,6 @@ message GetPersonEducationDataRequest {
     (buf.validate.field).string.in = "cs",
     (buf.validate.field).string.in = "en"
   ];
-
 }
 
 message GetPersonEducationDataResponse {
@@ -169,7 +159,6 @@ message GetPersonEducationDataResponse {
 
 // Generic messages
 message CodelistKey {
-
   string domain = 1 [
     (buf.validate.field).string.min_len = 1,
     (buf.validate.field).string.max_len = 100
@@ -179,7 +168,6 @@ message CodelistKey {
     (buf.validate.field).string.min_len = 1,
     (buf.validate.field).string.max_len = 240
   ];
-
 }
 
 message CodelistMeaning {

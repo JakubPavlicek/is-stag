@@ -84,7 +84,7 @@ components:
 
     StudentId:
       type: string
-      title: Person ID
+      title: Student ID
       description: Unique identifier of the student.
       maxLength: 10
       example: K24B4302P
@@ -113,8 +113,8 @@ components:
         - personId
         - firstName
         - lastName
+        - gender
         - titles
-        - studyStatus
         - studyProgram
         - fieldOfStudy
       properties:
@@ -150,25 +150,20 @@ components:
           description: Gender of the student.
           example: male
           maxLength: 240
-        studyStatus:
-          type: string
-          description: Study status of the student.
-          example: Studuje
-          maxLength: 240
         studyProgram:
           type: object
           title: StudyProgramResponse
           description: Object containing student's study program details.
           additionalProperties: false
           required:
-            - studyProgramId
+            - id
             - name
             - faculty
             - code
             - form
             - type
           properties:
-            studyProgramId:
+            id:
               type: integer
               format: int32
               description: Unique identifier of the study program.
@@ -204,14 +199,13 @@ components:
           description: Object containing student's field of study details.
           additionalProperties: false
           required:
-            - fieldOfStudyId
+            - id
             - name
-            - abbreviation
             - faculty
             - department
             - code
           properties:
-            fieldOfStudyId:
+            id:
               type: integer
               format: int32
               description: Unique identifier of the field of study.
@@ -221,11 +215,6 @@ components:
               description: Name of the field of study.
               example: Ekonomická a regionální geografie
               maxLength: 200
-            abbreviation:
-              type: string
-              description: Abbreviation of the field of study.
-              example: ERG-B
-              maxLength: 10
             faculty:
               type: string
               description: Faculty of the field of study.

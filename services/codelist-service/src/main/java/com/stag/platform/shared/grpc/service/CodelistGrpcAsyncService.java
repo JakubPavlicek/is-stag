@@ -35,6 +35,12 @@ class CodelistGrpcAsyncService {
     private final HighSchoolService highSchoolService;
     private final HighSchoolFieldOfStudyService highSchoolFieldOfStudyService;
 
+    public List<CodelistMeaning> fetchCodelistMeanings(List<CodelistKey> codelistKeys, String language) {
+        List<CodelistEntryId> entryIds = CodelistMapper.INSTANCE.toCodelistEntryIds(codelistKeys);
+        List<CodelistEntryMeaningProjection> entries = codelistEntryService.findMeaningsByIds(entryIds, language);
+        return CodelistMapper.INSTANCE.toCodelistMeanings(entries);
+    }
+
     @Async
     public CompletableFuture<List<CodelistMeaning>> fetchCodelistMeaningsAsync(List<CodelistKey> codelistKeys, String language) {
         List<CodelistMeaning> codelistValues = fetchCodelistMeanings(codelistKeys, language);
@@ -65,12 +71,6 @@ class CodelistGrpcAsyncService {
     public CompletableFuture<String> fetchHighSchoolFieldOfStudyAsync(boolean hasFieldOfStudyNumber, String fieldOfStudyNumber) {
         String fieldOfStudyName = fetchHighSchoolFieldOfStudy(hasFieldOfStudyNumber, fieldOfStudyNumber);
         return CompletableFuture.completedFuture(fieldOfStudyName);
-    }
-
-    private List<CodelistMeaning> fetchCodelistMeanings(List<CodelistKey> codelistKeys, String language) {
-        List<CodelistEntryId> entryIds = CodelistMapper.INSTANCE.toCodelistEntryIds(codelistKeys);
-        List<CodelistEntryMeaningProjection> entries = codelistEntryService.findMeaningsByIds(entryIds, language);
-        return CodelistMapper.INSTANCE.toCodelistMeanings(entries);
     }
 
     private Map<Integer, String> fetchCountryNames(Set<Integer> countryIds, String language) {
