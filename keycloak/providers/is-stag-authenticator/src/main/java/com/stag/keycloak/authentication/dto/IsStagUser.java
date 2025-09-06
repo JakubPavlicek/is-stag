@@ -7,8 +7,8 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record IsStagUser(
-    @JsonProperty("jmeno") String name,
-    @JsonProperty("prijmeni") String lastname,
+    @JsonProperty("jmeno") String firstName,
+    @JsonProperty("prijmeni") String lastName,
     @JsonProperty("stagUserInfo") List<IsStagUserDetails> stagUserInfo
 ) {
 

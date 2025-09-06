@@ -10,7 +10,7 @@ public record IsStagUserDetails(
     @JsonProperty("userName") String userName,
     @JsonProperty("role") String role,
     @JsonProperty("email") String email,
-    @JsonProperty("osCislo") Optional<String> personalNumber,
+    @JsonProperty("osCislo") Optional<String> studentId,
     @JsonProperty("ucitIdno") Optional<Long> teacherId
 ) {
 

@@ -3,12 +3,14 @@ package com.stag.academics.shared.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.ExpressionJwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -36,16 +38,30 @@ public class SecurityConfig {
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(
                 jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
             ))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
             .build();
     }
 
     @Bean
+    public ExpressionJwtGrantedAuthoritiesConverter expressionConverter() {
+        // Extract roles from the realm_access.roles claim and prefix with "ROLE_"
+        ExpressionJwtGrantedAuthoritiesConverter expressionConverter =
+            new ExpressionJwtGrantedAuthoritiesConverter(
+                new SpelExpressionParser().parseRaw("[realm_access][roles]")
+            );
+        expressionConverter.setAuthorityPrefix("ROLE_");
+
+        return expressionConverter;
+    }
+
+    @Bean
     public Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        // Set a custom converter to extract authorities from the JWT
-        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
-        return converter;
+        JwtAuthenticationConverter jwtAuthConverter = new JwtAuthenticationConverter();
+        jwtAuthConverter.setJwtGrantedAuthoritiesConverter(expressionConverter());
+
+        return jwtAuthConverter;
     }
 
 }

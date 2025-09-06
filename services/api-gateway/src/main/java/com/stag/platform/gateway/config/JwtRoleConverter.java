@@ -1,7 +1,7 @@
 package com.stag.platform.gateway.config;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux;
 import java.util.Collection;
 import java.util.Map;
 
-public class KeycloakRealmRoleConverter implements Converter<Jwt, Flux<GrantedAuthority>> {
+public class JwtRoleConverter implements Converter<Jwt, Flux<GrantedAuthority>> {
 
     @Override
     @SuppressWarnings("unchecked")

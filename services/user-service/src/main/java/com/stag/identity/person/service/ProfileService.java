@@ -29,7 +29,10 @@ public class ProfileService {
     private final StudentLookupService studentLookupService;
 
     @Cacheable(value = "person-profile", key = "#personId + ':' + #language")
-    @PreAuthorize("hasAnyRole('PR', 'AD', 'SP', 'SR') || @accessPolicyService.canAccessPerson(authentication, #personId)")
+    @PreAuthorize("""
+        hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
+        || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)
+    """)
     public Profile getPersonProfile(Integer personId, String language) {
         log.info("Fetching person profile for personId: {} with language: {}", personId, language);
 

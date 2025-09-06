@@ -37,8 +37,8 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
     private static final String STAG_LOGIN_TRIGGER = "true";
 
     // Attribute keys
-    private static final String PERSONAL_NUM_ATTR = "osCislo";
-    private static final String TEACHER_ID_ATTR = "ucitIdno";
+    private static final String STUDENT_ID_ATTR = "studentId";
+    private static final String TEACHER_ID_ATTR = "teacherId";
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
@@ -165,14 +165,14 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         user.setEnabled(true);
         user.setEmail(isStagUserDetails.email());
         user.setEmailVerified(true);
-        user.setFirstName(isStagUser.name());
-        user.setLastName(isStagUser.lastname());
+        user.setFirstName(isStagUser.firstName());
+        user.setLastName(isStagUser.lastName());
 
-        // Set additional attributes (student has osCislo, teacher has ucitIdno)
-        isStagUserDetails.personalNumber()
+        // Set additional attributes (student has studentId, teacher has teacherId)
+        isStagUserDetails.studentId()
                          .ifPresent(num -> {
                              log.debug("Setting personal number attribute for user: " + userName);
-                             user.setSingleAttribute(PERSONAL_NUM_ATTR, num);
+                             user.setSingleAttribute(STUDENT_ID_ATTR, num);
                          });
         isStagUserDetails.teacherId()
                          .ifPresent(id -> {

@@ -42,7 +42,7 @@ public class SecurityConfig {
     public Converter<Jwt, ? extends Mono<? extends AbstractAuthenticationToken>> jwtAuthenticationConverter() {
         ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
         // Set a custom converter to extract authorities from the JWT
-        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
+        converter.setJwtGrantedAuthoritiesConverter(new JwtRoleConverter());
         return converter;
     }
 

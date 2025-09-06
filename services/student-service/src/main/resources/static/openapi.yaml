@@ -20,6 +20,8 @@ tags:
 
 paths:
 
+  # TODO: add the roles to the description of the endpoints
+
   /students/{studentId}:
     get:
       security:

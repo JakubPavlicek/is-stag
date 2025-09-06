@@ -84,7 +84,7 @@ jobs:
           pack build ${IMAGE_NAME}:${VER} \
             --builder paketobuildpacks/builder-jammy-base \
             --buildpack paketo-buildpacks/web-servers \
-            --env BP_NPM_VERSION=11.5.2 \
+            --env BP_NPM_VERSION=11.6.0 \
             --env BP_NODE_RUN_SCRIPTS=build \
             --env NODE_ENV=dev \
             --env BP_WEB_SERVER=nginx \

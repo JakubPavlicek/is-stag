@@ -23,7 +23,10 @@ public class AddressService {
     private final CodelistLookupService codelistLookupService;
 
     @Cacheable(value = "person-addresses", key = "#personId + ':' + #language")
-    @PreAuthorize("hasAnyRole('PR', 'AD', 'SP', 'SR') || @accessPolicyService.canAccessPerson(authentication, #personId)")
+    @PreAuthorize("""
+        hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
+        || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)
+    """)
     public Addresses getPersonAddresses(Integer personId, String language) {
         log.info("Fetching person addresses for personId: {} with language: {}", personId, language);
 

@@ -23,7 +23,10 @@ public class BankingService {
     private final CodelistLookupService codelistLookupService;
 
     @Cacheable(value = "person-banking", key = "#personId + ':' + #language")
-    @PreAuthorize("hasAnyRole('PR', 'AD', 'SP', 'SR') || @accessPolicyService.canAccessPerson(authentication, #personId)")
+    @PreAuthorize("""
+        hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
+        || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)
+    """)
     public Banking getPersonBanking(Integer personId, String language) {
         log.info("Fetching person banking information for personId: {} with language: {}", personId, language);
 
