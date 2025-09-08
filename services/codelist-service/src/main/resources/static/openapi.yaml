@@ -123,10 +123,10 @@ components:
           example:
             - id: 203
               name: Czech Republic
-              generalName: Czechia
+              commonName: Czechia
             - id: 204
               name: Slovak Republic
-              generalName: Slovakia
+              commonName: Slovakia
 
     Country:
       type: object
@@ -137,7 +137,7 @@ components:
       required:
         - id
         - name
-        - generalName
+        - commonName
       properties:
         id:
           type: integer
@@ -152,10 +152,10 @@ components:
           description: Name of the country.
           example: Czech Republic
           maxLength: 240
-        generalName:
+        commonName:
           type: string
           nullable: true
-          description: General name of the country.
+          description: Common name of the country.
           example: Czechia
           maxLength: 70
 

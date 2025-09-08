@@ -2,6 +2,8 @@ server:
   port: 8020
   http2:
     enabled: true
+  compression:
+    enabled: true
 
 grpc:
   server:

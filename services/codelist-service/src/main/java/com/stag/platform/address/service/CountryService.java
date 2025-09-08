@@ -3,8 +3,10 @@ package com.stag.platform.address.service;
 import com.stag.platform.address.exception.CountriesNotFoundException;
 import com.stag.platform.address.repository.CountryRepository;
 import com.stag.platform.address.repository.projection.CountryNameProjection;
+import com.stag.platform.address.repository.projection.CountryView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,11 @@ import java.util.stream.Collectors;
 public class CountryService {
 
     private final CountryRepository countryRepository;
+
+    @Cacheable(value = "countries", key = "#language")
+    public Set<CountryView> getCountries(String language) {
+        return countryRepository.findAllValidCountries(language);
+    }
 
     @Transactional(readOnly = true)
     public Map<Integer, String> findNamesByIds(Collection<Integer> countryIds, String language) {

@@ -2,6 +2,8 @@ server:
   port: 8761
   http2:
     enabled: true
+  compression:
+    enabled: true
 
 eureka:
   instance:

@@ -2,6 +2,8 @@ server:
   port: 8100
   http2:
     enabled: true
+  compression:
+    enabled: true
   ssl:
     key-store: classpath:gateway-keystore.p12
     key-store-type: PKCS12
@@ -29,7 +31,7 @@ spring:
             - id: codelist-service
               uri: lb://codelist-service
               predicates:
-                - Path=/api/v1/codelists/**
+                - Path=/api/v1/countries/**,/api/v1/domains/**
             - id: student-service
               uri: lb://student-service
               predicates:
