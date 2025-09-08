@@ -13,11 +13,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Run protolint with reviewdog
-        uses: yoheimuta/action-protolint@v1.3.0
-        with:
-          fail_on_error: true
-          protolint_version: 0.56.4
+      - name: Set up protolint
+        run: |
+          PROTOLINT_VERSION="0.56.4"
+          PB_REL="https://github.com/yoheimuta/protolint/releases/download/v${PROTOLINT_VERSION}/protolint_${PROTOLINT_VERSION}_linux_amd64.tar.gz"
+          curl -sSL "${PB_REL}" | tar -xz
+          protolint --version
+
+      - name: Run protolint
+        run: protolint lint proto
 
   vacuum-lint-openapi:
     runs-on: ubuntu-latest

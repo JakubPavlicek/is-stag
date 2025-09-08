@@ -16,7 +16,7 @@ service StudentService {
       returns (GetStudentPersonIdResponse);
 }
 
-service xxxxxxxxxxxxx_DSA!FSF"!xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx {
+service xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx {
 
 }
 
