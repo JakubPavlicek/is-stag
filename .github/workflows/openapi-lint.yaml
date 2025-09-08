@@ -2,7 +2,7 @@ name: OpenAPI Vacuum Lint
 on:
   push:
     paths:
-      - 'services/**'
+      - 'services/*/src/main/resources/static/*.yaml'
 
 jobs:
   vacuum-lint-openapi:
@@ -18,4 +18,4 @@ jobs:
 
       - name: Run Vacuum Lint
         working-directory: services
-        run: vacuum lint *-service/src/main/resources/static/openapi.yaml --fail-severity error --min-score 95
+        run: vacuum lint */src/main/resources/static/openapi.yaml --fail-severity error --min-score 95
