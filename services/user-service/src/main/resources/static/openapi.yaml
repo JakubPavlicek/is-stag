@@ -39,6 +39,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PersonResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
@@ -47,6 +49,8 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        'default':
+          $ref: '#/components/responses/Default'
 
   /persons/{personId}/addresses:
     get:
@@ -67,6 +71,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AddressesResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
@@ -75,6 +81,8 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        'default':
+          $ref: '#/components/responses/Default'
 
   /persons/{personId}/banking:
     get:
@@ -95,6 +103,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BankAccountsResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
@@ -103,6 +113,8 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        'default':
+          $ref: '#/components/responses/Default'
 
   /persons/{personId}/education:
     get:
@@ -123,6 +135,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EducationResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
@@ -131,6 +145,8 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        'default':
+          $ref: '#/components/responses/Default'
 
 components:
 
@@ -173,6 +189,7 @@ components:
       title: Person ID
       description: The unique numeric identifier for a person.
       example: 221264
+      minimum: 1
 
     StudentId:
       type: string
@@ -229,7 +246,7 @@ components:
         birthSurname:
           type: string
           nullable: true
-          description: Birth surename of the person.
+          description: Birth surname of the person.
           example: Smith
           maxLength: 100
         contact:
@@ -249,8 +266,6 @@ components:
           nullable: false
           description: Birth date of the person.
           example: '1990-01-01'
-          pattern: ^\d{4}-\d{2}-\d{2}$
-          maxLength: 10
         birthPlace:
           $ref: '#/components/schemas/BirthPlace'
         citizenship:
@@ -750,9 +765,10 @@ components:
       properties:
         type:
           type: string
+          format: uri
           description: A URI reference that identifies the problem type.
           example: http://localhost:8080/person-not-found
-          pattern: ^((about:blank)|(https?://[^\s]+$))
+          pattern: ^((about:blank)|(https?://[^\s]+))$
           maxLength: 1000
         title:
           type: string
@@ -761,7 +777,8 @@ components:
           pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
           maxLength: 255
         status:
-          type: number
+          type: integer
+          format: int32
           description: The HTTP status code.
           example: 404
         detail:
@@ -786,10 +803,23 @@ components:
 
   responses:
 
+    400BadRequest:
+      description: Bad request.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/bad-request
+            title: Bad Request
+            status: 400
+            detail: Invalid person ID
+            instance: /api/v1/persons/-10
+
     401Unauthorized:
       description: Access token is missing or invalid.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
@@ -802,7 +832,7 @@ components:
     403Forbidden:
       description: You do not have permission to access this resource.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
@@ -815,7 +845,7 @@ components:
     404NotFound:
       description: The specified resource was not found.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
@@ -828,7 +858,7 @@ components:
     500InternalServerError:
       description: Internal server error.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
@@ -837,3 +867,10 @@ components:
             status: 500
             detail: An unexpected error occurred
             instance: /api/v1/persons/221264
+
+    Default:
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'

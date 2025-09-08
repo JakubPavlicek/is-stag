@@ -39,12 +39,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CountryListResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        'default':
+          $ref: '#/components/responses/Default'
 
   /domains:
     get:
@@ -62,12 +66,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DomainListResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
           $ref: '#/components/responses/403Forbidden'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        'default':
+          $ref: '#/components/responses/Default'
 
 components:
 
@@ -137,6 +145,7 @@ components:
           nullable: false
           description: Unique identifier of the country.
           example: 203
+          minimum: 1
         name:
           type: string
           nullable: false
@@ -197,20 +206,22 @@ components:
       properties:
         type:
           type: string
+          format: uri
           nullable: false
           description: A URI reference that identifies the problem type.
           example: "http://localhost:8080/countries"
-          pattern: "^((about:blank)|(https?://[^\\s]+$))"
+          pattern: ^((about:blank)|(https?://[^\s]+))$
           maxLength: 1000
         title:
           type: string
           nullable: false
           description: A short, human-readable summary of the problem type.
           example: Internal Server Error
-          pattern: "^[A-Za-z0-9\\s\\-.,!?:;'\"]+$"
+          pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
           maxLength: 255
         status:
-          type: number
+          type: integer
+          format: int32
           nullable: false
           description: The HTTP status code.
           example: 404
@@ -219,14 +230,14 @@ components:
           nullable: false
           description: A human-readable explanation specific to this occurrence of the problem.
           example: An unexpected error occurred
-          pattern: "^[A-Za-z0-9\\s\\-.,!?:;'\"]+$"
+          pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
           maxLength: 1000
         instance:
           type: string
           nullable: false
           description: A URI reference that identifies the specific occurrence of the problem.
           example: /countries
-          pattern: "^(/[^\\s]*)+$"
+          pattern: ^(/[^\s]*)+$
           maxLength: 1000
         contextInfo:
           type: object
@@ -239,10 +250,23 @@ components:
 
   responses:
 
+    400BadRequest:
+      description: Bad request.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/bad-request
+            title: Bad Request
+            status: 400
+            detail: Invalid Language header
+            instance: /api/v1/countries
+
     401Unauthorized:
       description: Access token is missing or invalid.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
@@ -255,7 +279,7 @@ components:
     403Forbidden:
       description: You do not have permission to access this resource.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
@@ -268,7 +292,7 @@ components:
     500InternalServerError:
       description: Internal server error.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
@@ -277,4 +301,11 @@ components:
             status: 500
             detail: An unexpected error occurred
             instance: /api/v1/countries
+
+    Default:
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
 

@@ -29,7 +29,10 @@ paths:
       tags:
         - students
       summary: Get student
-      description: Retrieve a person by their unique identifier.
+      description: |
+        Retrieve a student by their unique identifier.
+        
+        **Required Roles:** `AD`, `DE`, `PR`, `SR`, `SP`, `VY`, `VK`
       operationId: getStudentProfile
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
@@ -41,6 +44,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudentResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
@@ -49,6 +54,8 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        'default':
+          $ref: '#/components/responses/Default'
 
 components:
 
@@ -89,7 +96,6 @@ components:
       title: Student ID
       nullable: false
       description: The unique alphanumeric identifier for a student.
-      pattern: ^[A-Z0-9]{9}$
       maxLength: 10
       example: K24B4302P
 
@@ -100,6 +106,7 @@ components:
       nullable: false
       description: Unique identifier of the person.
       example: 221264
+      minimum: 1
 
     StudentResponse:
       type: object
@@ -278,20 +285,22 @@ components:
       properties:
         type:
           type: string
+          format: uri
           nullable: false
           description: A URI reference that identifies the problem type.
           example: http://localhost:8080/student-not-found
-          pattern: ^((about:blank)|(https?://[^\s]+$))
+          pattern: ^((about:blank)|(https?://[^\s]+))$
           maxLength: 1000
         title:
           type: string
           nullable: false
           description: A short, human-readable summary of the problem type.
-          example: Domain Not Found
+          example: Student Not Found
           pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
           maxLength: 255
         status:
-          type: number
+          type: integer
+          format: int32
           nullable: false
           description: The HTTP status code.
           example: 404
@@ -299,7 +308,7 @@ components:
           type: string
           nullable: false
           description: A human-readable explanation specific to this occurrence of the problem.
-          example: 'Student with ID: 221264 not found'
+          example: 'Student with ID: K24B4302P not found'
           pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
           maxLength: 1000
         instance:
@@ -320,10 +329,23 @@ components:
 
   responses:
 
+    400BadRequest:
+      description: Bad request.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/bad-request
+            title: Bad Request
+            status: 400
+            detail: Invalid student ID
+            instance: /api/v1/students/-10
+
     401Unauthorized:
       description: Access token is missing or invalid.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
@@ -336,7 +358,7 @@ components:
     403Forbidden:
       description: You do not have permission to access this resource.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
@@ -349,12 +371,12 @@ components:
     404NotFound:
       description: The specified resource was not found.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
             type: http://localhost:8080/api/v1/student-not-found
-            title: Person Not Found
+            title: Student Not Found
             status: 404
             detail: 'Student with ID: 221264 not found'
             instance: /api/v1/students/K24B4302P
@@ -362,7 +384,7 @@ components:
     500InternalServerError:
       description: Internal server error.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
@@ -370,4 +392,11 @@ components:
             title: Internal server error
             status: 500
             detail: An unexpected error occurred
-            instance: /api/v1/persons/221264
+            instance: /api/v1/students/K24B4302P
+
+    Default:
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
