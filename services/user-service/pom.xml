@@ -120,8 +120,8 @@
                         <artifactId>openapi-generator-maven-plugin</artifactId>
                         <configuration>
                             <configOptions>
-                                <apiPackage>com.stag.identity</apiPackage>
-                                <modelPackage>com.stag.identity.dto</modelPackage>
+                                <apiPackage>com.stag.identity.api</apiPackage>
+                                <modelPackage>com.stag.identity.api.dto</modelPackage>
                             </configOptions>
                         </configuration>
                     </plugin>

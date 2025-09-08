@@ -1,4 +1,4 @@
-package com.stag.identity.shared.config;
+package com.stag.platform.shared.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder;

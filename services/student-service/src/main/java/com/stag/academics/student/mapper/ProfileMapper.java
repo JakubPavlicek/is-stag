@@ -1,6 +1,6 @@
 package com.stag.academics.student.mapper;
 
-import com.stag.academics.student.model.StudentProfile;
+import com.stag.academics.student.model.Profile;
 import com.stag.academics.student.repository.projection.ProfileView;
 import com.stag.academics.student.service.data.SimpleProfileLookupData;
 import com.stag.academics.student.service.data.StudyProgramAndFieldLookupData;
@@ -15,7 +15,7 @@ public interface ProfileMapper {
 
     @Mapping(target = "titles.prefix", source = "profileData.titlePrefix")
     @Mapping(target = "titles.suffix", source = "profileData.titleSuffix")
-    StudentProfile toStudentProfile(
+    Profile toStudentProfile(
         ProfileView profile,
         SimpleProfileLookupData profileData,
         StudyProgramAndFieldLookupData studyProgramAndFieldData

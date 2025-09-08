@@ -1,7 +1,7 @@
 package com.stag.academics.student.mapper;
 
-import com.stag.academics.dto.StudentProfileDTO;
-import com.stag.academics.student.model.StudentProfile;
+import com.stag.academics.api.dto.StudentResponse;
+import com.stag.academics.student.model.Profile;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -10,6 +10,6 @@ public interface StudentApiMapper {
 
     StudentApiMapper INSTANCE = Mappers.getMapper(StudentApiMapper.class);
 
-    StudentProfileDTO toStudentProfileDTO(StudentProfile studentProfile);
+    StudentResponse toStudentResponse(Profile profile);
 
 }

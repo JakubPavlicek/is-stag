@@ -33,14 +33,14 @@ paths:
       operationId: getStudentProfile
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
-        - $ref: '#/components/parameters/studentId'
+        - $ref: '#/components/parameters/StudentId'
       responses:
         '200':
           description: Student details retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StudentProfile'
+                $ref: '#/components/schemas/StudentResponse'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
@@ -74,11 +74,11 @@ components:
           - en
         default: cs
 
-    studentId:
+    StudentId:
       name: studentId
       in: path
       required: true
-      description: Unique identifier of the student.
+      description: The unique identifier of the student to retrieve.
       schema:
         $ref: '#/components/schemas/StudentId'
 
@@ -87,7 +87,9 @@ components:
     StudentId:
       type: string
       title: Student ID
-      description: Unique identifier of the student.
+      nullable: false
+      description: The unique alphanumeric identifier for a student.
+      pattern: ^[A-Z0-9]{9}$
       maxLength: 10
       example: K24B4302P
 
@@ -95,28 +97,23 @@ components:
       type: integer
       format: int32
       title: Person ID
+      nullable: false
       description: Unique identifier of the person.
       example: 221264
 
-    Title:
-      type: string
-      nullable: true
-      description: Title of the student.
-      example: Ing.
-      maxLength: 240
-
-    StudentProfile:
+    StudentResponse:
       type: object
-      title: StudentProfileResponse
-      description: Response containing student profile details.
+      title: Student Response
+      description: Response containing student details.
       additionalProperties: false
+      nullable: false
       required:
         - studentId
         - personId
         - firstName
         - lastName
-        - gender
         - titles
+        - gender
         - studyProgram
         - fieldOfStudy
       properties:
@@ -126,118 +123,152 @@ components:
           $ref: '#/components/schemas/PersonId'
         firstName:
           type: string
+          nullable: false
           description: First name of the student.
           example: John
           maxLength: 100
         lastName:
           type: string
+          nullable: false
           description: Last name of the student.
           example: Doe
           maxLength: 100
         titles:
-          type: object
-          title: Titles
-          description: Title of the person.
-          additionalProperties: false
-          required:
-            - prefix
-            - suffix
-          properties:
-            prefix:
-              $ref: '#/components/schemas/Title'
-            suffix:
-              $ref: '#/components/schemas/Title'
+          $ref: '#/components/schemas/Titles'
         gender:
           type: string
+          nullable: false
           description: Gender of the student.
           example: male
           maxLength: 240
         studyProgram:
-          type: object
-          title: StudyProgramResponse
-          description: Object containing student's study program details.
-          additionalProperties: false
-          required:
-            - id
-            - name
-            - faculty
-            - code
-            - form
-            - type
-          properties:
-            id:
-              type: integer
-              format: int32
-              description: Unique identifier of the study program.
-              example: 1966
-            name:
-              type: string
-              description: Name of the study program.
-              example: Ekonomická a regionální geografie
-              maxLength: 200
-            faculty:
-              type: string
-              description: Faculty of the study program.
-              example: FEK
-              maxLength: 6
-            code:
-              type: string
-              description: Code of the study program.
-              example: B0532A330036
-              maxLength: 12
-            form:
-              type: string
-              description: Form of the study program.
-              example: Prezenční
-              maxLength: 240
-            type:
-              type: string
-              description: Type of the study program.
-              example: Bakalářský
-              maxLength: 240
+          $ref: '#/components/schemas/StudyProgram'
         fieldOfStudy:
-          type: object
-          title: FieldOfStudyResponse
-          description: Object containing student's field of study details.
-          additionalProperties: false
-          required:
-            - id
-            - name
-            - faculty
-            - department
-            - code
-          properties:
-            id:
-              type: integer
-              format: int32
-              description: Unique identifier of the field of study.
-              example: 4343
-            name:
-              type: string
-              description: Name of the field of study.
-              example: Ekonomická a regionální geografie
-              maxLength: 200
-            faculty:
-              type: string
-              description: Faculty of the field of study.
-              example: FEK
-              maxLength: 6
-            department:
-              type: string
-              description: Department of the field of study.
-              example: KGE
-              maxLength: 6
-            code:
-              type: string
-              description: Code of the field of study.
-              example: B0532A330036
-              maxLength: 15
+          $ref: '#/components/schemas/FieldOfStudy'
+
+    Titles:
+      type: object
+      title: Titles
+      description: Academic titles associated with the student (prefix and suffix).
+      additionalProperties: false
+      nullable: false
+      required:
+        - prefix
+        - suffix
+      properties:
+        prefix:
+          $ref: '#/components/schemas/Title'
+        suffix:
+          $ref: '#/components/schemas/Title'
+
+    Title:
+      type: string
+      nullable: true
+      description: An academic title, such as 'Ing.' or 'Ph.D.'.
+      example: Ing.
+      maxLength: 240
+
+    StudyProgram:
+      type: object
+      title: Study Program
+      description: Object containing student's study program details.
+      additionalProperties: false
+      nullable: false
+      required:
+        - id
+        - name
+        - faculty
+        - code
+        - form
+        - type
+      properties:
+        id:
+          type: integer
+          format: int32
+          nullable: false
+          description: Unique identifier of the study program.
+          example: 1966
+        name:
+          type: string
+          nullable: false
+          description: Name of the study program.
+          example: Ekonomická a regionální geografie
+          maxLength: 200
+        faculty:
+          type: string
+          nullable: false
+          description: Faculty of the study program.
+          example: FEK
+          maxLength: 6
+        code:
+          type: string
+          nullable: true
+          description: Code of the study program.
+          example: B0532A330036
+          maxLength: 12
+        form:
+          type: string
+          nullable: false
+          description: Form of the study program.
+          example: Prezenční
+          maxLength: 240
+        type:
+          type: string
+          nullable: false
+          description: Type of the study program.
+          example: Bakalářský
+          maxLength: 240
+
+    FieldOfStudy:
+      type: object
+      title: Field Of Study
+      description: Object containing student's field of study details.
+      additionalProperties: false
+      nullable: false
+      required:
+        - id
+        - name
+        - faculty
+        - department
+        - code
+      properties:
+        id:
+          type: integer
+          format: int32
+          nullable: false
+          description: Unique identifier of the field of study.
+          example: 4343
+        name:
+          type: string
+          nullable: false
+          description: Name of the field of study.
+          example: Ekonomická a regionální geografie
+          maxLength: 200
+        faculty:
+          type: string
+          nullable: false
+          description: Faculty of the field of study.
+          example: FEK
+          maxLength: 6
+        department:
+          type: string
+          nullable: true
+          description: Department of the field of study.
+          example: KGE
+          maxLength: 6
+        code:
+          type: string
+          nullable: false
+          description: Code of the field of study.
+          example: B0532A330036
+          maxLength: 15
 
     ProblemDetail:
       type: object
-      title: ProblemDetail
+      title: Problem Detail
       description: A generic error.
       additionalProperties: false
+      nullable: false
       required:
         - type
         - title
@@ -247,28 +278,33 @@ components:
       properties:
         type:
           type: string
+          nullable: false
           description: A URI reference that identifies the problem type.
           example: http://localhost:8080/student-not-found
           pattern: ^((about:blank)|(https?://[^\s]+$))
           maxLength: 1000
         title:
           type: string
+          nullable: false
           description: A short, human-readable summary of the problem type.
           example: Domain Not Found
           pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
           maxLength: 255
         status:
           type: number
+          nullable: false
           description: The HTTP status code.
           example: 404
         detail:
           type: string
+          nullable: false
           description: A human-readable explanation specific to this occurrence of the problem.
           example: 'Student with ID: 221264 not found'
           pattern: ^[A-Za-z0-9\s\-.,!?:;'"]+$
           maxLength: 1000
         instance:
           type: string
+          nullable: false
           description: A URI reference that identifies the specific occurrence of the problem.
           example: /students/K24B4302P
           pattern: ^(/[^\s]*)+$
@@ -276,47 +312,42 @@ components:
         contextInfo:
           type: object
           additionalProperties: true
+          nullable: false
           maxProperties: 5
           description: A free-form based object that contains additional context about the error.
-      example:
-        type: http://localhost:8080/api/v1/student-not-found
-        title: Student Not Found
-        status: 404
-        detail: 'Student with ID: K24B4302P not found'
-        instance: /api/v1/students/K24B4302P
-        contextInfo:
-          student: Student K24B4302P not found
+          example:
+            student: Student K24B4302P not found
 
   responses:
 
     401Unauthorized:
-      description: Access token is missing or invalid
+      description: Access token is missing or invalid.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
-            type: http://localhost:8080/api/v1/student-not-found
+            type: http://localhost:8080/api/v1/unauthorized
             title: Unauthorized
             status: 401
             detail: Access token is missing or invalid
             instance: /api/v1/students/K24B4302P
 
     403Forbidden:
-      description: The specified resource was not found
+      description: You do not have permission to access this resource.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
-            type: http://localhost:8080/api/v1/student-not-found
+            type: http://localhost:8080/api/v1/forbidden
             title: Forbidden
             status: 403
             detail: You do not have permission to access this resource
             instance: /api/v1/students/K24B4302P
 
     404NotFound:
-      description: The specified resource was not found
+      description: The specified resource was not found.
       content:
         application/json:
           schema:
@@ -329,7 +360,7 @@ components:
             instance: /api/v1/students/K24B4302P
 
     500InternalServerError:
-      description: Internal server error
+      description: Internal server error.
       content:
         application/json:
           schema:

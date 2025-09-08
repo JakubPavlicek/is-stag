@@ -1,9 +1,8 @@
 openapi: 3.0.3
 info:
-  title: Code Lists Service API
+  title: Codelist Service API
   description: |
     This API provides access to various code lists, also known as dictionaries or enumerations, which are fundamental for the IS/STAG system.
-    It allows for the management and retrieval of data related to university structure, such as faculties and departments (workplaces), as well as time-related data like teaching hours.
   version: 1.0.0
   contact:
     name: STAG Support
@@ -12,53 +11,161 @@ info:
 
 servers:
   - url: /api/v1
-    description: Main API server
+    description: Codelist Service API through API Gateway
 
 tags:
-  - name: code-lists
-    description: Operations for managing code lists (dictionaries)
-  - name: workplaces
-    description: Operations for managing workplaces
-  - name: time-series
-    description: Operations for managing time series
+  - name: countries
+    description: Operations for managing countries
+  - name: domains
+    description: Operations for managing codelist domains
 
 paths:
-  /code-lists/domains:
+
+  /countries:
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
-        - code-lists
-      summary: Get all code list domains
+        - countries
+      summary: Get all countries
+      description: Retrieve list of all countries available in the system.
+      operationId: getCountries
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        '200':
+          description: List of available countries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryListResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+  /domains:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - domains
+      summary: Get all codelist domains
       description: Retrieve list of all domains available in the code lists system.
       operationId: getCodeListDomains
       responses:
         '200':
-          description: List of available domains
+          description: List of available domains.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DomainsResponse'
+                $ref: '#/components/schemas/DomainListResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
         '500':
           $ref: '#/components/responses/500InternalServerError'
 
 components:
 
+  securitySchemes:
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token issued by Keycloak.
+
+  parameters:
+
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      description: Preferred language.
+      required: false
+      schema:
+        type: string
+        enum:
+          - cs
+          - en
+        default: cs
+
   schemas:
 
-    DomainsResponse:
+    CountryListResponse:
       type: object
-      title: Domains Response
-      description: Response containing a list of code list domains.
+      title: Country List Response
+      description: Response containing a list of countries.
       additionalProperties: false
+      nullable: false
+      required:
+        - countries
+      properties:
+        countries:
+          type: array
+          description: List of countries.
+          items:
+            $ref: '#/components/schemas/Country'
+          minItems: 1
+          nullable: false
+          uniqueItems: true
+          example:
+            - id: 203
+              name: Czech Republic
+              generalName: Czechia
+            - id: 204
+              name: Slovak Republic
+              generalName: Slovakia
+
+    Country:
+      type: object
+      title: Country
+      description: Response containing a country.
+      additionalProperties: false
+      nullable: false
+      required:
+        - id
+        - name
+        - generalName
+      properties:
+        id:
+          type: integer
+          format: int32
+          nullable: false
+          description: Unique identifier of the country.
+          example: 203
+        name:
+          type: string
+          nullable: false
+          description: Name of the country.
+          example: Czech Republic
+          maxLength: 240
+        generalName:
+          type: string
+          nullable: true
+          description: General name of the country.
+          example: Czechia
+          maxLength: 70
+
+    DomainListResponse:
+      type: object
+      title: Domain List Response
+      description: Response containing a list of codelist domains.
+      additionalProperties: false
+      nullable: false
       required:
         - domains
       properties:
         domains:
           type: array
+          description: List of codelist domains.
           items:
-            type: string
-            description: A code list domain identifier.
-            example: ADRESA
+            $ref: '#/components/schemas/Domain'
           minItems: 1
+          nullable: false
           uniqueItems: true
       example:
         domains:
@@ -66,11 +173,21 @@ components:
           - FAKULTA
           - PRACOVISTE
 
+    Domain:
+      type: string
+      title: Domain
+      nullable: false
+      description: A codelist domain name.
+      example: ADRESA
+      minLength: 1
+      maxLength: 100
+
     ProblemDetail:
       type: object
       title: Problem Detail
-      description: "A generic error."
+      description: A generic error.
       additionalProperties: false
+      nullable: false
       required:
         - type
         - title
@@ -80,50 +197,76 @@ components:
       properties:
         type:
           type: string
-          description: "A URI reference that identifies the problem type."
-          example: "http://localhost:8080/domain-not-found"
+          nullable: false
+          description: A URI reference that identifies the problem type.
+          example: "http://localhost:8080/countries"
           pattern: "^((about:blank)|(https?://[^\\s]+$))"
           maxLength: 1000
         title:
           type: string
+          nullable: false
           description: A short, human-readable summary of the problem type.
-          example: Domain Not Found
+          example: Internal Server Error
           pattern: "^[A-Za-z0-9\\s\\-.,!?:;'\"]+$"
           maxLength: 255
         status:
           type: number
+          nullable: false
           description: The HTTP status code.
           example: 404
         detail:
           type: string
-          description: "A human-readable explanation specific to this occurrence of the problem."
-          example: "Domain with ID: TEST not found"
+          nullable: false
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: An unexpected error occurred
           pattern: "^[A-Za-z0-9\\s\\-.,!?:;'\"]+$"
           maxLength: 1000
         instance:
           type: string
+          nullable: false
           description: A URI reference that identifies the specific occurrence of the problem.
-          example: /codelists/TEST
+          example: /countries
           pattern: "^(/[^\\s]*)+$"
           maxLength: 1000
         contextInfo:
           type: object
           additionalProperties: true
+          nullable: false
           maxProperties: 5
           description: A free-form based object that contains additional context about the error.
-      example:
-        type: http://localhost:8080/api/v1/domain-not-found
-        title: Domain Not Found
-        status: 404
-        detail: "Domain with ID: TEST not found"
-        instance: /api/v1/codelists/TEST
-        contextInfo:
-          domain: domain TEST not found
+          example:
+            domain: Something went wrong
 
   responses:
 
+    401Unauthorized:
+      description: Access token is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Access token is missing or invalid
+            instance: /api/v1/countries
+
+    403Forbidden:
+      description: You do not have permission to access this resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/forbidden
+            title: Forbidden
+            status: 403
+            detail: You do not have permission to access this resource
+            instance: /api/v1/countries
+
     500InternalServerError:
-      description: Internal server error
+      description: Internal server error.
       content:
         application/json:
           schema:
@@ -133,5 +276,5 @@ components:
             title: Internal server error
             status: 500
             detail: An unexpected error occurred
-            instance: /api/v1/codelists/TEST
+            instance: /api/v1/countries
 

@@ -1,9 +1,9 @@
 package com.stag.academics.student.controller;
 
-import com.stag.academics.StudentsApi;
-import com.stag.academics.dto.StudentProfileDTO;
+import com.stag.academics.api.StudentsApi;
+import com.stag.academics.api.dto.StudentResponse;
 import com.stag.academics.student.mapper.StudentApiMapper;
-import com.stag.academics.student.model.StudentProfile;
+import com.stag.academics.student.model.Profile;
 import com.stag.academics.student.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +20,13 @@ public class StudentController implements StudentsApi {
     private final StudentService studentService;
 
     @Override
-    public ResponseEntity<StudentProfileDTO> getStudentProfile(String studentId, String language) {
+    public ResponseEntity<StudentResponse> getStudentProfile(String studentId, String language) {
         log.info("Student profile requested for studentId: {} with language: {}", studentId, language);
 
-        StudentProfile studentProfile = studentService.getStudentProfile(studentId, language);
-        StudentProfileDTO studentProfileDTO = StudentApiMapper.INSTANCE.toStudentProfileDTO(studentProfile);
+        Profile profile = studentService.getStudentProfile(studentId, language);
+        StudentResponse studentResponse = StudentApiMapper.INSTANCE.toStudentResponse(profile);
 
-        return ResponseEntity.ok(studentProfileDTO);
+        return ResponseEntity.ok(studentResponse);
     }
 
 }

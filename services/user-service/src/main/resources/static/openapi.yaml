@@ -31,14 +31,14 @@ paths:
       operationId: getPersonProfile
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
-        - $ref: '#/components/parameters/personId'
+        - $ref: '#/components/parameters/PersonId'
       responses:
         '200':
           description: Person details retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PersonProfile'
+                $ref: '#/components/schemas/PersonResponse'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
@@ -59,14 +59,14 @@ paths:
       operationId: getPersonAddresses
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
-        - $ref: '#/components/parameters/personId'
+        - $ref: '#/components/parameters/PersonId'
       responses:
         '200':
           description: Person addresses retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Addresses'
+                $ref: '#/components/schemas/AddressesResponse'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
@@ -87,14 +87,14 @@ paths:
       operationId: getPersonBanking
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
-        - $ref: '#/components/parameters/personId'
+        - $ref: '#/components/parameters/PersonId'
       responses:
         '200':
           description: Person banking information retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankAccounts'
+                $ref: '#/components/schemas/BankAccountsResponse'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
@@ -115,14 +115,14 @@ paths:
       operationId: getPersonEducation
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
-        - $ref: '#/components/parameters/personId'
+        - $ref: '#/components/parameters/PersonId'
       responses:
         '200':
           description: Person education information retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EducationDetails'
+                $ref: '#/components/schemas/EducationResponse'
         '401':
           $ref: '#/components/responses/401Unauthorized'
         '403':
@@ -156,7 +156,7 @@ components:
           - en
         default: cs
 
-    personId:
+    PersonId:
       name: personId
       in: path
       required: true
@@ -169,22 +169,25 @@ components:
     PersonId:
       type: integer
       format: int32
+      nullable: false
       title: Person ID
-      description: Unique identifier of the person.
+      description: The unique numeric identifier for a person.
       example: 221264
 
-    Title:
+    StudentId:
       type: string
-      nullable: true
-      description: Title of the person.
-      example: Ing.
-      maxLength: 240
+      title: Student ID
+      nullable: false
+      description: The unique alphanumeric identifier for a student.
+      maxLength: 10
+      example: K24B4302P
 
-    PersonProfile:
+    PersonResponse:
       type: object
-      title: PersonProfileResponse
-      description: Response containing person profile details.
+      title: Person Response
+      description: Response containing person details.
       additionalProperties: false
+      nullable: false
       required:
         - personId
         - studentIds
@@ -205,20 +208,21 @@ components:
           $ref: '#/components/schemas/PersonId'
         studentIds:
           type: array
+          nullable: false
           description: List of student ids associated with the person.
           items:
-            type: string
-            description: Student id of the person.
-            example: K24B4302P
-            pattern: ^[A-Z0-9]{9}$
-            maxLength: 9
+            $ref: '#/components/schemas/StudentId'
+          example:
+            - K24B4302P
         firstName:
           type: string
+          nullable: false
           description: First name of the person.
           example: John
           maxLength: 100
         lastName:
           type: string
+          nullable: false
           description: Last name of the person.
           example: Doe
           maxLength: 100
@@ -229,50 +233,12 @@ components:
           example: Smith
           maxLength: 100
         contact:
-          type: object
-          title: Contact
-          description: Contact information of the person.
-          additionalProperties: false
-          required:
-            - email
-            - phone
-            - mobile
-          properties:
-            email:
-              type: string
-              format: email
-              nullable: true
-              description: Email address of the person.
-              example: Martin95043186@xxx.cz
-            phone:
-              type: string
-              nullable: true
-              description: Phone number of the person.
-              example: '+420123456789'
-              pattern: ^\+?\d{1,20}$
-              maxLength: 20
-            mobile:
-              type: string
-              nullable: true
-              description: Mobile number of the person.
-              example: '+420987654321'
-              pattern: ^\+?\d{1,30}$
-              maxLength: 30
+          $ref: '#/components/schemas/Contact'
         titles:
-          type: object
-          title: Titles
-          description: Title of the person.
-          additionalProperties: false
-          required:
-            - prefix
-            - suffix
-          properties:
-            prefix:
-              $ref: '#/components/schemas/Title'
-            suffix:
-              $ref: '#/components/schemas/Title'
+          $ref: '#/components/schemas/Titles'
         birthNumber:
           type: string
+          nullable: false
           description: Birth number of the person.
           example: '7061030163'
           pattern: ^\d{10}$
@@ -280,50 +246,15 @@ components:
         birthDate:
           type: string
           format: date
+          nullable: false
           description: Birth date of the person.
           example: '1990-01-01'
           pattern: ^\d{4}-\d{2}-\d{2}$
           maxLength: 10
         birthPlace:
-          type: object
-          title: BirthPlace
-          description: Birth place of the person.
-          additionalProperties: false
-          required:
-            - city
-            - country
-          properties:
-            city:
-              type: string
-              nullable: true
-              description: Birth place of the person.
-              example: Prague
-              maxLength: 100
-            country:
-              type: string
-              description: Country of birth.
-              example: Czech Republic
-              maxLength: 70
+          $ref: '#/components/schemas/BirthPlace'
         citizenship:
-          type: object
-          title: Citizenship
-          description: Citizenship details of the person.
-          additionalProperties: false
-          required:
-            - country
-            - qualifier
-          properties:
-            country:
-              type: string
-              description: Country of citizenship.
-              example: Czech Republic
-              maxLength: 70
-            qualifier:
-              type: string
-              nullable: true
-              description: Citizenship qualifier of the person.
-              example: Občan
-              maxLength: 240
+          $ref: '#/components/schemas/Citizenship'
         passportNumber:
           type: string
           nullable: true
@@ -333,6 +264,7 @@ components:
           maxLength: 11
         gender:
           type: string
+          nullable: false
           description: Gender of the person.
           example: male
           maxLength: 240
@@ -343,11 +275,112 @@ components:
           example: single
           maxLength: 240
 
+    Citizenship:
+      type: object
+      title: Citizenship
+      description: Citizenship details of the person.
+      additionalProperties: false
+      nullable: false
+      required:
+        - country
+        - qualifier
+      properties:
+        country:
+          type: string
+          nullable: false
+          description: Country of citizenship.
+          example: Czech Republic
+          maxLength: 70
+        qualifier:
+          type: string
+          nullable: true
+          description: Citizenship qualifier of the person.
+          example: Občan
+          maxLength: 240
+
+    BirthPlace:
+      type: object
+      title: Birth Place
+      description: Birth place of the person.
+      additionalProperties: false
+      nullable: false
+      required:
+        - city
+        - country
+      properties:
+        city:
+          type: string
+          nullable: true
+          description: Birth city of the person.
+          example: Prague
+          maxLength: 100
+        country:
+          type: string
+          nullable: false
+          description: Birth country of the person.
+          example: Czech Republic
+          maxLength: 70
+
+    Titles:
+      type: object
+      title: Titles
+      description: Titles of the person.
+      additionalProperties: false
+      nullable: false
+      required:
+        - prefix
+        - suffix
+      properties:
+        prefix:
+          $ref: '#/components/schemas/Title'
+        suffix:
+          $ref: '#/components/schemas/Title'
+
+    Title:
+      type: string
+      nullable: true
+      description: Title of the person.
+      example: Ing.
+      maxLength: 240
+
+    Contact:
+      type: object
+      title: Contact
+      description: Contact information of the person.
+      additionalProperties: false
+      nullable: false
+      required:
+        - email
+        - phone
+        - mobile
+      properties:
+        email:
+          type: string
+          format: email
+          nullable: true
+          description: Email address of the person.
+          example: Martin95043186@xxx.cz
+        phone:
+          type: string
+          nullable: true
+          description: Phone number of the person.
+          example: '+420123456789'
+          pattern: ^\+?\d{1,20}$
+          maxLength: 20
+        mobile:
+          type: string
+          nullable: true
+          description: Mobile number of the person.
+          example: '+420987654321'
+          pattern: ^\+?\d{1,30}$
+          maxLength: 30
+
     Address:
       type: object
       title: Address
       description: Address details of the person.
       additionalProperties: false
+      nullable: false
       required:
         - street
         - streetNumber
@@ -403,9 +436,10 @@ components:
 
     ForeignAddress:
       type: object
-      title: ForeignAddress
+      title: Foreign Address
       description: Address details of the person when they have a foreign residence.
       additionalProperties: false
+      nullable: false
       required:
         - zipCode
         - municipality
@@ -415,20 +449,20 @@ components:
         zipCode:
           type: string
           nullable: true
-          description: Zip code of the address.
+          description: Zip code of the foreign address.
           example: '1110'
           pattern: ^\d{1,10}$
           maxLength: 10
         municipality:
           type: string
           nullable: true
-          description: Municipality of the address.
+          description: Municipality of the foreign address.
           example: Mornaguia
           maxLength: 75
         district:
           type: string
           nullable: true
-          description: District of the address.
+          description: District of the foreign address.
           example: manouba
           maxLength: 50
         postOffice:
@@ -438,11 +472,12 @@ components:
           example: Mornaguia
           maxLength: 75
 
-    Addresses:
+    AddressesResponse:
       type: object
-      title: PersonAddresses
+      title: Person Addresses Response
       description: Response containing person addresses.
       additionalProperties: false
+      nullable: false
       required:
         - permanentAddress
         - temporaryAddress
@@ -458,11 +493,12 @@ components:
         foreignTemporaryAddress:
           $ref: '#/components/schemas/ForeignAddress'
 
-    BankAccountDetails:
+    BankAccount:
       type: object
-      title: BankAccountDetails
+      title: Bank Account
       description: Response containing bank account details.
       additionalProperties: false
+      nullable: false
       required:
         - accountNumberPrefix
         - accountNumberSuffix
@@ -477,7 +513,7 @@ components:
           type: string
           nullable: true
           description: Prefix of the bank account number.
-          example: '295538'
+          example: "295538"
           pattern: ^\d{1,6}$
           minLength: 1
           maxLength: 6
@@ -485,7 +521,7 @@ components:
           type: string
           nullable: true
           description: Main part of the bank account number.
-          example: '4167197191'
+          example: "4167197191"
           pattern: ^\d{1,10}$
           minLength: 1
           maxLength: 10
@@ -493,11 +529,12 @@ components:
           type: string
           nullable: true
           description: Bank code of the bank where the account is held.
-          example: '0100'
+          example: "0100"
           pattern: ^\d{4}$
           maxLength: 4
         bankName:
           type: string
+          nullable: true
           description: Name of the bank where the account is held.
           example: Česká spořitelna, a.s.
           maxLength: 240
@@ -527,54 +564,60 @@ components:
           example: Příchovice 97, 34901 Stříbro, Česká republika
           maxLength: 255
 
-    EuroBankAccountDetails:
+    EuroBankAccount:
       type: object
-      title: EuroBankAccountDetails
+      title: Euro Bank Account
       description: Bank account details for Euro transactions.
       additionalProperties: false
+      nullable: false
       allOf:
-        - $ref: '#/components/schemas/BankAccountDetails'
-        - type: object
-          title: BankAccountDetails
-          description: Bank account details for Euro transactions.
-          additionalProperties: false
-          required:
-            - country
-            - swiftCode
-          properties:
-            country:
-              type: string
-              nullable: true
-              description: Country code of the Euro account.
-              example: Česká republika
-              maxLength: 70
-            swiftCode:
-              type: string
-              nullable: true
-              description: SWIFT code of the bank for Euro transactions.
-              example: KOMBCZPPXXX
-              pattern: ^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$
-              maxLength: 11
+        - $ref: '#/components/schemas/BankAccount'
+        - $ref: '#/components/schemas/CountryAndSwiftCode'
 
-    BankAccounts:
+    CountryAndSwiftCode:
       type: object
-      title: BankAccounts
+      title: Country And Swift Code
+      description: Country and SWIFT code of the bank for Euro transactions.
+      additionalProperties: false
+      nullable: false
+      required:
+        - country
+        - swiftCode
+      properties:
+        country:
+          type: string
+          nullable: true
+          description: Country code of the Euro account.
+          example: Česká republika
+          maxLength: 70
+        swiftCode:
+          type: string
+          nullable: true
+          description: SWIFT code of the bank for Euro transactions.
+          example: KOMBCZPPXXX
+          maxLength: 11
+
+    BankAccountsResponse:
+      type: object
+      title: Bank Accounts Response
       description: Bank accounts of the person.
       additionalProperties: false
+      nullable: false
       required:
         - account
         - euroAccount
       properties:
         account:
-          $ref: '#/components/schemas/BankAccountDetails'
+          $ref: '#/components/schemas/BankAccount'
         euroAccount:
-          $ref: '#/components/schemas/EuroBankAccountDetails'
+          $ref: '#/components/schemas/EuroBankAccount'
 
     HighSchoolAddress:
       type: object
-      title: HighSchoolAddress
+      title: High School Address
       description: High School address details.
       additionalProperties: false
+      nullable: false
       required:
         - street
         - zipCode
@@ -585,109 +628,119 @@ components:
         street:
           type: string
           nullable: true
-          description: Street name of the address.
+          description: Street name of the high school address.
           example: Příchovice
           maxLength: 48
         zipCode:
           type: string
           nullable: true
-          description: Zip code of the address.
+          description: Zip code of the high school address.
           example: '34901'
           pattern: ^\d{1,5}$
           maxLength: 5
         municipality:
           type: string
           nullable: true
-          description: Municipality of the address.
+          description: Municipality of the high school address.
           example: Stříbro
           maxLength: 255
         district:
           type: string
           nullable: true
-          description: District of the address.
+          description: District of the high school address.
           example: Tachov
           maxLength: 100
         country:
           type: string
           nullable: true
-          description: Country of the address.
+          description: Country of the high school address.
           example: Česká republika
           maxLength: 70
 
-    EducationDetails:
+    EducationResponse:
       type: object
-      title: EducationDetails
+      title: Education Response
       description: Education details of the person.
       additionalProperties: false
+      nullable: false
       required:
         - highSchool
         - foreignHighSchool
       properties:
         highSchool:
-          type: object
-          title: HighSchool
-          description: Details of the high school attended by the person.
-          additionalProperties: false
-          required:
-            - schoolName
-            - fieldOfStudy
-            - graduationDate
-            - address
-          properties:
-            schoolName:
-              type: string
-              nullable: true
-              description: Name of the high school.
-              example: Gymnázium
-              maxLength: 150
-            fieldOfStudy:
-              type: string
-              nullable: true
-              description: Field of study at the high school.
-              example: Výpočetní technika a informatika
-              maxLength: 240
-            graduationDate:
-              type: string
-              format: date
-              nullable: true
-              description: Date of graduation from the educational institution.
-              example: '2020-06-15'
-            address:
-              $ref: '#/components/schemas/HighSchoolAddress'
+          $ref: '#/components/schemas/HighSchool'
         foreignHighSchool:
-          type: object
-          title: ForeignHighSchool
-          description: Details of the foreign high school attended by the person.
-          additionalProperties: false
-          required:
-            - schoolName
-            - fieldOfStudy
-            - location
-          properties:
-            schoolName:
-              type: string
-              nullable: true
-              description: Name of the foreign high school.
-              example: International School
-              maxLength: 75
-            fieldOfStudy:
-              type: string
-              nullable: true
-              description: Field of study at the foreign high school.
-              example: Computer Science
-              maxLength: 255
-            location:
-              type: string
-              nullable: true
-              description: Location of the foreign high school.
-              example: Paris
-              maxLength: 75
+          $ref: '#/components/schemas/ForeignHighSchool'
+
+    HighSchool:
+      type: object
+      title: High School
+      description: Details of the high school attended by the person.
+      additionalProperties: false
+      nullable: false
+      required:
+        - schoolName
+        - fieldOfStudy
+        - graduationDate
+        - address
+      properties:
+        schoolName:
+          type: string
+          nullable: true
+          description: Name of the high school.
+          example: Gymnázium
+          maxLength: 150
+        fieldOfStudy:
+          type: string
+          nullable: true
+          description: Field of study at the high school.
+          example: Výpočetní technika a informatika
+          maxLength: 240
+        graduationDate:
+          type: string
+          format: date
+          nullable: true
+          description: Date of graduation from the educational institution.
+          example: '2020-06-15'
+        address:
+          $ref: '#/components/schemas/HighSchoolAddress'
+
+    ForeignHighSchool:
+      type: object
+      title: Foreign High School
+      description: Details of the foreign high school attended by the person.
+      additionalProperties: false
+      nullable: false
+      required:
+        - schoolName
+        - fieldOfStudy
+        - location
+      properties:
+        schoolName:
+          type: string
+          nullable: true
+          description: Name of the foreign high school.
+          example: International School
+          maxLength: 75
+        fieldOfStudy:
+          type: string
+          nullable: true
+          description: Field of study at the foreign high school.
+          example: Computer Science
+          maxLength: 255
+        location:
+          type: string
+          nullable: true
+          description: Location of the foreign high school.
+          example: Paris
+          maxLength: 75
 
     ProblemDetail:
       type: object
-      title: ProblemDetail
+      title: Problem Detail
       description: A generic error.
       additionalProperties: false
+      nullable: false
       required:
         - type
         - title
@@ -728,45 +781,39 @@ components:
           additionalProperties: true
           maxProperties: 5
           description: A free-form based object that contains additional context about the error.
-      example:
-        type: http://localhost:8080/api/v1/person-not-found
-        title: Person Not Found
-        status: 404
-        detail: 'Person with ID: 221264 not found'
-        instance: /api/v1/persons/221264
-        contextInfo:
-          person: Person 221264 not found
+          example:
+            personId: Must be greater than 0.
 
   responses:
 
     401Unauthorized:
-      description: Access token is missing or invalid
+      description: Access token is missing or invalid.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
-            type: http://localhost:8080/api/v1/person-not-found
+            type: http://localhost:8080/api/v1/unauthorized
             title: Unauthorized
             status: 401
             detail: Access token is missing or invalid
             instance: /api/v1/persons/221264
 
     403Forbidden:
-      description: The specified resource was not found
+      description: You do not have permission to access this resource.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
           example:
-            type: http://localhost:8080/api/v1/person-not-found
+            type: http://localhost:8080/api/v1/forbidden
             title: Forbidden
             status: 403
             detail: You do not have permission to access this resource
             instance: /api/v1/persons/221264
 
     404NotFound:
-      description: The specified resource was not found
+      description: The specified resource was not found.
       content:
         application/json:
           schema:
@@ -779,7 +826,7 @@ components:
             instance: /api/v1/persons/221264
 
     500InternalServerError:
-      description: Internal server error
+      description: Internal server error.
       content:
         application/json:
           schema:

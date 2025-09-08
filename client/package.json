@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "pack": "pack build $(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --builder paketobuildpacks/builder-jammy-base --buildpack paketo-buildpacks/web-servers --env BP_NPM_VERSION=11.5.2 --env BP_NODE_RUN_SCRIPTS=build --env NODE_ENV=dev --env BP_WEB_SERVER=nginx --env BP_WEB_SERVER_ENABLE_PUSH_STATE=true --env BP_WEB_SERVER_ROOT=/workspace/dist"
+    "pack": "pack build $(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --builder paketobuildpacks/builder-jammy-base --buildpack paketo-buildpacks/web-servers --env BP_NPM_VERSION=11.6.0 --env BP_NODE_RUN_SCRIPTS=build --env NODE_ENV=dev --env BP_WEB_SERVER=nginx --env BP_WEB_SERVER_ENABLE_PUSH_STATE=true --env BP_WEB_SERVER_ROOT=/workspace/dist"
   },
   "engines": {
     "npm": ">=11.6.0"

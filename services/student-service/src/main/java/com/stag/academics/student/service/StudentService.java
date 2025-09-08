@@ -2,7 +2,7 @@ package com.stag.academics.student.service;
 
 import com.stag.academics.student.exception.StudentNotFoundException;
 import com.stag.academics.student.mapper.ProfileMapper;
-import com.stag.academics.student.model.StudentProfile;
+import com.stag.academics.student.model.Profile;
 import com.stag.academics.student.repository.StudentRepository;
 import com.stag.academics.student.repository.projection.ProfileView;
 import com.stag.academics.student.service.data.SimpleProfileLookupData;
@@ -45,7 +45,7 @@ public class StudentService {
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
         || #studentId == principal.claims['studentId']
     """)
-    public StudentProfile getStudentProfile(String studentId, String language) {
+    public Profile getStudentProfile(String studentId, String language) {
         log.info("Fetching student profile for studentId: {} with language: {}", studentId, language);
 
         ProfileView profileView = studentRepository.findStudentProfileById(studentId)
@@ -62,7 +62,7 @@ public class StudentService {
         CompletableFuture.allOf(personSimpleProfileDataFuture, studyProgramAndFieldFuture).join();
 
         log.debug("Additional data fetched, mapping to StudentProfile for studentId: {}", studentId);
-        StudentProfile profile = ProfileMapper.INSTANCE.toStudentProfile(
+        Profile profile = ProfileMapper.INSTANCE.toStudentProfile(
             profileView, personSimpleProfileDataFuture.join(), studyProgramAndFieldFuture.join()
         );
 

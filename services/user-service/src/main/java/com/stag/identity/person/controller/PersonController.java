@@ -1,10 +1,10 @@
 package com.stag.identity.person.controller;
 
-import com.stag.identity.PersonsApi;
-import com.stag.identity.dto.AddressesDTO;
-import com.stag.identity.dto.BankAccountsDTO;
-import com.stag.identity.dto.EducationDetailsDTO;
-import com.stag.identity.dto.PersonProfileDTO;
+import com.stag.identity.api.PersonsApi;
+import com.stag.identity.api.dto.AddressesResponse;
+import com.stag.identity.api.dto.BankAccountsResponse;
+import com.stag.identity.api.dto.EducationResponse;
+import com.stag.identity.api.dto.PersonResponse;
 import com.stag.identity.person.mapper.PersonApiMapper;
 import com.stag.identity.person.model.Addresses;
 import com.stag.identity.person.model.Banking;
@@ -32,43 +32,43 @@ public class PersonController implements PersonsApi {
     private final EducationService educationService;
 
     @Override
-    public ResponseEntity<PersonProfileDTO> getPersonProfile(Integer personId, String language) {
+    public ResponseEntity<PersonResponse> getPersonProfile(Integer personId, String language) {
         log.info("Person profile requested for personId: {} with language: {}", personId, language);
 
         Profile profile = profileService.getPersonProfile(personId, language);
-        PersonProfileDTO personProfileDTO = PersonApiMapper.INSTANCE.toPersonProfileDTO(profile);
+        PersonResponse personResponse = PersonApiMapper.INSTANCE.toPersonResponse(profile);
 
-        return ResponseEntity.ok(personProfileDTO);
+        return ResponseEntity.ok(personResponse);
     }
 
     @Override
-    public ResponseEntity<AddressesDTO> getPersonAddresses(Integer personId, String language) {
+    public ResponseEntity<AddressesResponse> getPersonAddresses(Integer personId, String language) {
         log.info("Person addresses requested for personId: {} with language: {}", personId, language);
 
         Addresses addresses = addressService.getPersonAddresses(personId, language);
-        AddressesDTO addressesDTO = PersonApiMapper.INSTANCE.toAddressesDTO(addresses);
+        AddressesResponse addressesResponse = PersonApiMapper.INSTANCE.toAddressesResponse(addresses);
 
-        return ResponseEntity.ok(addressesDTO);
+        return ResponseEntity.ok(addressesResponse);
     }
 
     @Override
-    public ResponseEntity<BankAccountsDTO> getPersonBanking(Integer personId, String language) {
+    public ResponseEntity<BankAccountsResponse> getPersonBanking(Integer personId, String language) {
         log.info("Person banking requested for personId: {} with language: {}", personId, language);
 
         Banking banking = bankingService.getPersonBanking(personId, language);
-        BankAccountsDTO bankAccountsDTO = PersonApiMapper.INSTANCE.toBankAccountsDTO(banking);
+        BankAccountsResponse accountsResponse = PersonApiMapper.INSTANCE.toBankAccountsResponse(banking);
 
-        return ResponseEntity.ok(bankAccountsDTO);
+        return ResponseEntity.ok(accountsResponse);
     }
 
     @Override
-    public ResponseEntity<EducationDetailsDTO> getPersonEducation(Integer personId, String language) {
+    public ResponseEntity<EducationResponse> getPersonEducation(Integer personId, String language) {
         log.info("Person education requested for personId: {} with language: {}", personId, language);
 
         Education education = educationService.getPersonEducation(personId, language);
-        EducationDetailsDTO educationDetailsDTO = PersonApiMapper.INSTANCE.toEducationDetailsDTO(education);
+        EducationResponse educationResponse = PersonApiMapper.INSTANCE.toEducationResponse(education);
 
-        return ResponseEntity.ok(educationDetailsDTO);
+        return ResponseEntity.ok(educationResponse);
     }
 
 }

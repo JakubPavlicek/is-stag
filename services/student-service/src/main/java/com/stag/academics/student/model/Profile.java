@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.io.Serializable;
 
 @Builder
-public record StudentProfile(
+public record Profile(
     String studentId,
     Integer personId,
     String firstName,
@@ -38,7 +38,6 @@ public record StudentProfile(
     public record FieldOfStudy(
         Integer id,
         String name,
-        String abbreviation,
         String faculty,
         String department,
         String code

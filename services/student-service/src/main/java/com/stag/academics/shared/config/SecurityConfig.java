@@ -1,5 +1,7 @@
 package com.stag.academics.shared.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -12,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.ExpressionJwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -62,6 +65,14 @@ public class SecurityConfig {
         jwtAuthConverter.setJwtGrantedAuthoritiesConverter(expressionConverter());
 
         return jwtAuthConverter;
+    }
+
+    /// Enables SecurityContext propagation into @Asnyc methods (useful for authorization with @PreAuthorize)
+    @Bean
+    public DelegatingSecurityContextAsyncTaskExecutor taskExecutor(
+        @Qualifier("simpleAsyncTaskExecutorBuilder") SimpleAsyncTaskExecutorBuilder builder
+    ) {
+        return new DelegatingSecurityContextAsyncTaskExecutor(builder.build());
     }
 
 }

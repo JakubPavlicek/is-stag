@@ -92,8 +92,8 @@
                         <artifactId>openapi-generator-maven-plugin</artifactId>
                         <configuration>
                             <configOptions>
-                                <apiPackage>com.stag.academics</apiPackage>
-                                <modelPackage>com.stag.academics.dto</modelPackage>
+                                <apiPackage>com.stag.academics.api</apiPackage>
+                                <modelPackage>com.stag.academics.api.dto</modelPackage>
                             </configOptions>
                         </configuration>
                     </plugin>

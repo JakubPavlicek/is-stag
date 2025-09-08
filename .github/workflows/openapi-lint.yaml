@@ -1,0 +1,21 @@
+name: OpenAPI Vacuum Lint
+on:
+  push:
+    paths:
+      - 'services/**'
+
+jobs:
+  vacuum-lint-openapi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+
+      - name: Install Vacuum
+        run: |
+          curl -fsSL https://quobix.com/scripts/install_vacuum.sh | sh
+          vacuum version
+
+      - name: Run Vacuum Lint
+        working-directory: services
+        run: vacuum lint *-service/src/main/resources/static/openapi.yaml --fail-severity error --min-score 95
