@@ -18,6 +18,7 @@ jobs:
           PROTOLINT_VERSION="0.56.4"
           PB_REL="https://github.com/yoheimuta/protolint/releases/download/v${PROTOLINT_VERSION}/protolint_${PROTOLINT_VERSION}_linux_amd64.tar.gz"
           curl -sSL "${PB_REL}" | tar -xz
+          sudo mv protolint /usr/local/bin/
           protolint --version
 
       - name: Run protolint
