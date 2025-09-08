@@ -3,7 +3,6 @@ on:
   push:
     paths:
       - 'services/**'
-      - 'client/**'
 
 jobs:
   vacuum-lint-openapi:
