@@ -1,11 +1,12 @@
 name: Frontend CI
+
 on:
   push:
     paths:
       - 'client/**'
 
 jobs:
-  build-push-client:
+  build-and-publish-client:
     runs-on: ubuntu-latest
     defaults:
       run:

@@ -4,7 +4,8 @@ services:
       - dev
       - prod
     container_name: keycloak
-    image: quay.io/keycloak/keycloak:26.3.3
+    build:
+      context: ./keycloak
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
@@ -41,10 +42,6 @@ services:
     ports:
       - "8180:8080"
     command: start-dev --import-realm
-    volumes:
-      - ./keycloak/is-stag-realm-export.json:/opt/keycloak/data/import/is-stag-realm.json
-      - ./keycloak/providers/is-stag-authenticator/target/is-stag-authenticator.jar:/opt/keycloak/providers/is-stag-authenticator.jar
-      - ./keycloak/theme/is-stag-theme:/opt/keycloak/themes/is-stag-theme
     networks:
       - is-stag-network
 
