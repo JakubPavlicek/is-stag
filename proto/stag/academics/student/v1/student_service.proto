@@ -16,7 +16,7 @@ service StudentService {
       returns (GetStudentPersonIdResponse);
 }
 
-service xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx {
+service xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx {
 
 }
 
