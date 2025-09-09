@@ -32,10 +32,9 @@ jobs:
 
       - name: Run Dependency Check (HTML + JSON)
         working-directory: services
-        env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
           mvn -B org.owasp:dependency-check-maven:check \
+            -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
             -Ddata.directory="${GITHUB_WORKSPACE}/dependency-check-data" \
             -DcveValidForHours=24 \
             -Dformat=HTML,JSON
