@@ -28,8 +28,15 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build project with Maven
-        run: mvn clean install -DskipTests
+      - name: Install mvnd
+        run: |
+          MVND_VERSION=2.0.0-rc-3
+          curl -sL https://downloads.apache.org/maven/mvnd/${MVND_VERSION}/maven-mvnd-${MVND_VERSION}-linux-amd64.zip -o mvnd.zip
+          unzip -q mvnd.zip
+          echo "$PWD/maven-mvnd-${MVND_VERSION}-linux-amd64/bin" >> $GITHUB_PATH
+
+      - name: Build project with mvnd
+        run: mvnd -B -T 1C -DskipTests clean install
 
       - name: Depcheck
         uses: dependency-check/Dependency-Check_Action@main
