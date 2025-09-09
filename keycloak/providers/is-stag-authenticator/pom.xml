@@ -5,7 +5,7 @@
 
     <groupId>com.stag.portal.keycloak</groupId>
     <artifactId>is-stag-authenticator</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
 
     <name>IS/STAG Keycloak Authenticator</name>
