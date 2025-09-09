@@ -2,7 +2,7 @@ name: Security Scan
 
 on:
   schedule:
-    - cron: '30 17 * * 2'
+    - cron: '32 17 * * 2'
 
 jobs:
   dependency-vulnerability-scan:
