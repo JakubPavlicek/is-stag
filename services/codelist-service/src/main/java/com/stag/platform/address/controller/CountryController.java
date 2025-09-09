@@ -21,6 +21,14 @@ public class CountryController implements CountriesApi {
 
     private final CountryService countryService;
 
+    // TODO:
+    //  Add:
+    //    GET /domains/TITUL_PRED
+    //    GET /domains/TITUL_ZA
+    //    GET /domains/STAV (rodinny stav)
+    //    GET /domains/CIS_BANK
+    //    GET /address (debounce effect) - (dorucovaci adresa)
+
     @Override
     public ResponseEntity<CountryListResponse> getCountries(String language) {
         log.info("Countries requested in language: {}", language);

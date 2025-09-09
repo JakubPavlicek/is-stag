@@ -26,6 +26,9 @@
         <!-- Empty by default; override in CI with -Ddocker.password=... -->
         <docker.password></docker.password>
 
+        <!-- SonarQube -->
+        <sonar.organization>jakubpavlicek</sonar.organization>
+
         <!-- Maven -->
         <maven-enforcer.version>3.6.1</maven-enforcer.version>
         <maven-compiler.version>3.14.0</maven-compiler.version>

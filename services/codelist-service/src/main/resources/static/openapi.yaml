@@ -124,9 +124,11 @@ components:
             - id: 203
               name: Czech Republic
               commonName: Czechia
+              abbreviation: CZ
             - id: 204
               name: Slovak Republic
               commonName: Slovakia
+              abbreviation: SK
 
     Country:
       type: object
@@ -138,6 +140,7 @@ components:
         - id
         - name
         - commonName
+        - abbreviation
       properties:
         id:
           type: integer
@@ -158,6 +161,12 @@ components:
           description: Common name of the country.
           example: Czechia
           maxLength: 70
+        abbreviation:
+          type: string
+          nullable: false
+          description: Abbreviation of the country.
+          example: CZ
+          maxLength: 2
 
     DomainListResponse:
       type: object

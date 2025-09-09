@@ -23,12 +23,15 @@ public interface CountryRepository extends JpaRepository<Country, Integer> {
             CASE
                 WHEN :language = 'en' THEN c.commonNameEn
                 ELSE c.commonNameCz
-            END AS commonName
+            END AS commonName,
+            c.abbreviation
         )
         FROM
             Country c
         WHERE
             c.validTo IS NULL
+        ORDER BY
+            c.abbreviation
         """
     )
     Set<CountryView> findAllValidCountries(String language);
