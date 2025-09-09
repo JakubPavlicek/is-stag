@@ -1,6 +1,7 @@
 name: Security Vulnerabilities Scan
 
 on:
+  push:
   schedule:
     - cron: '0 0 * * 1'
   workflow_dispatch:
