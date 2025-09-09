@@ -10,10 +10,15 @@ jobs:
   dependency-vulnerability-scan:
     name: OWASP Dependency Check
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    defaults:
-      run:
-        working-directory: services
+    strategy:
+      matrix:
+        target:
+          - name: services
+            build_dir: services
+            scan_path: services
+          - name: keycloak-provider
+            build_dir: keycloak/providers/is-stag-authenticator
+            scan_path: keycloak/providers/is-stag-authenticator
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -25,13 +30,6 @@ jobs:
           java-version: 24.0.2
           cache: maven
 
-      - name: Cache Maven packages
-        uses: actions/cache@v4.2.4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
       - name: Install mvnd
         run: |
           MVND_VERSION=2.0.0-rc-3
@@ -39,26 +37,25 @@ jobs:
           unzip -q mvnd.zip
           echo "$PWD/maven-mvnd-${MVND_VERSION}-linux-amd64/bin" >> $GITHUB_PATH
 
-      - name: Build services with mvnd
-        run: mvnd -B -T 1C -DskipTests verify
+      - name: Build (${ { matrix.target.name } })
+        working-directory: ${{ matrix.target.build_dir }}
+        run: mvn -B -DskipTests verify
 
-      - name: Depcheck
+      - name: Depcheck (${ { matrix.target.name } })
         uses: dependency-check/Dependency-Check_Action@main
         env:
-          # actions/setup-java changes JAVA_HOME so it needs to be reset to match the depcheck image
           JAVA_HOME: /opt/jdk
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         with:
-          project: 'is-stag'
-          path: 'services'
-          format: 'HTML'
-          out: 'reports'
+          project: is-stag-${{ matrix.target.name }}
+          path: ${{ matrix.target.scan_path }}
+          format: HTML
+          out: reports/${{ matrix.target.name }}
 #          args: >
 #            --failOnCVSS 8
 
-      - name: Upload Report Artifacts
-        uses: actions/upload-artifact@v4.6.2
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
         with:
-          name: Depcheck report
-          path: ${{github.workspace}}/reports
-          retention-days: 3
+          name: depcheck-${{ matrix.target.name }}
+          path: reports/${{ matrix.target.name }}

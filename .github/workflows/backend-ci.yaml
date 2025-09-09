@@ -53,6 +53,7 @@ jobs:
         with:
           distribution: liberica
           java-version: 24.0.2
+          cache: maven
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4.2.4
@@ -60,13 +61,6 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-
-      - name: Cache Maven packages
-        uses: actions/cache@v4.2.4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
 
       - name: Install mvnd
         run: |
@@ -106,13 +100,7 @@ jobs:
         with:
           distribution: liberica
           java-version: 24.0.2
-
-      - name: Cache Maven packages
-        uses: actions/cache@v4.2.4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          cache: maven
 
       - name: Install mvnd
         run: |
