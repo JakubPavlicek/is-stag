@@ -21,27 +21,28 @@ jobs:
           distribution: liberica
           java-version: 24.0.2
 
-      - name: Cache Dependency-Check NVD Data
-        id: depcheck-cache
+      - name: Cache Maven packages
         uses: actions/cache@v4.2.4
         with:
-          path: dependency-check-data
-          key: ${{ runner.os }}-depcheck-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-depcheck-
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
 
-      - name: Run Dependency Check (HTML + JSON)
-        working-directory: services
-        run: |
-          mvn -B org.owasp:dependency-check-maven:check \
-            -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
-            -Ddata.directory="${GITHUB_WORKSPACE}/dependency-check-data" \
-            -DcveValidForHours=24 \
-            -Dformat=HTML,JSON
-          # Copy reports to a predictable location
-          mkdir -p ../dependency-check-reports
-          find . -name dependency-check-report.html -o -name dependency-check-report.json \
-            -exec cp {} ../dependency-check-reports/ \;
+      - name: Build project with Maven
+        run: mvn clean install
+
+      - name: Depcheck
+        uses: dependency-check/Dependency-Check_Action@main
+        env:
+          # actions/setup-java changes JAVA_HOME so it needs to be reset to match the depcheck image
+          JAVA_HOME: /opt/jdk
+        with:
+          project: 'test'
+          path: '.'
+          format: 'HTML'
+          out: 'reports'
+          args: >
+            --failOnCVSS 8
 
       - name: Upload Report Artifacts
         uses: actions/upload-artifact@v4.6.2
