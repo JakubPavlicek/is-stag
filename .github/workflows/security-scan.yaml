@@ -1,8 +1,7 @@
 name: Security Scan
 
 on:
-  schedule:
-    - cron: '32 17 * * 2'
+  push
 
 jobs:
   dependency-vulnerability-scan:
