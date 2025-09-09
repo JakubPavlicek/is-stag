@@ -1,7 +1,6 @@
 name: Security Vulnerabilities Scan
 
 on:
-  push:
   schedule:
     - cron: '0 0 * * 1'
   workflow_dispatch:
@@ -54,7 +53,7 @@ jobs:
         working-directory: client
         run: npm ci
 
-      - name: Depcheck (${ { matrix.target.name } })
+      - name: Depcheck ${{ matrix.target.name }}
         uses: dependency-check/Dependency-Check_Action@main
         env:
           JAVA_HOME: /opt/jdk
