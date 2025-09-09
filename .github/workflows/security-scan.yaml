@@ -1,7 +1,9 @@
-name: Security Scan
+name: Security Vulnerabilities Scan
 
 on:
-  push
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
 
 jobs:
   dependency-vulnerability-scan:
@@ -36,7 +38,7 @@ jobs:
           unzip -q mvnd.zip
           echo "$PWD/maven-mvnd-${MVND_VERSION}-linux-amd64/bin" >> $GITHUB_PATH
 
-      - name: Build project with mvnd
+      - name: Build services with mvnd
         run: mvnd -B -T 1C -DskipTests verify
 
       - name: Depcheck
