@@ -23,10 +23,6 @@ public class CountryController implements CountriesApi {
 
     // TODO:
     //  Add:
-    //    GET /domains/TITUL_PRED
-    //    GET /domains/TITUL_ZA
-    //    GET /domains/STAV (rodinny stav)
-    //    GET /domains/CIS_BANK
     //    GET /address (debounce effect) - (dorucovaci adresa)
 
     @Override

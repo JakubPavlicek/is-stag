@@ -20,12 +20,12 @@ public class StudyProgramService {
 
     private final CodelistClient codelistClient;
 
-    @Transactional(readOnly = true)
     public StudyProgramView findStudyProgramViewById(Long studyProgramId, String language) {
         return studyProgramRepository.findStudyProgramViewById(studyProgramId, language)
                                      .orElseThrow(() -> new StudyProgramNotFoundException(studyProgramId));
     }
 
+    @Transactional(readOnly = true)
     public StudyProgramView findStudyProgram(Long studyProgramId, String language) {
         StudyProgramView rawStudyProgramView = findStudyProgramViewById(studyProgramId, language);
 

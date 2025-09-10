@@ -28,7 +28,7 @@ public class ProfileService {
     private final CodelistLookupService codelistLookupService;
     private final StudentLookupService studentLookupService;
 
-    @Cacheable(value = "person-profile", key = "#personId + ':' + #language")
+    @Cacheable(value = "person-profile", key = "{#personId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
         || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)

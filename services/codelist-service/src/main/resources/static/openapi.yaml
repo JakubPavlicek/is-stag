@@ -23,8 +23,6 @@ paths:
 
   /countries:
     get:
-      security:
-        - bearerAuth: [ ]
       tags:
         - countries
       summary: Get all countries
@@ -52,13 +50,11 @@ paths:
 
   /domains:
     get:
-      security:
-        - bearerAuth: [ ]
       tags:
         - domains
-      summary: Get all codelist domains
+      summary: Get all domains
       description: Retrieve list of all domains available in the code lists system.
-      operationId: getCodeListDomains
+      operationId: getDomains
       responses:
         '200':
           description: List of available domains.
@@ -77,15 +73,33 @@ paths:
         'default':
           $ref: '#/components/responses/Default'
 
+  /domains/{domain}:
+    get:
+      tags:
+        - domains
+      summary: Get domain values
+      description: Retrieve a domain values by its unique identifier.
+      operationId: getDomainValues
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Domain'
+      responses:
+        '200':
+          description: Domain details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainValueListResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        'default':
+          $ref: '#/components/responses/Default'
+
 components:
-
-  securitySchemes:
-
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-      description: JWT token issued by Keycloak.
 
   parameters:
 
@@ -100,6 +114,14 @@ components:
           - cs
           - en
         default: cs
+
+    Domain:
+      name: domain
+      in: path
+      required: true
+      description: The unique identifier of the domain to retrieve.
+      schema:
+        $ref: '#/components/schemas/Domain'
 
   schemas:
 
@@ -187,18 +209,77 @@ components:
           uniqueItems: true
       example:
         domains:
-          - ADRESA
+          - TITUL_PRED
+          - TITUL_ZA
+          - STAV
+          - CIS_BANK
           - FAKULTA
-          - PRACOVISTE
 
     Domain:
       type: string
       title: Domain
       nullable: false
-      description: A codelist domain name.
-      example: ADRESA
+      description: A domain name.
+      example: FAKULTA
       minLength: 1
       maxLength: 100
+
+    DomainValueListResponse:
+      type: object
+      title: Domain Value List Response
+      description: Response containing a list of values belonging to the specified domain.
+      additionalProperties: false
+      nullable: false
+      required:
+        - values
+      properties:
+        values:
+          type: array
+          description: List of values belonging to the specified domain.
+          items:
+            $ref: '#/components/schemas/DomainValue'
+          minItems: 1
+          nullable: false
+          uniqueItems: true
+          example:
+            - key: "FAV"
+              name: "Fakulta aplikovaných věd"
+              abbreviation: "FAV"
+            - key: "FEL"
+              name: "Fakulta elektrotechnická"
+              abbreviation: "FEL"
+
+    DomainValue:
+      type: object
+      title: Domain Value
+      description: Object representing a value belonging to the specified domain.
+      additionalProperties: false
+      nullable: false
+      required:
+        - key
+        - name
+        - abbreviation
+      properties:
+        key:
+          type: string
+          nullable: false
+          description: Key of the value.
+          example: FAV
+          minLength: 1
+          maxLength: 240
+        name:
+          type: string
+          nullable: false
+          description: Name of the value.
+          example: Fakulta aplikovaných věd
+          minLength: 1
+          maxLength: 240
+        abbreviation:
+          type: string
+          nullable: true
+          description: Abbreviation of the value.
+          example: FAV
+          maxLength: 240
 
     ProblemDetail:
       type: object
@@ -297,6 +378,19 @@ components:
             status: 403
             detail: You do not have permission to access this resource
             instance: /api/v1/countries
+
+    404NotFound:
+      description: The specified resource was not found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/domain-not-found
+            title: Domain Not Found
+            status: 404
+            detail: 'Domain with ID: STAT not found'
+            instance: /api/v1/domains/STAT
 
     500InternalServerError:
       description: Internal server error.

@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.Set;
 
-@Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
+@Mapper
 public interface CountryApiMapper {
 
     CountryApiMapper INSTANCE = Mappers.getMapper(CountryApiMapper.class);

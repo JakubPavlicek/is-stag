@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .pathMatchers("/actuator/health").permitAll()
                 .pathMatchers("/*/openapi.yaml").permitAll()
                 .pathMatchers(SWAGGER_URLS).permitAll()
+                .pathMatchers("/api/v1/countries/**", "/api/v1/domains/**").permitAll()
                 .anyExchange().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->

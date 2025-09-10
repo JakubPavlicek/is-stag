@@ -14,8 +14,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class CodelistEntryService {
 
     private final CodelistEntryRepository codelistEntryRepository;

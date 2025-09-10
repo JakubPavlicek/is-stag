@@ -1,4 +1,4 @@
-package com.stag.platform.address.entity;
+package com.stag.platform.entry.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

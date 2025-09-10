@@ -26,10 +26,10 @@ public class StudentLookupService {
         return CompletableFuture.completedFuture(personalNumbers);
     }
 
-    @Cacheable(value = "student-person-id", key = "#personalNumber")
-    public Integer getStudentPersonId(String personalNumber) {
+    @Cacheable(value = "student-person-id", key = "#studentId")
+    public Integer getStudentPersonId(String studentId) {
         log.info("Fetching student person id");
-        Integer personId = studentClient.getStudentPersonId(personalNumber);
+        Integer personId = studentClient.getStudentPersonId(studentId);
         log.debug("Completed fetching student person id");
 
         return personId;

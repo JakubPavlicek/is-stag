@@ -22,7 +22,7 @@ public class EducationService {
     private final PersonRepository personRepository;
     private final CodelistLookupService codelistLookupService;
 
-    @Cacheable(value = "person-education", key = "#personId + ':' + #language")
+    @Cacheable(value = "person-education", key = "{#personId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
         || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)

@@ -40,7 +40,7 @@ public class StudentService {
     //  we can make this work by annotating the get methods / gRPC calls with @PreAuthorize and then providing null if not satisfied
     //  see https://www.youtube.com/watch?v=-x8-s3QnhMQ&list=PLa1A960Nosoe5yT4Uj_LdrtgtZH8c7vfR&index=109&ab_channel=SpringI%2FO at 27:35
 
-    @Cacheable(value = "student-profile", key = "#studentId + ':' + #language")
+    @Cacheable(value = "student-profile", key = "{#studentId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
         || #studentId == principal.claims['studentId']

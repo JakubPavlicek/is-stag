@@ -1,6 +1,5 @@
 package com.stag.platform.entry.entity;
 
-import com.stag.platform.address.entity.Domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
