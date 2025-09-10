@@ -31,7 +31,7 @@ spring:
             - id: codelist-service
               uri: lb://codelist-service
               predicates:
-                - Path=/api/v1/countries/**,/api/v1/domains/**
+                - Path=/api/v1/addresses/**,/api/v1/countries/**,/api/v1/domains/**
               filters:
                 - RemoveRequestHeader=Authorization
             - id: student-service

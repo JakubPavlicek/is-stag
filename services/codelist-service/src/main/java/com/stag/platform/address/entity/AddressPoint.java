@@ -2,8 +2,11 @@ package com.stag.platform.address.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -55,14 +58,26 @@ public class AddressPoint {
     )
     private Long id;
 
-    @Column(name = "ULICIDNO")
+    @Column(name = "ULICIDNO", insertable = false, updatable = false)
     private Long streetId;
 
-    @Column(name = "OBEC_IDNO")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ULICIDNO")
+    private Street street;
+
+    @Column(name = "OBEC_IDNO", insertable = false, updatable = false)
     private Long municipalityId;
 
-    @Column(name = "CCOB_IDNO")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "OBEC_IDNO")
+    private Municipality municipality;
+
+    @Column(name = "CCOB_IDNO", insertable = false, updatable = false)
     private Long municipalityPartId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CCOB_IDNO")
+    private MunicipalityPart municipalityPart;
 
     @Size(max = 10)
     @Column(
