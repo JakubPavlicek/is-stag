@@ -4,7 +4,6 @@ import com.stag.platform.api.dto.DomainListResponse;
 import com.stag.platform.api.dto.DomainValue;
 import com.stag.platform.api.dto.DomainValueListResponse;
 import com.stag.platform.entry.repository.projection.DomainValueView;
-import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

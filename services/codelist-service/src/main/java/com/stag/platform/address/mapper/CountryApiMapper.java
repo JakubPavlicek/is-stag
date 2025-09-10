@@ -3,7 +3,6 @@ package com.stag.platform.address.mapper;
 import com.stag.platform.address.repository.projection.CountryView;
 import com.stag.platform.api.dto.Country;
 import com.stag.platform.api.dto.CountryListResponse;
-import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

@@ -1,7 +1,6 @@
 package com.stag.academics.shared.grpc.client;
 
 import com.stag.academics.shared.grpc.mapper.PersonMapper;
-import com.stag.academics.student.repository.projection.ProfileView;
 import com.stag.academics.student.service.data.SimpleProfileLookupData;
 import com.stag.identity.person.v1.PersonServiceGrpc;
 import lombok.RequiredArgsConstructor;

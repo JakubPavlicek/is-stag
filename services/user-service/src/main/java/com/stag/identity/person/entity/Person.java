@@ -783,13 +783,4 @@ public class Person {
     @Column(name = "SIMS_ID")
     private String simsId;
 
-/*
- TODO [Reverse Engineering] create field to map the 'ZDR_SPECIFIKAT' column
- Available actions: Define target Java type | Uncomment as is | Remove column mapping
-    @Column(
-    name = "ZDR_SPECIFIKAT",
-    columnDefinition = "ZDR_SPECIFIKAT"
-    )
-    private Object healthSpecifics;
-*/
 }

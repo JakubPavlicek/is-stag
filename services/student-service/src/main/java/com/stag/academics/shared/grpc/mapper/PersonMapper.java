@@ -1,6 +1,5 @@
 package com.stag.academics.shared.grpc.mapper;
 
-import com.stag.academics.student.repository.projection.ProfileView;
 import com.stag.academics.student.service.data.SimpleProfileLookupData;
 import com.stag.identity.person.v1.GetPersonSimpleProfileRequest;
 import com.stag.identity.person.v1.GetPersonSimpleProfileResponse;
