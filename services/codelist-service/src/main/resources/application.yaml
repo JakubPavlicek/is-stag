@@ -3,6 +3,27 @@ spring:
     name: codelist-service
   config:
     import: optional:configserver:http://config-server:8888
+  jpa:
+    properties:
+      hibernate:
+        search:
+          backend:
+            type: elasticsearch
+            version: 9
+            hosts: localhost:9200
+#            protocol: https
+            protocol: http
+            username: elastic
+            password: cp6r_Muie+Kckk1Hppel
+            schema_management:
+              strategy: create-or-validate
+            analysis:
+              configurer: com.stag.platform.shared.config.ElasticsearchAnalysisConfig
+#            ssl:
+#              truststore:
+#                path: elastic-ca.p12
+#                password: elastic
+#                type: PKCS12
 
 ---
 

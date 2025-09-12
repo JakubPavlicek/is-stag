@@ -8,16 +8,23 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@Indexed(index = "idx_address_point")
 @Entity
 @Table(
     name = "CIS_ADRESNICH_MIST",
@@ -58,21 +65,33 @@ public class AddressPoint {
     )
     private Long id;
 
-    @Column(name = "ULICIDNO", insertable = false, updatable = false)
+    @Column(
+        name = "ULICIDNO",
+        insertable = false,
+        updatable = false
+    )
     private Long streetId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ULICIDNO")
     private Street street;
 
-    @Column(name = "OBEC_IDNO", insertable = false, updatable = false)
+    @Column(
+        name = "OBEC_IDNO",
+        insertable = false,
+        updatable = false
+    )
     private Long municipalityId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OBEC_IDNO")
     private Municipality municipality;
 
-    @Column(name = "CCOB_IDNO", insertable = false, updatable = false)
+    @Column(
+        name = "CCOB_IDNO",
+        insertable = false,
+        updatable = false
+    )
     private Long municipalityPartId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -135,5 +154,55 @@ public class AddressPoint {
         scale = 15
     )
     private BigDecimal gpsY;
+
+    @Transient
+    @FullTextField(analyzer = "czech")
+    @IndexingDependency(derivedFrom = @ObjectPath({
+        @PropertyValue(propertyName = AddressPoint_.STREET),
+        @PropertyValue(propertyName = AddressPoint_.HOUSE_NUMBER),
+        @PropertyValue(propertyName = AddressPoint_.ORIENTATION_NUMBER),
+        @PropertyValue(propertyName = AddressPoint_.ORIENTATION_NUMBER_LETTER),
+        @PropertyValue(propertyName = AddressPoint_.MUNICIPALITY_PART),
+        @PropertyValue(propertyName = AddressPoint_.MUNICIPALITY),
+        @PropertyValue(propertyName = AddressPoint_.ZIP_CODE)
+    }))
+    public String getFullAddress() {
+        StringBuilder sb = new StringBuilder();
+
+        // Street name (if available)
+        if (street != null && street.getName() != null) {
+            sb.append(street.getName()).append(" ");
+        }
+
+        // House number
+        if (houseNumber != null) {
+            sb.append(houseNumber);
+        }
+
+        // Orientation number (if available)
+        if (orientationNumber != null) {
+            sb.append("/").append(orientationNumber);
+            if (orientationNumberLetter != null) {
+                sb.append(orientationNumberLetter);
+            }
+        }
+
+        // Comma + municipality part (optional)
+        if (municipalityPart.getName() != null) {
+            sb.append(", ").append(municipalityPart.getName());
+        }
+
+        // Comma + municipality
+        if (municipality.getName() != null) {
+            sb.append(", ").append(municipality.getName());
+        }
+
+        // ZIP code at the end
+        if (zipCode != null) {
+            sb.append(", ").append(zipCode);
+        }
+
+        return sb.toString().trim();
+    }
 
 }

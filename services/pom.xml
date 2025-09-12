@@ -45,6 +45,12 @@
         <protovalidate.version>1.0.0-rc.4</protovalidate.version>
         <protobuf-maven-plugin.version>3.9.0</protobuf-maven-plugin.version>
 
+        <!-- Hibernate Search -->
+        <hibernate-search.version>7.1.2.Final</hibernate-search.version>
+
+        <!-- Hibernate ORM Processor for JPA Metamodel generation -->
+        <hibernate-processor.version>7.1.0.Final</hibernate-processor.version>
+
         <!-- Tools -->
         <mapstruct.version>1.6.3</mapstruct.version>
         <mapstruct-protobuf-spi.version>1.50.0</mapstruct-protobuf-spi.version>
@@ -52,9 +58,9 @@
         <openapi-generator.version>7.15.0</openapi-generator.version>
 
         <!-- Cloud Native Buildpacks -->
-        <image.builder.version>0.0.60</image.builder.version>
+        <image.builder.version>0.0.61</image.builder.version>
         <buildpack-java.version>18.13.0</buildpack-java.version>
-        <buildpack-health-checker.version>2.10.2</buildpack-health-checker.version>
+        <buildpack-health-checker.version>2.11.0</buildpack-health-checker.version>
     </properties>
 
     <modules>
@@ -112,6 +118,25 @@
                 <groupId>com.stag</groupId>
                 <artifactId>grpc-common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <!-- Hibernate Search -->
+            <dependency>
+                <groupId>org.hibernate.search</groupId>
+                <artifactId>hibernate-search-mapper-orm</artifactId>
+                <version>${hibernate-search.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.search</groupId>
+                <artifactId>hibernate-search-backend-elasticsearch</artifactId>
+                <version>${hibernate-search.version}</version>
+            </dependency>
+
+            <!-- Hibernate ORM Processor for JPA Metamodel generation -->
+            <dependency>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-processor</artifactId>
+                <version>${hibernate-processor.version}</version>
             </dependency>
 
             <!-- OpenAPI -->
@@ -230,6 +255,11 @@
                     <configuration>
                         <release>${java.version}</release>
                         <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.hibernate.orm</groupId>
+                                <artifactId>hibernate-processor</artifactId>
+                                <version>${hibernate-processor.version}</version>
+                            </path>
                             <path>
                                 <groupId>org.mapstruct</groupId>
                                 <artifactId>mapstruct-processor</artifactId>

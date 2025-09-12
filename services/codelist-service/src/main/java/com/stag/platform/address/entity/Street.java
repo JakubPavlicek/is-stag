@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,7 +22,17 @@ import java.time.LocalDate;
 @Entity
 @Table(
     name = "CIS_ULIC",
-    schema = "INSTALL2"
+    schema = "INSTALL2",
+    indexes = {
+        @Index(
+            name = "CIUL_COBC_FK_I",
+            columnList = "OBEC_IDNO"
+        ),
+        @Index(
+            name = "CIUL_NAZEV_I",
+            columnList = "NAZEV"
+        )
+    }
 )
 public class Street {
 
@@ -44,11 +55,12 @@ public class Street {
     )
     private Municipality municipality;
 
-    @Size(max = 255)
+    @Size(max = 4000)
     @NotNull
     @Column(
         name = "NAZEV",
-        nullable = false
+        nullable = false,
+        length = 4000
     )
     private String name;
 
@@ -57,4 +69,5 @@ public class Street {
 
     @Column(name = "ZANIK_DNE")
     private LocalDate dissolutionDate;
+
 }
