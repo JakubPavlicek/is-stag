@@ -14,7 +14,7 @@ spring:
 #            protocol: https
             protocol: http
             username: elastic
-            password: cp6r_Muie+Kckk1Hppel
+            password: ${ELASTICSEARCH_PASSWORD}
             schema_management:
               strategy: create-or-validate
             analysis:

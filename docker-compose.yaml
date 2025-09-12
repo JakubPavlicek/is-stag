@@ -346,6 +346,8 @@ services:
       api-gateway:
 #        condition: service_healthy
         condition: service_started
+      elasticsearch:
+        condition: service_started
       redis:
         condition: service_healthy
       otel:

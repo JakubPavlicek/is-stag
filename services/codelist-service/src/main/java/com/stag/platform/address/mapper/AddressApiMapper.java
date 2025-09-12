@@ -21,7 +21,7 @@ public interface AddressApiMapper {
 
     Set<Address> toAddressList(List<AddressSuggestion> addressSuggestions);
 
-    @Mapping(target = "id", source = "addressPointId")
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "fullAddress")
     Address toAddress(AddressSuggestion addressSuggestion);
 

@@ -1,7 +1,8 @@
 package com.stag.platform.address.repository.projection;
 
 public record AddressSuggestion(
-    Long addressPointId,
+    Long id,
     String fullAddress
 ) {
+
 }

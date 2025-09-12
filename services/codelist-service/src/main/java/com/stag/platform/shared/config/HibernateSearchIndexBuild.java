@@ -20,6 +20,10 @@ public class HibernateSearchIndexBuild implements ApplicationListener<Applicatio
 
     private final EntityManager entityManager;
 
+    // TODO: Do not reindex the whole database on every startup.
+    //  Only reindex the entries that have changed since the last indexing.
+    //  This will save a lot of time and resources.
+
     @Override
     @Transactional
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {

@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
@@ -58,7 +59,11 @@ import java.time.LocalDate;
 )
 public class AddressPoint {
 
+    private static final String POSTAL_NUMBER = "č.p.";
+    private static final String REGISTRATION_NUMBER = "ev. č. ";
+
     @Id
+    @DocumentId
     @Column(
         name = "ADMIIDNO",
         nullable = false
@@ -155,54 +160,70 @@ public class AddressPoint {
     )
     private BigDecimal gpsY;
 
+    /// This method is a 1:1 translation of the Oracle function FN_ADRESNI_MISTO_ADRESA.
+    /// It formats the address for display and full-text search indexing.
     @Transient
     @FullTextField(analyzer = "czech")
-    @IndexingDependency(derivedFrom = @ObjectPath({
-        @PropertyValue(propertyName = AddressPoint_.STREET),
-        @PropertyValue(propertyName = AddressPoint_.HOUSE_NUMBER),
-        @PropertyValue(propertyName = AddressPoint_.ORIENTATION_NUMBER),
-        @PropertyValue(propertyName = AddressPoint_.ORIENTATION_NUMBER_LETTER),
-        @PropertyValue(propertyName = AddressPoint_.MUNICIPALITY_PART),
-        @PropertyValue(propertyName = AddressPoint_.MUNICIPALITY),
-        @PropertyValue(propertyName = AddressPoint_.ZIP_CODE)
-    }))
+    @IndexingDependency(derivedFrom = {
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.STREET)),
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.MUNICIPALITY)),
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.MUNICIPALITY_PART)),
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.BUILDING_TYPE)),
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.HOUSE_NUMBER)),
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.ORIENTATION_NUMBER)),
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.ORIENTATION_NUMBER_LETTER)),
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.ZIP_CODE))
+    })
     public String getFullAddress() {
-        StringBuilder sb = new StringBuilder();
+        String formattedNumber = getFormattedNumber();
+        StringBuilder addressBuilder = new StringBuilder();
 
-        // Street name (if available)
-        if (street != null && street.getName() != null) {
-            sb.append(street.getName()).append(" ");
+        if (street != null) {
+            // Format: Street number, Municipality - MunicipalityPart
+            addressBuilder.append(street.getName())
+                          .append(" ")
+                          .append(formattedNumber)
+                          .append(", ")
+                          .append(getFormattedMunicipality());
+        } else {
+            // Format: Municipality - MunicipalityPart number
+            addressBuilder.append(getFormattedMunicipality())
+                          .append(" ")
+                          .append(formattedNumber);
         }
 
-        // House number
-        if (houseNumber != null) {
-            sb.append(houseNumber);
-        }
+        // Add the ZIP code at the end
+        addressBuilder.append(", ")
+                      .append(zipCode);
 
-        // Orientation number (if available)
+        return addressBuilder.toString();
+    }
+
+    private String getFormattedNumber() {
+        String prefix = POSTAL_NUMBER.equals(buildingType) ? "" : REGISTRATION_NUMBER;
+
+        StringBuilder number = new StringBuilder(houseNumber);
+
         if (orientationNumber != null) {
-            sb.append("/").append(orientationNumber);
+            number.append("/").append(orientationNumber);
             if (orientationNumberLetter != null) {
-                sb.append(orientationNumberLetter);
+                number.append(orientationNumberLetter);
             }
         }
 
-        // Comma + municipality part (optional)
-        if (municipalityPart.getName() != null) {
-            sb.append(", ").append(municipalityPart.getName());
+        return prefix + number;
+    }
+
+    private String getFormattedMunicipality() {
+        StringBuilder municipalityBuilder = new StringBuilder();
+        municipalityBuilder.append(municipality.getName());
+
+        // If the municipality part name differs from the municipality name, add it to the address
+        if (!municipality.getName().equals(municipalityPart.getName())) {
+            municipalityBuilder.append(" - ").append(municipalityPart.getName());
         }
 
-        // Comma + municipality
-        if (municipality.getName() != null) {
-            sb.append(", ").append(municipality.getName());
-        }
-
-        // ZIP code at the end
-        if (zipCode != null) {
-            sb.append(", ").append(zipCode);
-        }
-
-        return sb.toString().trim();
+        return municipalityBuilder.toString();
     }
 
 }
