@@ -34,9 +34,9 @@ public class HibernateSearchIndexBuild implements ApplicationListener<Applicatio
 
 //        SearchSession searchSession = Search.session(entityManager);
 //        MassIndexer indexer = searchSession.massIndexer()
-//                                           .idFetchSize(150)
-//                                           .batchSizeToLoadObjects(30)
-//                                           .threadsToLoadObjects(12);
+//                                           .idFetchSize(300)
+//                                           .batchSizeToLoadObjects(200)
+//                                           .threadsToLoadObjects(16);
 //
 //        try {
 //            indexer.startAndWait();

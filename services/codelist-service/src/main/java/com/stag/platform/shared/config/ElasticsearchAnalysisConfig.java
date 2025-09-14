@@ -9,20 +9,25 @@ public class ElasticsearchAnalysisConfig implements ElasticsearchAnalysisConfigu
 
     @Override
     public void configure(ElasticsearchAnalysisConfigurationContext context) {
-        context.analyzer("czech")
+        context.analyzer("czech_autocomplete")
                .custom()
                .tokenizer("standard")
-               .tokenFilters("lowercase", "asciifolding"
-//                   , "czech_stop", "czech_stemmer"
-               );
+               .tokenFilters("lowercase", "asciifolding", "czech_stemmer", "edge_ngram");
 
-//        context.tokenFilter("czech_stop")
-//               .type("stop")
-//               .param("stopwords", "_czech_");
-//
-//        context.tokenFilter("czech_stemmer")
-//               .type("stemmer")
-//               .param("language", "czech");
+        context.analyzer("czech_autocomplete_search")
+               .custom()
+               .tokenizer("standard")
+               .tokenFilters("lowercase", "asciifolding", "czech_stemmer");
+
+        // Token filters
+        context.tokenFilter("czech_stemmer")
+               .type("stemmer")
+               .param("language", "czech");
+
+        context.tokenFilter("edge_ngram")
+               .type("edge_ngram")
+               .param("min_gram", "1")
+               .param("max_gram", "20");
     }
 
 }

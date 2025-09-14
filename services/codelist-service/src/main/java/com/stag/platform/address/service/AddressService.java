@@ -19,22 +19,16 @@ public class AddressService {
     private final EntityManager entityManager;
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public List<AddressSuggestion> findAddressSuggestions(String query) {
+    public List<AddressSuggestion> findAddressSuggestions(String query, Integer limit) {
         SearchSession searchSession = Search.session(entityManager);
 
         return searchSession.search(AddressPoint.class)
-                            .select(f -> f.composite()
-                                          .from(
-                                              f.id(Long.class),
-                                              f.field("fullAddress", String.class)
-                                          )
-                                          .as(AddressSuggestion::new)
-                            )
+                            .select(AddressSuggestion.class)
                             .where(f -> f.match()
                                          .fields("fullAddress")
                                          .matching(query)
                             )
-                            .fetchHits(10);
+                            .fetchHits(limit);
     }
 
 }

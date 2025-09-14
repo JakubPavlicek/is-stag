@@ -163,15 +163,18 @@ public class AddressPoint {
     /// This method is a 1:1 translation of the Oracle function FN_ADRESNI_MISTO_ADRESA.
     /// It formats the address for display and full-text search indexing.
     @Transient
-    @FullTextField(analyzer = "czech")
+    @FullTextField(
+        analyzer = "czech_autocomplete",
+        searchAnalyzer = "czech_autocomplete_search"
+    )
     @IndexingDependency(derivedFrom = {
         @ObjectPath(@PropertyValue(propertyName = AddressPoint_.STREET)),
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.MUNICIPALITY)),
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.MUNICIPALITY_PART)),
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.BUILDING_TYPE)),
         @ObjectPath(@PropertyValue(propertyName = AddressPoint_.HOUSE_NUMBER)),
         @ObjectPath(@PropertyValue(propertyName = AddressPoint_.ORIENTATION_NUMBER)),
         @ObjectPath(@PropertyValue(propertyName = AddressPoint_.ORIENTATION_NUMBER_LETTER)),
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.MUNICIPALITY)),
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.MUNICIPALITY_PART)),
+        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.BUILDING_TYPE)),
         @ObjectPath(@PropertyValue(propertyName = AddressPoint_.ZIP_CODE))
     })
     public String getFullAddress() {
