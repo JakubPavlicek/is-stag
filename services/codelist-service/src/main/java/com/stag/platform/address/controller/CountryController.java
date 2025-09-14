@@ -21,10 +21,6 @@ public class CountryController implements CountriesApi {
 
     private final CountryService countryService;
 
-    // TODO:
-    //   Add:
-    //     GET /address (debounce effect) - (dorucovaci adresa)
-
     @Override
     public ResponseEntity<CountryListResponse> getCountries(String language) {
         log.info("Countries requested in language: {}", language);

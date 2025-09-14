@@ -9,5 +9,6 @@
 
     <modules>
         <module>services</module>
+        <module>keycloak/providers/is-stag-authenticator</module>
     </modules>
 </project>

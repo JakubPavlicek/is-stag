@@ -63,6 +63,22 @@ services:
     networks:
       - is-stag-network
 
+  elasticsearch:
+    profiles:
+      - dev
+      - prod
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.1.3-arm64
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - xpack.security.http.ssl.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    networks:
+      - is-stag-network
+
   react-client:
     profiles:
       - prod
@@ -329,6 +345,8 @@ services:
     depends_on:
       api-gateway:
 #        condition: service_healthy
+        condition: service_started
+      elasticsearch:
         condition: service_started
       redis:
         condition: service_healthy

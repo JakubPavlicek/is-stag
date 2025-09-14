@@ -2,6 +2,7 @@ package com.stag.platform.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
@@ -21,12 +22,12 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
-            .csrf(ServerHttpSecurity.CsrfSpec::disable)
+            .csrf(Customizer.withDefaults())
             .authorizeExchange(ex -> ex
                 .pathMatchers("/actuator/health").permitAll()
                 .pathMatchers("/*/openapi.yaml").permitAll()
                 .pathMatchers(SWAGGER_URLS).permitAll()
-                .pathMatchers("/api/v1/countries/**", "/api/v1/domains/**").permitAll()
+                .pathMatchers("/api/v1/addresses/**", "/api/v1/countries/**", "/api/v1/domains/**").permitAll()
                 .anyExchange().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->

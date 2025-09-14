@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/openapi.yaml").permitAll()
                 .requestMatchers(SWAGGER_URLS).permitAll()
-                .requestMatchers("/api/v1/countries/**", "/api/v1/domains/**").permitAll()
+                .requestMatchers("/api/v1/addresses/**", "/api/v1/countries/**", "/api/v1/domains/**").permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(
