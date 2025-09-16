@@ -50,6 +50,11 @@ spring:
           jdbc:
             defaultConnectionValidation: LOCAL
             implicitStatementCacheSize: 200
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300000 # 5 minutes
+      cache-null-values: false
   threads:
     virtual:
       enabled: true

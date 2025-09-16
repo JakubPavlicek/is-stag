@@ -15,26 +15,14 @@ grpc:
       enable-keep-alive: true
       keep-alive-time: 30s
       keep-alive-timeout: 5s
-      idle-timeout: 60s
       max-inbound-message-size: 4MB
-      max-outbound-message-size: 4MB
-      channel-shutdown-timeout: 5s
-      enable-retry: true
-      max-retry-attempts: 3
-      retry-delay: 100ms
     codelist-service:
       address: discovery:///codelist-service
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-time: 30s
       keep-alive-timeout: 5s
-      idle-timeout: 60s
       max-inbound-message-size: 4MB
-      max-outbound-message-size: 4MB
-      channel-shutdown-timeout: 5s
-      enable-retry: true
-      max-retry-attempts: 3
-      retry-delay: 100ms
 
 #logging:
 #  level:
@@ -89,11 +77,11 @@ spring:
       port: 6379
     #      username: user
     #      password: password
-    cache:
-      type: redis
-      redis:
-        time-to-live: 60000
-        enable-statistics: true
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300000 # 5 minutes
+      cache-null-values: false
   threads:
     virtual:
       enabled: true

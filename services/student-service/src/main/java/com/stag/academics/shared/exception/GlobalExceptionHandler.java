@@ -1,6 +1,7 @@
 package com.stag.academics.shared.exception;
 
 import com.stag.academics.student.exception.StudentNotFoundException;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setTitle("Student not found");
+
+        return problemDetail;
+    }
+
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ProblemDetail handleServiceUnavailableException(ServiceUnavailableException ex) {
+        log.warn(ex.getMessage(), ex);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage());
+        problemDetail.setTitle("Service Unavailable");
+        problemDetail.setProperty("serviceName", ex.getServiceName());
+
+        return problemDetail;
+    }
+
+    @ExceptionHandler(CallNotPermittedException.class)
+    public ProblemDetail handleCallNotPermittedException(CallNotPermittedException ex) {
+        log.error("Circuit breaker is open", ex);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, "Service is currently unavailable. Please try again later.");
+        problemDetail.setTitle("Service Unavailable");
 
         return problemDetail;
     }

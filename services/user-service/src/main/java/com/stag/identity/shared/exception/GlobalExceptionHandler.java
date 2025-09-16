@@ -36,7 +36,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                      .orElse("gRPC service error");
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(httpStatus, description);
-        problemDetail.setTitle("Service communication error");
+        problemDetail.setTitle("Service Communication Error");
 
         return problemDetail;
     }

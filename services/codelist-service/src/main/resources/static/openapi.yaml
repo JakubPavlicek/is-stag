@@ -380,8 +380,8 @@ components:
     ProblemDetail:
       type: object
       title: Problem Detail
-      description: A generic error.
-      additionalProperties: false
+      description: A generic error, as defined by RFC 7807. It can be extended with additional properties.
+      additionalProperties: true
       nullable: false
       required:
         - type
@@ -425,14 +425,6 @@ components:
           example: /countries
           pattern: ^(/[^\s]*)+$
           maxLength: 1000
-        contextInfo:
-          type: object
-          additionalProperties: true
-          nullable: false
-          maxProperties: 5
-          description: A free-form based object that contains additional context about the error.
-          example:
-            domain: Something went wrong
 
   responses:
 
@@ -504,7 +496,7 @@ components:
     Default:
       description: Unexpected error.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
 

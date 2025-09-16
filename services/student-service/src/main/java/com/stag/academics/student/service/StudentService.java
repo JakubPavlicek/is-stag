@@ -9,7 +9,6 @@ import com.stag.academics.student.service.data.SimpleProfileLookupData;
 import com.stag.academics.student.service.data.StudyProgramAndFieldLookupData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +35,6 @@ public class StudentService {
                                 .orElseThrow(() -> new StudentNotFoundException(studentId));
     }
 
-    // TODO: Other students can also fetch the student profile, but they should not see StudyProgram and FieldOfStudy of the student
-    //  we can make this work by annotating the get methods / gRPC calls with @PreAuthorize and then providing null if not satisfied
-    //  see https://www.youtube.com/watch?v=-x8-s3QnhMQ&list=PLa1A960Nosoe5yT4Uj_LdrtgtZH8c7vfR&index=109&ab_channel=SpringI%2FO at 27:35
-
-    @Cacheable(value = "student-profile", key = "{#studentId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
         || #studentId == principal.claims['studentId']

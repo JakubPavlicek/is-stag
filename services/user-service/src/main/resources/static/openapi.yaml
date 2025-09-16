@@ -49,6 +49,8 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
         'default':
           $ref: '#/components/responses/Default'
 
@@ -81,6 +83,8 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
         'default':
           $ref: '#/components/responses/Default'
 
@@ -113,6 +117,8 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
         'default':
           $ref: '#/components/responses/Default'
 
@@ -145,6 +151,8 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '500':
           $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
         'default':
           $ref: '#/components/responses/Default'
 
@@ -753,8 +761,8 @@ components:
     ProblemDetail:
       type: object
       title: Problem Detail
-      description: A generic error.
-      additionalProperties: false
+      description: A generic error, as defined by RFC 7807. It can be extended with additional properties.
+      additionalProperties: true
       nullable: false
       required:
         - type
@@ -793,13 +801,6 @@ components:
           example: /persons/221264
           pattern: ^(/[^\s]*)+$
           maxLength: 1000
-        contextInfo:
-          type: object
-          additionalProperties: true
-          maxProperties: 5
-          description: A free-form based object that contains additional context about the error.
-          example:
-            personId: Must be greater than 0.
 
   responses:
 
@@ -868,9 +869,23 @@ components:
             detail: An unexpected error occurred
             instance: /api/v1/persons/221264
 
+    503ServiceUnavailable:
+      description: The service is currently unavailable.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: http://localhost:8080/api/v1/service-unavailable
+            title: Service Unavailable
+            status: 503
+            detail: Service 'student-service' is currently unavailable.
+            instance: /api/v1/persons/221264
+            serviceName: student-service
+
     Default:
       description: Unexpected error.
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetail'
