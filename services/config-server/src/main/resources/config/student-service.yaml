@@ -76,6 +76,9 @@ spring:
     redis:
       time-to-live: 300000 # 5 minutes
       cache-null-values: false
+  mvc:
+    problemdetails:
+      enabled: true
   threads:
     virtual:
       enabled: true

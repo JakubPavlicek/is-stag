@@ -6,6 +6,7 @@ import com.stag.academics.student.v1.StudentServiceGrpc;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class StudentClient {
 
+    @GrpcClient("student-service")
     private StudentServiceGrpc.StudentServiceBlockingStub studentServiceStub;
 
     private StudentServiceGrpc.StudentServiceBlockingStub studentStub() {

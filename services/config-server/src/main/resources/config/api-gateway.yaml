@@ -82,6 +82,9 @@ spring:
                 - Path=/user-service/**
               filters:
                 - RewritePath=/user-service/openapi.yaml, /openapi.yaml
+  webflux:
+    problemdetails:
+      enabled: true
   threads:
     virtual:
       enabled: true
