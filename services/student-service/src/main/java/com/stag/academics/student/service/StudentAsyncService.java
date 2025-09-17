@@ -6,7 +6,6 @@ import com.stag.academics.student.service.data.SimpleProfileLookupData;
 import com.stag.academics.student.service.data.StudyProgramAndFieldLookupData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ public class StudentAsyncService {
     private final StudyPlanClient studyPlanClient;
 
     @Async
-    @Cacheable(value = "person-simple-profile", key = "{#personId, #language}")
     public CompletableFuture<SimpleProfileLookupData> getPersonSimpleProfileData(
         Integer personId,
         String language
@@ -35,7 +33,6 @@ public class StudentAsyncService {
     }
 
     @Async
-    @Cacheable(value = "study-program-and-field", key = "{#studyProgramId, #studyPlanId, #language}")
     public CompletableFuture<StudyProgramAndFieldLookupData> getStudyProgramAndField(
         Long studyProgramId,
         Long studyPlanId,
