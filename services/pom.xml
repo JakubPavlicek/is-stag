@@ -42,7 +42,7 @@
         <grpc.version>1.75.0</grpc.version>
         <protobuf-java.version>4.32.1</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
-        <protovalidate.version>1.0.0-rc.4</protovalidate.version>
+        <protovalidate.version>1.0.0</protovalidate.version>
         <protobuf-maven-plugin.version>3.9.1</protobuf-maven-plugin.version>
 
         <!-- Hibernate Search -->

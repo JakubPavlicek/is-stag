@@ -19,6 +19,10 @@ public class StudyPlanClient {
     @GrpcClient("study-plan-service")
     private StudyPlanServiceGrpc.StudyPlanServiceBlockingStub studyPlanServiceStub;
 
+    private StudyPlanServiceGrpc.StudyPlanServiceBlockingStub studyPlanStub() {
+        return studyPlanServiceStub.withDeadlineAfter(500, TimeUnit.MILLISECONDS);
+    }
+
     @Cacheable(value = "study-program-and-field", key = "{#studyProgramId, #studyPlanId, #language}")
     @CircuitBreaker(name = "study-plan-service")
     @Retry(name = "grpc-retry")
@@ -26,8 +30,7 @@ public class StudyPlanClient {
         log.info("Fetching study program: {}, field of study with plan: {}", studyProgramId, studyPlanId);
 
         var request = StudyPlanMapper.INSTANCE.toStudyProgramAndFieldDataRequest(studyProgramId, studyPlanId, language);
-        var response = studyPlanServiceStub.withDeadlineAfter(500, TimeUnit.MILLISECONDS)
-                                           .getStudyProgramAndField(request);
+        var response = studyPlanStub().getStudyProgramAndField(request);
 
         log.debug("Completed fetching study program and field of study");
 

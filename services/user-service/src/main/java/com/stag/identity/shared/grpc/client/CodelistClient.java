@@ -16,27 +16,37 @@ import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
 import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
 import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
-import lombok.RequiredArgsConstructor;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class CodelistClient {
 
     @GrpcClient("codelist-service")
     private CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub;
 
+    private CodelistServiceGrpc.CodelistServiceBlockingStub codelistStub() {
+        return codelistServiceStub.withDeadlineAfter(500, TimeUnit.MILLISECONDS);
+    }
+
+    @CircuitBreaker(name = "codelist-service")
+    @Retry(name = "codelist-service")
     public CodelistMeaningsLookupData getSimpleProfileData(SimpleProfileView simpleProfile, String language) {
         var request = CodelistMapper.INSTANCE.toCodelistValuesRequest(simpleProfile, language);
-        var response = codelistServiceStub.getCodelistValues(request);
+        var response = codelistStub().getCodelistValues(request);
 
         return CodelistMapper.INSTANCE.toCodelistMeaningsData(response);
     }
 
     /// Get codelist data specifically for person profile (GET /persons/{personId})
+    @CircuitBreaker(name = "codelist-service")
+    @Retry(name = "codelist-service")
     public ProfileLookupData getPersonProfileData(ProfileView personProfile, String language) {
         var request = CodelistMapper.INSTANCE.toPersonProfileDataRequest(personProfile, language);
 
@@ -46,11 +56,13 @@ public class CodelistClient {
             return null;
         }
 
-        var response = codelistServiceStub.getPersonProfileData(request);
+        var response = codelistStub().getPersonProfileData(request);
         return CodelistMapper.INSTANCE.toPersonProfileData(response);
     }
 
     /// Get codelist data specifically for person addresses (GET /persons/{personId}/addresses)
+    @CircuitBreaker(name = "codelist-service")
+    @Retry(name = "codelist-service")
     public AddressLookupData getPersonAddressData(AddressView addressView, String language) {
         var request = CodelistMapper.INSTANCE.toPersonAddressDataRequest(addressView, language);
 
@@ -60,11 +72,13 @@ public class CodelistClient {
             return null;
         }
 
-        var response = codelistServiceStub.getPersonAddressData(request);
+        var response = codelistStub().getPersonAddressData(request);
         return CodelistMapper.INSTANCE.toPersonAddressData(response, addressView);
     }
 
     /// Get codelist data specifically for person banking (GET /persons/{personId}/banking)
+    @CircuitBreaker(name = "codelist-service")
+    @Retry(name = "codelist-service")
     public BankingLookupData getPersonBankingData(BankView bankView, String language) {
         var request = CodelistMapper.INSTANCE.toPersonBankingDataRequest(bankView, language);
 
@@ -74,11 +88,13 @@ public class CodelistClient {
             return null;
         }
 
-        var response = codelistServiceStub.getPersonBankingData(request);
+        var response = codelistStub().getPersonBankingData(request);
         return CodelistMapper.INSTANCE.toPersonBankingData(response);
     }
 
     /// Get codelist data specifically for person education (GET /persons/{personId}/education)
+    @CircuitBreaker(name = "codelist-service")
+    @Retry(name = "codelist-service")
     public EducationLookupData getPersonEducationData(EducationView personEducation, String language) {
         var request = CodelistMapper.INSTANCE.toPersonEducationDataRequest(personEducation, language);
 
@@ -88,7 +104,7 @@ public class CodelistClient {
             return null;
         }
 
-        var response = codelistServiceStub.getPersonEducationData(request);
+        var response = codelistStub().getPersonEducationData(request);
         return CodelistMapper.INSTANCE.toPersonEducationData(response);
     }
 

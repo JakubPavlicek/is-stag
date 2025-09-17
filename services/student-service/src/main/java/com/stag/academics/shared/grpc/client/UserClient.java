@@ -19,6 +19,10 @@ public class UserClient {
     @GrpcClient("user-service")
     private PersonServiceGrpc.PersonServiceBlockingStub personServiceStub;
 
+    private PersonServiceGrpc.PersonServiceBlockingStub personStub() {
+        return personServiceStub.withDeadlineAfter(500, TimeUnit.MILLISECONDS);
+    }
+
     @Cacheable(value = "person-simple-profile", key = "{#personId, #language}")
     @CircuitBreaker(name = "user-service")
     @Retry(name = "user-service")
@@ -26,8 +30,7 @@ public class UserClient {
         log.info("Fetching student simple profile for personId: {}", personId);
 
         var request = PersonMapper.INSTANCE.toSimpleProfileDataRequest(personId, language);
-        var response = personServiceStub.withDeadlineAfter(500, TimeUnit.MILLISECONDS)
-                                        .getPersonSimpleProfile(request);
+        var response = personStub().getPersonSimpleProfile(request);
 
         log.debug("Completed fetching student simple profile");
 
