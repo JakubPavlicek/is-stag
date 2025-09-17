@@ -24,6 +24,9 @@ spring:
     gateway:
       server:
         webflux:
+          httpclient:
+            response-timeout: 500ms
+            compression: true
           metrics:
             enabled: true
           routes:
@@ -38,6 +41,21 @@ spring:
               uri: lb://student-service
               predicates:
                 - Path=/api/v1/students/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: student-service
+                    fallbackUri: forward:/fallback
+                - name: Retry
+                  args:
+                    retries: 2
+                    methods: GET
+                    statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                    backoff:
+                      firstBackoff: 50ms
+                      maxBackoff: 100ms
+                      factor: 2
+                      basedOnPreviousValue: true
             - id: study-plan-service
               uri: lb://study-plan-service
               predicates:
@@ -87,6 +105,31 @@ spring:
       enabled: true
   threads:
     virtual:
+      enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      student-service:
+        failure-rate-threshold: 50
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        sliding-window-type: count-based
+        sliding-window-size: 10
+        wait-duration-in-open-state: 15s
+        register-health-indicator: true
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 500s
+        cancel-running-future: true
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
       enabled: true
 
 springdoc:

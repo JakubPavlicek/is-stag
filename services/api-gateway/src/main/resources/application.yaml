@@ -8,6 +8,9 @@ spring:
 #  level:
 #    com.stag.platform.gateway: DEBUG
 #    reactor.netty: DEBUG
+#    org.springframework.cloud.gateway: DEBUG
+#    io.github.resilience4j.circuitbreaker: DEBUG
+#    io.github.resilience4j.timelimiter: DEBUG
 
 ---
 
