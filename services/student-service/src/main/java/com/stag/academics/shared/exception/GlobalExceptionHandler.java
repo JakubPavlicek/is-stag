@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.Optional;
-
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -27,22 +25,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    @ExceptionHandler(ServiceUnavailableException.class)
-    public ProblemDetail handleServiceUnavailableException(ServiceUnavailableException ex) {
-        log.warn(ex.getMessage(), ex);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage());
-        problemDetail.setTitle("Service Unavailable");
-        problemDetail.setProperty("serviceName", ex.getServiceName());
-
-        return problemDetail;
-    }
-
     @ExceptionHandler(CallNotPermittedException.class)
     public ProblemDetail handleCallNotPermittedException(CallNotPermittedException ex) {
         log.error("Circuit breaker is open", ex);
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, "Service is currently unavailable. Please try again later.");
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+            HttpStatus.SERVICE_UNAVAILABLE,
+            "Service is currently unavailable. Please try again later."
+        );
         problemDetail.setTitle("Service Unavailable");
 
         return problemDetail;
@@ -52,30 +42,35 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail handleGrpcException(StatusRuntimeException ex) {
         log.warn("gRPC call failed: {}", ex.getMessage());
 
-        Status grpcStatus = ex.getStatus();
-        HttpStatus httpStatus = toHttpStatus(grpcStatus);
-        String description = Optional.ofNullable(grpcStatus.getDescription())
-                                     .orElse("gRPC service error");
+        GrpcProblemDetail grpcProblemDetail = toGrpcProblemDetail(ex.getStatus());
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(httpStatus, description);
-        problemDetail.setTitle("Service communication error");
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(grpcProblemDetail.status, grpcProblemDetail.detail);
+        problemDetail.setTitle(grpcProblemDetail.title);
 
         return problemDetail;
     }
 
-    private HttpStatus toHttpStatus(Status grpcStatus) {
+    private GrpcProblemDetail toGrpcProblemDetail(Status grpcStatus) {
         return switch (grpcStatus.getCode()) {
-            case NOT_FOUND -> HttpStatus.NOT_FOUND;
-            case INVALID_ARGUMENT -> HttpStatus.BAD_REQUEST;
-            case PERMISSION_DENIED -> HttpStatus.FORBIDDEN;
-            case UNAUTHENTICATED -> HttpStatus.UNAUTHORIZED;
-            case ALREADY_EXISTS -> HttpStatus.CONFLICT;
-            case FAILED_PRECONDITION -> HttpStatus.PRECONDITION_FAILED;
-            case UNIMPLEMENTED -> HttpStatus.NOT_IMPLEMENTED;
-            case UNAVAILABLE -> HttpStatus.SERVICE_UNAVAILABLE;
-            case DEADLINE_EXCEEDED -> HttpStatus.REQUEST_TIMEOUT;
-            default -> HttpStatus.INTERNAL_SERVER_ERROR;
+            case NOT_FOUND -> new GrpcProblemDetail(HttpStatus.NOT_FOUND, "Resource Not Found", "Resource not found");
+            case INVALID_ARGUMENT -> new GrpcProblemDetail(HttpStatus.BAD_REQUEST, "Invalid Argument", "Invalid argument");
+            case PERMISSION_DENIED -> new GrpcProblemDetail(HttpStatus.FORBIDDEN, "Permission Denied", "Permission denied");
+            case UNAUTHENTICATED -> new GrpcProblemDetail(HttpStatus.UNAUTHORIZED, "Unauthorized", "Unauthorized");
+            case ALREADY_EXISTS -> new GrpcProblemDetail(HttpStatus.CONFLICT, "Already Exists", "Already exists");
+            case FAILED_PRECONDITION -> new GrpcProblemDetail(HttpStatus.PRECONDITION_FAILED, "Failed Precondition", "Failed precondition");
+            case UNIMPLEMENTED -> new GrpcProblemDetail(HttpStatus.NOT_IMPLEMENTED, "Unimplemented", "Unimplemented");
+            case UNAVAILABLE -> new GrpcProblemDetail(HttpStatus.SERVICE_UNAVAILABLE, "Upstream Service Unavailable", "Upstream service unavailable");
+            case DEADLINE_EXCEEDED -> new GrpcProblemDetail(HttpStatus.GATEWAY_TIMEOUT, "Upstream Service Timeout", "Upstream service timeout");
+            default -> new GrpcProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", "Internal server error");
         };
+    }
+
+    private record GrpcProblemDetail(
+        HttpStatus status,
+        String title,
+        String detail
+    ) {
+
     }
 
 }

@@ -1,6 +1,5 @@
 package com.stag.academics.shared.grpc.client;
 
-import com.stag.academics.shared.exception.ServiceUnavailableException;
 import com.stag.academics.shared.grpc.mapper.StudyPlanMapper;
 import com.stag.academics.student.service.data.StudyProgramAndFieldLookupData;
 import com.stag.academics.studyplan.v1.StudyPlanServiceGrpc;
@@ -19,13 +18,9 @@ public class StudyPlanClient {
     @GrpcClient("study-plan-service")
     private StudyPlanServiceGrpc.StudyPlanServiceBlockingStub studyPlanServiceStub;
 
+    @CircuitBreaker(name = "study-plan-service")
     @Retry(name = "grpc-retry")
-    @CircuitBreaker(name = "study-plan-service", fallbackMethod = "studyPlanFallback")
-    public StudyProgramAndFieldLookupData getStudyProgramAndField(
-        Long studyProgramId,
-        Long studyPlanId,
-        String language
-    ) {
+    public StudyProgramAndFieldLookupData getStudyProgramAndField(Long studyProgramId, Long studyPlanId, String language) {
         log.info("Fetching study program: {}, field of study with plan: {}", studyProgramId, studyPlanId);
 
         var request = StudyPlanMapper.INSTANCE.toStudyProgramAndFieldDataRequest(studyProgramId, studyPlanId, language);
@@ -35,10 +30,6 @@ public class StudyPlanClient {
         log.debug("Completed fetching study program and field of study");
 
         return StudyPlanMapper.INSTANCE.toStudyProgramAndFieldData(response);
-    }
-
-    private StudyProgramAndFieldLookupData studyPlanFallback(Throwable t) {
-        throw new ServiceUnavailableException("Study Plan service", t);
     }
 
 }

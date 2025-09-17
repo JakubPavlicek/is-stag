@@ -1,6 +1,5 @@
 package com.stag.academics.shared.grpc.client;
 
-import com.stag.academics.shared.exception.ServiceUnavailableException;
 import com.stag.academics.shared.grpc.mapper.PersonMapper;
 import com.stag.academics.student.service.data.SimpleProfileLookupData;
 import com.stag.identity.person.v1.PersonServiceGrpc;
@@ -19,7 +18,7 @@ public class UserClient {
     @GrpcClient("user-service")
     private PersonServiceGrpc.PersonServiceBlockingStub personServiceStub;
 
-    @CircuitBreaker(name = "user-service", fallbackMethod = "userFallback")
+    @CircuitBreaker(name = "user-service")
     @Retry(name = "user-service")
     public SimpleProfileLookupData getPersonSimpleProfileData(Integer personId, String language) {
         log.info("Fetching student simple profile for personId: {}", personId);
@@ -31,10 +30,6 @@ public class UserClient {
         log.debug("Completed fetching student simple profile");
 
         return PersonMapper.INSTANCE.toSimpleProfileData(response);
-    }
-
-    private SimpleProfileLookupData userFallback(Throwable t) {
-        throw new ServiceUnavailableException("User service", t);
     }
 
 }
