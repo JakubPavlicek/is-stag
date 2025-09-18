@@ -26,6 +26,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -110,16 +112,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.of(problemDetail).build();
     }
 
-    @ExceptionHandler(Exception.class)
-    public ProblemDetail handleException(Exception e, HttpServletRequest request) {
-        log.error("Request {} raised", request.getRequestURI(), e);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
-        problemDetail.setTitle("Internal Server Error");
-
-        return problemDetail;
-    }
-
     @ExceptionHandler(CallNotPermittedException.class)
     public ProblemDetail handleCallNotPermittedException(CallNotPermittedException ex) {
         log.error("Circuit breaker is open", ex);
@@ -145,6 +137,30 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler({CompletionException.class, ExecutionException.class})
+    public ProblemDetail handleAsyncWrapperExceptions(Exception ex, HttpServletRequest request) {
+        // Special handling for gRPC exceptions
+        if (ex.getCause() instanceof StatusRuntimeException sre) {
+            return handleGrpcException(sre);
+        }
+        // Special handling for Circuit Breaker exceptions
+        if (ex.getCause() instanceof CallNotPermittedException cnpe) {
+            return handleCallNotPermittedException(cnpe);
+        }
+
+        return handleException(ex, request);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleException(Exception ex, HttpServletRequest request) {
+        log.error("Request {} raised", request.getRequestURI(), ex);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
+        problemDetail.setTitle("Internal Server Error");
+
+        return problemDetail;
+    }
+
     private GrpcProblemDetail toGrpcProblemDetail(Status grpcStatus) {
         return switch (grpcStatus.getCode()) {
             case NOT_FOUND -> new GrpcProblemDetail(HttpStatus.NOT_FOUND, "Resource Not Found", "Resource not found");
@@ -154,8 +170,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             case ALREADY_EXISTS -> new GrpcProblemDetail(HttpStatus.CONFLICT, "Already Exists", "Already exists");
             case FAILED_PRECONDITION -> new GrpcProblemDetail(HttpStatus.PRECONDITION_FAILED, "Failed Precondition", "Failed precondition");
             case UNIMPLEMENTED -> new GrpcProblemDetail(HttpStatus.NOT_IMPLEMENTED, "Unimplemented", "Unimplemented");
-            case UNAVAILABLE -> new GrpcProblemDetail(HttpStatus.SERVICE_UNAVAILABLE, "Upstream Service Unavailable", "Upstream service unavailable");
-            case DEADLINE_EXCEEDED -> new GrpcProblemDetail(HttpStatus.GATEWAY_TIMEOUT, "Upstream Service Timeout", "Upstream service timeout");
+            case UNAVAILABLE -> new GrpcProblemDetail(HttpStatus.SERVICE_UNAVAILABLE, "Service Unavailable", "Service is currently unavailable. Please try again later.");
+            case DEADLINE_EXCEEDED -> new GrpcProblemDetail(HttpStatus.GATEWAY_TIMEOUT, "Gateway Timeout", "Service is currently unavailable. Please try again later.");
             default -> new GrpcProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", "Internal server error");
         };
     }

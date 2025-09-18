@@ -20,7 +20,7 @@ public class UserClient {
     private PersonServiceGrpc.PersonServiceBlockingStub personServiceStub;
 
     private PersonServiceGrpc.PersonServiceBlockingStub personStub() {
-        return personServiceStub.withDeadlineAfter(500, TimeUnit.MILLISECONDS);
+        return personServiceStub.withDeadlineAfter(300, TimeUnit.MILLISECONDS);
     }
 
     @Cacheable(value = "person-simple-profile", key = "{#personId, #language}")

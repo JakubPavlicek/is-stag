@@ -20,7 +20,7 @@ public class StudyPlanClient {
     private StudyPlanServiceGrpc.StudyPlanServiceBlockingStub studyPlanServiceStub;
 
     private StudyPlanServiceGrpc.StudyPlanServiceBlockingStub studyPlanStub() {
-        return studyPlanServiceStub.withDeadlineAfter(500, TimeUnit.MILLISECONDS);
+        return studyPlanServiceStub.withDeadlineAfter(300, TimeUnit.MILLISECONDS);
     }
 
     @Cacheable(value = "study-program-and-field", key = "{#studyProgramId, #studyPlanId, #language}")

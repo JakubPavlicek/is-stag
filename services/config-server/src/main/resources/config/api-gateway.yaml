@@ -10,6 +10,22 @@ server:
     key-store-password: ${API_GATEWAY_SSL_KEY_STORE_PASSWORD}
     key-alias: api-gateway
 
+# Templates for API Gateway filters
+filter-templates:
+  circuitbreaker_args: &circuitbreaker_args
+    name: default-cb
+    fallbackUri: forward:/fallback
+
+  retry_args: &retry_args
+    retries: 2
+    methods: GET
+    statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+    backoff:
+      firstBackoff: 50ms
+      maxBackoff: 100ms
+      factor: 2
+      basedOnPreviousValue: true
+
 spring:
   security:
     oauth2:
@@ -25,7 +41,7 @@ spring:
       server:
         webflux:
           httpclient:
-            response-timeout: 500ms
+#            response-timeout: 500ms
             compression: true
           metrics:
             enabled: true
@@ -37,37 +53,61 @@ spring:
                 - Path=/api/v1/addresses/**,/api/v1/countries/**,/api/v1/domains/**
               filters:
                 - RemoveRequestHeader=Authorization
+                - name: CircuitBreaker
+                  args:
+                    <<: *circuitbreaker_args
+                    name: codelist-service
+                - name: Retry
+                  args:
+                    <<: *retry_args
             - id: student-service
               uri: lb://student-service
               predicates:
                 - Path=/api/v1/students/**
-              filters:
-                - name: CircuitBreaker
-                  args:
-                    name: student-service
-                    fallbackUri: forward:/fallback
-                - name: Retry
-                  args:
-                    retries: 2
-                    methods: GET
-                    statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
-                    backoff:
-                      firstBackoff: 50ms
-                      maxBackoff: 100ms
-                      factor: 2
-                      basedOnPreviousValue: true
+#              filters:
+#                - name: CircuitBreaker
+#                  args:
+#                    <<: *circuitbreaker_args
+#                    name: student-service
+#                - name: Retry
+#                  args:
+#                    <<: *retry_args
             - id: study-plan-service
               uri: lb://study-plan-service
               predicates:
                 - Path=/api/v1/study-plan/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    <<: *circuitbreaker_args
+                    name: study-plan-service
+                - name: Retry
+                  args:
+                    <<: *retry_args
             - id: subject-service
               uri: lb://subject-service
               predicates:
                 - Path=/api/v1/subjects/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    <<: *circuitbreaker_args
+                    name: subject-service
+                - name: Retry
+                  args:
+                    <<: *retry_args
             - id: user-service
               uri: lb://user-service
               predicates:
                 - Path=/api/v1/users/**,/api/v1/persons/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    <<: *circuitbreaker_args
+                    name: user-service
+                - name: Retry
+                  args:
+                    <<: *retry_args
 
             # OpenAPI routes for aggregation
             - id: codelist-service-openapi
@@ -87,7 +127,7 @@ spring:
               predicates:
                 - Path=/study-plan-service/**
               filters:
-                - RewritePath=/student-service/openapi.yaml, /openapi.yaml
+                - RewritePath=/study-plan-service/openapi.yaml, /openapi.yaml
             - id: subject-service-openapi
               uri: lb://subject-service
               predicates:
@@ -109,8 +149,8 @@ spring:
 
 resilience4j:
   circuitbreaker:
-    instances:
-      student-service:
+    configs:
+      default:
         failure-rate-threshold: 50
         permitted-number-of-calls-in-half-open-state: 5
         automatic-transition-from-open-to-half-open-enabled: true
@@ -118,6 +158,17 @@ resilience4j:
         sliding-window-size: 10
         wait-duration-in-open-state: 15s
         register-health-indicator: true
+    instances:
+      codelist-service:
+        base-config: default
+      student-service:
+        base-config: default
+      study-plan-service:
+        base-config: default
+      subject-service:
+        base-config: default
+      user-service:
+        base-config: default
   timelimiter:
     configs:
       default:
