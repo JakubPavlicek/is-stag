@@ -100,15 +100,15 @@ resilience4j:
     configs:
       default:
         max-attempts: 3
-        wait-duration: 200ms
+        wait-duration: 100ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        enable-randomized-wait: true
         retry-exceptions:
           - io.grpc.StatusRuntimeException
           - java.util.concurrent.TimeoutException
         ignore-exceptions:
           - io.github.resilience4j.circuitbreaker.CallNotPermittedException
-        enable-exponential-backoff: true
-        exponential-backoff-multiplier: 2
-        enable-randomized-wait: true
     instances:
       codelist-service:
         base-config: default

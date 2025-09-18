@@ -41,7 +41,7 @@ spring:
       server:
         webflux:
           httpclient:
-#            response-timeout: 500ms
+            response-timeout: 2s
             compression: true
           metrics:
             enabled: true
@@ -64,14 +64,14 @@ spring:
               uri: lb://student-service
               predicates:
                 - Path=/api/v1/students/**
-#              filters:
-#                - name: CircuitBreaker
-#                  args:
-#                    <<: *circuitbreaker_args
-#                    name: student-service
-#                - name: Retry
-#                  args:
-#                    <<: *retry_args
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    <<: *circuitbreaker_args
+                    name: student-service
+                - name: Retry
+                  args:
+                    <<: *retry_args
             - id: study-plan-service
               uri: lb://study-plan-service
               predicates:
