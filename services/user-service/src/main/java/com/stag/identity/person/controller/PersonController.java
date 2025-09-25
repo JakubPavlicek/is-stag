@@ -5,6 +5,7 @@ import com.stag.identity.api.dto.AddressesResponse;
 import com.stag.identity.api.dto.BankAccountsResponse;
 import com.stag.identity.api.dto.EducationResponse;
 import com.stag.identity.api.dto.PersonResponse;
+import com.stag.identity.api.dto.UpdatePersonRequest;
 import com.stag.identity.person.mapper.PersonApiMapper;
 import com.stag.identity.person.model.Addresses;
 import com.stag.identity.person.model.Banking;
@@ -14,6 +15,7 @@ import com.stag.identity.person.service.AddressService;
 import com.stag.identity.person.service.BankingService;
 import com.stag.identity.person.service.EducationService;
 import com.stag.identity.person.service.ProfileService;
+import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +41,16 @@ public class PersonController implements PersonsApi {
         PersonResponse personResponse = PersonApiMapper.INSTANCE.toPersonResponse(profile);
 
         return ResponseEntity.ok(personResponse);
+    }
+
+    @Override
+    public ResponseEntity<Void> updatePersonProfile(Integer personId, UpdatePersonRequest updatePersonRequest) {
+        log.info("Person profile update requested for personId: {}", personId);
+
+        PersonUpdateCommand command = PersonApiMapper.INSTANCE.toPersonUpdateCommand(updatePersonRequest);
+        profileService.updatePersonProfile(personId, command);
+
+        return ResponseEntity.noContent().build();
     }
 
     @Override

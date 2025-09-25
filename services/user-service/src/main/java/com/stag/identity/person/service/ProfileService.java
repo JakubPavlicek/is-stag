@@ -1,5 +1,6 @@
 package com.stag.identity.person.service;
 
+import com.stag.identity.person.entity.Person;
 import com.stag.identity.person.exception.PersonNotFoundException;
 import com.stag.identity.person.mapper.ProfileMapper;
 import com.stag.identity.person.model.Profile;
@@ -9,6 +10,10 @@ import com.stag.identity.person.repository.projection.ProfileView;
 import com.stag.identity.person.repository.projection.SimpleProfileView;
 import com.stag.identity.person.service.data.CodelistMeaningsLookupData;
 import com.stag.identity.person.service.data.ProfileLookupData;
+import com.stag.identity.person.service.dto.PersonUpdateCommand;
+import com.stag.identity.person.util.DataBoxValidator;
+import com.stag.identity.shared.util.ObjectUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,6 +29,8 @@ import java.util.concurrent.CompletableFuture;
 public class ProfileService {
 
     private final PersonRepository personRepository;
+
+    private final BankingService bankingService;
 
     private final CodelistLookupService codelistLookupService;
     private final StudentLookupService studentLookupService;
@@ -77,6 +84,37 @@ public class ProfileService {
 
         log.info("Successfully fetched person simple profile for personId: {}", personId);
         return simpleProfile;
+    }
+
+    @Transactional
+    public void updatePersonProfile(Integer personId, PersonUpdateCommand command) {
+        Person person = personRepository.findById(personId)
+                                        .orElseThrow(() -> new PersonNotFoundException(personId));
+
+        ObjectUtils.updateIfNotNull(command.birthSurname(), person::setBirthSurname);
+        ObjectUtils.updateIfNotNull(command.maritalStatus(), person::setMaritalStatus);
+
+        updateContact(person, command.contact());
+        updateTitles(person, command.titles());
+
+        // TODO: update BirthPlace and TemporaryAddress
+
+        bankingService.updatePersonBankAccount(person, command.bankAccount());
+    }
+
+    private void updateContact(Person person, Profile.Contact contact) {
+        ObjectUtils.updateIfNotNull(contact.email(), person::setEmail);
+        ObjectUtils.updateIfNotNull(contact.phone(), person::setPhone);
+        ObjectUtils.updateIfNotNull(contact.mobile(), person::setMobile);
+
+        if (DataBoxValidator.isValidDataBoxId(contact.dataBox())) {
+            person.setDataBox(contact.dataBox());
+        }
+    }
+
+    private void updateTitles(Person person, Profile.Titles titles) {
+        ObjectUtils.updateIfNotNull(titles.prefix(), person::setTitlePrefix);
+        ObjectUtils.updateIfNotNull(titles.suffix(), person::setTitleSuffix);
     }
 
 }

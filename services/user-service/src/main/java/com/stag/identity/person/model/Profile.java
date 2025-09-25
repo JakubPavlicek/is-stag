@@ -27,7 +27,8 @@ public record Profile(
     public record Contact(
         String email,
         String phone,
-        String mobile
+        String mobile,
+        String dataBox
     ) implements Serializable {
 
     }

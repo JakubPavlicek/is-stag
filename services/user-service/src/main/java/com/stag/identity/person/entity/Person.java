@@ -214,7 +214,7 @@ public class Person {
         name = "RODNE_PRIJMENI",
         length = 100
     )
-    private String birthName;
+    private String birthSurname;
 
     @Size(max = 30)
     @NotNull
@@ -446,7 +446,7 @@ public class Person {
 
     @Size(max = 255)
     @Column(name = "UCET_MAJITEL")
-    private String accountOwner;
+    private String accountHolder;
 
     @Size(max = 255)
     @Column(name = "UCET_ADRESA")
@@ -471,7 +471,7 @@ public class Person {
         name = "UCET_BANKA",
         length = 4
     )
-    private String accountBank;
+    private String bankCode;
 
     @Size(max = 30)
     @Column(
@@ -647,7 +647,7 @@ public class Person {
         name = "ADRESA_DATOVE_SCHRANKY",
         length = 12
     )
-    private String dataBoxAddress;
+    private String dataBox;
 
     @Size(max = 255)
     @Column(name = "EXTERNI_IDENTITA")

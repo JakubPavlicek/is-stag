@@ -18,8 +18,8 @@ filter-templates:
 
   retry_args: &retry_args
     retries: 2
-    methods: GET
-    statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+    methods: GET, PATCH
+    statuses: BAD_GATEWAY, GATEWAY_TIMEOUT, SERVICE_UNAVAILABLE
     backoff:
       firstBackoff: 50ms
       maxBackoff: 100ms

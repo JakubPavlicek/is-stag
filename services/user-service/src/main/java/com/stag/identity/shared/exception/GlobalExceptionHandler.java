@@ -1,5 +1,7 @@
 package com.stag.identity.shared.exception;
 
+import com.stag.identity.person.exception.InvalidAccountNumberException;
+import com.stag.identity.person.exception.InvalidDataBoxException;
 import com.stag.identity.person.exception.PersonNotFoundException;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.grpc.Status;
@@ -37,6 +39,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private String getRequestURI(WebRequest request) {
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
         return servletWebRequest.getRequest().getRequestURI();
+    }
+
+    @ExceptionHandler({ InvalidAccountNumberException.class, InvalidDataBoxException.class })
+    public ProblemDetail handleInvalidException(Exception ex) {
+        log.warn(ex.getMessage());
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problemDetail.setTitle("Invalid Value");
+
+        return problemDetail;
     }
 
     @ExceptionHandler(PersonNotFoundException.class)
@@ -137,7 +149,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    @ExceptionHandler({ CompletionException.class, ExecutionException.class})
+    @ExceptionHandler({ CompletionException.class, ExecutionException.class })
     public ProblemDetail handleAsyncWrapperExceptions(Exception ex, HttpServletRequest request) {
         // Special handling for gRPC exceptions
         if (ex.getCause() instanceof StatusRuntimeException sre) {

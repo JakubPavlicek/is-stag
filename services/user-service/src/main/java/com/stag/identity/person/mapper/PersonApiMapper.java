@@ -8,10 +8,12 @@ import com.stag.identity.api.dto.EuroBankAccount;
 import com.stag.identity.api.dto.ForeignHighSchool;
 import com.stag.identity.api.dto.HighSchool;
 import com.stag.identity.api.dto.PersonResponse;
+import com.stag.identity.api.dto.UpdatePersonRequest;
 import com.stag.identity.person.model.Addresses;
 import com.stag.identity.person.model.Banking;
 import com.stag.identity.person.model.Education;
 import com.stag.identity.person.model.Profile;
+import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -46,5 +48,9 @@ public interface PersonApiMapper {
 
     @Mapping(target = "schoolName", source = "name")
     ForeignHighSchool toForeignHighSchoolDTO(Education.ForeignHighSchool foreignHighSchool);
+
+    @Mapping(target = "bankAccount.prefix", source = "bankAccount.accountNumberPrefix")
+    @Mapping(target = "bankAccount.suffix", source = "bankAccount.accountNumberSuffix")
+    PersonUpdateCommand toPersonUpdateCommand(UpdatePersonRequest updatePersonRequest);
 
 }

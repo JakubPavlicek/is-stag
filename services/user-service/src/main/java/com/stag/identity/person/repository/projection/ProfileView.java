@@ -10,6 +10,7 @@ public record ProfileView(
     String email,
     String phone,
     String mobile,
+    String dataBox,
     String titlePrefix,
     String titleSuffix,
     String birthNumber,

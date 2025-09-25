@@ -53,6 +53,40 @@ paths:
           $ref: '#/components/responses/503ServiceUnavailable'
         'default':
           $ref: '#/components/responses/Default'
+    patch:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - persons
+      summary: Update person
+      description: Update a person by their unique identifier.
+      operationId: updatePersonProfile
+      parameters:
+        - $ref: '#/components/parameters/PersonId'
+      requestBody:
+        description: Person details to be updated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePersonRequest'
+      responses:
+        '204':
+          description: Person details updated successfully
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        'default':
+          $ref: '#/components/responses/Default'
 
   /persons/{personId}/addresses:
     get:
@@ -207,6 +241,110 @@ components:
       maxLength: 10
       example: K24B4302P
 
+    UpdatePersonRequest:
+      type: object
+      title: Update Person Request
+      description: Request containing person details to be updated.
+      additionalProperties: false
+      nullable: false
+      properties:
+        birthSurname:
+          $ref: '#/components/schemas/PersonResponse/properties/birthSurname'
+        maritalStatus:
+          $ref: '#/components/schemas/PersonResponse/properties/maritalStatus'
+        contact:
+          $ref: '#/components/schemas/ContactUpdate'
+        titles:
+          $ref: '#/components/schemas/TitlesUpdate'
+        birthPlace:
+          $ref: '#/components/schemas/BirthPlaceUpdate'
+        temporaryAddress:
+          $ref: '#/components/schemas/AddressUpdate'
+        bankAccount:
+          $ref: '#/components/schemas/BankAccountUpdate'
+
+    BirthPlaceUpdate:
+      type: object
+      title: Birth Place Update
+      description: Object containing birth place to be updated.
+      additionalProperties: false
+      nullable: false
+      properties:
+        country:
+          $ref: '#/components/schemas/BirthPlace/properties/country'
+        city:
+          $ref: '#/components/schemas/BirthPlace/properties/city'
+
+    TitlesUpdate:
+      type: object
+      title: Titles Update
+      description: Object containing titles to be updated.
+      additionalProperties: false
+      nullable: false
+      properties:
+        prefix:
+          $ref: '#/components/schemas/Title'
+        suffix:
+          $ref: '#/components/schemas/Title'
+
+    ContactUpdate:
+      type: object
+      title: Contact Update
+      description: Object containing contact details to be updated.
+      additionalProperties: false
+      nullable: false
+      properties:
+        email:
+          $ref: '#/components/schemas/Contact/properties/email'
+        phone:
+          $ref: '#/components/schemas/Contact/properties/phone'
+        mobile:
+          $ref: '#/components/schemas/Contact/properties/mobile'
+        dataBox:
+          $ref: '#/components/schemas/Contact/properties/dataBox'
+
+    AddressUpdate:
+      type: object
+      title: Address Update
+      description: Object containing address details to be updated.
+      additionalProperties: false
+      nullable: false
+      properties:
+        country:
+          $ref: '#/components/schemas/Address/properties/country'
+        district:
+          $ref: '#/components/schemas/Address/properties/district'
+        municipality:
+          $ref: '#/components/schemas/Address/properties/municipality'
+        municipalityPart:
+          $ref: '#/components/schemas/Address/properties/municipalityPart'
+        street:
+          $ref: '#/components/schemas/Address/properties/street'
+        streetNumber:
+          $ref: '#/components/schemas/Address/properties/streetNumber'
+        zipCode:
+          $ref: '#/components/schemas/Address/properties/zipCode'
+        postOffice:
+          $ref: '#/components/schemas/ForeignAddress/properties/postOffice'
+
+    BankAccountUpdate:
+      type: object
+      title: Bank Account Update
+      description: Object containing bank account details to be updated.
+      additionalProperties: false
+      nullable: false
+      properties:
+        accountNumberPrefix:
+          $ref: '#/components/schemas/BankAccount/properties/accountNumberPrefix'
+        accountNumberSuffix:
+          $ref: '#/components/schemas/BankAccount/properties/accountNumberSuffix'
+        bankCode:
+          $ref: '#/components/schemas/BankAccount/properties/bankCode'
+        holderName:
+          $ref: '#/components/schemas/BankAccount/properties/holderName'
+        holderAddress:
+          $ref: '#/components/schemas/BankAccount/properties/holderAddress'
+
     PersonResponse:
       type: object
       title: Person Response
@@ -252,6 +390,7 @@ components:
           example: Doe
           maxLength: 100
         birthSurname:
+          title: Birth Surname
           type: string
           nullable: true
           description: Birth surname of the person.
@@ -292,6 +431,7 @@ components:
           example: male
           maxLength: 240
         maritalStatus:
+          title: Marital Status
           type: string
           nullable: true
           description: Marital status of the person.
@@ -328,21 +468,23 @@ components:
       additionalProperties: false
       nullable: false
       required:
-        - city
         - country
+        - city
       properties:
-        city:
-          type: string
-          nullable: true
-          description: Birth city of the person.
-          example: Prague
-          maxLength: 100
         country:
+          title: Country
           type: string
           nullable: false
           description: Birth country of the person.
           example: Czech Republic
           maxLength: 70
+        city:
+          title: City
+          type: string
+          nullable: true
+          description: Birth city of the person.
+          example: Prague
+          maxLength: 100
 
     Titles:
       type: object
@@ -376,14 +518,17 @@ components:
         - email
         - phone
         - mobile
+        - dataBox
       properties:
         email:
+          title: Email
           type: string
           format: email
           nullable: true
           description: Email address of the person.
           example: Martin95043186@xxx.cz
         phone:
+          title: Phone
           type: string
           nullable: true
           description: Phone number of the person.
@@ -391,12 +536,21 @@ components:
           pattern: ^\+?\d{1,20}$
           maxLength: 20
         mobile:
+          title: Mobile
           type: string
           nullable: true
           description: Mobile number of the person.
           example: '+420987654321'
           pattern: ^\+?\d{1,30}$
           maxLength: 30
+        dataBox:
+          title: Data Box
+          type: string
+          nullable: true
+          description: Data box number of the person.
+          example: 'krmm7m5'
+          pattern: ^[a-km-np-z2-9]{7}$
+          maxLength: 7
 
     Address:
       type: object
@@ -414,18 +568,21 @@ components:
         - country
       properties:
         street:
+          title: Street
           type: string
           nullable: true
           description: Street name of the address.
           example: Příchovice
           maxLength: 48
         streetNumber:
+          title: Street Number
           type: string
           nullable: true
           description: Street number of the address.
           example: '97'
           maxLength: 10
         zipCode:
+          title: Zip Code
           type: string
           nullable: true
           description: Zip code of the address.
@@ -433,24 +590,28 @@ components:
           pattern: ^\d{1,5}$
           maxLength: 5
         municipality:
+          title: Municipality
           type: string
           nullable: true
           description: Municipality of the address.
           example: Stříbro
           maxLength: 255
         municipalityPart:
+          title: Municipality Part
           type: string
           nullable: true
           description: Part of the municipality.
           example: Stříbro I
           maxLength: 255
         district:
+          title: District
           type: string
           nullable: true
           description: District of the address.
           example: Tachov
           maxLength: 100
         country:
+          title: Country
           type: string
           nullable: true
           description: Country of the address.
@@ -470,6 +631,7 @@ components:
         - postOffice
       properties:
         zipCode:
+          title: Zip Code
           type: string
           nullable: true
           description: Zip code of the foreign address.
@@ -477,18 +639,21 @@ components:
           pattern: ^\d{1,10}$
           maxLength: 10
         municipality:
+          title: Municipality
           type: string
           nullable: true
           description: Municipality of the foreign address.
           example: Mornaguia
           maxLength: 75
         district:
+          title: District
           type: string
           nullable: true
           description: District of the foreign address.
           example: manouba
           maxLength: 50
         postOffice:
+          title: Post Office
           type: string
           nullable: true
           description: Post office of the foreign address.
@@ -520,7 +685,6 @@ components:
       type: object
       title: Bank Account
       description: Response containing bank account details.
-      additionalProperties: false
       nullable: false
       required:
         - accountNumberPrefix
@@ -533,6 +697,7 @@ components:
         - holderAddress
       properties:
         accountNumberPrefix:
+          title: Account Number Prefix
           type: string
           nullable: true
           description: Prefix of the bank account number.
@@ -541,6 +706,7 @@ components:
           minLength: 1
           maxLength: 6
         accountNumberSuffix:
+          title: Account Number Suffix
           type: string
           nullable: true
           description: Main part of the bank account number.
@@ -549,6 +715,7 @@ components:
           minLength: 1
           maxLength: 10
         bankCode:
+          title: Bank Code
           type: string
           nullable: true
           description: Bank code of the bank where the account is held.
@@ -556,18 +723,21 @@ components:
           pattern: ^\d{4}$
           maxLength: 4
         bankName:
+          title: Bank Name
           type: string
           nullable: true
           description: Name of the bank where the account is held.
           example: Česká spořitelna, a.s.
           maxLength: 240
         iban:
+          title: IBAN
           type: string
           nullable: true
           description: International Bank Account Number (IBAN).
           example: CZ6508000000002000145399
           maxLength: 30
         currency:
+          title: Currency
           type: string
           nullable: true
           description: Currency of the bank account.
@@ -575,12 +745,14 @@ components:
           pattern: ^[A-Z]{3}$
           maxLength: 3
         holderName:
+          title: Holder Name
           type: string
           nullable: true
           description: Name of the account holder.
           example: Jan Novák
           maxLength: 255
         holderAddress:
+          title: Holder Address
           type: string
           nullable: true
           description: Address of the account holder.
@@ -591,17 +763,26 @@ components:
       type: object
       title: Euro Bank Account
       description: Bank account details for Euro transactions.
-      additionalProperties: false
       nullable: false
       allOf:
         - $ref: '#/components/schemas/BankAccount'
         - $ref: '#/components/schemas/CountryAndSwiftCode'
+      example:
+        accountNumberPrefix: "295538"
+        accountNumberSuffix: "4167197191"
+        bankCode: "0100"
+        bankName: "Česká spořitelna, a.s."
+        iban: "CZ6508000000002000145399"
+        currency: "EUR"
+        holderName: "Jan Novák"
+        holderAddress: "Příchovice 97, 34901 Stříbro, Česká republika"
+        country: "Česká republika"
+        swiftCode: "KOMBCZPPXXX"
 
     CountryAndSwiftCode:
       type: object
       title: Country And Swift Code
       description: Country and SWIFT code of the bank for Euro transactions.
-      additionalProperties: false
       nullable: false
       required:
         - country
@@ -879,9 +1060,8 @@ components:
             type: http://localhost:8080/api/v1/service-unavailable
             title: Service Unavailable
             status: 503
-            detail: Service 'student-service' is currently unavailable.
+            detail: Service is currently unavailable. Please try again later.
             instance: /api/v1/persons/221264
-            serviceName: student-service
 
     Default:
       description: Unexpected error.
