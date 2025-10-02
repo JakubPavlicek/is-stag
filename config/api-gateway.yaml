@@ -131,8 +131,8 @@ spring:
                 - RewritePath=/user-service/openapi.yaml, /openapi.yaml
   http:
     client:
-      read-timeout: 2s
-      connect-timeout: 2s
+      read-timeout: 10s
+      connect-timeout: 10s
   mvc:
     problemdetails:
       enabled: true
