@@ -9,20 +9,17 @@ import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.JWKSourceBuilder;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.nimbusds.jwt.SignedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
-import reactor.core.publisher.Flux;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-import java.util.function.Function;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -37,7 +34,7 @@ public class JwtConfig {
 
     /// @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/enhanced-jwk-retrieval">JWKs Retrieval</a>
     @Bean
-    public ReactiveJwtDecoder reactiveJwtDecoder() throws KeySourceException, MalformedURLException {
+    public JwtDecoder jwtDecoder() throws KeySourceException, MalformedURLException {
         URL jwkSetURL = URI.create(jwkSetUri).toURL();
 
         // Build the Nimbus-enhanced JWK source with caching and retry capabilities
@@ -60,18 +57,8 @@ public class JwtConfig {
 
         log.info("Loading {} JWKs on startup", jwks.size());
 
-        // Function to validate JWTs
-        Function<SignedJWT, Flux<JWK>> jwkLookup = jwt -> {
-            try {
-                List<JWK> matches = jwkSource.get(selector, null);
-                return Flux.fromIterable(matches);
-            } catch (KeySourceException ex) {
-                return Flux.error(ex);
-            }
-        };
-
-        // Create the NimbusReactiveJwtDecoder with the JWK source
-        return NimbusReactiveJwtDecoder.withJwkSource(jwkLookup).build();
+        // Create the NimbusJwtDecoder with the JWK source
+        return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
     }
 
 }

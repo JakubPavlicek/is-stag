@@ -1,81 +1,80 @@
 package com.stag.platform.gateway.config;
 
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
-import static io.netty.handler.codec.http2.HttpConversionUtil.ExtensionHeaderNames.SCHEME;
-import static io.netty.handler.codec.http2.HttpConversionUtil.ExtensionHeaderNames.STREAM_ID;
-
 @Slf4j
 @Component
-public class LoggingFilter implements WebFilter {
+public class LoggingFilter implements Filter {
 
-    @NonNull
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, @NonNull WebFilterChain chain) {
-        ServerHttpRequest request = exchange.getRequest();
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
+            throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // Skip logging for non-API requests
-        if (!request.getURI().getPath().startsWith("/api")) {
-            return chain.filter(exchange);
+        if (!httpRequest.getRequestURI().startsWith("/api")) {
+            chain.doFilter(request, response);
+            return;
         }
 
-        logRequest(request);
+        logRequest(httpRequest);
         Instant start = Instant.now();
 
-        return chain.filter(exchange)
-                    .doOnSuccess(_ -> {
-                        Duration duration = Duration.between(start, Instant.now());
-                        logResponse(exchange.getResponse(), duration);
-                    });
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            Duration duration = Duration.between(start, Instant.now());
+            logResponse(httpResponse, duration);
+        }
     }
 
-    private void logRequest(ServerHttpRequest request) {
-        String method = request.getMethod().name();
-        String path = request.getPath().value();
-        String query = request.getURI().getQuery();
-        String contentType = Optional.ofNullable(request.getHeaders().getContentType())
-                                     .map(MediaType::toString)
-                                     .orElse("");
-        long contentLength = request.getHeaders().getContentLength();
+    private void logRequest(HttpServletRequest request) {
+        String method = request.getMethod();
+        String path = request.getRequestURI();
+        String query = request.getQueryString() != null ? "?" + request.getQueryString() : "";
+        String contentType = Optional.ofNullable(request.getContentType()).orElse("");
+        int contentLength = request.getContentLength();
 
-        String httpVersion = "HTTP/1.1";
-        if (request.getHeaders().containsKey(SCHEME.text().toString())) {
-            httpVersion = "HTTP/2.0";
-        }
+        String httpVersion = request.getProtocol();
 
         log.debug("REQUEST: {} {}{} {} contentType={} contentLength={}",
             method, path, query, httpVersion, contentType, contentLength
         );
     }
 
-    private void logResponse(ServerHttpResponse response, Duration duration) {
-        int status = Optional.ofNullable(response.getStatusCode())
-                             .map(HttpStatusCode::value)
-                             .orElse(-1);
+    private void logResponse(HttpServletResponse response, Duration duration) {
+        int status = response.getStatus();
         long millis = duration.toMillis();
-        String contentType = Optional.ofNullable(response.getHeaders().getContentType())
-                                     .map(MediaType::getType)
+        String contentType = Optional.ofNullable(response.getContentType())
+                                     .map(ct -> {
+                                         try {
+                                             return MediaType.parseMediaType(ct).getType();
+                                         } catch (Exception e) {
+                                             return ct;
+                                         }
+                                     })
                                      .orElse("");
-        long contentLength = response.getHeaders().getContentLength();
 
-        String httpVersion = "HTTP/1.1";
-        if (response.getHeaders().containsKey(STREAM_ID.text().toString())) {
-            httpVersion = "HTTP/2.0";
-        }
+        // Note: Content length may not be available until a response is committed
+        String contentLengthHeader = response.getHeader("Content-Length");
+        String contentLength = contentLengthHeader != null ? contentLengthHeader : "unknown";
+
+        String httpVersion = "HTTP/1.1"; // Default, a protocol version isn't easily accessible in servlet response
 
         log.debug("RESPONSE: {} {} duration={}ms contentType={} contentLength={}",
             status, httpVersion, millis, contentType, contentLength

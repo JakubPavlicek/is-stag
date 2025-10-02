@@ -39,12 +39,7 @@ spring:
         ttl: 15s
     gateway:
       server:
-        webflux:
-          httpclient:
-            response-timeout: 2s
-            compression: true
-          metrics:
-            enabled: true
+        webmvc:
           routes:
             # Service routes
             - id: codelist-service
@@ -140,7 +135,11 @@ spring:
                 - Path=/user-service/**
               filters:
                 - RewritePath=/user-service/openapi.yaml, /openapi.yaml
-  webflux:
+  http:
+    client:
+      read-timeout: 2s
+      connect-timeout: 2s
+  mvc:
     problemdetails:
       enabled: true
   threads:

@@ -4,13 +4,13 @@ spring:
   config:
     import: optional:configserver:http://config-server:8888
 
-#logging:
-#  level:
-#    com.stag.platform.gateway: DEBUG
-#    reactor.netty: DEBUG
-#    org.springframework.cloud.gateway: DEBUG
-#    io.github.resilience4j.circuitbreaker: DEBUG
-#    io.github.resilience4j.timelimiter: DEBUG
+logging:
+  level:
+    com.stag.platform.gateway: DEBUG
+    reactor.netty: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    io.github.resilience4j.circuitbreaker: DEBUG
+    io.github.resilience4j.timelimiter: DEBUG
 
 ---
 

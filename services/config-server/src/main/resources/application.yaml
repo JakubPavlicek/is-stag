@@ -4,10 +4,10 @@ server:
 spring:
   application:
     name: config-server
-  profiles:
-    active: native
   cloud:
     config:
       server:
-        native:
-          search-locations: classpath:/config
+        git:
+          uri: https://github.com/JakubPavlicek/is-stag
+          default-label: master
+          search-paths: config

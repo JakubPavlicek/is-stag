@@ -2,14 +2,16 @@ package com.stag.platform.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
-import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.server.resource.authentication.ExpressionJwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebFluxSecurity
+@EnableWebSecurity
 public class SecurityConfig {
 
     private static final String[] SWAGGER_URLS = {
@@ -20,15 +22,15 @@ public class SecurityConfig {
 
     // TODO: make the actuator endpoints protected by an ADMIN role
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
             .csrf(Customizer.withDefaults())
-            .authorizeExchange(ex -> ex
-                .pathMatchers("/actuator/health").permitAll()
-                .pathMatchers("/*/openapi.yaml").permitAll()
-                .pathMatchers(SWAGGER_URLS).permitAll()
-                .pathMatchers("/api/v1/addresses/**", "/api/v1/countries/**", "/api/v1/domains/**").permitAll()
-                .anyExchange().authenticated()
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/*/openapi.yaml").permitAll()
+                .requestMatchers(SWAGGER_URLS).permitAll()
+                .requestMatchers("/api/v1/addresses/**", "/api/v1/countries/**", "/api/v1/domains/**").permitAll()
+                .anyRequest().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                 jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
@@ -37,11 +39,23 @@ public class SecurityConfig {
     }
 
     @Bean
-    public ReactiveJwtAuthenticationConverter jwtAuthenticationConverter() {
-        ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
-        // Set a custom converter to extract authorities from the JWT
-        converter.setJwtGrantedAuthoritiesConverter(new JwtRoleConverter());
-        return converter;
+    public ExpressionJwtGrantedAuthoritiesConverter expressionConverter() {
+        // Extract roles from the realm_access.roles claim and prefix with "ROLE_"
+        ExpressionJwtGrantedAuthoritiesConverter expressionConverter =
+            new ExpressionJwtGrantedAuthoritiesConverter(
+                new SpelExpressionParser().parseRaw("[realm_access][roles]")
+            );
+        expressionConverter.setAuthorityPrefix("ROLE_");
+
+        return expressionConverter;
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter jwtAuthConverter = new JwtAuthenticationConverter();
+        jwtAuthConverter.setJwtGrantedAuthoritiesConverter(expressionConverter());
+
+        return jwtAuthConverter;
     }
 
 }
