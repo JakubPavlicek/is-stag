@@ -13,18 +13,12 @@ server:
 # Templates for API Gateway filters
 filter-templates:
   circuitbreaker_args: &circuitbreaker_args
-    name: default-cb
     fallbackUri: forward:/fallback
 
   retry_args: &retry_args
-    retries: 2
+    retries: 3
     methods: GET, PATCH
     statuses: BAD_GATEWAY, GATEWAY_TIMEOUT, SERVICE_UNAVAILABLE
-    backoff:
-      firstBackoff: 50ms
-      maxBackoff: 100ms
-      factor: 2
-      basedOnPreviousValue: true
 
 spring:
   security:
@@ -51,7 +45,7 @@ spring:
                 - name: CircuitBreaker
                   args:
                     <<: *circuitbreaker_args
-                    name: codelist-service
+                    id: codelist-service
                 - name: Retry
                   args:
                     <<: *retry_args
@@ -63,7 +57,7 @@ spring:
                 - name: CircuitBreaker
                   args:
                     <<: *circuitbreaker_args
-                    name: student-service
+                    id: student-service
                 - name: Retry
                   args:
                     <<: *retry_args
@@ -75,7 +69,7 @@ spring:
                 - name: CircuitBreaker
                   args:
                     <<: *circuitbreaker_args
-                    name: study-plan-service
+                    id: study-plan-service
                 - name: Retry
                   args:
                     <<: *retry_args
@@ -87,7 +81,7 @@ spring:
                 - name: CircuitBreaker
                   args:
                     <<: *circuitbreaker_args
-                    name: subject-service
+                    id: subject-service
                 - name: Retry
                   args:
                     <<: *retry_args
@@ -99,7 +93,7 @@ spring:
                 - name: CircuitBreaker
                   args:
                     <<: *circuitbreaker_args
-                    name: user-service
+                    id: user-service
                 - name: Retry
                   args:
                     <<: *retry_args
@@ -171,7 +165,7 @@ resilience4j:
   timelimiter:
     configs:
       default:
-        timeout-duration: 500s
+        timeout-duration: 1s
         cancel-running-future: true
 
 management:

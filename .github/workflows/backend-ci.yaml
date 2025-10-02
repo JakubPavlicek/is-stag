@@ -5,6 +5,7 @@ on:
     paths:
       - 'services/**'
       - 'proto/**'
+      - 'config/**'
 
 jobs:
   protolint-lint-proto:

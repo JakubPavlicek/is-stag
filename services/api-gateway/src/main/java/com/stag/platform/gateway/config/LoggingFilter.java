@@ -8,7 +8,6 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,8 +20,7 @@ import java.util.Optional;
 public class LoggingFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
@@ -47,10 +45,9 @@ public class LoggingFilter implements Filter {
         String method = request.getMethod();
         String path = request.getRequestURI();
         String query = request.getQueryString() != null ? "?" + request.getQueryString() : "";
+        String httpVersion = request.getProtocol();
         String contentType = Optional.ofNullable(request.getContentType()).orElse("");
         int contentLength = request.getContentLength();
-
-        String httpVersion = request.getProtocol();
 
         log.debug("REQUEST: {} {}{} {} contentType={} contentLength={}",
             method, path, query, httpVersion, contentType, contentLength
@@ -60,24 +57,11 @@ public class LoggingFilter implements Filter {
     private void logResponse(HttpServletResponse response, Duration duration) {
         int status = response.getStatus();
         long millis = duration.toMillis();
-        String contentType = Optional.ofNullable(response.getContentType())
-                                     .map(ct -> {
-                                         try {
-                                             return MediaType.parseMediaType(ct).getType();
-                                         } catch (Exception e) {
-                                             return ct;
-                                         }
-                                     })
-                                     .orElse("");
+        String contentType = Optional.ofNullable(response.getContentType()).orElse("");
+        String contentLength = response.getHeader("Content-Length");
 
-        // Note: Content length may not be available until a response is committed
-        String contentLengthHeader = response.getHeader("Content-Length");
-        String contentLength = contentLengthHeader != null ? contentLengthHeader : "unknown";
-
-        String httpVersion = "HTTP/1.1"; // Default, a protocol version isn't easily accessible in servlet response
-
-        log.debug("RESPONSE: {} {} duration={}ms contentType={} contentLength={}",
-            status, httpVersion, millis, contentType, contentLength
+        log.debug("RESPONSE: {} duration={}ms contentType={} contentLength={}",
+            status, millis, contentType, contentLength
         );
     }
 

@@ -11,6 +11,7 @@ logging:
     org.springframework.cloud.gateway: DEBUG
     io.github.resilience4j.circuitbreaker: DEBUG
     io.github.resilience4j.timelimiter: DEBUG
+    org.springframework.retry: DEBUG
 
 ---
 

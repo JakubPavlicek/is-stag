@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0-M3</version>
+        <version>3.5.6</version>
         <relativePath /> <!-- lookup parent from a repository -->
     </parent>
 
@@ -36,7 +36,7 @@
         <maven-compiler.version>3.14.1</maven-compiler.version>
 
         <!-- Spring -->
-        <spring-cloud.version>2025.1.0-M2</spring-cloud.version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
         <springdoc.version>2.8.13</springdoc.version>
         <oracle.jdbc.version>23.9.0.25.07</oracle.jdbc.version>
 

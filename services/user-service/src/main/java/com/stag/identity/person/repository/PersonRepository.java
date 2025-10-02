@@ -49,19 +49,19 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     @Query(
         """
         SELECT new com.stag.identity.person.repository.projection.BankView(
-            p.accountOwner,
+            p.accountHolder,
             p.accountAddress,
             p.accountPrefix,
             p.accountSuffix,
-            p.accountBank,
+            p.bankCode,
             p.accountIban,
             p.accountCurrency,
 
-            p.euroAccountOwner,
+            p.euroAccountHolder,
             p.euroAccountAddress,
             p.euroAccountPrefix,
             p.euroAccountSuffix,
-            p.euroAccountBank,
+            p.euroBankCode,
             p.euroAccountIban,
             p.euroAccountCurrency,
             CAST(p.euroAccountCountryId AS Integer),

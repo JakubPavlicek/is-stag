@@ -610,7 +610,7 @@ public class Person {
         name = "UCET_EURO_BANKA",
         length = 4
     )
-    private String euroAccountBank;
+    private String euroBankCode;
 
     @Size(max = 3)
     @Column(
@@ -625,7 +625,7 @@ public class Person {
 
     @Size(max = 255)
     @Column(name = "UCET_EURO_MAJITEL")
-    private String euroAccountOwner;
+    private String euroAccountHolder;
 
     @Size(max = 30)
     @Column(

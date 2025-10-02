@@ -9,10 +9,8 @@ import java.time.Duration;
 @Configuration
 public class Http2Config {
 
-    /**
-     * Configure Java HttpClient with HTTP/2 support.
-     * This client will be used by Spring Cloud Gateway MVC for proxying requests.
-     */
+    /// Configure Java HttpClient with HTTP/2 support.
+    /// This client will be used by Spring Cloud Gateway MVC for proxying requests.
     @Bean
     public HttpClient httpClient() {
         return HttpClient.newBuilder()
