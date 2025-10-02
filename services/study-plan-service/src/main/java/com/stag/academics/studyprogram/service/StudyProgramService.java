@@ -9,7 +9,7 @@ import com.stag.academics.studyprogram.service.data.CodelistMeaningsLookupData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,14 +20,13 @@ public class StudyProgramService {
 
     private final CodelistClient codelistClient;
 
-    public StudyProgramView findStudyProgramViewById(Long studyProgramId, String language) {
-        return studyProgramRepository.findStudyProgramViewById(studyProgramId, language)
-                                     .orElseThrow(() -> new StudyProgramNotFoundException(studyProgramId));
-    }
+    private final TransactionTemplate transactionTemplate;
 
-    @Transactional(readOnly = true)
     public StudyProgramView findStudyProgram(Long studyProgramId, String language) {
-        StudyProgramView rawStudyProgramView = findStudyProgramViewById(studyProgramId, language);
+        StudyProgramView rawStudyProgramView = transactionTemplate.execute(status ->
+            studyProgramRepository.findStudyProgramViewById(studyProgramId, language)
+                                  .orElseThrow(() -> new StudyProgramNotFoundException(studyProgramId))
+        );
 
         // Fetch codelist meanings from the codelist-service
         CodelistMeaningsLookupData studyProgramData =

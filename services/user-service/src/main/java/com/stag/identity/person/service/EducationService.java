@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -22,6 +23,8 @@ public class EducationService {
     private final PersonRepository personRepository;
     private final CodelistLookupService codelistLookupService;
 
+    private final TransactionTemplate transactionTemplate;
+
     @Cacheable(value = "person-education", key = "{#personId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
@@ -30,9 +33,10 @@ public class EducationService {
     public Education getPersonEducation(Integer personId, String language) {
         log.info("Fetching person education information for personId: {} with language: {}", personId, language);
 
-        EducationView educationView =
+        EducationView educationView = transactionTemplate.execute(status ->
             personRepository.findEducationByPersonId(personId)
-                            .orElseThrow(() -> new PersonNotFoundException(personId));
+                            .orElseThrow(() -> new PersonNotFoundException(personId))
+        );
 
         log.debug("Person education information found, fetching additional data for personId: {}", personId);
 

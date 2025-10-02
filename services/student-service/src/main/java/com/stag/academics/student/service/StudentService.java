@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -23,6 +24,8 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final StudentAsyncService studentAsyncService;
+
+    private final TransactionTemplate transactionTemplate;
 
     @Transactional(readOnly = true)
     public List<String> findAllStudentIds(Integer personId) {
@@ -42,8 +45,10 @@ public class StudentService {
     public Profile getStudentProfile(String studentId, String language) {
         log.info("Fetching student profile for studentId: {} with language: {}", studentId, language);
 
-        ProfileView profileView = studentRepository.findStudentProfileById(studentId)
-                                                   .orElseThrow(() -> new StudentNotFoundException(studentId));
+        ProfileView profileView = transactionTemplate.execute(status ->
+            studentRepository.findStudentProfileById(studentId)
+                             .orElseThrow(() -> new StudentNotFoundException(studentId))
+        );
 
         log.debug("Student profile found, fetching additional data for studentId: {}", studentId);
 

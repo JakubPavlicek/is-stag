@@ -17,6 +17,7 @@ import org.iban4j.Iban;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -28,6 +29,8 @@ public class BankingService {
     private final PersonRepository personRepository;
     private final CodelistLookupService codelistLookupService;
 
+    private final TransactionTemplate transactionTemplate;
+
     @Cacheable(value = "person-banking", key = "{#personId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
@@ -36,9 +39,10 @@ public class BankingService {
     public Banking getPersonBanking(Integer personId, String language) {
         log.info("Fetching person banking information for personId: {} with language: {}", personId, language);
 
-        BankView bankView =
+        BankView bankView = transactionTemplate.execute(status ->
             personRepository.findBankingByPersonId(personId)
-                            .orElseThrow(() -> new PersonNotFoundException(personId));
+                            .orElseThrow(() -> new PersonNotFoundException(personId))
+        );
 
         log.debug("Person banking information found, fetching additional data for personId: {}", personId);
 

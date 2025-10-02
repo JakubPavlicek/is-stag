@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -35,6 +36,8 @@ public class ProfileService {
     private final CodelistLookupService codelistLookupService;
     private final StudentLookupService studentLookupService;
 
+    private final TransactionTemplate transactionTemplate;
+
     @Cacheable(value = "person-profile", key = "{#personId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
@@ -43,9 +46,10 @@ public class ProfileService {
     public Profile getPersonProfile(Integer personId, String language) {
         log.info("Fetching person profile for personId: {} with language: {}", personId, language);
 
-        ProfileView profileView =
+        ProfileView profileView = transactionTemplate.execute(status ->
             personRepository.findById(personId, ProfileView.class)
-                            .orElseThrow(() -> new PersonNotFoundException(personId));
+                            .orElseThrow(() -> new PersonNotFoundException(personId))
+        );
 
         log.debug("Person profile found, fetching additional data for personId: {}", personId);
 
@@ -69,9 +73,10 @@ public class ProfileService {
     public SimpleProfile getPersonSimpleProfile(Integer personId, String language) {
         log.info("Fetching person simple profile for personId: {} with language: {}", personId, language);
 
-        SimpleProfileView simpleProfileView =
+        SimpleProfileView simpleProfileView = transactionTemplate.execute(status ->
             personRepository.findById(personId, SimpleProfileView.class)
-                            .orElseThrow(() -> new PersonNotFoundException(personId));
+                            .orElseThrow(() -> new PersonNotFoundException(personId))
+        );
 
         log.debug("Person simple profile found, fetching additional data for personId: {}", personId);
 
