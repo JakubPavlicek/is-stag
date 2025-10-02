@@ -20,7 +20,7 @@ public class CodelistClient {
     private CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub;
 
     private CodelistServiceGrpc.CodelistServiceBlockingStub codelistStub() {
-        return codelistServiceStub.withDeadlineAfter(500, TimeUnit.MILLISECONDS);
+        return codelistServiceStub.withDeadlineAfter(1, TimeUnit.SECONDS);
     }
 
     @CircuitBreaker(name = "codelist-service")

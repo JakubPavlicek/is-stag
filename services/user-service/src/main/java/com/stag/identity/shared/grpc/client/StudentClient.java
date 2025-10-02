@@ -20,7 +20,7 @@ public class StudentClient {
     private StudentServiceGrpc.StudentServiceBlockingStub studentServiceStub;
 
     private StudentServiceGrpc.StudentServiceBlockingStub studentStub() {
-        return studentServiceStub.withDeadlineAfter(500, TimeUnit.MILLISECONDS);
+        return studentServiceStub.withDeadlineAfter(1, TimeUnit.SECONDS);
     }
 
     @CircuitBreaker(name = "student-service")
