@@ -94,7 +94,7 @@ resilience4j:
         sliding-window-size: 100
         wait-duration-in-open-state: 10s
         register-health-indicator: true
-        slow-call-duration-threshold: 3s
+        slow-call-duration-threshold: 10s
         slow-call-rate-threshold: 75
     instances:
       codelist-service:
