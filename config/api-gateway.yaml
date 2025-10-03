@@ -27,6 +27,9 @@ spring:
         jwt:
           issuer-uri: http://localhost:8180/realms/is-stag
           jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
+  jackson:
+    mapper:
+      sort-properties-alphabetically: false
   cloud:
     loadbalancer:
       cache:

@@ -12,6 +12,9 @@ server:
 #        hikari: DEBUG
 
 spring:
+  jackson:
+    mapper:
+      sort-properties-alphabetically: false
   jpa:
 #    show-sql: true
     properties:
@@ -26,6 +29,8 @@ spring:
           in_clause_parameter_padding: true
           fail_on_pagination_over_collection_fetch: true
           plan_cache_max_size: 4096
+        jdbc:
+          fetch_size: 50
     hibernate:
       ddl-auto: none
     open-in-view: false

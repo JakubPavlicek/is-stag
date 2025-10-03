@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.6</version>
+        <version>4.0.0-M3</version>
         <relativePath /> <!-- lookup parent from a repository -->
     </parent>
 
@@ -32,26 +32,26 @@
         <sonar.organization>jakubpavlicek</sonar.organization>
 
         <!-- Maven -->
-        <maven-enforcer.version>3.6.1</maven-enforcer.version>
+        <maven-enforcer.version>3.6.2</maven-enforcer.version>
         <maven-compiler.version>3.14.1</maven-compiler.version>
 
         <!-- Spring -->
-        <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <springdoc.version>2.8.13</springdoc.version>
+        <spring-cloud.version>2025.1.0-M3</spring-cloud.version>
+        <springdoc.version>3.0.0-M1</springdoc.version>
         <oracle.jdbc.version>23.9.0.25.07</oracle.jdbc.version>
 
         <!-- gRPC -->
         <grpc.version>1.75.0</grpc.version>
-        <protobuf-java.version>4.32.1</protobuf-java.version>
+        <protobuf-java.version>4.33.0-RC1</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
         <protovalidate.version>1.0.0</protovalidate.version>
         <protobuf-maven-plugin.version>3.10.0</protobuf-maven-plugin.version>
 
         <!-- Hibernate Search -->
-        <hibernate-search.version>7.1.2.Final</hibernate-search.version>
+        <hibernate-search.version>8.1.2.Final</hibernate-search.version>
 
         <!-- Hibernate ORM Processor for JPA Metamodel generation -->
-        <hibernate-processor.version>7.1.0.Final</hibernate-processor.version>
+        <hibernate-processor.version>7.1.2.Final</hibernate-processor.version>
 
         <!-- Tools -->
         <mapstruct.version>1.6.3</mapstruct.version>

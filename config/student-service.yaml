@@ -37,6 +37,9 @@ spring:
         jwt:
           issuer-uri: http://localhost:8180/realms/is-stag
           jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
+  jackson:
+    mapper:
+      sort-properties-alphabetically: false
   jpa:
 #    show-sql: true
     properties:
@@ -51,6 +54,8 @@ spring:
           in_clause_parameter_padding: true
           fail_on_pagination_over_collection_fetch: true
           plan_cache_max_size: 4096
+        jdbc:
+          fetch_size: 50
     hibernate:
       ddl-auto: none
     open-in-view: false
