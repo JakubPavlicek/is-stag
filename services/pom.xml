@@ -45,7 +45,7 @@
         <protobuf-java.version>4.33.0-RC1</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
         <protovalidate.version>1.0.0</protovalidate.version>
-        <protobuf-maven-plugin.version>3.10.0</protobuf-maven-plugin.version>
+        <protobuf-maven-plugin.version>3.10.1</protobuf-maven-plugin.version>
 
         <!-- Hibernate Search -->
         <hibernate-search.version>8.1.2.Final</hibernate-search.version>
@@ -73,7 +73,6 @@
 
         <!-- Infrastructure services -->
         <module>api-gateway</module>
-        <module>config-server</module>
         <module>discovery-server</module>
 
         <!-- Business services -->

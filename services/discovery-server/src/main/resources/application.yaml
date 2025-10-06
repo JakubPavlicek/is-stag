@@ -1,17 +1,25 @@
+server:
+  port: 8761
+  http2:
+    enabled: true
+  compression:
+    enabled: true
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  server:
+    response-cache-update-interval-ms: 10000
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
 spring:
   application:
     name: discovery-server
-  config:
-    import: optional:configserver:http://config-server:8888
-
-eureka:
-  server:
-    response-cache-update-interval-ms: 10000
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: dev
-    import: optional:configserver:http://localhost:8888
+  threads:
+    virtual:
+      enabled: true
