@@ -98,67 +98,6 @@ services:
     networks:
       - is-stag-network
 
-  config-server:
-    profiles:
-      - prod
-    container_name: config-server
-    image: jakubpavlicek/config-server:0.0.1
-    pull_policy: never
-    environment:
-      THC_PATH: /actuator/health
-      THC_PORT: 8888
-      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
-      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
-      OTEL_TRACES_SAMPLER_ARG: 1.0
-      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
-      OTEL_SERVICE_NAME: config-server
-      OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_traceidratio
-    volumes:
-      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
-    healthcheck:
-      test: ["CMD", "/workspace/health-check"]
-      start_period: 10s
-      timeout: 20s
-      retries: 5
-    ports:
-      - "8888:8888"
-    networks:
-      - is-stag-network
-
-  discovery-server:
-    profiles:
-      - prod
-    container_name: discovery-server
-    image: jakubpavlicek/discovery-server:0.0.1
-    pull_policy: never
-    ports:
-      - "8761:8761"
-    environment:
-      THC_PATH: /actuator/health
-      THC_PORT: 8761
-      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
-      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
-      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
-      OTEL_SERVICE_NAME: discovery-server
-      OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_traceidratio
-      OTEL_TRACES_SAMPLER_ARG: 1.0
-    volumes:
-      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
-    healthcheck:
-      test: [ "CMD", "/workspace/health-check" ]
-      start_period: 10s
-      timeout: 20s
-      retries: 5
-    depends_on:
-      config-server:
-        condition: service_healthy
-    networks:
-      - is-stag-network
-
   api-gateway:
     profiles:
       - prod
@@ -189,10 +128,6 @@ services:
 #      timeout: 10s
 #      retries: 5
     depends_on:
-      config-server:
-        condition: service_healthy
-      discovery-server:
-        condition: service_healthy
       keycloak:
         condition: service_healthy
     networks:

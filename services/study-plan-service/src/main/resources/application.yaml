@@ -10,7 +10,8 @@ grpc:
     port: 9050
   client:
     codelist-service:
-      address: discovery:///codelist-service
+#      address: static://codelist-service:9010
+      address: static://localhost:9010
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-time: 30s
@@ -35,11 +36,11 @@ spring:
     mapper:
       sort-properties-alphabetically: false
   jpa:
-    #    show-sql: true
+#    show-sql: true
     properties:
       hibernate:
-        #        format_sql: true
-        #        generate_statistics: true
+#        format_sql: true
+#        generate_statistics: true
         order_inserts: true
         order_updates: true
         connection:
@@ -74,8 +75,8 @@ spring:
     redis:
       host: redis
       port: 6379
-    #      username: user
-    #      password: password
+#      username: user
+#      password: password
   cache:
     type: redis
     redis:
@@ -122,22 +123,6 @@ resilience4j:
       codelist-service:
         base-config: default
 
-eureka:
-  instance:
-    prefer-ip-address: true
-    # Reduce service discovery delays
-    lease-renewal-interval-in-seconds: 10
-    lease-expiration-duration-in-seconds: 30
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://discovery-server:8761/eureka/
-    # Cache registry locally to avoid repeated lookups
-    registry-fetch-interval-seconds: 10
-    cache-refresh-executor-thread-pool-size: 2
-    initial-instance-info-replication-interval-seconds: 10
-
 springdoc:
   api-docs:
     enabled: false
@@ -158,8 +143,3 @@ spring:
   data:
     redis:
       host: localhost
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/

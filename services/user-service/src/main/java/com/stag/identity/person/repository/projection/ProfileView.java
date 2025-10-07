@@ -6,7 +6,7 @@ public record ProfileView(
     Integer id,
     String firstName,
     String lastName,
-    String birthName,
+    String birthSurname,
     String email,
     String phone,
     String mobile,

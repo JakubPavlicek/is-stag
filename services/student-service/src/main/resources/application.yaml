@@ -10,14 +10,16 @@ grpc:
     port: 9030
   client:
     user-service:
-      address: discovery:///user-service
+#      address: static://user-service:9020
+      address: static://localhost:9020
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-time: 30s
       keep-alive-timeout: 5s
       max-inbound-message-size: 4MB
     study-plan-service:
-      address: discovery:///study-plan-service
+#      address: static://study-plan-service:9050
+      address: static://localhost:9050
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-time: 30s
@@ -41,11 +43,11 @@ spring:
     mapper:
       sort-properties-alphabetically: false
   jpa:
-    #    show-sql: true
+#    show-sql: true
     properties:
       hibernate:
-        #        format_sql: true
-        #        generate_statistics: true
+#        format_sql: true
+#        generate_statistics: true
         order_inserts: true
         order_updates: true
         connection:
@@ -136,22 +138,6 @@ management:
     circuitbreakers:
       enabled: true
 
-eureka:
-  instance:
-    prefer-ip-address: true
-    # Reduce service discovery delays
-    lease-renewal-interval-in-seconds: 10
-    lease-expiration-duration-in-seconds: 30
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://discovery-server:8761/eureka/
-    # Cache registry locally to avoid repeated lookups
-    registry-fetch-interval-seconds: 10
-    cache-refresh-executor-thread-pool-size: 2
-    initial-instance-info-replication-interval-seconds: 10
-
 springdoc:
   api-docs:
     enabled: false
@@ -173,7 +159,3 @@ spring:
     redis:
       host: localhost
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/

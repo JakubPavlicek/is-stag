@@ -46,8 +46,6 @@ spring:
             protocol: http
             username: elastic
             password: ${ELASTICSEARCH_PASSWORD}
-            schema_management:
-              strategy: create-or-validate
             analysis:
               configurer: com.stag.platform.shared.config.ElasticsearchAnalysisConfig
 #              ssl:
@@ -87,22 +85,6 @@ spring:
     virtual:
       enabled: true
 
-eureka:
-  instance:
-    prefer-ip-address: true
-    # Reduce service discovery delays
-    lease-renewal-interval-in-seconds: 10
-    lease-expiration-duration-in-seconds: 30
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://discovery-server:8761/eureka/
-    # Cache registry locally to avoid repeated lookups
-    registry-fetch-interval-seconds: 10
-    cache-refresh-executor-thread-pool-size: 2
-    initial-instance-info-replication-interval-seconds: 10
-
 springdoc:
   api-docs:
     enabled: false
@@ -123,8 +105,3 @@ spring:
   data:
     redis:
       host: localhost
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/

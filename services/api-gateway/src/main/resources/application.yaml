@@ -42,16 +42,13 @@ spring:
           issuer-uri: http://localhost:8180/realms/is-stag
           jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
   cloud:
-    loadbalancer:
-      cache:
-        ttl: 15s
     gateway:
       server:
         webmvc:
           routes:
             # Service routes
             - id: codelist-service
-              uri: lb://codelist-service
+              uri: ${codelist-service.url}
               predicates:
                 - Path=/api/v1/addresses/**,/api/v1/countries/**,/api/v1/domains/**
               filters:
@@ -64,7 +61,7 @@ spring:
                   args:
                     <<: *retry_args
             - id: student-service
-              uri: lb://student-service
+              uri: ${student-service.url}
               predicates:
                 - Path=/api/v1/students/**
               filters:
@@ -76,7 +73,7 @@ spring:
                   args:
                     <<: *retry_args
             - id: study-plan-service
-              uri: lb://study-plan-service
+              uri: ${study-plan-service.url}
               predicates:
                 - Path=/api/v1/study-plan/**
               filters:
@@ -88,7 +85,7 @@ spring:
                   args:
                     <<: *retry_args
             - id: subject-service
-              uri: lb://subject-service
+              uri: ${subject-service.url}
               predicates:
                 - Path=/api/v1/subjects/**
               filters:
@@ -100,7 +97,7 @@ spring:
                   args:
                     <<: *retry_args
             - id: user-service
-              uri: lb://user-service
+              uri: ${user-service.url}
               predicates:
                 - Path=/api/v1/users/**,/api/v1/persons/**
               filters:
@@ -114,31 +111,31 @@ spring:
 
             # OpenAPI routes for aggregation
             - id: codelist-service-openapi
-              uri: lb://codelist-service
+              uri: ${codelist-service.url}
               predicates:
                 - Path=/codelist-service/**
               filters:
                 - RewritePath=/codelist-service/openapi.yaml, /openapi.yaml
             - id: student-service-openapi
-              uri: lb://student-service
+              uri: ${student-service.url}
               predicates:
                 - Path=/student-service/**
               filters:
                 - RewritePath=/student-service/openapi.yaml, /openapi.yaml
             - id: study-plan-service-openapi
-              uri: lb://study-plan-service
+              uri: ${study-plan-service.url}
               predicates:
                 - Path=/study-plan-service/**
               filters:
                 - RewritePath=/study-plan-service/openapi.yaml, /openapi.yaml
             - id: subject-service-openapi
-              uri: lb://subject-service
+              uri: ${subject-service.url}
               predicates:
                 - Path=/subject-service/**
               filters:
                 - RewritePath=/subject-service/openapi.yaml, /openapi.yaml
             - id: user-service-openapi
-              uri: lb://user-service
+              uri: ${user-service.url}
               predicates:
                 - Path=/user-service/**
               filters:
@@ -211,21 +208,16 @@ springdoc:
   api-docs:
     enabled: false
 
-eureka:
-  instance:
-    prefer-ip-address: true
-    # Reduce service discovery delays
-    lease-renewal-interval-in-seconds: 10
-    lease-expiration-duration-in-seconds: 30
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://discovery-server:8761/eureka/
-    # Cache registry locally to avoid repeated lookups
-    registry-fetch-interval-seconds: 10
-    cache-refresh-executor-thread-pool-size: 2
-    initial-instance-info-replication-interval-seconds: 10
+codelist-service:
+  url: http://localhost:8010
+student-service:
+  url: http://localhost:8030
+study-plan-service:
+  url: http://localhost:8050
+subject-service:
+  url: http://localhost:8040
+user-service:
+  url: http://localhost:8020
 
 ---
 
@@ -238,8 +230,3 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8180/realms/is-stag/protocol/openid-connect/certs
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/

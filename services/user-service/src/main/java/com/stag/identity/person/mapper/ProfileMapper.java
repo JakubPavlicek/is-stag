@@ -21,7 +21,7 @@ public interface ProfileMapper {
 
     @Mapping(target = "personId", source = "profile.id")
     @Mapping(target = "studentIds", source = "studentIds")
-    @Mapping(target = "birthSurname", source = "profile.birthName")
+    @Mapping(target = "birthSurname", source = "profile.birthSurname")
     @Mapping(target = "gender", source = "profile.gender", qualifiedByName = "lookupGender")
     @Mapping(target = "maritalStatus", source = "profile.maritalStatus", qualifiedByName = "lookupMaritalStatus")
     @Mapping(target = "contact", source = "profile")
