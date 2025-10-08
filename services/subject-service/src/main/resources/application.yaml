@@ -18,11 +18,8 @@ spring:
     mapper:
       sort-properties-alphabetically: false
   jpa:
-#    show-sql: true
     properties:
       hibernate:
-#        format_sql: true
-#        generate_statistics: true
         order_inserts: true
         order_updates: true
         connection:
@@ -37,9 +34,6 @@ spring:
       ddl-auto: none
     open-in-view: false
   datasource:
-    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=atreus.zcu.cz)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=pelops.zcu.cz)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=DEMO_SERVICE)(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))
-    username: install
-    password: demo
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
       auto-commit: false

@@ -50,5 +50,10 @@ metrics_generator:
       - url: http://prometheus:9090/api/v1/write
         send_exemplars: true
 
-overrides:
-  metrics_generator_processors: [ service-graphs, local-blocks, span-metrics ]
+global_overrides:
+  defaults:
+    metrics_generator:
+      processors:
+        - service-graphs
+        - local-blocks
+        - span-metrics
