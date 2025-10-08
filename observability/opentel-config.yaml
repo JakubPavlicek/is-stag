@@ -6,10 +6,11 @@ receivers:
   prometheus/collector:
     config:
       scrape_configs:
+        # This job scrapes the collector's own metrics
         - job_name: "opentelemetry-collector"
-          scrape_interval: 10s
+          scrape_interval: 15s
           static_configs:
-            - targets: ["127.0.0.1:8888"]
+            - targets: [ "127.0.0.1:8888" ]
 
 processors:
   batch:
@@ -21,7 +22,7 @@ processors:
         type: string_attribute,
         string_attribute: {
           key: url.path,
-          values: [ /actuator.*, /eureka.*, /swagger-ui.*, /v3/api-docs.* ],
+          values: [ /actuator.*, /swagger-ui.*, /v3/api-docs.* ],
           enabled_regex_matching: true,
           invert_match: true
         }
@@ -41,12 +42,6 @@ exporters:
     endpoint: http://loki:3100/otlp
     tls:
       insecure: true
-  debug/metrics:
-    verbosity: detailed
-  debug/traces:
-    verbosity: detailed
-  debug/logs:
-    verbosity: detailed
 
 extensions:
   health_check:
@@ -54,17 +49,17 @@ extensions:
     path: "/ready"
 
 service:
-  extensions: [health_check]
+  extensions: [ health_check ]
   pipelines:
     traces:
-      receivers: [otlp]
-      processors: [batch, tail_sampling]
-      exporters: [otlphttp/traces]
+      receivers: [ otlp ]
+      processors: [ batch, tail_sampling ]
+      exporters: [ otlphttp/traces ]
     metrics:
-      receivers: [otlp, prometheus/collector]
-      processors: [batch]
-      exporters: [otlphttp/metrics]
+      receivers: [ otlp, prometheus/collector ]
+      processors: [ batch ]
+      exporters: [ otlphttp/metrics ]
     logs:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [otlphttp/logs]
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ otlphttp/logs ]

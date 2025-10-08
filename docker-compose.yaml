@@ -73,6 +73,7 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - xpack.security.http.ssl.enabled=false
+      - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
@@ -139,6 +140,8 @@ services:
     container_name: student-service
     image: jakubpavlicek/student-service:0.0.1
     pull_policy: never
+    env_file:
+      - .env
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
@@ -170,6 +173,8 @@ services:
     container_name: study-plan-service
     image: jakubpavlicek/study-plan-service:0.0.1
     pull_policy: never
+    env_file:
+      - .env
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
@@ -201,6 +206,8 @@ services:
     container_name: subject-service
     image: jakubpavlicek/subject-service:0.0.1
     pull_policy: never
+    env_file:
+      - .env
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
@@ -232,6 +239,8 @@ services:
     container_name: user-service
     image: jakubpavlicek/user-service:0.0.1
     pull_policy: never
+    env_file:
+      - .env
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
@@ -263,6 +272,8 @@ services:
     container_name: codelist-service
     image: jakubpavlicek/codelist-service:0.0.1
     pull_policy: never
+    env_file:
+      - .env
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
@@ -300,7 +311,7 @@ services:
     image: otel/opentelemetry-collector-contrib:latest
     command: [ --config=/etc/otel-config.yml ]
     volumes:
-      - ./opentel-config.yaml:/etc/otel-config.yml
+      - ./observability/opentel-config.yaml:/etc/otel-config.yml
     ports:
       - "4318:4318"
       - "4317:4317"
@@ -323,8 +334,7 @@ services:
     image: grafana/loki:latest
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
-      - ./loki-config.yaml:/etc/loki/local-config.yaml
-      - ./data:/data
+      - ./observability/loki-config.yaml:/etc/loki/local-config.yaml
     ports:
       - "3100"
     networks:
@@ -340,8 +350,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     volumes:
-      - ./grafana-datasources.yaml:/etc/grafana/provisioning/datasources/default.yml
-      - ./grafana-datasources.yaml:/etc/grafana/provisioning/dashboards/default.yml
+      - ./observability/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/default.yml
     ports:
       - "3000:3000"
     networks:
@@ -355,8 +364,7 @@ services:
     image: grafana/tempo:latest
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
-      - ./tempo-config.yaml:/etc/tempo.yaml
-      - ./data:/data
+      - ./observability/tempo-config.yaml:/etc/tempo.yaml
     ports:
       - "4317"  # otlp grpc
       - "4318"
@@ -375,9 +383,9 @@ services:
       --web.enable-remote-write-receiver
     ]
     volumes:
-      - ./prometheus-config.yaml:/etc/prometheus/prometheus.yml
+      - ./observability/prometheus-config.yaml:/etc/prometheus/prometheus.yml
     ports:
-      - "9091:9090"
+      - "9090:9090"
     networks:
       - is-stag-network
 

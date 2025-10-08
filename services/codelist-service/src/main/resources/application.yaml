@@ -11,22 +11,22 @@ grpc:
 
 #logging:
 #  level:
-#    com:
-#      zaxxer:
-#        hikari: DEBUG
+#    com.zaxxer.hikari: DEBUG
 
 spring:
   application:
     name: codelist-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
   jackson:
     mapper:
       sort-properties-alphabetically: false
   jpa:
-#    show-sql: true
     properties:
       hibernate:
-#        format_sql: true
-#        generate_statistics: true
         order_inserts: true
         order_updates: true
         connection:
@@ -41,18 +41,10 @@ spring:
           backend:
             type: elasticsearch
             version: 9
-            hosts: localhost:9200
-#            protocol: https
+            hosts: ${ELASTICSEARCH_ADDRESS:elasticsearch:9200}
             protocol: http
-            username: elastic
-            password: ${ELASTICSEARCH_PASSWORD}
             analysis:
               configurer: com.stag.platform.shared.config.ElasticsearchAnalysisConfig
-#              ssl:
-#                truststore:
-#                  path: elastic-ca.p12
-#                  password: elastic
-#                  type: PKCS12
     hibernate:
       ddl-auto: none
     open-in-view: false
@@ -73,6 +65,10 @@ spring:
           jdbc:
             defaultConnectionValidation: LOCAL
             implicitStatementCacheSize: 200
+  data:
+    redis:
+      host: redis
+      port: 6379
   cache:
     type: redis
     redis:
@@ -102,6 +98,12 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8180/realms/is-stag/protocol/openid-connect/certs
+  jpa:
+    properties:
+      hibernate:
+        search:
+          backend:
+            hosts: localhost:9200
   data:
     redis:
       host: localhost

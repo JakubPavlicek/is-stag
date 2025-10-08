@@ -39,7 +39,6 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/is-stag
           jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
   cloud:
     gateway:
@@ -48,7 +47,7 @@ spring:
           routes:
             # Service routes
             - id: codelist-service
-              uri: ${codelist-service.url}
+              uri: ${CODELIST-SERVICE_ADDRESS:http://codelist-service:8010}
               predicates:
                 - Path=/api/v1/addresses/**,/api/v1/countries/**,/api/v1/domains/**
               filters:
@@ -61,7 +60,7 @@ spring:
                   args:
                     <<: *retry_args
             - id: student-service
-              uri: ${student-service.url}
+              uri: ${STUDENT-SERVICE_ADDRESS:http://student-service:8030}
               predicates:
                 - Path=/api/v1/students/**
               filters:
@@ -73,7 +72,7 @@ spring:
                   args:
                     <<: *retry_args
             - id: study-plan-service
-              uri: ${study-plan-service.url}
+              uri: ${STUDY-PLAN-SERVICE_ADDRESS:http://study-plan-service:8050}
               predicates:
                 - Path=/api/v1/study-plan/**
               filters:
@@ -85,7 +84,7 @@ spring:
                   args:
                     <<: *retry_args
             - id: subject-service
-              uri: ${subject-service.url}
+              uri: ${SUBJECT-SERVICE_ADDRESS:http://subject-service:8040}
               predicates:
                 - Path=/api/v1/subjects/**
               filters:
@@ -97,7 +96,7 @@ spring:
                   args:
                     <<: *retry_args
             - id: user-service
-              uri: ${user-service.url}
+              uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
               predicates:
                 - Path=/api/v1/users/**,/api/v1/persons/**
               filters:
@@ -111,31 +110,31 @@ spring:
 
             # OpenAPI routes for aggregation
             - id: codelist-service-openapi
-              uri: ${codelist-service.url}
+              uri: ${CODELIST-SERVICE_ADDRESS:http://codelist-service:8010}
               predicates:
                 - Path=/codelist-service/**
               filters:
                 - RewritePath=/codelist-service/openapi.yaml, /openapi.yaml
             - id: student-service-openapi
-              uri: ${student-service.url}
+              uri: ${STUDENT-SERVICE_ADDRESS:http://student-service:8030}
               predicates:
                 - Path=/student-service/**
               filters:
                 - RewritePath=/student-service/openapi.yaml, /openapi.yaml
             - id: study-plan-service-openapi
-              uri: ${study-plan-service.url}
+              uri: ${STUDY-PLAN-SERVICE_ADDRESS:http://study-plan-service:8050}
               predicates:
                 - Path=/study-plan-service/**
               filters:
                 - RewritePath=/study-plan-service/openapi.yaml, /openapi.yaml
             - id: subject-service-openapi
-              uri: ${subject-service.url}
+              uri: ${SUBJECT-SERVICE_ADDRESS:http://subject-service:8040}
               predicates:
                 - Path=/subject-service/**
               filters:
                 - RewritePath=/subject-service/openapi.yaml, /openapi.yaml
             - id: user-service-openapi
-              uri: ${user-service.url}
+              uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
               predicates:
                 - Path=/user-service/**
               filters:
@@ -208,17 +207,6 @@ springdoc:
   api-docs:
     enabled: false
 
-codelist-service:
-  url: http://localhost:8010
-student-service:
-  url: http://localhost:8030
-study-plan-service:
-  url: http://localhost:8050
-subject-service:
-  url: http://localhost:8040
-user-service:
-  url: http://localhost:8020
-
 ---
 
 spring:
@@ -230,3 +218,9 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8180/realms/is-stag/protocol/openid-connect/certs
+
+CODELIST-SERVICE_ADDRESS: http://localhost:8010
+STUDENT-SERVICE_ADDRESS: http://localhost:8030
+STUDY-PLAN-SERVICE_ADDRESS: http://localhost:8050
+SUBJECT-SERVICE_ADDRESS: http://localhost:8040
+USER-SERVICE_ADDRESS: http://localhost:8020

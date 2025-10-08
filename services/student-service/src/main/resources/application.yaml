@@ -10,16 +10,14 @@ grpc:
     port: 9030
   client:
     user-service:
-#      address: static://user-service:9020
-      address: static://localhost:9020
+      address: ${GRPC_CLIENT_USER-SERVICE_ADDRESS:static://user-service:9020}
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-time: 30s
       keep-alive-timeout: 5s
       max-inbound-message-size: 4MB
     study-plan-service:
-#      address: static://study-plan-service:9050
-      address: static://localhost:9050
+      address: ${GRPC_CLIENT_STUDY-PLAN-SERVICE_ADDRESS:static://study-plan-service:9050}
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-time: 30s
@@ -37,17 +35,13 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/is-stag
           jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
   jackson:
     mapper:
       sort-properties-alphabetically: false
   jpa:
-#    show-sql: true
     properties:
       hibernate:
-#        format_sql: true
-#        generate_statistics: true
         order_inserts: true
         order_updates: true
         connection:
@@ -159,3 +153,9 @@ spring:
     redis:
       host: localhost
 
+grpc:
+  client:
+    user-service:
+      address: static://localhost:9020
+    study-plan-service:
+      address: static://localhost:9050

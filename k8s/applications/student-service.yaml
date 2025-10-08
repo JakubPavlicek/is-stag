@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-service
+  labels:
+    app: student-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: student-service
+  template:
+    metadata:
+      name: student-service
+      labels:
+        app: student-service
+    spec:
+      containers:
+        - name: student-service
+          image: jakubpavlicek/student-service
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8030
+              protocol: TCP
+            - containerPort: 9030
+              protocol: TCP
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_DATASOURCE_URL
+                  name: is-stag-database-config
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: SPRING_DATASOURCE_USERNAME
+                  name: is-stag-database-secret
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: SPRING_DATASOURCE_PASSWORD
+                  name: is-stag-database-secret
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-service
+spec:
+  selector:
+    app: student-service
+  ports:
+    - protocol: TCP
+      port: 8030
+      targetPort: 8030
+    - protocol: TCP
+      port: 9030
+      targetPort: 9030
+  type: ClusterIP

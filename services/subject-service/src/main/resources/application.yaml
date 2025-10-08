@@ -18,11 +18,11 @@ spring:
     mapper:
       sort-properties-alphabetically: false
   jpa:
-    #    show-sql: true
+#    show-sql: true
     properties:
       hibernate:
-        #        format_sql: true
-        #        generate_statistics: true
+#        format_sql: true
+#        generate_statistics: true
         order_inserts: true
         order_updates: true
         connection:
@@ -65,35 +65,8 @@ spring:
     virtual:
       enabled: true
 
-eureka:
-  instance:
-    prefer-ip-address: true
-    # Reduce service discovery delays
-    lease-renewal-interval-in-seconds: 10
-    lease-expiration-duration-in-seconds: 30
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://discovery-server:8761/eureka/
-    # Cache registry locally to avoid repeated lookups
-    registry-fetch-interval-seconds: 10
-    cache-refresh-executor-thread-pool-size: 2
-    initial-instance-info-replication-interval-seconds: 10
-
 springdoc:
   api-docs:
     enabled: false
   swagger-ui:
     url: /openapi.yaml
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: dev
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/

@@ -10,16 +10,14 @@ grpc:
     port: 9020
   client:
     student-service:
-#      address: static://student-service:9030
-      address: static://localhost:9030
+      address: ${GRPC_CLIENT_STUDENT-SERVICE_ADDRESS:static://student-service:9030}
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-time: 30s
       keep-alive-timeout: 5s
       max-inbound-message-size: 4MB
     codelist-service:
-#      address: static://codelist-service:9010
-      address: static://localhost:9010
+      address: ${GRPC_CLIENT_CODELIST-SERVICE_ADDRESS:static://codelist-service:9010}
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-time: 30s
@@ -30,6 +28,7 @@ logging:
   level:
     com.stag.identity: DEBUG
 #    com.zaxxer.hikari: DEBUG
+
 spring:
   application:
     name: user-service
@@ -37,17 +36,13 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/is-stag
           jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
   jackson:
     mapper:
       sort-properties-alphabetically: false
   jpa:
-#    show-sql: true
     properties:
       hibernate:
-#        format_sql: true
-#        generate_statistics: true
         order_inserts: true
         order_updates: true
         connection:
@@ -62,9 +57,6 @@ spring:
       ddl-auto: none
     open-in-view: false
   datasource:
-    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=atreus.zcu.cz)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=pelops.zcu.cz)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=DEMO_SERVICE)(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))
-    username: install
-    password: demo
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
       auto-commit: false
@@ -82,8 +74,6 @@ spring:
     redis:
       host: redis
       port: 6379
-#      username: user
-#      password: password
   cache:
     type: redis
     redis:
@@ -154,3 +144,10 @@ spring:
   data:
     redis:
       host: localhost
+
+grpc:
+  client:
+    student-service:
+      address: static://localhost:9030
+    codelist-service:
+      address: static://localhost:9010
