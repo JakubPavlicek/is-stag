@@ -35,11 +35,11 @@ jobs:
           java-version: 25
           cache: maven
 
-      - name: Setup Node.js 24.8.0
+      - name: Setup Node.js Environment
         uses: actions/setup-node@v4.4.0
         if: matrix.target.build == 'node'
         with:
-          node-version: 24.8.0
+          node-version: 24.9.0
           cache: npm
           cache-dependency-path: client/package-lock.json
 

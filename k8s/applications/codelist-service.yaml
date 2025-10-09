@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: codelist-service
+  namespace: is-stag
   labels:
     app: codelist-service
 spec:
@@ -12,18 +13,21 @@ spec:
   template:
     metadata:
       name: codelist-service
+      namespace: is-stag
       labels:
         app: codelist-service
     spec:
       containers:
         - name: codelist-service
-          image: jakubpavlicek/codelist-service
-          imagePullPolicy: IfNotPresent
+          image: jakubpavlicek/codelist-service:0.0.1
+          imagePullPolicy: Always
           ports:
             - containerPort: 8010
               protocol: TCP
+              name: http
             - containerPort: 9010
               protocol: TCP
+              name: grpc
           env:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
@@ -40,7 +44,6 @@ spec:
                 secretKeyRef:
                   key: SPRING_DATASOURCE_PASSWORD
                   name: is-stag-database-secret
-      restartPolicy: Always
 
 ---
 
@@ -48,6 +51,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: codelist-service
+  namespace: is-stag
 spec:
   selector:
     app: codelist-service
@@ -55,7 +59,9 @@ spec:
     - protocol: TCP
       port: 8010
       targetPort: 8010
+      name: http
     - protocol: TCP
       port: 9010
       targetPort: 9010
+      name: grpc
   type: ClusterIP

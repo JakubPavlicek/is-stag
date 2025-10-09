@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4.4.0
         with:
-          node-version: 24.8.0
+          node-version: 24.9.0
           cache: npm
           cache-dependency-path: client/package-lock.json
 
@@ -42,7 +42,7 @@ jobs:
           NAME=$(npm pkg get name | tr -d '"')
           VER=$(npm pkg get version | tr -d '"')
           IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/${NAME}
-          NPM_VERSION=11.6.1
+          NPM_VERSION=11.6.2
           pack build ${IMAGE_NAME}:${VER} \
             --builder paketobuildpacks/builder-jammy-base \
             --buildpack paketo-buildpacks/web-servers \
