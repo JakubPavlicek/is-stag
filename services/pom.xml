@@ -241,7 +241,6 @@
                                 <JAVA_TOOL_OPTIONS>-Duser.timezone=Europe/Prague</JAVA_TOOL_OPTIONS>
                             </env>
                             <name>docker.io/${docker.username}/${project.artifactId}:${project.version}</name>
-                            <imagePlatform>linux/arm64</imagePlatform>
                         </image>
                         <docker>
                             <publishRegistry>
