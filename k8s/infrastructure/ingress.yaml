@@ -4,7 +4,7 @@ metadata:
   name: is-stag-ingress
   namespace: is-stag
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
   rules:
@@ -12,21 +12,21 @@ spec:
       http:
         paths:
           - path: /(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: react-client
                 port:
                   number: 5173
           - path: /api/(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: api-gateway
                 port:
                   number: 8100
           - path: /realms/(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: keycloak

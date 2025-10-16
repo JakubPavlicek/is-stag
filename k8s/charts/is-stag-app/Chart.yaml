@@ -1,0 +1,40 @@
+apiVersion: v2
+name: is-stag-app
+description: A Helm chart for the IS/STAG microservices application
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+maintainers:
+  - name: Jakub Pavlíček
+    email: jpvlck@students.zcu.cz
+
+dependencies:
+  - name: generic-service
+    version: 0.0.1
+    repository: file://../generic-service
+    alias: react-client
+
+  - name: generic-service
+    version: 0.0.1
+    repository: file://../generic-service
+    alias: api-gateway
+
+  - name: generic-service
+    version: 0.0.1
+    repository: file://../generic-service
+    alias: codelist-service
+
+  - name: generic-service
+    version: 0.0.1
+    repository: file://../generic-service
+    alias: student-service
+
+  - name: generic-service
+    version: 0.0.1
+    repository: file://../generic-service
+    alias: study-plan-service
+
+  - name: generic-service
+    version: 0.0.1
+    repository: file://../generic-service
+    alias: user-service

@@ -1,0 +1,43 @@
+name: generic-service
+
+replicaCount: 1
+
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  ports:
+    http: 8080
+    grpc: null
+
+# Enable database environment variables
+database:
+  enabled: false
+  configMapName: "is-stag-database-config"
+  secretName: "is-stag-database-secret"
+
+probes:
+  readiness:
+    path: /actuator/health/readiness
+    initialDelaySeconds: 10
+    periodSeconds: 5
+  liveness:
+    path: /actuator/health/liveness
+    initialDelaySeconds: 15
+    periodSeconds: 10
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true

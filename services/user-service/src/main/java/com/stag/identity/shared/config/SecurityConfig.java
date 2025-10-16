@@ -32,7 +32,7 @@ public class SecurityConfig {
         return http
             .csrf(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/actuator/health/**").permitAll()
                 .requestMatchers("/openapi.yaml").permitAll()
                 .requestMatchers(SWAGGER_URLS).permitAll()
                 .anyRequest().authenticated()

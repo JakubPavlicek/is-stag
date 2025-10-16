@@ -1,0 +1,131 @@
+react-client:
+  name: react-client
+  replicaCount: 1
+  image:
+    repository: jakubpavlicek/react-client
+    tag: 0.0.1
+  service:
+    ports:
+      http: 5173
+      grpc: null
+  database:
+    enabled: false
+  probes:
+    readiness:
+      path: /
+      initialDelaySeconds: 30
+      periodSeconds: 10
+    liveness:
+      path: /
+      initialDelaySeconds: 45
+      periodSeconds: 10
+
+api-gateway:
+  name: api-gateway
+  replicaCount: 1
+  image:
+    repository: jakubpavlicek/api-gateway
+    tag: 0.0.1
+  service:
+    ports:
+      http: 8100
+      grpc: null
+  database:
+    enabled: false
+  probes:
+    readiness:
+      path: /actuator/health/readiness
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    liveness:
+      path: /actuator/health/liveness
+      initialDelaySeconds: 20
+      periodSeconds: 10
+
+codelist-service:
+  name: codelist-service
+  replicaCount: 3
+  image:
+    repository: jakubpavlicek/codelist-service
+    tag: 0.0.1
+  service:
+    ports:
+      http: 8010
+      grpc: 9010
+  database:
+    enabled: true
+  probes:
+    readiness:
+      path: /actuator/health/readiness
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    liveness:
+      path: /actuator/health/liveness
+      initialDelaySeconds: 20
+      periodSeconds: 10
+
+student-service:
+  name: student-service
+  replicaCount: 3
+  image:
+    repository: jakubpavlicek/student-service
+    tag: 0.0.1
+  service:
+    ports:
+      http: 8030
+      grpc: 9030
+  database:
+    enabled: true
+  probes:
+    readiness:
+      path: /actuator/health/readiness
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    liveness:
+      path: /actuator/health/liveness
+      initialDelaySeconds: 20
+      periodSeconds: 10
+
+study-plan-service:
+  name: study-plan-service
+  replicaCount: 3
+  image:
+    repository: jakubpavlicek/study-plan-service
+    tag: 0.0.1
+  service:
+    ports:
+      http: 8050
+      grpc: 9050
+  database:
+    enabled: true
+  probes:
+    readiness:
+      path: /actuator/health/readiness
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    liveness:
+      path: /actuator/health/liveness
+      initialDelaySeconds: 20
+      periodSeconds: 10
+
+user-service:
+  name: user-service
+  replicaCount: 3
+  image:
+    repository: jakubpavlicek/user-service
+    tag: 0.0.1
+  service:
+    ports:
+      http: 8020
+      grpc: 9020
+  database:
+    enabled: true
+  probes:
+    readiness:
+      path: /actuator/health/readiness
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    liveness:
+      path: /actuator/health/liveness
+      initialDelaySeconds: 20
+      periodSeconds: 10

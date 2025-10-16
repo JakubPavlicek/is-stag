@@ -42,10 +42,10 @@
 
         <!-- gRPC -->
         <grpc.version>1.76.0</grpc.version>
-        <protobuf-java.version>4.33.0-RC1</protobuf-java.version>
+        <protobuf-java.version>4.33.0-RC2</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
         <protovalidate.version>1.0.0</protovalidate.version>
-        <protobuf-maven-plugin.version>3.10.1</protobuf-maven-plugin.version>
+        <protobuf-maven-plugin.version>3.10.2</protobuf-maven-plugin.version>
 
         <!-- Hibernate Search -->
         <hibernate-search.version>8.1.2.Final</hibernate-search.version>
@@ -63,8 +63,8 @@
         <lombok.version>1.18.42</lombok.version>
 
         <!-- Cloud Native Buildpacks -->
-        <image.builder.version>0.0.66</image.builder.version>
-        <buildpack-java.version>19.0.0</buildpack-java.version>
+        <image.builder.version>0.0.69</image.builder.version>
+        <buildpack-java.version>20.0.0</buildpack-java.version>
         <buildpack-health-checker.version>2.11.0</buildpack-health-checker.version>
     </properties>
 
@@ -78,7 +78,6 @@
         <!-- Business services -->
         <module>student-service</module>
         <module>study-plan-service</module>
-        <module>subject-service</module>
         <module>codelist-service</module>
         <module>user-service</module>
     </modules>

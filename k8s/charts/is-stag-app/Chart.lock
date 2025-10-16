@@ -1,0 +1,21 @@
+dependencies:
+- name: generic-service
+  repository: file://../generic-service
+  version: 0.0.1
+- name: generic-service
+  repository: file://../generic-service
+  version: 0.0.1
+- name: generic-service
+  repository: file://../generic-service
+  version: 0.0.1
+- name: generic-service
+  repository: file://../generic-service
+  version: 0.0.1
+- name: generic-service
+  repository: file://../generic-service
+  version: 0.0.1
+- name: generic-service
+  repository: file://../generic-service
+  version: 0.0.1
+digest: sha256:29c453c4c46d8639c30895c71593336f13083bd0c32ba81b0bee91a66a3e5cf5
+generated: "2025-10-16T11:41:57.699635+02:00"
