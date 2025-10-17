@@ -8,10 +8,11 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "pack": "pack build $(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --builder paketobuildpacks/builder-jammy-base --buildpack paketo-buildpacks/web-servers --env BP_NPM_VERSION=11.6.2 --env BP_NODE_RUN_SCRIPTS=build --env NODE_ENV=dev --env BP_WEB_SERVER=nginx --env BP_WEB_SERVER_ENABLE_PUSH_STATE=true --env BP_WEB_SERVER_ROOT=/workspace/dist"
+    "pack": "pack build $(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --builder heroku/builder:22 --buildpack heroku/nodejs --env NODE_ENV=dev"
   },
   "engines": {
-    "npm": ">=11.6.0"
+    "node": ">=24.10.0",
+    "npm": ">=11.6.2"
   },
   "dependencies": {
     "@react-keycloak/web": "^3.4.0",

@@ -38,18 +38,11 @@ jobs:
 
       - name: Build Docker Image with Buildpacks
         run: |
-          npm ci
           NAME=$(npm pkg get name | tr -d '"')
           VER=$(npm pkg get version | tr -d '"')
           IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/${NAME}
-          NPM_VERSION=11.6.2
           pack build ${IMAGE_NAME}:${VER} \
-            --builder paketobuildpacks/builder-jammy-base \
-            --buildpack paketo-buildpacks/web-servers \
-            --env BP_NPM_VERSION=${NPM_VERSION} \
-            --env BP_NODE_RUN_SCRIPTS=build \
+            --builder heroku/builder:22 \
+            --buildpack heroku/nodejs \
             --env NODE_ENV=dev \
-            --env BP_WEB_SERVER=nginx \
-            --env BP_WEB_SERVER_ENABLE_PUSH_STATE=true \
-            --env BP_WEB_SERVER_ROOT=/workspace/dist \
             --publish
