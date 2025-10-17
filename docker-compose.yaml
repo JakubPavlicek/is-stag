@@ -86,9 +86,6 @@ services:
     container_name: react-client
     image: react-client:0.0.1
     pull_policy: never
-    environment:
-      PORT: 5173
-      VITE_KEYCLOAK_URL: http://localhost:8180/
     ports:
       - "5173:5173"
     depends_on:

@@ -35,11 +35,11 @@ api-gateway:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 15
+      initialDelaySeconds: 100
       periodSeconds: 10
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 20
+      initialDelaySeconds: 100
       periodSeconds: 10
 
 codelist-service:
@@ -57,11 +57,11 @@ codelist-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 15
+      initialDelaySeconds: 100
       periodSeconds: 10
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 20
+      initialDelaySeconds: 100
       periodSeconds: 10
 
 student-service:
@@ -79,11 +79,11 @@ student-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 15
+      initialDelaySeconds: 100
       periodSeconds: 10
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 20
+      initialDelaySeconds: 100
       periodSeconds: 10
 
 study-plan-service:
@@ -101,11 +101,11 @@ study-plan-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 15
+      initialDelaySeconds: 100
       periodSeconds: 10
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 20
+      initialDelaySeconds: 100
       periodSeconds: 10
 
 user-service:
@@ -123,9 +123,9 @@ user-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 15
+      initialDelaySeconds: 100
       periodSeconds: 10
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 20
+      initialDelaySeconds: 100
       periodSeconds: 10

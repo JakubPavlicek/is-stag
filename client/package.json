@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "start": "vite --port 5173 --host",
     "lint": "eslint .",
     "preview": "vite preview",
     "pack": "pack build $(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --builder heroku/builder:22 --buildpack heroku/nodejs --env NODE_ENV=dev"
