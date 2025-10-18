@@ -14,11 +14,11 @@ env:
 
 jobs:
   build-and-push:
+    runs-on: ubuntu-latest
     # We use a matrix to run the build steps for each architecture
     strategy:
       matrix:
         arch: [amd64, arm64]
-    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
