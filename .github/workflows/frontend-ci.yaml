@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'client/**'
+      - '.github/workflows/frontend-ci.yaml'
 
 jobs:
   build-and-publish-client:
