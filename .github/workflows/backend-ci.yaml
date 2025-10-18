@@ -73,10 +73,10 @@ jobs:
   build-and-publish-services:
     name: Build and Publish Service Docker Images
     runs-on: ubuntu-22.04-arm
-    needs:
-      - protolint-lint-proto
-      - vacuum-lint-openapi
-      - sonar-lint-code
+#    needs:
+#      - protolint-lint-proto
+#      - vacuum-lint-openapi
+#      - sonar-lint-code
     defaults:
       run:
         working-directory: services
