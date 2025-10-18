@@ -76,38 +76,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                    <layers>
-                        <enabled>true</enabled>
-                    </layers>
-                    <image>
-                        <builder>paketobuildpacks/builder-noble-java-tiny:${image.builder.version}</builder>
-                        <buildpacks>
-                            <buildpack>paketobuildpacks/java:${buildpack-java.version}</buildpack>
-                            <buildpack>paketobuildpacks/health-checker:${buildpack-health-checker.version}</buildpack>
-                        </buildpacks>
-                        <env>
-                            <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
-                            <BP_HEALTH_CHECKER_ENABLED>true</BP_HEALTH_CHECKER_ENABLED>
-                            <BP_SPRING_CLOUD_BINDINGS_DISABLED>true</BP_SPRING_CLOUD_BINDINGS_DISABLED>
-                            <BPL_JAVA_NMT_ENABLED>false</BPL_JAVA_NMT_ENABLED>
-                            <JAVA_TOOL_OPTIONS>-Duser.timezone=Europe/Prague</JAVA_TOOL_OPTIONS>
-                        </env>
-                        <name>docker.io/${docker.username}/${project.artifactId}:${project.version}</name>
-                    </image>
-                    <docker>
-                        <publishRegistry>
-                            <username>${docker.username}</username>
-                            <password>${docker.password}</password>
-                        </publishRegistry>
-                    </docker>
-                </configuration>
             </plugin>
         </plugins>
     </build>

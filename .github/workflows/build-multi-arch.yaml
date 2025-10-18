@@ -47,7 +47,7 @@ jobs:
           cache: maven
 
       - name: Build and Push Spring Boot Docker Images
-        working-directory: ./services/api-gateway
+        working-directory: ./services
         run: |
           mvn -B -DskipTests spring-boot:build-image \
             -Dspring-boot.build-image.publish=true \
