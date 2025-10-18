@@ -71,7 +71,7 @@ jobs:
 
   build-and-publish-services:
     name: Build and Publish Service Docker Images
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     needs:
       - protolint-lint-proto
       - vacuum-lint-openapi
@@ -96,19 +96,12 @@ jobs:
           java-version: 25
           cache: maven
 
-      - name: Install mvnd
-        run: |
-          MVND_VERSION=2.0.0-rc-3
-          curl -sL https://downloads.apache.org/maven/mvnd/${MVND_VERSION}/maven-mvnd-${MVND_VERSION}-linux-amd64.zip -o mvnd.zip
-          unzip -q mvnd.zip
-          echo "$PWD/maven-mvnd-${MVND_VERSION}-linux-amd64/bin" >> $GITHUB_PATH
-
       - name: Warm Up Dependencies
-        run: mvnd -B -T 1C dependency:go-offline
+        run: mvn -B -T 1C -DskipTests package
 
       - name: Build and Push Spring Boot Docker Images
         run: |
-          mvnd -B -T 1C -DskipTests spring-boot:build-image \
+          mvn -B -T 1C -DskipTests spring-boot:build-image \
             -Dspring-boot.build-image.publish=true \
             -Ddocker.username=${{ secrets.DOCKERHUB_USERNAME }} \
             -Ddocker.password=${{ secrets.DOCKERHUB_TOKEN }}
