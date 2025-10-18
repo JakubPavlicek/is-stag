@@ -98,11 +98,11 @@ jobs:
           cache: maven
 
       - name: Warm Up Dependencies
-        run: mvn -B -T 1C dependency:go-offline
+        run: mvn -B install
 
       - name: Build and Push Spring Boot Docker Images
         run: |
-          mvn -B -T 1C -DskipTests install spring-boot:build-image \
+          mvn -B -T 1C -DskipTests spring-boot:build-image \
             -Dspring-boot.build-image.publish=true \
             -Ddocker.username=${{ secrets.DOCKERHUB_USERNAME }} \
             -Ddocker.password=${{ secrets.DOCKERHUB_TOKEN }}
