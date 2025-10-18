@@ -97,9 +97,6 @@ jobs:
           java-version: 25
           cache: maven
 
-      - name: Warm Up Dependencies
-        run: mvn -B dependency:go-offline
-
       - name: Build and Push Spring Boot Docker Images
         run: |
           mvn -B -DskipTests spring-boot:build-image \
