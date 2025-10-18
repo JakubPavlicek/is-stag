@@ -45,10 +45,13 @@ jobs:
           java-version: 25
           cache: maven
 
+      - name: Warm Up Dependencies
+        run: mvn -B -T 1C dependency:go-offline
+
       - name: Build and Push Spring Boot Docker Images
         working-directory: ./services
         run: |
-          mvn -B -DskipTests spring-boot:build-image \
+          mvn -B -T 1C -DskipTests spring-boot:build-image \
             -Dspring-boot.build-image.publish=true \
             -Dproject.version=${{ env.IMAGE_TAG }}-${{ matrix.arch }} \
             -Ddocker.username=${{ secrets.DOCKERHUB_USERNAME }} \
