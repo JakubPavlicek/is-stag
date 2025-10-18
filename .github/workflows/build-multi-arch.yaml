@@ -2,6 +2,8 @@ name: Build and Push Multi-Arch Images
 
 on:
   push:
+    paths:
+      - '.github/workflows/build-multi-arch.yaml'
 
 env:
   # Use a single version tag for both images to keep them in sync
