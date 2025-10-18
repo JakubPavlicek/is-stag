@@ -83,7 +83,7 @@ jobs:
         id: list-services
         run: |
           # Finds all subdirectories in /services that contain a pom.xml
-          ERVICES=$(find ./services -mindepth 1 -maxdepth 1 -type d -exec test -e "{}/pom.xml" \; -print | sed 's|^\./services/||' | jq -R . | jq -s .)
+          SERVICES=$(find ./services -mindepth 1 -maxdepth 1 -type d -exec test -e "{}/pom.xml" \; -print | sed 's|^\./services/||' | jq -R . | jq -s .)
           echo "services=$SERVICES" >> $GITHUB_OUTPUT
           echo "Found services: $SERVICES"
 
