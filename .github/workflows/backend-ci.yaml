@@ -6,6 +6,7 @@ on:
       - 'services/**'
       - 'proto/**'
       - 'config/**'
+      - '.github/workflows/backend-ci.yaml'
 
 jobs:
   protolint-lint-proto:
