@@ -17,9 +17,6 @@ jobs:
       matrix:
         arch: [amd64, arm64]
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout repository
@@ -51,7 +48,7 @@ jobs:
         run: |
           mvn -B -DskipTests spring-boot:build-image \
             -Dspring-boot.build-image.publish=true \
-            -Dspring-boot.build-image.imageName=${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.IMAGE_TAG }}-${{ matrix.arch }}
+            -Dspring-boot.build-image.imageName=${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.BACKEND_IMAGE }}:${{ env.IMAGE_TAG }}-${{ matrix.arch }}
             -Ddocker.username=${{ secrets.DOCKERHUB_USERNAME }} \
             -Ddocker.password=${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -72,7 +69,7 @@ jobs:
       - name: Build and Push Frontend Image (${{ matrix.arch }})
         working-directory: ./client
         run: |
-          pack build ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.IMAGE_TAG }}-${{ matrix.arch }} \
+          pack build ${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.FRONTEND_IMAGE }}:${{ env.IMAGE_TAG }}-${{ matrix.arch }} \
             --builder heroku/builder:22 \
             --buildpack heroku/nodejs \
             --env NODE_ENV=dev \
