@@ -98,7 +98,7 @@ jobs:
           cache: maven
 
       - name: Warm Up Dependencies
-        run: mvn -B install
+        run: mvn -B -DskipTests install
 
       - name: Build and Push Spring Boot Docker Images
         run: |
