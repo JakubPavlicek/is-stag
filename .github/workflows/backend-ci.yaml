@@ -5,7 +5,6 @@ on:
     paths:
       - 'services/**'
       - 'proto/**'
-      - 'config/**'
 
 jobs:
   protolint-lint-proto:
@@ -96,12 +95,9 @@ jobs:
           java-version: 25
           cache: maven
 
-      - name: Warm Up Dependencies
-        run: mvn -B -T 1C -DskipTests package
-
       - name: Build and Push Spring Boot Docker Images
         run: |
-          mvn -B -T 1C -DskipTests spring-boot:build-image \
+          mvn -B -T 1C -DskipTests package spring-boot:build-image \
             -Dspring-boot.build-image.publish=true \
             -Ddocker.username=${{ secrets.DOCKERHUB_USERNAME }} \
             -Ddocker.password=${{ secrets.DOCKERHUB_TOKEN }}
