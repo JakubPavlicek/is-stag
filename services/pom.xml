@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0-M3</version>
+        <version>4.0.0-RC1</version>
         <relativePath /> <!-- lookup parent from a repository -->
     </parent>
 
@@ -36,16 +36,16 @@
         <maven-compiler.version>3.14.1</maven-compiler.version>
 
         <!-- Spring -->
-        <spring-cloud.version>2025.1.0-M3</spring-cloud.version>
+        <spring-cloud.version>2025.1.0-M4</spring-cloud.version>
         <springdoc.version>3.0.0-M1</springdoc.version>
         <oracle.jdbc.version>23.9.0.25.07</oracle.jdbc.version>
 
         <!-- gRPC -->
         <grpc.version>1.76.0</grpc.version>
-        <protobuf-java.version>4.33.0-RC2</protobuf-java.version>
+        <protobuf-java.version>4.33.0</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
         <protovalidate.version>1.0.0</protovalidate.version>
-        <protobuf-maven-plugin.version>3.10.2</protobuf-maven-plugin.version>
+        <protobuf-maven-plugin.version>4.0.0-M2</protobuf-maven-plugin.version>
 
         <!-- Hibernate Search -->
         <hibernate-search.version>8.1.2.Final</hibernate-search.version>

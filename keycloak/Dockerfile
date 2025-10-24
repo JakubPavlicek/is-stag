@@ -9,7 +9,7 @@ COPY providers/is-stag-authenticator/src ./src/
 # Build the provider JAR
 RUN mvn package
 
-FROM quay.io/keycloak/keycloak:26.4.0
+FROM quay.io/keycloak/keycloak:26.4.2
 
 # Copy the custom provider JAR from the builder stage
 COPY --from=builder /usr/src/app/target/is-stag-authenticator.jar /opt/keycloak/providers/

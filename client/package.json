@@ -9,7 +9,7 @@
     "start": "vite --port 5173 --host",
     "lint": "eslint .",
     "preview": "vite preview",
-    "pack": "pack build $(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --builder heroku/builder:24 --buildpack heroku/nodejs --env NODE_ENV=dev"
+    "pack": "pack build $(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --builder heroku/builder:24 --env NODE_ENV=dev"
   },
   "engines": {
     "node": ">=24.10.0",
@@ -32,7 +32,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.4.0",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.1",
-    "vite": "^7.1.10"
+    "typescript-eslint": "^8.46.2",
+    "vite": "^7.1.12"
   }
 }
