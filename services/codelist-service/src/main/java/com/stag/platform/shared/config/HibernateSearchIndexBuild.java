@@ -16,7 +16,7 @@ import org.springframework.util.StopWatch;
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class HibernateSearchIndexBuild implements ApplicationListener<ApplicationReadyEvent> {
+public class HibernateSearchIndexBuild implements ApplicationListener<@NonNull ApplicationReadyEvent> {
 
     private final EntityManager entityManager;
 
