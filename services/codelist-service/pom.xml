@@ -9,7 +9,7 @@
     </parent>
     <artifactId>codelist-service</artifactId>
     <name>codelist-service</name>
-    <description>codelist-service</description>
+    <description>Codelist Service</description>
 
     <dependencies>
         <!-- Spring Boot Starters -->

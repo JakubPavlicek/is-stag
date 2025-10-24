@@ -9,7 +9,7 @@
     </parent>
     <artifactId>student-service</artifactId>
     <name>student-service</name>
-    <description>student-service</description>
+    <description>Student Service</description>
 
     <dependencies>
         <!-- Spring Boot Starters -->

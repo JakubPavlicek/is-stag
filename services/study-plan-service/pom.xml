@@ -10,7 +10,7 @@
 
     <artifactId>study-plan-service</artifactId>
     <name>study-plan-service</name>
-    <description>study-plan-service</description>
+    <description>Study Plan Service</description>
 
     <dependencies>
         <!-- Spring Boot Starters -->
