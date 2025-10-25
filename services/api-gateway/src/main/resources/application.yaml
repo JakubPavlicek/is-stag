@@ -109,6 +109,12 @@ spring:
                     <<: *retry_args
 
             # OpenAPI routes for aggregation
+            - id: swagger-config
+              uri: ${API-GATEWAY_ADDRESS:http://api-gateway:8100}
+              predicates:
+                - Path=/api/v3/api-docs/swagger-config
+              filters:
+                - SetPath=/v3/api-docs/swagger-config
             - id: codelist-service-openapi
               uri: ${CODELIST-SERVICE_ADDRESS:http://codelist-service:8010}
               predicates:
@@ -197,7 +203,7 @@ management:
 springdoc:
   swagger-ui:
     path: /api/swagger-ui.html
-    config-url: /v3/api-docs/swagger-config
+    config-url: /api/v3/api-docs/swagger-config
     urls:
       - name: Codelist Service
         url: /api/codelist-service/openapi.yaml
@@ -226,6 +232,7 @@ spring:
         jwt:
           jwk-set-uri: http://localhost:8180/realms/is-stag/protocol/openid-connect/certs
 
+API-GATEWAY_ADDRESS: http://localhost:8100
 CODELIST-SERVICE_ADDRESS: http://localhost:8010
 STUDENT-SERVICE_ADDRESS: http://localhost:8030
 STUDY-PLAN-SERVICE_ADDRESS: http://localhost:8050

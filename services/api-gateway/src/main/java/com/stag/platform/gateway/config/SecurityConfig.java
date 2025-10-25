@@ -17,6 +17,7 @@ public class SecurityConfig {
     private static final String[] SWAGGER_URLS = {
         "/api/swagger-ui.html",
         "/api/swagger-ui/**",
+        "/api/v3/api-docs/swagger-config",
         "/v3/api-docs/swagger-config"
     };
 
