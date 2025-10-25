@@ -109,12 +109,6 @@ spring:
                     <<: *retry_args
 
             # OpenAPI routes for aggregation
-            - id: redirect-to-student-swagger-ui
-              uri: no://op
-              predicates:
-                - Path=/api
-              filters:
-                - RedirectTo=302, /api/swagger-ui/index.html
             - id: codelist-service-openapi
               uri: ${CODELIST-SERVICE_ADDRESS:http://codelist-service:8010}
               predicates:

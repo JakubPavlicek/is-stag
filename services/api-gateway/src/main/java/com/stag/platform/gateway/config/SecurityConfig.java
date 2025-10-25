@@ -27,7 +27,7 @@ public class SecurityConfig {
             .csrf(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/actuator/health/**").permitAll()
-                .requestMatchers("/api", "/api/*/openapi.yaml").permitAll()
+                .requestMatchers("/api/*/openapi.yaml").permitAll()
                 .requestMatchers(SWAGGER_URLS).permitAll()
                 .requestMatchers("/api/v1/addresses/**", "/api/v1/countries/**", "/api/v1/domains/**").permitAll()
                 .anyRequest().authenticated()
