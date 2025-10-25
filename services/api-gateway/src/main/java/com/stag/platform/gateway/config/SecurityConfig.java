@@ -22,7 +22,7 @@ public class SecurityConfig {
 
     // TODO: make the actuator endpoints protected by an ADMIN role
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
             .csrf(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize

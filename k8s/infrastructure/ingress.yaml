@@ -7,6 +7,10 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - is-stag.cz
+      secretName: selfsigned-cert-tls
   rules:
     - host: is-stag.cz
       http:

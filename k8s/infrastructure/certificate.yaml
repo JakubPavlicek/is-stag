@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: selfsigned-cert
+  namespace: is-stag
+spec:
+  dnsNames:
+    - is-stag.cz
+  secretName: selfsigned-cert-tls
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer

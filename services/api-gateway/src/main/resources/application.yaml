@@ -140,11 +140,14 @@ spring:
               filters:
                 - RewritePath=/user-service/openapi.yaml, /openapi.yaml
   http:
-    clients:
-      read-timeout: 10s
+    client:
       connect-timeout: 10s
-      imperative:
-        factory: http_components
+      read-timeout: 10s
+#    clients:
+#      connect-timeout: 10s
+#      read-timeout: 10s
+#      imperative:
+#        factory: http_components
   mvc:
     problemdetails:
       enabled: true

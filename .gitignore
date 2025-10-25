@@ -49,3 +49,6 @@ GEMINI.md
 DATABASE.md
 MICROSERVICES.md
 API.md
+
+### Kubernetes ###
+k8s-openapi.json
