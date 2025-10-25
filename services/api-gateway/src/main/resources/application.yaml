@@ -109,12 +109,12 @@ spring:
                     <<: *retry_args
 
             # OpenAPI routes for aggregation
-            - id: default-openapi-service
-              uri: ${STUDENT-SERVICE_ADDRESS:http://student-service:8030}
+            - id: redirect-to-student-swagger-ui
+              uri: no://op
               predicates:
                 - Path=/api
               filters:
-                - RewritePath=/api/student-service/openapi.yaml
+                - RedirectTo=302, /api/swagger-ui/index.html
             - id: codelist-service-openapi
               uri: ${CODELIST-SERVICE_ADDRESS:http://codelist-service:8010}
               predicates:
@@ -202,7 +202,7 @@ management:
 
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html
+    path: /api/swagger-ui.html
     config-url: /v3/api-docs/swagger-config
     urls:
       - name: Codelist Service
@@ -215,6 +215,7 @@ springdoc:
         url: /api/subject-service/openapi.yaml
       - name: User Service
         url: /api/user-service/openapi.yaml
+    urls-primary-name: Student Service
   api-docs:
     enabled: false
 

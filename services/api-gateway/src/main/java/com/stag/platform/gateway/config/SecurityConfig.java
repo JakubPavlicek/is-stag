@@ -15,8 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private static final String[] SWAGGER_URLS = {
-        "/swagger-ui.html",
-        "/swagger-ui/**",
+        "/api/swagger-ui.html",
+        "/api/swagger-ui/**",
         "/v3/api-docs/swagger-config"
     };
 
@@ -27,7 +27,7 @@ public class SecurityConfig {
             .csrf(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/actuator/health/**").permitAll()
-                .requestMatchers("/*/openapi.yaml").permitAll()
+                .requestMatchers("/api", "/api/*/openapi.yaml").permitAll()
                 .requestMatchers(SWAGGER_URLS).permitAll()
                 .requestMatchers("/api/v1/addresses/**", "/api/v1/countries/**", "/api/v1/domains/**").permitAll()
                 .anyRequest().authenticated()
