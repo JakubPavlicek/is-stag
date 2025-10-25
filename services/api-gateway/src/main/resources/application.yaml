@@ -216,6 +216,7 @@ springdoc:
       - name: User Service
         url: /api/user-service/openapi.yaml
     urls-primary-name: Student Service
+    disable-swagger-default-url: true
   api-docs:
     enabled: false
 

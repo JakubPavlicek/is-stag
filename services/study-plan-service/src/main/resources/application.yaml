@@ -118,6 +118,7 @@ springdoc:
     enabled: false
   swagger-ui:
     url: /openapi.yaml
+    disable-swagger-default-url: true
 
 ---
 
