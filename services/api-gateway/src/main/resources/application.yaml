@@ -109,36 +109,42 @@ spring:
                     <<: *retry_args
 
             # OpenAPI routes for aggregation
+            - id: default-openapi-service
+              uri: ${STUDENT-SERVICE_ADDRESS:http://student-service:8030}
+              predicates:
+                - Path=/api
+              filters:
+                - RewritePath=/api/student-service/openapi.yaml
             - id: codelist-service-openapi
               uri: ${CODELIST-SERVICE_ADDRESS:http://codelist-service:8010}
               predicates:
-                - Path=/codelist-service/**
+                - Path=/api/codelist-service/**
               filters:
-                - RewritePath=/codelist-service/openapi.yaml, /openapi.yaml
+                - RewritePath=/api/codelist-service/(?<segment>.*), /$\{segment}
             - id: student-service-openapi
               uri: ${STUDENT-SERVICE_ADDRESS:http://student-service:8030}
               predicates:
-                - Path=/student-service/**
+                - Path=/api/student-service/**
               filters:
-                - RewritePath=/student-service/openapi.yaml, /openapi.yaml
+                - RewritePath=/api/student-service/(?<segment>.*), /$\{segment}
             - id: study-plan-service-openapi
               uri: ${STUDY-PLAN-SERVICE_ADDRESS:http://study-plan-service:8050}
               predicates:
-                - Path=/study-plan-service/**
+                - Path=/api/study-plan-service/**
               filters:
-                - RewritePath=/study-plan-service/openapi.yaml, /openapi.yaml
+                - RewritePath=/api/study-plan-service/(?<segment>.*), /$\{segment}
             - id: subject-service-openapi
               uri: ${SUBJECT-SERVICE_ADDRESS:http://subject-service:8040}
               predicates:
-                - Path=/subject-service/**
+                - Path=/api/subject-service/**
               filters:
-                - RewritePath=/subject-service/openapi.yaml, /openapi.yaml
+                - RewritePath=/api/subject-service/(?<segment>.*), /$\{segment}
             - id: user-service-openapi
               uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
               predicates:
-                - Path=/user-service/**
+                - Path=/api/user-service/**
               filters:
-                - RewritePath=/user-service/openapi.yaml, /openapi.yaml
+                - RewritePath=/api/user-service/(?<segment>.*), /$\{segment}
   http:
     client:
       connect-timeout: 10s
@@ -200,15 +206,15 @@ springdoc:
     config-url: /v3/api-docs/swagger-config
     urls:
       - name: Codelist Service
-        url: /codelist-service/openapi.yaml
+        url: /api/codelist-service/openapi.yaml
       - name: Student Service
-        url: /student-service/openapi.yaml
+        url: /api/student-service/openapi.yaml
       - name: Study Plan Service
-        url: /study-plan-service/openapi.yaml
+        url: /api/study-plan-service/openapi.yaml
       - name: Subject Service
-        url: /subject-service/openapi.yaml
+        url: /api/subject-service/openapi.yaml
       - name: User Service
-        url: /user-service/openapi.yaml
+        url: /api/user-service/openapi.yaml
   api-docs:
     enabled: false
 

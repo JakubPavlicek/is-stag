@@ -4,7 +4,7 @@ metadata:
   name: is-stag-ingress
   namespace: is-stag
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
+    cert-manager.io/issuer: selfsigned-issuer
 spec:
   ingressClassName: nginx
   tls:
@@ -15,24 +15,27 @@ spec:
     - host: is-stag.cz
       http:
         paths:
-          - path: /(.*)
-            pathType: ImplementationSpecific
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: react-client
                 port:
                   number: 5173
-          - path: /api/(.*)
-            pathType: ImplementationSpecific
+          - path: /api
+            pathType: Prefix
             backend:
               service:
                 name: api-gateway
                 port:
                   number: 8100
-          - path: /realms/(.*)
-            pathType: ImplementationSpecific
+          - path: /realms
+            pathType: Prefix
             backend:
               service:
                 name: keycloak
                 port:
                   number: 8080
+
+# TODO: Add Keycloak to cluster
+# TODO: Add Grafana to cluster and ingress
