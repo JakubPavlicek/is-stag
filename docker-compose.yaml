@@ -197,39 +197,6 @@ services:
     networks:
       - is-stag-network
 
-  subject-service:
-    profiles:
-      - prod
-    container_name: subject-service
-    image: jakubpavlicek/subject-service:0.0.1
-    pull_policy: never
-    env_file:
-      - .env
-    environment:
-      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
-      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
-      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
-      OTEL_SERVICE_NAME: subject-service
-      OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_traceidratio
-      OTEL_TRACES_SAMPLER_ARG: 1.0
-    volumes:
-      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
-    ports:
-      - "8040:8040"
-      - "9040:9040"
-    depends_on:
-      api-gateway:
-#        condition: service_healthy
-        condition: service_started
-      redis:
-        condition: service_healthy
-      otel:
-        condition: service_started
-    networks:
-      - is-stag-network
-
   user-service:
     profiles:
       - prod

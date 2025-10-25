@@ -17,8 +17,32 @@ helm upgrade --install cert-manager oci://quay.io/jetstack/charts/cert-manager \
   --namespace $NAMESPACE \
   --set crds.enabled=true
 
+echo "Waiting for cert-manager to be ready..."
+kubectl wait --for=condition=available --timeout=120s deployment/cert-manager -n $NAMESPACE
+kubectl wait --for=condition=available --timeout=120s deployment/cert-manager-cainjector -n $NAMESPACE
+kubectl wait --for=condition=available --timeout=120s deployment/cert-manager-webhook -n $NAMESPACE
+
 kubectl apply -f infrastructure/cert-issuer.yaml
 kubectl apply -f infrastructure/certificate.yaml
+
+# ----- OpenTelemetry -----
+
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+helm upgrade --install opentelemetry-operator open-telemetry/opentelemetry-operator \
+  --version 0.98.0 \
+  --namespace $NAMESPACE \
+  --set "manager.collectorImage.repository=otel/opentelemetry-collector-k8s" \
+  --set admissionWebhooks.certManager.enabled=true \
+  --set admissionWebhooks.timeoutSeconds=30
+
+echo "Waiting for opentelemetry-operator to be ready..."
+kubectl wait --for=condition=available --timeout=120s deployment/opentelemetry-operator -n $NAMESPACE
+
+kubectl apply -f infrastructure/otel-collector.yaml
+kubectl apply -f infrastructure/otel-instrumentation.yaml
+
+echo "Waiting for otel-collector to be ready..."
+kubectl wait --for=condition=available --timeout=120s deployment/otel-collector-collector -n $NAMESPACE
 
 # ----- NGINX Ingress Controller -----
 

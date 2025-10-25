@@ -2,6 +2,9 @@ name: generic-service
 
 replicaCount: 1
 
+deployment:
+  annotations: {}
+
 image:
   repository: ""
   tag: ""

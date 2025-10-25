@@ -23,6 +23,9 @@ react-client:
 api-gateway:
   name: api-gateway
   replicaCount: 1
+  deployment:
+    annotations:
+      instrumentation.opentelemetry.io/inject-java: "true"
   image:
     repository: jakubpavlicek/api-gateway
     tag: 0.0.1
@@ -45,6 +48,9 @@ api-gateway:
 codelist-service:
   name: codelist-service
   replicaCount: 3
+  deployment:
+    annotations:
+      instrumentation.opentelemetry.io/inject-java: "true"
   image:
     repository: jakubpavlicek/codelist-service
     tag: 0.0.1
@@ -67,6 +73,9 @@ codelist-service:
 student-service:
   name: student-service
   replicaCount: 3
+  deployment:
+    annotations:
+      instrumentation.opentelemetry.io/inject-java: "true"
   image:
     repository: jakubpavlicek/student-service
     tag: 0.0.1
@@ -89,6 +98,9 @@ student-service:
 study-plan-service:
   name: study-plan-service
   replicaCount: 3
+  deployment:
+    annotations:
+      instrumentation.opentelemetry.io/inject-java: "true"
   image:
     repository: jakubpavlicek/study-plan-service
     tag: 0.0.1
@@ -111,6 +123,9 @@ study-plan-service:
 user-service:
   name: user-service
   replicaCount: 3
+  deployment:
+    annotations:
+      instrumentation.opentelemetry.io/inject-java: "true"
   image:
     repository: jakubpavlicek/user-service
     tag: 0.0.1

@@ -5,6 +5,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ .Values.name }}
+  annotations:
+    {{ toYaml .Values.deployment.annotations | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

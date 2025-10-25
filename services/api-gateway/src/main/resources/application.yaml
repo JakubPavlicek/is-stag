@@ -83,18 +83,6 @@ spring:
                 - name: Retry
                   args:
                     <<: *retry_args
-            - id: subject-service
-              uri: ${SUBJECT-SERVICE_ADDRESS:http://subject-service:8040}
-              predicates:
-                - Path=/api/v1/subjects/**
-              filters:
-                - name: CircuitBreaker
-                  args:
-                    <<: *circuitbreaker_args
-                    id: subject-service
-                - name: Retry
-                  args:
-                    <<: *retry_args
             - id: user-service
               uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
               predicates:
@@ -133,12 +121,6 @@ spring:
                 - Path=/api/study-plan-service/**
               filters:
                 - RewritePath=/api/study-plan-service/(?<segment>.*), /$\{segment}
-            - id: subject-service-openapi
-              uri: ${SUBJECT-SERVICE_ADDRESS:http://subject-service:8040}
-              predicates:
-                - Path=/api/subject-service/**
-              filters:
-                - RewritePath=/api/subject-service/(?<segment>.*), /$\{segment}
             - id: user-service-openapi
               uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
               predicates:
@@ -182,8 +164,6 @@ resilience4j:
         base-config: default
       study-plan-service:
         base-config: default
-      subject-service:
-        base-config: default
       user-service:
         base-config: default
   timelimiter:
@@ -211,8 +191,6 @@ springdoc:
         url: /api/student-service/openapi.yaml
       - name: Study Plan Service
         url: /api/study-plan-service/openapi.yaml
-      - name: Subject Service
-        url: /api/subject-service/openapi.yaml
       - name: User Service
         url: /api/user-service/openapi.yaml
     urls-primary-name: Student Service
@@ -236,5 +214,4 @@ API-GATEWAY_ADDRESS: http://localhost:8100
 CODELIST-SERVICE_ADDRESS: http://localhost:8010
 STUDENT-SERVICE_ADDRESS: http://localhost:8030
 STUDY-PLAN-SERVICE_ADDRESS: http://localhost:8050
-SUBJECT-SERVICE_ADDRESS: http://localhost:8040
 USER-SERVICE_ADDRESS: http://localhost:8020
