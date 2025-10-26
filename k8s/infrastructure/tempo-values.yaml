@@ -1,0 +1,39 @@
+tempo:
+  reportingEnabled: false
+
+  receivers:
+    jaeger: { }
+
+  ingester:
+    trace_idle_period: 5s
+    flush_check_period: 10s
+    max_block_duration: 10m
+    complete_block_timeout: 15m
+    lifecycler:
+      ring:
+        replication_factor: 1
+
+  overrides:
+    defaults:
+      metrics_generator:
+        processors:
+          - service-graphs
+          - local-blocks
+          - span-metrics
+
+  metricsGenerator:
+    enabled: true
+    remoteWriteUrl: http://prometheus:9090/api/v1/write
+
+  metrics_generator:
+    ring:
+      kvstore:
+        store: inmemory
+    processor:
+      local_blocks:
+        filter_server_spans: false
+      span_metrics:
+        dimensions:
+          - service_name
+          - operation
+          - status_code

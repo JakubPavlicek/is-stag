@@ -1,7 +1,7 @@
 apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
-  name: otel-collector
+  name: otel
   namespace: is-stag
 spec:
   config:
@@ -15,7 +15,7 @@ spec:
       prometheus/collector:
         config:
           scrape_configs:
-            - job_name: 'otel-collector'
+            - job_name: 'otel-collector' # TODO: maybe change this to 'otel'
               scrape_interval: 10s
               static_configs:
                 - targets: [ '0.0.0.0:8888' ]

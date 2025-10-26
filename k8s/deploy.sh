@@ -15,7 +15,8 @@ kubectl apply -f infrastructure/is-stag-database-secret.yaml
 helm upgrade --install cert-manager oci://quay.io/jetstack/charts/cert-manager \
   --version v1.19.1 \
   --namespace $NAMESPACE \
-  --set crds.enabled=true
+  --set crds.enabled=true \
+  --wait
 
 echo "Waiting for cert-manager to be ready..."
 kubectl wait --for=condition=available --timeout=120s deployment/cert-manager -n $NAMESPACE
@@ -28,21 +29,61 @@ kubectl apply -f infrastructure/certificate.yaml
 # ----- OpenTelemetry -----
 
 helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+helm repo update
+
 helm upgrade --install opentelemetry-operator open-telemetry/opentelemetry-operator \
   --version 0.98.0 \
   --namespace $NAMESPACE \
   --set "manager.collectorImage.repository=otel/opentelemetry-collector-k8s" \
   --set admissionWebhooks.certManager.enabled=true \
-  --set admissionWebhooks.timeoutSeconds=30
+  --set admissionWebhooks.timeoutSeconds=30 \
+  --wait
 
 echo "Waiting for opentelemetry-operator to be ready..."
 kubectl wait --for=condition=available --timeout=120s deployment/opentelemetry-operator -n $NAMESPACE
+
+sleep 10
 
 kubectl apply -f infrastructure/otel-collector.yaml
 kubectl apply -f infrastructure/otel-instrumentation.yaml
 
 echo "Waiting for otel-collector to be ready..."
-kubectl wait --for=condition=available --timeout=120s deployment/otel-collector-collector -n $NAMESPACE
+kubectl wait --for=condition=available --timeout=120s deployment/otel-collector -n $NAMESPACE
+
+# ----- Observability (Grafana, Loki, Prometheus, Tempo) -----
+
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+
+# Grafana
+helm upgrade --install grafana grafana/grafana \
+  -f infrastructure/grafana-values.yaml \
+  --version 10.1.2 \
+  --namespace $NAMESPACE \
+  --wait
+#  --set persistence.enabled=true \
+
+# Loki
+helm upgrade --install loki grafana/loki \
+  -f infrastructure/loki-values.yaml \
+  --version 6.44.0 \
+  --namespace $NAMESPACE \
+  --wait
+
+# Prometheus
+helm upgrade --install prometheus prometheus-community/prometheus \
+  -f infrastructure/prometheus-values.yaml \
+  --version 27.42.0 \
+  --namespace $NAMESPACE \
+  --wait
+
+# Tempo
+helm upgrade --install tempo grafana/tempo \
+  -f infrastructure/tempo-values.yaml \
+  --version 1.24.0 \
+  --namespace $NAMESPACE \
+  --wait
 
 # ----- NGINX Ingress Controller -----
 

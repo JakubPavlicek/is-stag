@@ -38,12 +38,12 @@ api-gateway:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 100
-      periodSeconds: 10
+      initialDelaySeconds: 150
+      periodSeconds: 20
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 100
-      periodSeconds: 10
+      initialDelaySeconds: 150
+      periodSeconds: 20
 
 codelist-service:
   name: codelist-service
@@ -63,12 +63,12 @@ codelist-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 100
-      periodSeconds: 10
+      initialDelaySeconds: 150
+      periodSeconds: 20
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 100
-      periodSeconds: 10
+      initialDelaySeconds: 150
+      periodSeconds: 20
 
 student-service:
   name: student-service
@@ -88,12 +88,12 @@ student-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 100
-      periodSeconds: 10
+      initialDelaySeconds: 150
+      periodSeconds: 20
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 100
-      periodSeconds: 10
+      initialDelaySeconds: 150
+      periodSeconds: 20
 
 study-plan-service:
   name: study-plan-service
@@ -113,12 +113,12 @@ study-plan-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 100
-      periodSeconds: 10
+      initialDelaySeconds: 150
+      periodSeconds: 20
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 100
-      periodSeconds: 10
+      initialDelaySeconds: 150
+      periodSeconds: 20
 
 user-service:
   name: user-service
@@ -138,9 +138,9 @@ user-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 100
-      periodSeconds: 10
+      initialDelaySeconds: 150
+      periodSeconds: 20
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 100
-      periodSeconds: 10
+      initialDelaySeconds: 150
+      periodSeconds: 20
