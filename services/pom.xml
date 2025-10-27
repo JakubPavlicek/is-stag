@@ -45,7 +45,7 @@
         <protobuf-java.version>4.33.0</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
         <protovalidate.version>1.0.0</protovalidate.version>
-        <protobuf-maven-plugin.version>4.0.0-M2</protobuf-maven-plugin.version>
+        <protobuf-maven-plugin.version>4.0.0-M3</protobuf-maven-plugin.version>
 
         <!-- Hibernate Search -->
         <hibernate-search.version>8.1.2.Final</hibernate-search.version>
@@ -54,7 +54,7 @@
         <hibernate-processor.version>7.1.3.Final</hibernate-processor.version>
 
         <!-- Tools -->
-        <httpclient5.version>5.5.1</httpclient5.version>
+        <httpclient5.version>5.6-alpha1</httpclient5.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <mapstruct-protobuf-spi.version>1.52.0</mapstruct-protobuf-spi.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>

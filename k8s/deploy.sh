@@ -26,30 +26,6 @@ kubectl wait --for=condition=available --timeout=120s deployment/cert-manager-we
 kubectl apply -f infrastructure/cert-issuer.yaml
 kubectl apply -f infrastructure/certificate.yaml
 
-# ----- OpenTelemetry -----
-
-helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
-helm repo update
-
-helm upgrade --install opentelemetry-operator open-telemetry/opentelemetry-operator \
-  --version 0.98.0 \
-  --namespace $NAMESPACE \
-  --set "manager.collectorImage.repository=otel/opentelemetry-collector-k8s" \
-  --set admissionWebhooks.certManager.enabled=true \
-  --set admissionWebhooks.timeoutSeconds=30 \
-  --wait
-
-echo "Waiting for opentelemetry-operator to be ready..."
-kubectl wait --for=condition=available --timeout=120s deployment/opentelemetry-operator -n $NAMESPACE
-
-sleep 10
-
-kubectl apply -f infrastructure/otel-collector.yaml
-kubectl apply -f infrastructure/otel-instrumentation.yaml
-
-echo "Waiting for otel-collector to be ready..."
-kubectl wait --for=condition=available --timeout=120s deployment/otel-collector -n $NAMESPACE
-
 # ----- Observability (Grafana, Loki, Prometheus, Tempo) -----
 
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -84,6 +60,30 @@ helm upgrade --install tempo grafana/tempo \
   --version 1.24.0 \
   --namespace $NAMESPACE \
   --wait
+
+# ----- OpenTelemetry -----
+
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+helm repo update
+
+helm upgrade --install opentelemetry-operator open-telemetry/opentelemetry-operator \
+  --version 0.98.0 \
+  --namespace $NAMESPACE \
+  --set "manager.collectorImage.repository=otel/opentelemetry-collector-k8s" \
+  --set admissionWebhooks.certManager.enabled=true \
+  --set admissionWebhooks.timeoutSeconds=30 \
+  --wait
+
+echo "Waiting for opentelemetry-operator to be ready..."
+kubectl wait --for=condition=available --timeout=120s deployment/opentelemetry-operator -n $NAMESPACE
+
+kubectl apply -f infrastructure/otel-collector.yaml
+kubectl apply -f infrastructure/otel-instrumentation.yaml
+
+sleep 5
+
+echo "Waiting for otel-collector to be ready..."
+kubectl wait --for=condition=available --timeout=120s deployment/otel-collector -n $NAMESPACE
 
 # ----- NGINX Ingress Controller -----
 

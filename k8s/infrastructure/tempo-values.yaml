@@ -34,6 +34,19 @@ tempo:
         filter_server_spans: false
       span_metrics:
         dimensions:
+          - http.method
+          - http.target
+          - http.status_code
+          - service.version
+          - service_name
+          - operation
+          - status_code
+      service_graphs:
+        dimensions:
+          - http.method
+          - http.target
+          - http.status_code
+          - service.version
           - service_name
           - operation
           - status_code

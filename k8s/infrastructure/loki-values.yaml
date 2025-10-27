@@ -40,3 +40,6 @@ write:
 
 test:
   enabled: false
+
+lokiCanary:
+  enabled: false
