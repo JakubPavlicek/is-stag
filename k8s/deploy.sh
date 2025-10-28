@@ -26,6 +26,17 @@ kubectl wait --for=condition=available --timeout=120s deployment/cert-manager-we
 kubectl apply -f infrastructure/cert-issuer.yaml
 kubectl apply -f infrastructure/certificate.yaml
 
+# ----- Keycloak -----
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+
+helm upgrade --install keycloak bitnami/keycloak \
+  -f infrastructure/keycloak-values.yaml \
+  --version 25.2.0 \
+  --namespace $NAMESPACE \
+  --wait
+
 # ----- Observability (Grafana, Loki, Prometheus, Tempo) -----
 
 helm repo add grafana https://grafana.github.io/helm-charts

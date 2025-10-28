@@ -13,7 +13,7 @@ common:
     kvstore:
       store: inmemory
   replication_factor: 1
-  path_prefix: /var/loki
+  path_prefix: /tmp/loki
 
 schema_config:
   configs:
@@ -27,4 +27,4 @@ schema_config:
 
 storage_config:
   filesystem:
-    directory: /var/loki/chunks
+    directory: /tmp/loki/chunks

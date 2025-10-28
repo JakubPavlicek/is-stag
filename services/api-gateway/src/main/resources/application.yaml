@@ -136,6 +136,10 @@ spring:
 #      read-timeout: 10s
 #      imperative:
 #        factory: http_components
+  data:
+    redis:
+      host: redis
+      port: 6379
   mvc:
     problemdetails:
       enabled: true
@@ -209,6 +213,9 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8180/realms/is-stag/protocol/openid-connect/certs
+  data:
+    redis:
+      host: localhost
 
 API-GATEWAY_ADDRESS: http://localhost:8100
 CODELIST-SERVICE_ADDRESS: http://localhost:8010
