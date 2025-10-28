@@ -21,11 +21,10 @@ logging:
 # Templates for API Gateway filters
 filter-templates:
   request_rate_limiter_args: &request_rate_limiter_args
-    keyResolver: "#{@emailKeyResolver}"
-    redisRateLimiter.replenishRate: 10
-    redisRateLimiter.burstCapacity: 20
-    redisRateLimiter.requestedTokens: 1
-    redisRateLimiter.expireTime: 1s
+    key-resolver: "#{@emailKeyResolver}"
+    redis-rate-limiter.replenishRate: 10
+    redis-rate-limiter.burstCapacity: 20
+    redis-rate-limiter.requestedTokens: 1
 
   circuitbreaker_args: &circuitbreaker_args
     fallbackUri: forward:/fallback

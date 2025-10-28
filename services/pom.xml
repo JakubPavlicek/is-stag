@@ -38,14 +38,14 @@
         <!-- Spring -->
         <spring-cloud.version>2025.1.0-M4</spring-cloud.version>
         <springdoc.version>3.0.0-M1</springdoc.version>
-        <oracle.jdbc.version>23.9.0.25.07</oracle.jdbc.version>
+        <oracle.jdbc.version>23.26.0.0.0</oracle.jdbc.version>
 
         <!-- gRPC -->
         <grpc.version>1.76.0</grpc.version>
         <protobuf-java.version>4.33.0</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
-        <protovalidate.version>1.0.0</protovalidate.version>
-        <protobuf-maven-plugin.version>4.0.0-M3</protobuf-maven-plugin.version>
+        <protovalidate.version>1.0.1</protovalidate.version>
+        <protobuf-maven-plugin.version>4.0.0</protobuf-maven-plugin.version>
 
         <!-- Hibernate Search -->
         <hibernate-search.version>8.1.2.Final</hibernate-search.version>
