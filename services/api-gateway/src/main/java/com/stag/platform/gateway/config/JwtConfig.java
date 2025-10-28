@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
@@ -28,7 +29,8 @@ public class JwtConfig {
     /// @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/enhanced-jwk-retrieval">JWKs Retrieval</a>
     /// @see <a href="https://github.com/spring-projects/spring-security/pull/17046">JwkSource Pull Request</a>
     @Bean
-    public JwtDecoder jwtDecoder() throws MalformedURLException {
+    @Primary
+    public JwtDecoder enhancedJwtDecoder() throws MalformedURLException {
         URL jwkSetURL = URI.create(jwkSetUri).toURL();
 
         // Build the Nimbus-enhanced JWK source with caching and retry capabilities

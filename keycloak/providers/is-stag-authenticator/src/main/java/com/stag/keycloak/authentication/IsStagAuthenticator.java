@@ -125,7 +125,7 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
 
             // Decode and parse the user info
             IsStagUser isStagUser = objectMapper.readValue(
-                Base64.getUrlDecoder().decode(stagUserInfo),
+                Base64.getDecoder().decode(stagUserInfo),
                 IsStagUser.class
             );
             IsStagUserDetails isStagUserDetails = isStagUser.stagUserInfo().getFirst();

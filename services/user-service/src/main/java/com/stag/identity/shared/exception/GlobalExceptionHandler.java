@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +42,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return servletWebRequest.getRequest().getRequestURI();
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDeniedException(AccessDeniedException ex) {
+        log.warn(ex.getMessage());
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        problemDetail.setTitle("Access Denied");
+
+        return problemDetail;
+    }
+
     @ExceptionHandler({ InvalidAccountNumberException.class, InvalidDataBoxException.class })
     public ProblemDetail handleInvalidException(Exception ex) {
         log.warn(ex.getMessage());
@@ -62,7 +73,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+    protected ResponseEntity<@NonNull Object> handleMethodArgumentNotValid(
         @NonNull MethodArgumentNotValidException ex,
         @NonNull HttpHeaders headers,
         @NonNull HttpStatusCode status,
@@ -110,7 +121,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+    protected ResponseEntity<@NonNull Object> handleHttpMessageNotReadable(
         @NonNull HttpMessageNotReadableException ex,
         @NonNull HttpHeaders headers,
         @NonNull HttpStatusCode status,

@@ -13,21 +13,32 @@ server:
 logging:
   level:
     com.stag.platform.gateway: DEBUG
-    reactor.netty: DEBUG
+#    reactor.netty: DEBUG
     org.springframework.cloud.gateway: DEBUG
     io.github.resilience4j.circuitbreaker: DEBUG
     io.github.resilience4j.timelimiter: DEBUG
-    org.springframework.retry: DEBUG
 
 # Templates for API Gateway filters
 filter-templates:
+  request_rate_limiter_args: &request_rate_limiter_args
+    keyResolver: "#{@emailKeyResolver}"
+    redisRateLimiter.replenishRate: 10
+    redisRateLimiter.burstCapacity: 20
+    redisRateLimiter.requestedTokens: 1
+    redisRateLimiter.expireTime: 1s
+
   circuitbreaker_args: &circuitbreaker_args
     fallbackUri: forward:/fallback
 
   retry_args: &retry_args
-    retries: 3
+    retries: 2
     methods: GET, PATCH
     statuses: BAD_GATEWAY, GATEWAY_TIMEOUT, SERVICE_UNAVAILABLE
+    backoff:
+      firstBackoff: 50ms
+      maxBackoff: 100ms
+      factor: 2
+      basedOnPreviousValue: true
 
 spring:
   application:
@@ -43,7 +54,12 @@ spring:
   cloud:
     gateway:
       server:
-        webmvc:
+        webflux:
+          httpclient:
+            response-timeout: 2s
+            compression: true
+          metrics:
+            enabled: true
           routes:
             # Service routes
             - id: codelist-service
@@ -52,10 +68,13 @@ spring:
                 - Path=/api/v1/addresses/**,/api/v1/countries/**,/api/v1/domains/**
               filters:
                 - RemoveRequestHeader=Authorization
+                - name: RequestRateLimiter
+                  args:
+                    <<: *request_rate_limiter_args
                 - name: CircuitBreaker
                   args:
                     <<: *circuitbreaker_args
-                    id: codelist-service
+                    name: codelist-service
                 - name: Retry
                   args:
                     <<: *retry_args
@@ -64,10 +83,13 @@ spring:
               predicates:
                 - Path=/api/v1/students/**
               filters:
+                - name: RequestRateLimiter
+                  args:
+                    <<: *request_rate_limiter_args
                 - name: CircuitBreaker
                   args:
                     <<: *circuitbreaker_args
-                    id: student-service
+                    name: student-service
                 - name: Retry
                   args:
                     <<: *retry_args
@@ -76,10 +98,13 @@ spring:
               predicates:
                 - Path=/api/v1/study-plan/**
               filters:
+                - name: RequestRateLimiter
+                  args:
+                    <<: *request_rate_limiter_args
                 - name: CircuitBreaker
                   args:
                     <<: *circuitbreaker_args
-                    id: study-plan-service
+                    name: study-plan-service
                 - name: Retry
                   args:
                     <<: *retry_args
@@ -88,10 +113,13 @@ spring:
               predicates:
                 - Path=/api/v1/users/**,/api/v1/persons/**
               filters:
+                - name: RequestRateLimiter
+                  args:
+                    <<: *request_rate_limiter_args
                 - name: CircuitBreaker
                   args:
                     <<: *circuitbreaker_args
-                    id: user-service
+                    name: user-service
                 - name: Retry
                   args:
                     <<: *retry_args
@@ -127,10 +155,10 @@ spring:
                 - Path=/api/user-service/**
               filters:
                 - RewritePath=/api/user-service/(?<segment>.*), /$\{segment}
-  http:
-    client:
-      connect-timeout: 10s
-      read-timeout: 10s
+#  http:
+#    client:
+#      connect-timeout: 10s
+#      read-timeout: 10s
 #    clients:
 #      connect-timeout: 10s
 #      read-timeout: 10s
@@ -140,7 +168,7 @@ spring:
     redis:
       host: redis
       port: 6379
-  mvc:
+  webflux:
     problemdetails:
       enabled: true
   threads:
