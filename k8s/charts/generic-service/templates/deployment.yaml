@@ -30,8 +30,8 @@ spec:
             - containerPort: {{ .Values.service.ports.grpc }}
               name: grpc
             {{ end }}
-          {{- if .Values.database.enabled }}
           env:
+            {{- if .Values.database.enabled }}
             - name: SPRING_DATASOURCE_URL
               valueFrom:
                 configMapKeyRef:
@@ -47,7 +47,13 @@ spec:
                 secretKeyRef:
                   key: SPRING_DATASOURCE_PASSWORD
                   name: {{ .Values.database.secretName }}
-          {{ end }}
+            {{ end }}
+            {{- if .Values.keycloak.enabled }}
+            - name: VITE_KEYCLOAK_URL
+              value: {{ .Values.keycloak.url }}
+            - name: VITE_KEYCLOAK_REALM
+              value: {{ .Values.keycloak.realm }}
+            {{ end }}
           {{- with .Values.probes }}
           readinessProbe:
             httpGet:

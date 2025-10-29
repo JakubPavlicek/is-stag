@@ -15,13 +15,13 @@ spec:
     - host: is-stag.cz
       http:
         paths:
-          - path: /
+          - path: /auth
             pathType: Prefix
             backend:
               service:
-                name: react-client
+                name: keycloak-keycloakx-http
                 port:
-                  number: 5173
+                  number: 8080
           - path: /api
             pathType: Prefix
             backend:
@@ -29,13 +29,13 @@ spec:
                 name: api-gateway
                 port:
                   number: 8100
-          - path: /realms
+          - path: /
             pathType: Prefix
             backend:
               service:
-                name: keycloak
+                name: react-client
                 port:
-                  number: 8080
+                  number: 5173
 
 # TODO: Add Keycloak to cluster
 # TODO: Add Grafana to cluster and ingress

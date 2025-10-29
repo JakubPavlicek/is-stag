@@ -1,0 +1,49 @@
+image:
+  repository: docker.io/jakubpavlicek/is-stag-keycloak
+  tag: latest
+
+command:
+  - "/opt/keycloak/bin/kc.sh"
+  - "start"
+  - "--import-realm"
+
+# Additional init containers, e. g. for providing custom themes
+extraInitContainers: ""
+
+http:
+  relativePath: /auth
+
+service:
+  httpPort: 8080
+
+extraEnv: |
+  # Keycloak admin credentials
+  - name: KC_BOOTSTRAP_ADMIN_USERNAME
+    value: admin
+  - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+    value: admin
+  
+  # Tells Keycloak it’s behind a reverse proxy (Ingress)
+  - name: KC_PROXY
+    value: "edge"
+  
+  - name: KC_PROXY_HEADERS
+    value: "xforwarded"
+  
+  # The public hostname users will use to access Keycloak
+  - name: KC_HOSTNAME
+    value: "is-stag.cz"
+
+  # Ensures Keycloak generates HTTPS URLs even if backend traffic is HTTP
+  - name: KC_HOSTNAME_STRICT_HTTPS
+    value: "true"
+  
+  # Make sure this matches the ingress base path
+  - name: KC_HTTP_RELATIVE_PATH
+    value: "/auth"
+  
+  - name: KC_HOSTNAME_PATH
+    value: "/auth"
+  
+  - name: KC_HTTP_ENABLED
+    value: "true"

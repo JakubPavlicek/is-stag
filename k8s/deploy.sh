@@ -28,14 +28,23 @@ kubectl apply -f infrastructure/certificate.yaml
 
 # ----- Keycloak -----
 
-helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add codecentric https://codecentric.github.io/helm-charts
 helm repo update
 
-helm upgrade --install keycloak bitnami/keycloak \
+helm upgrade --install keycloak codecentric/keycloakx \
   -f infrastructure/keycloak-values.yaml \
-  --version 25.2.0 \
+  --version 7.1.4 \
   --namespace $NAMESPACE \
   --wait
+
+#helm repo add bitnami https://charts.bitnami.com/bitnami
+#helm repo update
+#
+#helm upgrade --install keycloak bitnami/keycloak \
+#  -f infrastructure/keycloak-bitnami-values.yaml \
+#  --version 25.2.0 \
+#  --namespace $NAMESPACE \
+#  --wait
 
 # ----- Observability (Grafana, Loki, Prometheus, Tempo) -----
 

@@ -10,6 +10,10 @@ react-client:
       grpc: null
   database:
     enabled: false
+  keycloak:
+    enabled: true
+    url: https://is-stag.cz/auth
+    realm: is-stag
   probes:
     readiness:
       path: /
@@ -38,11 +42,11 @@ api-gateway:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 150
+      initialDelaySeconds: 50
       periodSeconds: 20
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 150
+      initialDelaySeconds: 50
       periodSeconds: 20
 
 codelist-service:
@@ -63,11 +67,11 @@ codelist-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 150
+      initialDelaySeconds: 50
       periodSeconds: 20
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 150
+      initialDelaySeconds: 50
       periodSeconds: 20
 
 student-service:
@@ -88,11 +92,11 @@ student-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 150
+      initialDelaySeconds: 50
       periodSeconds: 20
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 150
+      initialDelaySeconds: 50
       periodSeconds: 20
 
 study-plan-service:
@@ -113,11 +117,11 @@ study-plan-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 150
+      initialDelaySeconds: 50
       periodSeconds: 20
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 150
+      initialDelaySeconds: 50
       periodSeconds: 20
 
 user-service:
@@ -138,9 +142,9 @@ user-service:
   probes:
     readiness:
       path: /actuator/health/readiness
-      initialDelaySeconds: 150
+      initialDelaySeconds: 50
       periodSeconds: 20
     liveness:
       path: /actuator/health/liveness
-      initialDelaySeconds: 150
+      initialDelaySeconds: 50
       periodSeconds: 20

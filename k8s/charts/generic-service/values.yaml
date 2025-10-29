@@ -22,6 +22,11 @@ database:
   configMapName: "is-stag-database-config"
   secretName: "is-stag-database-secret"
 
+keycloak:
+  enabled: false
+  url: https://is-stag.cz/auth
+  realm: master
+
 probes:
   readiness:
     path: /actuator/health/readiness
