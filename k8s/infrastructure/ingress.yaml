@@ -19,7 +19,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: keycloak-keycloakx-http
+                name: keycloak-http
                 port:
                   number: 8080
           - path: /api
@@ -37,5 +37,5 @@ spec:
                 port:
                   number: 5173
 
-# TODO: Add Keycloak to cluster
+# TODO: Fix "Caused by: java.net.UnknownHostException: Failed to resolve 'keycloak'" in API Gateway (it will be keycloak-http)
 # TODO: Add Grafana to cluster and ingress

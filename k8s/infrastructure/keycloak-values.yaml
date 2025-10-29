@@ -1,3 +1,5 @@
+fullnameOverride: keycloak
+
 image:
   repository: docker.io/jakubpavlicek/is-stag-keycloak
   tag: latest
@@ -27,6 +29,7 @@ extraEnv: |
   - name: KC_PROXY
     value: "edge"
   
+  # Tells Keycloak to trust the X-Forwarded-* headers
   - name: KC_PROXY_HEADERS
     value: "xforwarded"
   
@@ -38,12 +41,20 @@ extraEnv: |
   - name: KC_HOSTNAME_STRICT_HTTPS
     value: "true"
   
-  # Make sure this matches the ingress base path
-  - name: KC_HTTP_RELATIVE_PATH
-    value: "/auth"
-  
-  - name: KC_HOSTNAME_PATH
-    value: "/auth"
-  
-  - name: KC_HTTP_ENABLED
+  # OpenTelemetry Tracing
+  - name: KC_TRACING_ENABLED
     value: "true"
+  - name: KC_TRACING_ENDPOINT
+    value: "http://otel-collector:4317"
+  - name: KC_TRACING_PROTOCOL
+    value: "grpc"
+  - name: KC_TRACING_COMPRESSION
+    value: "gzip"
+  - name: KC_TRACING_SERVICE_NAME
+    value: "keycloak"
+  - name: KC_TRACING_RESOURCE_ATTRIBUTES
+    value: "service.name=keycloak,service.version=latest,environment=prod,k8s.namespace.name=is-stag"
+  - name: KC_TRACING_SAMPLER_TYPE
+    value: "parentbased_traceidratio"
+  - name: KC_TRACING_SAMPLER_RATIO
+    value: "1.0"

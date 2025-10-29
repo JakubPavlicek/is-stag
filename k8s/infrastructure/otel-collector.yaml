@@ -19,6 +19,11 @@ spec:
               scrape_interval: 15s
               static_configs:
                 - targets: [ '0.0.0.0:8888' ]
+            - job_name: 'keycloak'
+              scrape_interval: 15s
+              metrics_path: /auth/metrics
+              static_configs:
+                - targets: [ 'keycloak-http:9000' ]
 
     processors:
       batch: { }

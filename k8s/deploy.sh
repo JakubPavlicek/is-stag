@@ -5,14 +5,23 @@
 
 NAMESPACE=is-stag
 
+# Add Helm repositories
+helm repo add jetstack https://charts.jetstack.io
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+helm repo add codecentric https://codecentric.github.io/helm-charts
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+# Create Namespace and apply basic configurations
 kubectl apply -f infrastructure/is-stag-namespace.yaml
-kubectl apply -f infrastructure/ingress.yaml
 kubectl apply -f infrastructure/is-stag-database-config.yaml
 kubectl apply -f infrastructure/is-stag-database-secret.yaml
 
 # ----- Cert-Manager for TLS certificates -----
 
-helm upgrade --install cert-manager oci://quay.io/jetstack/charts/cert-manager \
+helm upgrade --install cert-manager jetstack/cert-manager \
   --version v1.19.1 \
   --namespace $NAMESPACE \
   --set crds.enabled=true \
@@ -26,31 +35,7 @@ kubectl wait --for=condition=available --timeout=120s deployment/cert-manager-we
 kubectl apply -f infrastructure/cert-issuer.yaml
 kubectl apply -f infrastructure/certificate.yaml
 
-# ----- Keycloak -----
-
-helm repo add codecentric https://codecentric.github.io/helm-charts
-helm repo update
-
-helm upgrade --install keycloak codecentric/keycloakx \
-  -f infrastructure/keycloak-values.yaml \
-  --version 7.1.4 \
-  --namespace $NAMESPACE \
-  --wait
-
-#helm repo add bitnami https://charts.bitnami.com/bitnami
-#helm repo update
-#
-#helm upgrade --install keycloak bitnami/keycloak \
-#  -f infrastructure/keycloak-bitnami-values.yaml \
-#  --version 25.2.0 \
-#  --namespace $NAMESPACE \
-#  --wait
-
 # ----- Observability (Grafana, Loki, Prometheus, Tempo) -----
-
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
 
 # Grafana
 helm upgrade --install grafana grafana/grafana \
@@ -83,9 +68,6 @@ helm upgrade --install tempo grafana/tempo \
 
 # ----- OpenTelemetry -----
 
-helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
-helm repo update
-
 helm upgrade --install opentelemetry-operator open-telemetry/opentelemetry-operator \
   --version 0.98.0 \
   --namespace $NAMESPACE \
@@ -96,20 +78,38 @@ helm upgrade --install opentelemetry-operator open-telemetry/opentelemetry-opera
 
 echo "Waiting for opentelemetry-operator to be ready..."
 kubectl wait --for=condition=available --timeout=120s deployment/opentelemetry-operator -n $NAMESPACE
+kubectl wait --for=create --timeout=120s service/opentelemetry-operator-webhook -n $NAMESPACE
 
 kubectl apply -f infrastructure/otel-collector.yaml
 kubectl apply -f infrastructure/otel-instrumentation.yaml
 
-sleep 5
-
 echo "Waiting for otel-collector to be ready..."
 kubectl wait --for=condition=available --timeout=120s deployment/otel-collector -n $NAMESPACE
 
+# ----- Keycloak -----
+
+helm upgrade --install keycloak codecentric/keycloakx \
+  -f infrastructure/keycloak-values.yaml \
+  --version 7.1.4 \
+  --namespace $NAMESPACE \
+  --wait
+
+#helm repo add bitnami https://charts.bitnami.com/bitnami
+#helm repo update
+#
+#helm upgrade --install keycloak bitnami/keycloak \
+#  -f infrastructure/keycloak-bitnami-values.yaml \
+#  --version 25.2.0 \
+#  --namespace $NAMESPACE \
+#  --wait
+
 # ----- NGINX Ingress Controller -----
 
-helm upgrade --install nginx-ingress oci://ghcr.io/nginx/charts/nginx-ingress \
-  --version 2.3.1 \
+helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+  --version 4.13.3 \
   --namespace $NAMESPACE
+
+kubectl apply -f infrastructure/ingress.yaml
 
 # Export External IP for Ingress
 #   minikube tunnel
