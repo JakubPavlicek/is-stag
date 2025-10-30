@@ -1,9 +1,9 @@
 services:
-  keycloak:
+  keycloak-http:
     profiles:
       - dev
       - prod
-    container_name: keycloak
+    container_name: keycloak-http
     build:
       context: ./keycloak
     environment:
@@ -63,23 +63,6 @@ services:
     networks:
       - is-stag-network
 
-  elasticsearch:
-    profiles:
-      - dev
-      - prod
-    container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.1.4-arm64
-    environment:
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - xpack.security.http.ssl.enabled=false
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ports:
-      - "9200:9200"
-    networks:
-      - is-stag-network
-
   react-client:
     profiles:
       - prod
@@ -89,7 +72,7 @@ services:
     ports:
       - "5173:5173"
     depends_on:
-      keycloak:
+      keycloak-http:
         condition: service_healthy
       api-gateway:
         condition: service_started
@@ -126,7 +109,7 @@ services:
 #      timeout: 10s
 #      retries: 5
     depends_on:
-      keycloak:
+      keycloak-http:
         condition: service_healthy
     networks:
       - is-stag-network
@@ -256,8 +239,6 @@ services:
       api-gateway:
 #        condition: service_healthy
         condition: service_started
-      elasticsearch:
-        condition: service_started
       redis:
         condition: service_healthy
       otel:
@@ -353,6 +334,7 @@ services:
     networks:
       - is-stag-network
 
+# TODO: add specific networks (split backend and frontend)
 networks:
   is-stag-network:
     driver: bridge

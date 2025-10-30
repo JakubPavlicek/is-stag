@@ -13,19 +13,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
 @Setter
-@Indexed(index = "idx_address_point")
 @Entity
 @Table(
     name = "CIS_ADRESNICH_MIST",
@@ -63,7 +56,6 @@ public class AddressPoint {
     private static final String REGISTRATION_NUMBER = "ev. č. ";
 
     @Id
-    @DocumentId
     @Column(
         name = "ADMIIDNO",
         nullable = false
@@ -163,20 +155,6 @@ public class AddressPoint {
     /// This method is a 1:1 translation of the Oracle function FN_ADRESNI_MISTO_ADRESA.
     /// It formats the address for display and full-text search indexing.
     @Transient
-    @FullTextField(
-        analyzer = "czech_autocomplete",
-        searchAnalyzer = "czech_autocomplete_search"
-    )
-    @IndexingDependency(derivedFrom = {
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.STREET)),
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.HOUSE_NUMBER)),
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.ORIENTATION_NUMBER)),
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.ORIENTATION_NUMBER_LETTER)),
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.MUNICIPALITY)),
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.MUNICIPALITY_PART)),
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.BUILDING_TYPE)),
-        @ObjectPath(@PropertyValue(propertyName = AddressPoint_.ZIP_CODE))
-    })
     public String getFullAddress() {
         String formattedNumber = getFormattedNumber();
         StringBuilder addressBuilder = new StringBuilder();

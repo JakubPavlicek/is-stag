@@ -20,7 +20,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://keycloak:8080/realms/is-stag/protocol/openid-connect/certs
+          jwk-set-uri: http://keycloak-http:8080/realms/is-stag/protocol/openid-connect/certs
   jackson:
     mapper:
       sort-properties-alphabetically: false
@@ -37,14 +37,6 @@ spring:
           plan_cache_max_size: 4096
         jdbc:
           fetch_size: 50
-        search:
-          backend:
-            type: elasticsearch
-            version: 9
-            hosts: ${ELASTICSEARCH_ADDRESS:elasticsearch:9200}
-            protocol: http
-            analysis:
-              configurer: com.stag.platform.shared.config.ElasticsearchAnalysisConfig
     hibernate:
       ddl-auto: none
     open-in-view: false
