@@ -14,7 +14,7 @@ logging:
   level:
     com.stag.platform.gateway: DEBUG
 #    reactor.netty: DEBUG
-    org.springframework.cloud.gateway: DEBUG
+#    org.springframework.cloud.gateway: DEBUG
     io.github.resilience4j.circuitbreaker: DEBUG
     io.github.resilience4j.timelimiter: DEBUG
 
@@ -165,8 +165,9 @@ spring:
 #        factory: http_components
   data:
     redis:
-      host: redis
+      host: redis-rate-limiter
       port: 6379
+      password: redis
   webflux:
     problemdetails:
       enabled: true
@@ -239,10 +240,11 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8180/realms/is-stag/protocol/openid-connect/certs
+          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
       host: localhost
+      port: 6380
 
 API-GATEWAY_ADDRESS: http://localhost:8100
 CODELIST-SERVICE_ADDRESS: http://localhost:8010

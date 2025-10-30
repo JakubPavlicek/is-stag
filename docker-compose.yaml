@@ -9,7 +9,9 @@ services:
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HTTP_RELATIVE_PATH: /auth
       KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
 
       # OpenTelemetry Tracing
       KC_TRACING_ENABLED: true
@@ -45,14 +47,15 @@ services:
     networks:
       - is-stag-network
 
-  redis:
+  redis-cache:
     profiles:
       - dev
       - prod
-    container_name: redis
-    image: redis:8.2.1-alpine
+    container_name: redis-cache
+    image: bitnami/redis
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+      REDIS_PASSWORD: redis
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -63,12 +66,34 @@ services:
     networks:
       - is-stag-network
 
+  redis-rate-limiter:
+    profiles:
+      - dev
+      - prod
+    container_name: redis-rate-limiter
+    image: bitnami/redis
+    environment:
+      REDIS_PASSWORD: redis
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "6380:6379"
+    networks:
+      - is-stag-network
+
   react-client:
     profiles:
       - prod
     container_name: react-client
     image: jakubpavlicek/react-client:0.0.1
     pull_policy: never
+    environment:
+      VITE_KEYCLOAK_URL: http://localhost:8180/auth/
+      VITE_KEYCLOAK_REALM: is-stag
     ports:
       - "5173:5173"
     depends_on:
@@ -103,13 +128,15 @@ services:
       OTEL_TRACES_SAMPLER_ARG: 1.0
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
-#    healthcheck:
-#      test: [ "CMD", "/workspace/health-check" ]
-#      start_period: 30s
-#      timeout: 10s
-#      retries: 5
+    healthcheck:
+      test: [ "CMD", "/workspace/health-check" ]
+      start_period: 30s
+      timeout: 10s
+      retries: 5
     depends_on:
       keycloak-http:
+        condition: service_healthy
+      redis-rate-limiter:
         condition: service_healthy
     networks:
       - is-stag-network
@@ -138,9 +165,8 @@ services:
       - "9030:9030"
     depends_on:
       api-gateway:
-#        condition: service_healthy
-        condition: service_started
-      redis:
+        condition: service_healthy
+      redis-cache:
         condition: service_healthy
       otel:
         condition: service_started
@@ -171,9 +197,8 @@ services:
       - "9050:9050"
     depends_on:
       api-gateway:
-#        condition: service_healthy
-        condition: service_started
-      redis:
+        condition: service_healthy
+      redis-cache:
         condition: service_healthy
       otel:
         condition: service_started
@@ -204,9 +229,8 @@ services:
       - "9020:9020"
     depends_on:
       api-gateway:
-#        condition: service_healthy
-        condition: service_started
-      redis:
+        condition: service_healthy
+      redis-cache:
         condition: service_healthy
       otel:
         condition: service_started
@@ -237,9 +261,8 @@ services:
       - "9010:9010"
     depends_on:
       api-gateway:
-#        condition: service_healthy
-        condition: service_started
-      redis:
+        condition: service_healthy
+      redis-cache:
         condition: service_healthy
       otel:
         condition: service_started
@@ -311,7 +334,7 @@ services:
     volumes:
       - ./observability/tempo-config.yaml:/etc/tempo.yaml
     ports:
-      - "4317"  # otlp grpc
+      - "4317"
       - "4318"
     networks:
       - is-stag-network

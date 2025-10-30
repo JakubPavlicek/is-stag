@@ -20,6 +20,7 @@ kubectl apply -f infrastructure/is-stag-namespace.yaml
 kubectl apply -f infrastructure/is-stag-database-config.yaml
 kubectl apply -f infrastructure/is-stag-database-secret.yaml
 kubectl apply -f infrastructure/keycloak-postgresql-secret.yaml
+kubectl apply -f infrastructure/redis-secret.yaml
 
 # ----- Cert-Manager for TLS certificates -----
 
@@ -71,11 +72,9 @@ helm upgrade --install tempo grafana/tempo \
 # ----- OpenTelemetry -----
 
 helm upgrade --install opentelemetry-operator open-telemetry/opentelemetry-operator \
+  -f infrastructure/opentelemetry-operator-values.yaml \
   --version 0.98.0 \
   --namespace $NAMESPACE \
-  --set "manager.collectorImage.repository=otel/opentelemetry-collector-k8s" \
-  --set admissionWebhooks.certManager.enabled=true \
-  --set admissionWebhooks.timeoutSeconds=30 \
   --wait
 
 echo "Waiting for opentelemetry-operator to be ready..."
@@ -108,11 +107,29 @@ helm upgrade --install keycloak codecentric/keycloakx \
 #  --namespace $NAMESPACE \
 #  --wait
 
+# ----- Redis (Cache and Rate Limit) -----
+
+helm upgrade --install redis-cache bitnami/redis \
+  -f infrastructure/redis-values.yaml \
+  --version 23.2.2 \
+  --namespace $NAMESPACE \
+  --wait
+
+helm upgrade --install redis-rate-limiter bitnami/redis \
+  -f infrastructure/redis-values.yaml \
+  --version 23.2.2 \
+  --namespace $NAMESPACE \
+  --wait
+
 # ----- NGINX Ingress Controller -----
 
 helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   --version 4.13.3 \
-  --namespace $NAMESPACE
+  --namespace $NAMESPACE \
+  --wait
+
+echo "Waiting for ingress-nginx-controller-admission to be ready..."
+kubectl wait --for=create --timeout=120s service/ingress-nginx-controller-admission -n $NAMESPACE
 
 kubectl apply -f infrastructure/ingress.yaml
 

@@ -1,0 +1,9 @@
+auth:
+  existingSecret: redis-secret
+  existingSecretPasswordKey: redis-password
+
+sentinel:
+  enabled: true
+
+volumePermissions:
+  enabled: true

@@ -69,6 +69,11 @@ spring:
           jdbc:
             defaultConnectionValidation: LOCAL
             implicitStatementCacheSize: 200
+  data:
+    redis:
+      host: redis-cache
+      port: 6379
+      password: redis
   cache:
     type: redis
     redis:
@@ -146,7 +151,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8180/realms/is-stag/protocol/openid-connect/certs
+          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
       host: localhost
