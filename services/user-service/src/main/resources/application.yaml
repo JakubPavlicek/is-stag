@@ -36,7 +36,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://keycloak-http:8080/realms/is-stag/protocol/openid-connect/certs
+          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
   jackson:
     mapper:
       sort-properties-alphabetically: false
