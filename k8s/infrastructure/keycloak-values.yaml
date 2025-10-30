@@ -18,6 +18,21 @@ http:
 service:
   httpPort: 8080
 
+proxy:
+  enabled: false
+
+dbchecker:
+  enabled: true
+
+database:
+  vendor: postgres
+  hostname: keycloak-postgresql
+  port: 5432
+  database: keycloak
+  username: keycloak
+  existingSecret: keycloak-postgresql-secret
+  existingSecretKey: postgresql-user-password
+
 extraEnv: |
   # Keycloak admin credentials
   - name: KC_BOOTSTRAP_ADMIN_USERNAME

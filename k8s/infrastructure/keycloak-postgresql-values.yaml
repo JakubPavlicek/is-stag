@@ -1,0 +1,9 @@
+global:
+  postgresql:
+    auth:
+      database: keycloak
+      username: keycloak
+      existingSecret: keycloak-postgresql-secret
+      secretKeys:
+        adminPasswordKey: postgresql-admin-password
+        userPasswordKey: postgresql-user-password

@@ -7,6 +7,7 @@ NAMESPACE=is-stag
 
 # Add Helm repositories
 helm repo add jetstack https://charts.jetstack.io
+helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
@@ -18,6 +19,7 @@ helm repo update
 kubectl apply -f infrastructure/is-stag-namespace.yaml
 kubectl apply -f infrastructure/is-stag-database-config.yaml
 kubectl apply -f infrastructure/is-stag-database-secret.yaml
+kubectl apply -f infrastructure/keycloak-postgresql-secret.yaml
 
 # ----- Cert-Manager for TLS certificates -----
 
@@ -86,7 +88,13 @@ kubectl apply -f infrastructure/otel-instrumentation.yaml
 echo "Waiting for otel-collector to be ready..."
 kubectl wait --for=condition=available --timeout=120s deployment/otel-collector -n $NAMESPACE
 
-# ----- Keycloak -----
+# ----- Keycloak with PostgreSQL -----
+
+helm upgrade --install keycloak-postgresql bitnami/postgresql \
+  -f infrastructure/keycloak-postgresql-values.yaml \
+  --version 18.1.3 \
+  --namespace $NAMESPACE \
+  --wait
 
 helm upgrade --install keycloak codecentric/keycloakx \
   -f infrastructure/keycloak-values.yaml \
@@ -94,9 +102,6 @@ helm upgrade --install keycloak codecentric/keycloakx \
   --namespace $NAMESPACE \
   --wait
 
-#helm repo add bitnami https://charts.bitnami.com/bitnami
-#helm repo update
-#
 #helm upgrade --install keycloak bitnami/keycloak \
 #  -f infrastructure/keycloak-bitnami-values.yaml \
 #  --version 25.2.0 \
