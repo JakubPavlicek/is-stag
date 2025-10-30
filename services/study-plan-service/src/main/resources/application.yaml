@@ -65,9 +65,15 @@ spring:
             implicitStatementCacheSize: 200
   data:
     redis:
+      sentinel:
+        master: mymaster
+        nodes:
+          - redis-cache-node-0:26379
+          - redis-cache-node-1:26379
+          - redis-cache-node-2:26379
+        password: redis
       host: redis-cache
-      port: 6379
-      password: redis
+      port: 26379
   cache:
     type: redis
     redis:

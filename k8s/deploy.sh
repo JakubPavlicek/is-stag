@@ -21,6 +21,7 @@ kubectl apply -f infrastructure/is-stag-database-config.yaml
 kubectl apply -f infrastructure/is-stag-database-secret.yaml
 kubectl apply -f infrastructure/keycloak-postgresql-secret.yaml
 kubectl apply -f infrastructure/redis-secret.yaml
+kubectl apply -f infrastructure/ingress.yaml
 
 # ----- Cert-Manager for TLS certificates -----
 
@@ -127,11 +128,6 @@ helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   --version 4.13.3 \
   --namespace $NAMESPACE \
   --wait
-
-echo "Waiting for ingress-nginx-controller-admission to be ready..."
-kubectl wait --for=create --timeout=120s service/ingress-nginx-controller-admission -n $NAMESPACE
-
-kubectl apply -f infrastructure/ingress.yaml
 
 # Export External IP for Ingress
 #   minikube tunnel
