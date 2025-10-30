@@ -59,12 +59,9 @@ spring:
       sentinel:
         master: mymaster
         nodes:
-          - redis-cache-node-0:26379
-          - redis-cache-node-1:26379
-          - redis-cache-node-2:26379
+          - redis-cache:26379
         password: redis
-      host: redis-cache
-      port: 26379
+      password: redis
   cache:
     type: redis
     redis:

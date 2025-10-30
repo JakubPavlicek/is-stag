@@ -168,12 +168,9 @@ spring:
       sentinel:
         master: mymaster
         nodes:
-          - redis-rate-limiter-node-0:26379
-          - redis-rate-limiter-node-1:26379
-          - redis-rate-limiter-node-2:26379
+          - redis-rate-limiter:26379
         password: redis
-      host: redis-rate-limiter
-      port: 26379
+      password: redis
   webflux:
     problemdetails:
       enabled: true
