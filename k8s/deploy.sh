@@ -126,8 +126,7 @@ helm upgrade --install redis-rate-limiter bitnami/redis \
 
 helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   --version 4.13.3 \
-  --namespace $NAMESPACE \
-  --wait
+  --namespace $NAMESPACE
 
 # Export External IP for Ingress
 #   minikube tunnel

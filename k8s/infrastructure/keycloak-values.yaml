@@ -42,7 +42,7 @@ extraEnv: |
   
   # Tells Keycloak it’s behind a reverse proxy (Ingress)
   - name: KC_PROXY
-    value: "edge"
+    value: "passthrough"
   
   # Tells Keycloak to trust the X-Forwarded-* headers
   - name: KC_PROXY_HEADERS

@@ -6,8 +6,10 @@ server:
   service:
     servicePort: 9090
 
-  extraArgs:
-    web.enable-otlp-receiver:
+  extraFlags:
+    - web.enable-lifecycle
+    - web.enable-otlp-receiver
+    - web.enable-remote-write-receiver
 
   otlp:
     keep_identifying_resource_attributes: true

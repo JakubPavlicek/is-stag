@@ -9,6 +9,25 @@ adminPassword: admin
 readinessProbe:
   initialDelaySeconds: 20
 
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: 'prometheus'
+        type: file
+        disableDeletion: false
+        updateIntervalSeconds: 10
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/default
+
+dashboards:
+  default:
+    k6:
+      gnetId: 19665
+      revision: 3
+      datasource: Prometheus
+
 datasources:
   datasources.yaml:
     apiVersion: 1
