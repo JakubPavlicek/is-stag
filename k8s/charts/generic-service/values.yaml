@@ -6,6 +6,7 @@ deployment:
   annotations: {}
 
 image:
+  registry: ghcr.io
   repository: ""
   tag: ""
   pullPolicy: IfNotPresent
