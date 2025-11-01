@@ -5,6 +5,7 @@ on:
     paths:
       - 'services/**'
       - 'proto/**'
+      - '.github/workflows/backend-ci.yaml'
 
 jobs:
   protolint-lint-proto:
