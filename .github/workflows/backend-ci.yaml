@@ -94,7 +94,7 @@ jobs:
           cache: maven
 
       - name: Publish packages
-        run: mvn --batch-mode deploy
+        run: mvn -T 1C -DskipTests --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
