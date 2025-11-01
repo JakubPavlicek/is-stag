@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4.4.0
         with:
-          node-version: 24.10.0
+          node-version: 25.1.0
           cache: npm
           cache-dependency-path: client/package-lock.json
 
@@ -29,21 +29,14 @@ jobs:
       - name: Setup Buildpacks Pack
         uses: buildpacks/github-actions/setup-pack@v5.9.5
 
-      - name: Docker Login
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.5.0
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       # TODO: Change NODE_ENV to prod
 
       - name: Build Docker Image with Buildpacks
-        run: |
-          NAME=$(npm pkg get name | tr -d '"')
-          VER=$(npm pkg get version | tr -d '"')
-          IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/${NAME}
-          pack build ${IMAGE_NAME}:${VER} \
-            --builder heroku/builder:24 \
-            --buildpack heroku/nodejs \
-            --env NODE_ENV=dev \
-            --publish
+        run: npm run pack -- --publish

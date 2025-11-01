@@ -22,11 +22,11 @@
         <java-required-version>[25,)</java-required-version>
         <maven-required-version>[3.9.11,)</maven-required-version>
 
-        <!-- Docker -->
-        <!-- Default username for local builds; override in CI with -Ddocker.username=... -->
-        <docker.username>jakubpavlicek</docker.username>
-        <!-- Empty by default; override in CI with -Ddocker.password=... -->
-        <docker.password></docker.password>
+        <!-- GitHub Container Registry -->
+        <!-- Default username for local builds; override in CI with -Dgithub.username=... -->
+        <github.username>jakubpavlicek</github.username>
+        <!-- Empty by default; override in CI with -Dgithub.password=... -->
+        <github.password></github.password>
 
         <!-- SonarQube -->
         <sonar.organization>jakubpavlicek</sonar.organization>
@@ -228,18 +228,20 @@
                                 <buildpack>paketobuildpacks/health-checker:${buildpack-health-checker.version}</buildpack>
                             </buildpacks>
                             <env>
+                                <BP_OCI_SOURCE>https://github.com/JakubPavlicek/is-stag</BP_OCI_SOURCE>
                                 <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
                                 <BP_HEALTH_CHECKER_ENABLED>true</BP_HEALTH_CHECKER_ENABLED>
                                 <BP_SPRING_CLOUD_BINDINGS_DISABLED>true</BP_SPRING_CLOUD_BINDINGS_DISABLED>
                                 <BPL_JAVA_NMT_ENABLED>false</BPL_JAVA_NMT_ENABLED>
                                 <JAVA_TOOL_OPTIONS>-Duser.timezone=Europe/Prague</JAVA_TOOL_OPTIONS>
                             </env>
-                            <name>docker.io/${docker.username}/${project.artifactId}:${project.version}</name>
+                            <name>ghcr.io/${github.username}/${project.artifactId}:${project.version}</name>
                         </image>
                         <docker>
                             <publishRegistry>
-                                <username>${docker.username}</username>
-                                <password>${docker.password}</password>
+                                <url>https://ghcr.io</url>
+                                <username>${github.username}</username>
+                                <password>${github.password}</password>
                             </publishRegistry>
                         </docker>
                     </configuration>
