@@ -103,5 +103,5 @@ jobs:
         run: |
           mvn -B -T 1C -DskipTests package spring-boot:build-image \
             -Dspring-boot.build-image.publish=true \
-            -Ddocker.username=${{ secrets.GHCR_USERNAME }} \
-            -Ddocker.password=${{ secrets.GITHUB_TOKEN }}
+            -Dgithub.username=${{ secrets.GHCR_USERNAME }} \
+            -Dgithub.password=${{ secrets.GITHUB_TOKEN }}
