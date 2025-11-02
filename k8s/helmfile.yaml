@@ -23,10 +23,10 @@ repositories:
 environments:
   qa:
     values:
-      - values-qa.yaml
+      - namespace: is-stag-qa
   prod:
     values:
-      - values-prod.yaml
+      - namespace: is-stag-prod
 
 hooks:
   - events: [ "prepare" ]
@@ -98,6 +98,7 @@ releases:
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/prometheus/values.yaml
+      - infrastructure/observability/prometheus/values-{{ .Environment.Name }}.yaml
 
   - name: loki
     chart: grafana/loki
@@ -130,42 +131,21 @@ releases:
     hooks:
       - events: [ "postsync" ]
         showlogs: true
-        command: "kubectl"
+        command: "bash"
         args:
-          - "wait"
-          - "--for=condition=available"
-          - "--timeout=300s"
-          - "deployment/opentelemetry-operator"
-          - "--namespace={{ .Environment.Values.namespace }}"
-
-      - events: [ "postsync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "wait"
-          - "--for=create"
-          - "--timeout=300s"
-          - "service/opentelemetry-operator-webhook"
-          - "--namespace={{ .Environment.Values.namespace }}"
-
-      - events: [ "postsync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "infrastructure/observability/opentelemetry/otel-*.yaml"
-          - "--namespace={{ .Environment.Values.namespace }}"
-
-      - events: [ "postsync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "wait"
-          - "--for=condition=available"
-          - "--timeout=120s"
-          - "deployment/otel-collector"
-          - "--namespace={{ .Environment.Values.namespace }}"
+          - "-c"
+          - |
+            set -e
+            kubectl wait --for=condition=available --timeout=300s deployment/opentelemetry-operator -n {{ .Environment.Values.namespace }}
+            echo "Waiting for webhook to be ready..."
+            until kubectl get endpoints opentelemetry-operator-webhook -n {{ .Environment.Values.namespace }} -o jsonpath='{.subsets}' | grep -q "addresses"; do
+              echo "Webhook endpoint not ready yet, sleeping 5s..."
+              sleep 5
+            done
+            for f in infrastructure/observability/opentelemetry/otel-*.yaml; do
+              kubectl apply -f "$f" -n {{ .Environment.Values.namespace }};
+            done
+            kubectl wait --for=condition=available --timeout=120s deployment/otel-collector -n {{ .Environment.Values.namespace }}
 
   # ========================================
   # Databases
@@ -190,6 +170,7 @@ releases:
     chart: bitnami/redis
     version: 23.2.2
     namespace: "{{ .Environment.Values.namespace }}"
+    timeout: 600
     values:
       - infrastructure/database/redis/cache-values.yaml
     hooks:
@@ -206,6 +187,7 @@ releases:
     chart: bitnami/redis
     version: 23.2.2
     namespace: "{{ .Environment.Values.namespace }}"
+    timeout: 600
     values:
       - infrastructure/database/redis/rate-limiter-values.yaml
     hooks:
@@ -257,6 +239,7 @@ releases:
   - name: react-client
     chart: ./charts/client
     namespace: "{{ .Environment.Values.namespace }}"
+    wait: false
     missingFileHandler: Warn
     values:
       - infrastructure/is-stag-app/react-client/values.yaml
@@ -268,6 +251,7 @@ releases:
   - name: api-gateway
     chart: ./charts/backend-service
     namespace: "{{ .Environment.Values.namespace }}"
+    wait: false
     missingFileHandler: Warn
     values:
       - infrastructure/is-stag-app/api-gateway/values.yaml
@@ -277,10 +261,21 @@ releases:
       - redis-rate-limiter
       - keycloak
       - ingress-nginx
+    hooks:
+      - events: [ "presync" ]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "wait"
+          - "--for=condition=available"
+          - "--timeout=300s"
+          - "deployment/otel-collector"
+          - "--namespace={{ .Environment.Values.namespace }}"
 
   - name: codelist-service
     chart: ./charts/backend-service
     namespace: "{{ .Environment.Values.namespace }}"
+    wait: false
     missingFileHandler: Warn
     values:
       - infrastructure/is-stag-app/codelist-service/values.yaml
@@ -289,10 +284,21 @@ releases:
       - opentelemetry-operator
       - redis-cache
       - keycloak
+    hooks:
+      - events: [ "presync" ]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "wait"
+          - "--for=condition=available"
+          - "--timeout=300s"
+          - "deployment/otel-collector"
+          - "--namespace={{ .Environment.Values.namespace }}"
 
   - name: student-service
     chart: ./charts/backend-service
     namespace: "{{ .Environment.Values.namespace }}"
+    wait: false
     missingFileHandler: Warn
     values:
       - infrastructure/is-stag-app/student-service/values.yaml
@@ -301,10 +307,21 @@ releases:
       - opentelemetry-operator
       - redis-cache
       - keycloak
+    hooks:
+      - events: [ "presync" ]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "wait"
+          - "--for=condition=available"
+          - "--timeout=300s"
+          - "deployment/otel-collector"
+          - "--namespace={{ .Environment.Values.namespace }}"
 
   - name: study-plan-service
     chart: ./charts/backend-service
     namespace: "{{ .Environment.Values.namespace }}"
+    wait: false
     missingFileHandler: Warn
     values:
       - infrastructure/is-stag-app/study-plan-service/values.yaml
@@ -313,10 +330,21 @@ releases:
       - opentelemetry-operator
       - redis-cache
       - keycloak
+    hooks:
+      - events: [ "presync" ]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "wait"
+          - "--for=condition=available"
+          - "--timeout=300s"
+          - "deployment/otel-collector"
+          - "--namespace={{ .Environment.Values.namespace }}"
 
   - name: user-service
     chart: ./charts/backend-service
     namespace: "{{ .Environment.Values.namespace }}"
+    wait: false
     missingFileHandler: Warn
     values:
       - infrastructure/is-stag-app/user-service/values.yaml
@@ -325,3 +353,13 @@ releases:
       - opentelemetry-operator
       - redis-cache
       - keycloak
+    hooks:
+      - events: [ "presync" ]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "wait"
+          - "--for=condition=available"
+          - "--timeout=300s"
+          - "deployment/otel-collector"
+          - "--namespace={{ .Environment.Values.namespace }}"

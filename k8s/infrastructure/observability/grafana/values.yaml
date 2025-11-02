@@ -14,7 +14,7 @@ dashboardProviders:
   dashboardproviders.yaml:
     apiVersion: 1
     providers:
-      - name: 'prometheus'
+      - name: 'default'
         type: file
         disableDeletion: false
         updateIntervalSeconds: 10
@@ -28,6 +28,25 @@ dashboards:
       gnetId: 19665
       revision: 3
       datasource: Prometheus
+    opentelemetry-collector:
+      gnetId: 15983
+      revision: 29
+    opentelemetry-http-services:
+      gnetId: 21587
+      revision: 2
+      datasource:
+        - name: DS_PROMETHEUS
+          type: datasource
+          pluginId: prometheus
+          value: prometheus
+        - name: DS_LOKI
+          type: datasource
+          pluginId: loki
+          value: loki
+        - name: DS_TEMPO
+          type: datasource
+          pluginId: tempo
+          value: tempo
 
 datasources:
   datasources.yaml:
