@@ -1,0 +1,4 @@
+service:
+  ports:
+    httpNodePort: 30050
+    grpcNodePort: 30051

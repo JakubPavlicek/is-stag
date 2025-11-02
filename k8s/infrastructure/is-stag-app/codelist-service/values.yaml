@@ -1,0 +1,23 @@
+name: codelist-service
+replicaCount: 1
+deployment:
+  annotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
+image:
+  repository: jakubpavlicek/codelist-service
+  tag: 0.0.1
+service:
+  ports:
+    http: 8010
+    grpc: 9010
+database:
+  enabled: true
+probes:
+  readiness:
+    path: /actuator/health/readiness
+    initialDelaySeconds: 50
+    periodSeconds: 20
+  liveness:
+    path: /actuator/health/liveness
+    initialDelaySeconds: 50
+    periodSeconds: 20

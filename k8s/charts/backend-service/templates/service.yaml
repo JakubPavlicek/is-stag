@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: {{ .Values.name }}
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.ports.http }}
+      targetPort: http
+      name: http
+      {{ if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.ports.httpNodePort }}
+      {{ end }}
+    {{ if .Values.service.ports.grpc }}
+    - port: {{ .Values.service.ports.grpc }}
+      targetPort: grpc
+      name: grpc
+      {{ if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.ports.grpcNodePort }}
+      {{ end }}
+    {{ end }}

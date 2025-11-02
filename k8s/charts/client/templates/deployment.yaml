@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  template:
+    metadata:
+      name: {{ .Values.name }}
+      namespace: {{ .Release.Namespace }}
+      labels:
+        app: {{ .Values.name }}
+      annotations:
+        {{ toYaml .Values.deployment.annotations | indent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.name }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.ports.http }}
+              name: http
+          env:
+            {{ if .Values.keycloak.enabled }}
+            - name: VITE_KEYCLOAK_URL
+              value: {{ .Values.keycloak.url }}
+            - name: VITE_KEYCLOAK_REALM
+              value: {{ .Values.keycloak.realm }}
+            {{ end }}
+          {{ with .Values.probes }}
+          readinessProbe:
+            httpGet:
+              path: {{ .readiness.path }}
+              port: http
+            initialDelaySeconds: {{ .readiness.initialDelaySeconds }}
+            periodSeconds: {{ .readiness.periodSeconds }}
+          livenessProbe:
+            httpGet:
+              path: {{ .liveness.path }}
+              port: http
+            initialDelaySeconds: {{ .liveness.initialDelaySeconds }}
+            periodSeconds: {{ .liveness.periodSeconds }}
+          {{ end }}

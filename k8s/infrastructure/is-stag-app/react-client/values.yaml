@@ -1,0 +1,21 @@
+name: react-client
+replicaCount: 1
+image:
+  repository: jakubpavlicek/react-client
+  tag: 0.0.1
+service:
+  ports:
+    http: 5173
+keycloak:
+  enabled: true
+  url: https://is-stag.cz/auth
+  realm: is-stag
+probes:
+  readiness:
+    path: /
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  liveness:
+    path: /
+    initialDelaySeconds: 45
+    periodSeconds: 10

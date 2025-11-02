@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.name }}-database-config
+  namespace: {{ .Release.Namespace }}
+data:
+  SPRING_DATASOURCE_URL: {{ .Values.database.url | quote }}

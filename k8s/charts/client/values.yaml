@@ -1,0 +1,47 @@
+name: react-client
+
+replicaCount: 1
+
+deployment:
+  annotations: {}
+
+image:
+  registry: ghcr.io
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  ports:
+    http: 5173
+    httpNodePort: null
+
+# Enable Keycloak config
+keycloak:
+  enabled: false
+  url: https://is-stag.cz/auth
+  realm: is-stag
+
+probes:
+  readiness:
+    path: /
+    initialDelaySeconds: 10
+    periodSeconds: 5
+  liveness:
+    path: /
+    initialDelaySeconds: 15
+    periodSeconds: 10
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
