@@ -47,6 +47,9 @@ dashboards:
           type: datasource
           pluginId: tempo
           value: tempo
+    ingress-nginx:
+      gnetId: 21336
+      revision: 1
 
 datasources:
   datasources.yaml:
