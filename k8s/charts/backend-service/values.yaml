@@ -19,9 +19,11 @@ service:
     httpNodePort: null
     grpcNodePort: null
 
-# Enable database config
+spring:
+  profiles:
+    active: ""
+
 database:
-  enabled: false
   url: "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=atreus.zcu.cz)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=pelops.zcu.cz)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=DEMO_SERVICE)(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"
   username: "install"
   password: "demo"

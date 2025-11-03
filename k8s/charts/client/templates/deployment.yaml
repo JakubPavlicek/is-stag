@@ -26,13 +26,9 @@ spec:
           ports:
             - containerPort: {{ .Values.service.ports.http }}
               name: http
-          env:
-            {{ if .Values.keycloak.enabled }}
-            - name: VITE_KEYCLOAK_URL
-              value: {{ .Values.keycloak.url }}
-            - name: VITE_KEYCLOAK_REALM
-              value: {{ .Values.keycloak.realm }}
-            {{ end }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.name }}-config
           {{ with .Values.probes }}
           readinessProbe:
             httpGet:

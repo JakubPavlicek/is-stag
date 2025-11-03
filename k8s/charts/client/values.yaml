@@ -17,9 +17,7 @@ service:
     http: 5173
     httpNodePort: null
 
-# Enable Keycloak config
 keycloak:
-  enabled: false
   url: https://is-stag.cz/auth
   realm: is-stag
 
