@@ -4,11 +4,6 @@ server:
     enabled: true
   compression:
     enabled: true
-#  ssl:
-#    key-store: classpath:gateway-keystore.p12
-#    key-store-type: PKCS12
-#    key-store-password: ${API_GATEWAY_SSL_KEY_STORE_PASSWORD}
-#    key-alias: api-gateway
 
 logging:
   level:
@@ -45,11 +40,6 @@ spring:
   jackson:
     mapper:
       sort-properties-alphabetically: false
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
   cloud:
     gateway:
       server:
@@ -163,14 +153,6 @@ spring:
 #      read-timeout: 10s
 #      imperative:
 #        factory: http_components
-  data:
-    redis:
-      sentinel:
-        master: mymaster
-        nodes:
-          - redis-rate-limiter:26379
-        password: redis
-      password: redis
   webflux:
     problemdetails:
       enabled: true
@@ -238,19 +220,58 @@ springdoc:
 spring:
   config:
     activate:
+      on-profile: prod
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
+  data:
+    redis:
+      sentinel:
+        master: mymaster
+        nodes:
+          - redis-rate-limiter:26379
+        password: redis
+      password: redis
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: qa
+  data:
+    redis:
+      sentinel:
+        master: mymaster
+        nodes:
+          - redis-rate-limiter:26379
+        password: redis
+      password: redis
+
+---
+
+spring:
+  config:
+    activate:
       on-profile: dev
   security:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
+          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
+#          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
-      host: localhost
-      port: 6380
+      host: redis-rate-limiter
+#      host: localhost
+      port: 6379
+#      port: 6380
+      password: redis
 
-API-GATEWAY_ADDRESS: http://localhost:8100
-CODELIST-SERVICE_ADDRESS: http://localhost:8010
-STUDENT-SERVICE_ADDRESS: http://localhost:8030
-STUDY-PLAN-SERVICE_ADDRESS: http://localhost:8050
-USER-SERVICE_ADDRESS: http://localhost:8020
+#API-GATEWAY_ADDRESS: http://localhost:8100
+#CODELIST-SERVICE_ADDRESS: http://localhost:8010
+#STUDENT-SERVICE_ADDRESS: http://localhost:8030
+#STUDY-PLAN-SERVICE_ADDRESS: http://localhost:8050
+#USER-SERVICE_ADDRESS: http://localhost:8020

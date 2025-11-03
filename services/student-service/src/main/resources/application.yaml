@@ -31,11 +31,6 @@ grpc:
 spring:
   application:
     name: student-service
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
   jackson:
     mapper:
       sort-properties-alphabetically: false
@@ -69,14 +64,6 @@ spring:
           jdbc:
             defaultConnectionValidation: LOCAL
             implicitStatementCacheSize: 200
-  data:
-    redis:
-      sentinel:
-        master: mymaster
-        nodes:
-          - redis-cache:26379
-        password: redis
-      password: redis
   cache:
     type: redis
     redis:
@@ -147,19 +134,51 @@ springdoc:
 spring:
   config:
     activate:
+      on-profile: prod
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
+  data:
+    redis:
+      sentinel:
+        master: mymaster
+        nodes:
+          - redis-cache:26379
+        password: redis
+      password: redis
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: qa
+  data:
+    redis:
+      sentinel:
+        master: mymaster
+        nodes:
+          - redis-cache:26379
+        password: redis
+      password: redis
+
+---
+
+spring:
+  config:
+    activate:
       on-profile: dev
   security:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
+          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
+#          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
-      host: localhost
-
-grpc:
-  client:
-    user-service:
-      address: static://localhost:9020
-    study-plan-service:
-      address: static://localhost:9050
+      host: redis-cache
+#      host: localhost
+      port: 6379
+      password: redis

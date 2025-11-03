@@ -16,11 +16,6 @@ grpc:
 spring:
   application:
     name: codelist-service
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
   jackson:
     mapper:
       sort-properties-alphabetically: false
@@ -86,18 +81,51 @@ springdoc:
 spring:
   config:
     activate:
+      on-profile: prod
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
+  data:
+    redis:
+      sentinel:
+        master: mymaster
+        nodes:
+          - redis-cache:26379
+        password: redis
+      password: redis
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: qa
+  data:
+    redis:
+      sentinel:
+        master: mymaster
+        nodes:
+          - redis-cache:26379
+        password: redis
+      password: redis
+
+---
+
+spring:
+  config:
+    activate:
       on-profile: dev
   security:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
-  jpa:
-    properties:
-      hibernate:
-        search:
-          backend:
-            hosts: localhost:9200
+          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
+#          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
-      host: localhost
+      host: redis-cache
+#      host: localhost
+      port: 6379
+      password: redis

@@ -55,7 +55,6 @@ services:
     image: bitnami/redis
     environment:
       REDIS_PASSWORD: redis
-      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -74,7 +73,6 @@ services:
     image: bitnami/redis
     environment:
       REDIS_PASSWORD: redis
-      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -89,7 +87,7 @@ services:
     profiles:
       - prod
     container_name: react-client
-    image: jakubpavlicek/react-client:0.0.1
+    image: ghcr.io/jakubpavlicek/react-client:0.0.1
     pull_policy: never
     environment:
       VITE_KEYCLOAK_URL: http://localhost:8180/auth/
@@ -108,13 +106,14 @@ services:
     profiles:
       - prod
     container_name: api-gateway
-    image: jakubpavlicek/api-gateway:0.0.1
+    image: ghcr.io/jakubpavlicek/api-gateway:0.0.1
     pull_policy: never
     ports:
       - "8100:8100"
     env_file:
       - .env
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       BP_HEALTH_CHECKER_ENABLED: false
       THC_PATH: /actuator/health
       THC_PORT: 8100
@@ -145,11 +144,12 @@ services:
     profiles:
       - prod
     container_name: student-service
-    image: jakubpavlicek/student-service:0.0.1
+    image: ghcr.io/jakubpavlicek/student-service:0.0.1
     pull_policy: never
     env_file:
       - .env
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
@@ -177,11 +177,12 @@ services:
     profiles:
       - prod
     container_name: study-plan-service
-    image: jakubpavlicek/study-plan-service:0.0.1
+    image: ghcr.io/jakubpavlicek/study-plan-service:0.0.1
     pull_policy: never
     env_file:
       - .env
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
@@ -209,11 +210,12 @@ services:
     profiles:
       - prod
     container_name: user-service
-    image: jakubpavlicek/user-service:0.0.1
+    image: ghcr.io/jakubpavlicek/user-service:0.0.1
     pull_policy: never
     env_file:
       - .env
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
@@ -241,11 +243,12 @@ services:
     profiles:
       - prod
     container_name: codelist-service
-    image: jakubpavlicek/codelist-service:0.0.1
+    image: ghcr.io/jakubpavlicek/codelist-service:0.0.1
     pull_policy: never
     env_file:
       - .env
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
