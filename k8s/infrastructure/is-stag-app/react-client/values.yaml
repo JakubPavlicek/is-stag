@@ -13,9 +13,9 @@ keycloak:
 probes:
   readiness:
     path: /
-    initialDelaySeconds: 30
+    initialDelaySeconds: 20
     periodSeconds: 10
   liveness:
     path: /
-    initialDelaySeconds: 45
+    initialDelaySeconds: 30
     periodSeconds: 10

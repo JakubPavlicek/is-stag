@@ -45,10 +45,10 @@
         <protobuf-java.version>4.33.0</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
         <protovalidate.version>1.0.1</protovalidate.version>
-        <protobuf-maven-plugin.version>4.0.1</protobuf-maven-plugin.version>
+        <protobuf-maven-plugin.version>4.0.2</protobuf-maven-plugin.version>
 
         <!-- Hibernate ORM Processor for JPA Metamodel generation -->
-        <hibernate-processor.version>7.1.3.Final</hibernate-processor.version>
+        <hibernate-processor.version>7.1.6.Final</hibernate-processor.version>
 
         <!-- Tools -->
         <httpclient5.version>5.6-alpha1</httpclient5.version>
@@ -60,7 +60,7 @@
         <lombok.version>1.18.42</lombok.version>
 
         <!-- Cloud Native Buildpacks -->
-        <image.builder.version>0.0.71</image.builder.version>
+        <image.builder.version>0.0.75</image.builder.version>
         <buildpack-java.version>20.1.0</buildpack-java.version>
         <buildpack-health-checker.version>2.11.0</buildpack-health-checker.version>
     </properties>
@@ -241,7 +241,7 @@
                                 <BP_HEALTH_CHECKER_ENABLED>true</BP_HEALTH_CHECKER_ENABLED>
                                 <BP_SPRING_CLOUD_BINDINGS_DISABLED>true</BP_SPRING_CLOUD_BINDINGS_DISABLED>
                                 <BPL_JAVA_NMT_ENABLED>false</BPL_JAVA_NMT_ENABLED>
-                                <JAVA_TOOL_OPTIONS>-Duser.timezone=Europe/Prague</JAVA_TOOL_OPTIONS>
+                                <JAVA_TOOL_OPTIONS>-XX:+UseCompactObjectHeaders</JAVA_TOOL_OPTIONS>
                             </env>
                             <name>ghcr.io/${github.username}/${project.artifactId}:${project.version}</name>
                         </image>
