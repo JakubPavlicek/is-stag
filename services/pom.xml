@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0-M3</version>
+        <version>4.0.0-RC2</version>
         <relativePath /> <!-- lookup parent from a repository -->
     </parent>
 
@@ -36,8 +36,8 @@
         <maven-compiler.version>3.14.1</maven-compiler.version>
 
         <!-- Spring -->
-        <spring-cloud.version>2025.1.0-M4</spring-cloud.version>
-        <springdoc.version>3.0.0-M1</springdoc.version>
+        <spring-cloud.version>2025.1.0-SNAPSHOT</spring-cloud.version>
+        <springdoc.version>3.0.0-RC1</springdoc.version>
         <oracle.jdbc.version>23.26.0.0.0</oracle.jdbc.version>
 
         <!-- gRPC -->
@@ -86,6 +86,20 @@
             <url>https://maven.pkg.github.com/JakubPavlicek/is-stag</url>
         </repository>
     </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -241,7 +255,7 @@
                                 <BP_HEALTH_CHECKER_ENABLED>true</BP_HEALTH_CHECKER_ENABLED>
                                 <BP_SPRING_CLOUD_BINDINGS_DISABLED>true</BP_SPRING_CLOUD_BINDINGS_DISABLED>
                                 <BPL_JAVA_NMT_ENABLED>false</BPL_JAVA_NMT_ENABLED>
-                                <JAVA_TOOL_OPTIONS>-XX:+UseCompactObjectHeaders</JAVA_TOOL_OPTIONS>
+                                <JAVA_TOOL_OPTIONS>-XX:+UseCompactObjectHeaders --sun-misc-unsafe-memory-access=allow</JAVA_TOOL_OPTIONS>
                             </env>
                             <name>ghcr.io/${github.username}/${project.artifactId}:${project.version}</name>
                         </image>

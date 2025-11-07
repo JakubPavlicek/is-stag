@@ -9,9 +9,7 @@ import net.devh.boot.grpc.server.advice.GrpcExceptionHandler;
 @GrpcAdvice
 public class GlobalGrpcExceptionHandler {
 
-    @GrpcExceptionHandler({
-        RuntimeException.class,
-    })
+    @GrpcExceptionHandler(RuntimeException.class)
     public Status handleRuntimeException(RuntimeException e) {
         log.warn("gRPC request failed: {}", e.getMessage());
         return Status.INTERNAL.withDescription(e.getMessage());

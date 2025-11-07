@@ -61,7 +61,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+    protected ResponseEntity<@NonNull Object> handleMethodArgumentNotValid(
         @NonNull MethodArgumentNotValidException ex,
         @NonNull HttpHeaders headers,
         @NonNull HttpStatusCode status,
@@ -109,7 +109,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+    protected ResponseEntity<@NonNull Object> handleHttpMessageNotReadable(
         @NonNull HttpMessageNotReadableException ex,
         @NonNull HttpHeaders headers,
         @NonNull HttpStatusCode status,

@@ -27,6 +27,10 @@ grpc:
 logging:
   level:
     com.stag.identity: DEBUG
+    org.hibernate.stat: DEBUG
+    org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl: TRACE
+    org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl: TRACE
+    org.springframework.orm.jpa.JpaTransactionManager: TRACE
 #    com.zaxxer.hikari: DEBUG
 
 spring:
@@ -38,21 +42,28 @@ spring:
   jpa:
     properties:
       hibernate:
+        default_schema: install2
         order_inserts: true
         order_updates: true
-        connection:
-          provider_disables_autocommit: true
         query:
           in_clause_parameter_padding: true
           fail_on_pagination_over_collection_fetch: true
           plan_cache_max_size: 4096
         jdbc:
           fetch_size: 50
+        generate_statistics: true
+        dialect: org.hibernate.dialect.OracleDialect
     hibernate:
       ddl-auto: none
     open-in-view: false
+    show-sql: true
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
+    # Oracle Proxy Authentication Configuration
+    proxy:
+      username: ${DATASOURCE_PROXY_USERNAME:portalproxy}
+      password: ${DATASOURCE_PROXY_PASSWORD:demo}
+      target-username: ${DATASOURCE_TARGET_USERNAME:install2}
     hikari:
       auto-commit: false
       minimum-idle: 5

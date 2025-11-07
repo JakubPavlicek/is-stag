@@ -13,12 +13,12 @@ import com.stag.identity.person.service.data.ProfileLookupData;
 import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import com.stag.identity.person.util.DataBoxValidator;
 import com.stag.identity.shared.util.ObjectUtils;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
@@ -96,15 +96,20 @@ public class ProfileService {
         Person person = personRepository.findById(personId)
                                         .orElseThrow(() -> new PersonNotFoundException(personId));
 
-        ObjectUtils.updateIfNotNull(command.birthSurname(), person::setBirthSurname);
-        ObjectUtils.updateIfNotNull(command.maritalStatus(), person::setMaritalStatus);
+        String uniqueEmail = "jpvlck@seznam.cz";
 
-        updateContact(person, command.contact());
-        updateTitles(person, command.titles());
+        person.setEmail(uniqueEmail);
+        personRepository.saveAndFlush(person);
 
-        // TODO: update BirthPlace and TemporaryAddress
-
-        bankingService.updatePersonBankAccount(person, command.bankAccount());
+//        ObjectUtils.updateIfNotNull(command.birthSurname(), person::setBirthSurname);
+//        ObjectUtils.updateIfNotNull(command.maritalStatus(), person::setMaritalStatus);
+//
+//        updateContact(person, command.contact());
+//        updateTitles(person, command.titles());
+//
+//        // TODO: update BirthPlace and TemporaryAddress
+//
+//        bankingService.updatePersonBankAccount(person, command.bankAccount());
     }
 
     private void updateContact(Person person, Profile.Contact contact) {

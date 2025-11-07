@@ -8,6 +8,7 @@ data/
 *.p12
 .env
 .env.**
+**/bin
 
 ### STS ###
 .apt_generated
