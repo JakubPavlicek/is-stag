@@ -82,21 +82,6 @@ spring:
                 - name: Retry
                   args:
                     <<: *retry_args
-            - id: study-plan-service
-              uri: ${STUDY-PLAN-SERVICE_ADDRESS:http://study-plan-service:8050}
-              predicates:
-                - Path=/api/v1/study-plan/**
-              filters:
-                - name: RequestRateLimiter
-                  args:
-                    <<: *request_rate_limiter_args
-                - name: CircuitBreaker
-                  args:
-                    <<: *circuitbreaker_args
-                    name: study-plan-service
-                - name: Retry
-                  args:
-                    <<: *retry_args
             - id: user-service
               uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
               predicates:
@@ -132,12 +117,6 @@ spring:
                 - Path=/api/student-service/**
               filters:
                 - RewritePath=/api/student-service/(?<segment>.*), /$\{segment}
-            - id: study-plan-service-openapi
-              uri: ${STUDY-PLAN-SERVICE_ADDRESS:http://study-plan-service:8050}
-              predicates:
-                - Path=/api/study-plan-service/**
-              filters:
-                - RewritePath=/api/study-plan-service/(?<segment>.*), /$\{segment}
             - id: user-service-openapi
               uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
               predicates:
@@ -179,8 +158,6 @@ resilience4j:
         base-config: default
       student-service:
         base-config: default
-      study-plan-service:
-        base-config: default
       user-service:
         base-config: default
   timelimiter:
@@ -206,8 +183,6 @@ springdoc:
         url: /api/codelist-service/openapi.yaml
       - name: Student Service
         url: /api/student-service/openapi.yaml
-      - name: Study Plan Service
-        url: /api/study-plan-service/openapi.yaml
       - name: User Service
         url: /api/user-service/openapi.yaml
     urls-primary-name: Student Service
@@ -295,18 +270,6 @@ spring:
                 - name: Retry
                   args:
                     <<: *retry_args
-            - id: study-plan-service
-              uri: ${STUDY-PLAN-SERVICE_ADDRESS:http://study-plan-service:8050}
-              predicates:
-                - Path=/api/v1/study-plan/**
-              filters:
-                - name: CircuitBreaker
-                  args:
-                    <<: *circuitbreaker_args
-                    name: study-plan-service
-                - name: Retry
-                  args:
-                    <<: *retry_args
             - id: user-service
               uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
               predicates:
@@ -339,12 +302,6 @@ spring:
                 - Path=/api/student-service/**
               filters:
                 - RewritePath=/api/student-service/(?<segment>.*), /$\{segment}
-            - id: study-plan-service-openapi
-              uri: ${STUDY-PLAN-SERVICE_ADDRESS:http://study-plan-service:8050}
-              predicates:
-                - Path=/api/study-plan-service/**
-              filters:
-                - RewritePath=/api/study-plan-service/(?<segment>.*), /$\{segment}
             - id: user-service-openapi
               uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
               predicates:
@@ -375,5 +332,4 @@ spring:
 #API-GATEWAY_ADDRESS: http://localhost:8100
 #CODELIST-SERVICE_ADDRESS: http://localhost:8010
 #STUDENT-SERVICE_ADDRESS: http://localhost:8030
-#STUDY-PLAN-SERVICE_ADDRESS: http://localhost:8050
 #USER-SERVICE_ADDRESS: http://localhost:8020

@@ -108,7 +108,7 @@ releases:
 
   - name: prometheus
     chart: prometheus-community/prometheus
-    version: 27.44.0
+    version: 27.44.1
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/prometheus/values.yaml
@@ -161,7 +161,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: bitnami/postgresql
-    version: 18.1.4
+    version: 18.1.7
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/database/keycloak-postgresql/values.yaml
@@ -177,7 +177,7 @@ releases:
 
   - name: redis-cache
     chart: bitnami/redis
-    version: 23.2.6
+    version: 23.2.12
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     values:
@@ -194,7 +194,7 @@ releases:
 
   - name: redis-rate-limiter
     chart: bitnami/redis
-    version: 23.2.6
+    version: 23.2.12
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     values:

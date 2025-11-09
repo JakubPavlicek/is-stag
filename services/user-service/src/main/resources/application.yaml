@@ -27,10 +27,10 @@ grpc:
 logging:
   level:
     com.stag.identity: DEBUG
-    org.hibernate.stat: DEBUG
-    org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl: TRACE
-    org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl: TRACE
-    org.springframework.orm.jpa.JpaTransactionManager: TRACE
+#    org.hibernate.stat: DEBUG
+#    org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl: TRACE
+#    org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl: TRACE
+#    org.springframework.orm.jpa.JpaTransactionManager: TRACE
 #    com.zaxxer.hikari: DEBUG
 
 spring:
