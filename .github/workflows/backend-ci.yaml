@@ -15,14 +15,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Set up protolint
-        run: |
-          PROTOLINT_VERSION="0.56.4"
-          PB_REL="https://github.com/yoheimuta/protolint/releases/download/v${PROTOLINT_VERSION}/protolint_${PROTOLINT_VERSION}_linux_amd64.tar.gz"
-          curl -sSL "${PB_REL}" | tar -xz
-          sudo mv protolint /usr/local/bin/
-          protolint --version
-
       - name: Run protolint
         run: protolint lint proto
 
@@ -35,11 +27,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Install Vacuum
-        run: |
-          curl -fsSL https://quobix.com/scripts/install_vacuum.sh | sh
-          vacuum version
-
       - name: Run Vacuum Lint
         working-directory: services
         run: vacuum lint */src/main/resources/static/openapi.yaml --fail-severity error --min-score 95
@@ -50,13 +37,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
-
-      - name: Setup JDK 25
-        uses: actions/setup-java@v5.0.0
-        with:
-          distribution: liberica
-          java-version: 25
-          cache: maven
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4.2.4
@@ -88,13 +68,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Setup JDK 25
-        uses: actions/setup-java@v5.0.0
-        with:
-          distribution: liberica
-          java-version: 25
-          cache: maven
-
       - name: Publish packages
         run: mvn -T 1C -DskipTests --batch-mode deploy
         env:
@@ -117,24 +90,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Setup docker (missing on MacOS)
-        if: runner.os == 'macos'
-        run: |
-          brew install docker
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.6.0
         with:
           registry: ghcr.io
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup JDK 25
-        uses: actions/setup-java@v5.0.0
-        with:
-          distribution: liberica
-          java-version: 25
-          cache: maven
 
       - name: Build and Push Spring Boot Docker Images
         run: |

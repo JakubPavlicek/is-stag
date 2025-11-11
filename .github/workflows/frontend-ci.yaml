@@ -19,19 +19,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Setup Node.js Environment
-        uses: actions/setup-node@v4.4.0
-        with:
-          node-version: 25.1.0
-          cache: npm
-          cache-dependency-path: client/package-lock.json
-
-      - name: Setup Buildpacks Tools
-        uses: buildpacks/github-actions/setup-tools@v5.9.5
-
-      - name: Setup Buildpacks Pack
-        run: brew install buildpacks/tap/pack
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.6.0
         with:
