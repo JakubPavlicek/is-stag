@@ -10,6 +10,9 @@ admin:
 readinessProbe:
   initialDelaySeconds: 20
 
+plugins:
+  - redis-datasource
+
 dashboardProviders:
   dashboardproviders.yaml:
     apiVersion: 1
@@ -21,6 +24,14 @@ dashboardProviders:
         editable: true
         options:
           path: /var/lib/grafana/dashboards/default
+      - name: 'redis'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/plugins/redis-datasource/dashboards/redis.json
 
 dashboards:
   default:
@@ -50,6 +61,11 @@ dashboards:
     ingress-nginx:
       gnetId: 21336
       revision: 1
+    jvm-overview:
+      gnetId: 18812
+      revision: 4
+    redis:
+      file: /var/lib/grafana/plugins/redis-datasource/dashboards/redis.json
 
 datasources:
   datasources.yaml:
@@ -104,3 +120,41 @@ datasources:
             - name: trace_id
               datasourceUid: tempo
               urlDisplayLabel: "Trace: $${__value.raw}"
+
+      - name: Redis Cache
+        type: redis-datasource
+        uid: redis-cache
+        url: redis://redis-cache:26379
+        editable: true
+        jsonData:
+          client: sentinel
+          sentinelName: mymaster
+          sentinelAcl: false
+          poolSize: 5
+          timeout: 10
+          pipelineWindow: 0
+          pingInterval: 0
+          tlsAuth: false
+          tlsSkipVerify: false
+        secureJsonData:
+          password: redis
+          sentinelPassword: redis
+
+      - name: Redis Rate Limiter
+        type: redis-datasource
+        uid: redis-rate-limiter
+        url: redis://redis-rate-limiter:26379
+        editable: true
+        jsonData:
+          client: sentinel
+          sentinelName: mymaster
+          sentinelAcl: false
+          poolSize: 5
+          timeout: 10
+          pipelineWindow: 0
+          pingInterval: 0
+          tlsAuth: false
+          tlsSkipVerify: false
+        secureJsonData:
+          password: redis
+          sentinelPassword: redis

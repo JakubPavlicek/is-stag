@@ -87,81 +87,11 @@ releases:
           - "--namespace={{ .Environment.Values.namespace }}"
 
   # ========================================
-  # Observability Stack
-  # ========================================
-  - name: grafana
-    chart: grafana/grafana
-    version: 10.1.4
-    namespace: "{{ .Environment.Values.namespace }}"
-    values:
-      - infrastructure/observability/grafana/values.yaml
-      - infrastructure/observability/grafana/values-{{ .Environment.Name }}.yaml
-    hooks:
-      - events: [ "presync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "infrastructure/observability/grafana/secret.yaml"
-          - "--namespace={{ .Environment.Values.namespace }}"
-
-  - name: prometheus
-    chart: prometheus-community/prometheus
-    version: 27.44.1
-    namespace: "{{ .Environment.Values.namespace }}"
-    values:
-      - infrastructure/observability/prometheus/values.yaml
-      - infrastructure/observability/prometheus/values-{{ .Environment.Name }}.yaml
-
-  - name: loki
-    chart: grafana/loki
-    version: 6.46.0
-    namespace: "{{ .Environment.Values.namespace }}"
-    values:
-      - infrastructure/observability/loki/values.yaml
-
-  - name: tempo
-    chart: grafana/tempo
-    version: 1.24.0
-    namespace: "{{ .Environment.Values.namespace }}"
-    values:
-      - infrastructure/observability/tempo/values.yaml
-
-  # ========================================
-  # OpenTelemetry
-  # ========================================
-  - name: opentelemetry-operator
-    chart: open-telemetry/opentelemetry-operator
-    version: 0.99.0
-    namespace: "{{ .Environment.Values.namespace }}"
-    needs:
-      - cert-manager
-      - prometheus
-      - loki
-      - tempo
-    values:
-      - infrastructure/observability/opentelemetry/values.yaml
-    hooks:
-      - events: [ "postsync" ]
-        showlogs: true
-        command: "bash"
-        args:
-          - "-c"
-          - |
-            kubectl wait --for=condition=available --timeout=300s deployment/opentelemetry-operator -n {{ .Environment.Values.namespace }}
-            until kubectl get endpoints opentelemetry-operator-webhook -n {{ .Environment.Values.namespace }} -o jsonpath='{.subsets}' | grep -q "addresses"; do
-              sleep 5
-            done
-            kubectl apply -f 'infrastructure/observability/opentelemetry/otel-*.yaml' -n {{ .Environment.Values.namespace }}
-            kubectl wait --for=condition=available --timeout=300s deployment/otel-collector -n {{ .Environment.Values.namespace }}
-
-  # ========================================
   # Databases
   # ========================================
   - name: keycloak-postgresql
     chart: bitnami/postgresql
-    version: 18.1.7
+    version: 18.1.8
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/database/keycloak-postgresql/values.yaml
@@ -208,6 +138,76 @@ releases:
           - "-f"
           - "infrastructure/database/redis/rate-limiter-secret.yaml"
           - "--namespace={{ .Environment.Values.namespace }}"
+
+  # ========================================
+  # Observability Stack
+  # ========================================
+  - name: grafana
+    chart: grafana/grafana
+    version: 10.1.4
+    namespace: "{{ .Environment.Values.namespace }}"
+    values:
+      - infrastructure/observability/grafana/values.yaml
+      - infrastructure/observability/grafana/values-{{ .Environment.Name }}.yaml
+    hooks:
+      - events: [ "presync" ]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "infrastructure/observability/grafana/secret.yaml"
+          - "--namespace={{ .Environment.Values.namespace }}"
+
+  - name: prometheus
+    chart: prometheus-community/prometheus
+    version: 27.45.0
+    namespace: "{{ .Environment.Values.namespace }}"
+    values:
+      - infrastructure/observability/prometheus/values.yaml
+      - infrastructure/observability/prometheus/values-{{ .Environment.Name }}.yaml
+
+  - name: loki
+    chart: grafana/loki
+    version: 6.46.0
+    namespace: "{{ .Environment.Values.namespace }}"
+    values:
+      - infrastructure/observability/loki/values.yaml
+
+  - name: tempo
+    chart: grafana/tempo
+    version: 1.24.0
+    namespace: "{{ .Environment.Values.namespace }}"
+    values:
+      - infrastructure/observability/tempo/values.yaml
+
+  # ========================================
+  # OpenTelemetry
+  # ========================================
+  - name: opentelemetry-operator
+    chart: open-telemetry/opentelemetry-operator
+    version: 0.99.0
+    namespace: "{{ .Environment.Values.namespace }}"
+    needs:
+      - cert-manager
+      - prometheus
+      - loki
+      - tempo
+    values:
+      - infrastructure/observability/opentelemetry/values.yaml
+    hooks:
+      - events: [ "postsync" ]
+        showlogs: true
+        command: "bash"
+        args:
+          - "-c"
+          - |
+            kubectl wait --for=condition=available --timeout=300s deployment/opentelemetry-operator -n {{ .Environment.Values.namespace }}
+            until kubectl get endpoints opentelemetry-operator-webhook -n {{ .Environment.Values.namespace }} -o jsonpath='{.subsets}' | grep -q "addresses"; do
+              sleep 5
+            done
+            kubectl apply -f 'infrastructure/observability/opentelemetry/otel-*.yaml' -n {{ .Environment.Values.namespace }}
+            kubectl wait --for=condition=available --timeout=300s deployment/otel-collector -n {{ .Environment.Values.namespace }}
 
   # ========================================
   # Keycloak

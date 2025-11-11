@@ -12,7 +12,8 @@ const MAX_PERSON_ID = 235000;
 export const options: Options = {
   insecureSkipTLSVerify: true,
   thresholds: {
-    http_req_duration: ['p(99)<500'], // 99% of requests should be below 1000ms
+    http_req_duration: ['p(99) < 500'], // 99% of requests should be below 500ms
+    'http_req_failed{scenario:smoke}': ['rate == 0'], // Fail smoke test if any HTTP request fails
   },
   scenarios: {
     // Smoke Test: A quick check to ensure all endpoints are functional.

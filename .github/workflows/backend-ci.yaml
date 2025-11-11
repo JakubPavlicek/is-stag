@@ -100,7 +100,7 @@ jobs:
 
   publish-docker-images:
     name: Publish Service Docker Images
-    runs-on: ubuntu-24.04-arm
+    runs-on: macos-latest
     permissions:
       contents: read
       packages: write

@@ -13,40 +13,40 @@ const HEADERS = {
 export function getPersonProfile(personId: number) {
   const res = http.get(`${BASE_URL}/api/v1/persons/${personId}`, {
     headers: HEADERS,
-    tags: { name: 'GetPersonProfile', testId: TEST_RUN_ID },
+    tags: { name: 'GET /persons/{personId}', testId: TEST_RUN_ID },
   });
   check(res, {
-    'GetPersonProfile: status is 200': (r) => r.status === 200,
+    'GET /persons/{personId}: status is 200': (r) => r.status === 200,
   });
 }
 
 export function getPersonAddresses(personId: number) {
   const res = http.get(`${BASE_URL}/api/v1/persons/${personId}/addresses`, {
     headers: HEADERS,
-    tags: { name: 'GetPersonAddresses', testId: TEST_RUN_ID },
+    tags: { name: 'GET /persons/{personId}/addresses', testId: TEST_RUN_ID },
   });
   check(res, {
-    'GetPersonAddresses: status is 200': (r) => r.status === 200,
+    'GET /persons/{personId}/addresses: status is 200': (r) => r.status === 200,
   });
 }
 
 export function getPersonBanking(personId: number) {
   const res = http.get(`${BASE_URL}/api/v1/persons/${personId}/banking`, {
     headers: HEADERS,
-    tags: { name: 'GetPersonBanking', testId: TEST_RUN_ID },
+    tags: { name: 'GET /persons/{personId}/banking', testId: TEST_RUN_ID },
   });
   check(res, {
-    'GetPersonBanking: status is 200': (r) => r.status === 200,
+    'GET /persons/{personId}/banking: status is 200': (r) => r.status === 200,
   });
 }
 
 export function getPersonEducation(personId: number) {
   const res = http.get(`${BASE_URL}/api/v1/persons/${personId}/education`, {
     headers: HEADERS,
-    tags: { name: 'GetPersonEducation', testId: TEST_RUN_ID },
+    tags: { name: 'GET /persons/{personId}/education', testId: TEST_RUN_ID },
   });
   check(res, {
-    'GetPersonEducation: status is 200': (r) => r.status === 200,
+    'GET /persons/{personId}/education: status is 200': (r) => r.status === 200,
   });
 }
 
@@ -59,10 +59,10 @@ export function updatePersonProfile(
     JSON.stringify(payload),
     {
       headers: HEADERS,
-      tags: { name: 'UpdatePersonProfile', testId: TEST_RUN_ID },
+      tags: { name: 'PATCH /persons/{personId}', testId: TEST_RUN_ID },
     },
   );
   check(res, {
-    'UpdatePersonProfile: status is 204': (r) => r.status === 204,
+    'PATCH /persons/{personId}: status is 204': (r) => r.status === 204,
   });
 }
