@@ -10,7 +10,7 @@ on:
 jobs:
   protolint-lint-proto:
     name: Protolint Lint Proto
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
@@ -28,7 +28,7 @@ jobs:
 
   vacuum-lint-openapi:
     name: Vacuum Lint OpenAPI
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
@@ -44,7 +44,7 @@ jobs:
 
   sonar-lint-code:
     name: SonarQube Lint Code
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
@@ -71,7 +71,7 @@ jobs:
 
   publish-jars:
     name: Publish Service JARs
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -100,7 +100,7 @@ jobs:
 
   publish-docker-images:
     name: Publish Service Docker Images
-    runs-on: macos-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
