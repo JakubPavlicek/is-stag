@@ -10,35 +10,22 @@ on:
 jobs:
   protolint-lint-proto:
     name: Protolint Lint Proto
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
-
-      - name: Set up protolint
-        run: |
-          PROTOLINT_VERSION="0.56.4"
-          PB_REL="https://github.com/yoheimuta/protolint/releases/download/v${PROTOLINT_VERSION}/protolint_${PROTOLINT_VERSION}_linux_amd64.tar.gz"
-          curl -sSL "${PB_REL}" | tar -xz
-          sudo mv protolint /usr/local/bin/
-          protolint --version
 
       - name: Run protolint
         run: protolint lint proto
 
   vacuum-lint-openapi:
     name: Vacuum Lint OpenAPI
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
-
-      - name: Install Vacuum
-        run: |
-          curl -fsSL https://quobix.com/scripts/install_vacuum.sh | sh
-          vacuum version
 
       - name: Run Vacuum Lint
         working-directory: services
@@ -46,17 +33,10 @@ jobs:
 
   sonar-lint-code:
     name: SonarQube Lint Code
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
-
-      - name: Setup JDK 25
-        uses: actions/setup-java@v5.0.0
-        with:
-          distribution: liberica
-          java-version: 25
-          cache: maven
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4.2.4
@@ -73,7 +53,7 @@ jobs:
 
   publish-jars:
     name: Publish Service JARs
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -87,13 +67,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
-
-      - name: Setup JDK 25
-        uses: actions/setup-java@v5.0.0
-        with:
-          distribution: liberica
-          java-version: 25
-          cache: maven
 
       - name: Publish packages
         run: mvn -T 1C -DskipTests --batch-mode deploy
@@ -102,7 +75,7 @@ jobs:
 
   publish-docker-images:
     name: Publish Service Docker Images
-    runs-on: macos-26
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -117,35 +90,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Setup Colima
-        run: brew install colima
-
-      - name: Setup Docker
-        run: brew install docker
-
-      - name: Start Colima
-        run: colima start --arch aarch64 --cpu 2 --memory 4
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3.6.0
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup JDK 25
-        uses: actions/setup-java@v5.0.0
-        with:
-          distribution: liberica
-          java-version: 25
-          cache: maven
-
       - name: Build and Push Spring Boot Docker Images
         run: |
           mvn -B -T 1C -DskipTests package spring-boot:build-image \
             -Dspring-boot.build-image.publish=true \
             -Dgithub.username=${{ secrets.GHCR_USERNAME }} \
             -Dgithub.password=${{ secrets.GITHUB_TOKEN }}
-
-      - name: Stop Colima
-        run: colima stop
