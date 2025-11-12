@@ -1,12 +1,14 @@
 name: Security Vulnerabilities Scan
 
 on:
+  schedule:
+    - cron: '0 0 * * 1'
   workflow_dispatch:
 
 jobs:
   dependency-vulnerability-scan:
     name: OWASP Dependency Check
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
