@@ -35,11 +35,11 @@ jobs:
       - name: Setup Colima
         run: brew install colima
 
-      - name: Detup Docker
+      - name: Setup Docker
         run: brew install docker
 
       - name: Delete Colima
-        run: colima delete
+        run: colima delete -f
 
       - name: Start Colima
         run: colima start --vm-type vz
