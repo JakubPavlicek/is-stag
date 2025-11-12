@@ -140,6 +140,12 @@ spring:
       enabled: true
 
 resilience4j:
+  bulkhead:
+    configs:
+      default:
+        max-concurrent-calls: 100
+        max-wait-duration: 10ms
+        event-consumer-buffer-size: 100
   circuitbreaker:
     configs:
       default:

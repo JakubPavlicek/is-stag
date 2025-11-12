@@ -4,8 +4,8 @@ import faker from 'k6/x/faker';
 import * as api from './user-api.ts';
 import { generateUpdatePersonPayload } from './common.ts';
 
-// The number of students is around 10,000. We test it with a slightly larger range
-// to include some "not found" cases, which is a realistic scenario.
+// The range of person's IDs.
+// IDs are chosen randomly to include some "not found" cases.
 const MIN_PERSON_ID = 100;
 const MAX_PERSON_ID = 235000;
 
@@ -30,40 +30,38 @@ export const options: Options = {
     average_load: {
       executor: 'ramping-vus',
       stages: [
-        { duration: '2m', target: 50 }, // Ramp up to 50 VUs over 2 minutes
-        { duration: '5m', target: 50 }, // Stay at 50 VUs for 5 minutes
-        { duration: '1m', target: 0 }, // Ramp down
+        { duration: '2m', target: 50 },
+        { duration: '5m', target: 50 },
+        { duration: '1m', target: 0 },
       ],
       exec: 'browserScenario',
       startTime: '10s', // Start after the smoke test
     },
-    // This is a placeholder for the editor scenario, running with fewer VUs.
-    // k6 doesn't directly support weighted scenarios in the same executor,
-    // so we run them as separate scenarios.
+    // Run the editor scenario separately because k6 doesn't directly support weighted scenarios in the same executor.
     editor_load: {
       executor: 'ramping-vus',
       stages: [
-        { duration: '2m', target: 5 }, // 10% of the browser VUs
+        { duration: '2m', target: 5 },
         { duration: '5m', target: 5 },
         { duration: '1m', target: 0 },
       ],
       exec: 'editorScenario',
       startTime: '10s', // Start alongside the main load test
     },
-    // // 3. Stress Test: Find the system's breaking point.
-    // // To run this, uncomment it and comment out the 'average_load' and 'editor_load' scenarios.
-    // stress: {
-    //   executor: 'ramping-vus',
-    //   stages: [
-    //     { duration: '2m', target: 100 },
-    //     { duration: '2m', target: 200 },
-    //     { duration: '2m', target: 300 },
-    //     { duration: '2m', target: 400 },
-    //     { duration: '2m', target: 0 },
-    //   ],
-    //   exec: 'browserScenario',
-    //   startTime: '10s',
-    // },
+    // Stress Test: Find the system's breaking point.
+    stress: {
+      executor: 'ramping-vus',
+      stages: [
+        { duration: '2m', target: 100 },
+        { duration: '2m', target: 200 },
+        { duration: '2m', target: 300 },
+        { duration: '2m', target: 400 },
+        { duration: '2m', target: 500 },
+        { duration: '2m', target: 0 },
+      ],
+      exec: 'browserScenario',
+      startTime: '10s', // Start after the Average Load test
+    },
   },
 };
 
