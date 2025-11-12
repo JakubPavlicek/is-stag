@@ -10,22 +10,33 @@ on:
 jobs:
   protolint-lint-proto:
     name: Protolint Lint Proto
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
+
+      - name: Set up protolint
+        run: |
+          PROTOLINT_VERSION="0.56.4"
+          PB_REL="https://github.com/yoheimuta/protolint/releases/download/v${PROTOLINT_VERSION}/protolint_${PROTOLINT_VERSION}_linux_amd64.tar.gz"
+          curl -sSL "${PB_REL}" | tar -xz
+          sudo mv protolint /usr/local/bin/
+          protolint --version
 
       - name: Run protolint
         run: protolint lint proto
 
   vacuum-lint-openapi:
     name: Vacuum Lint OpenAPI
-    runs-on: self-hosted
-    permissions:
-      contents: write
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
+
+      - name: Install Vacuum
+        run: |
+          curl -fsSL https://quobix.com/scripts/install_vacuum.sh | sh
+          vacuum version
 
       - name: Run Vacuum Lint
         working-directory: services
@@ -33,10 +44,17 @@ jobs:
 
   sonar-lint-code:
     name: SonarQube Lint Code
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5.0.0
+
+      - name: Setup JDK 25
+        uses: actions/setup-java@v5.0.0
+        with:
+          distribution: liberica
+          java-version: 25
+          cache: maven
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4.2.4
@@ -53,7 +71,7 @@ jobs:
 
   publish-jars:
     name: Publish Service JARs
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -68,6 +86,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
+      - name: Setup JDK 25
+        uses: actions/setup-java@v5.0.0
+        with:
+          distribution: liberica
+          java-version: 25
+          cache: maven
+
       - name: Publish packages
         run: mvn -T 1C -DskipTests --batch-mode deploy
         env:
@@ -75,7 +100,7 @@ jobs:
 
   publish-docker-images:
     name: Publish Service Docker Images
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: read
       packages: write
@@ -96,6 +121,13 @@ jobs:
           registry: ghcr.io
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup JDK 25
+        uses: actions/setup-java@v5.0.0
+        with:
+          distribution: liberica
+          java-version: 25
+          cache: maven
 
       - name: Build and Push Spring Boot Docker Images
         run: |
