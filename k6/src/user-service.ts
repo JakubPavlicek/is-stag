@@ -2,12 +2,11 @@ import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
 import faker from 'k6/x/faker';
 import * as api from './user-api.ts';
-import { generateUpdatePersonPayload } from './common.ts';
-
-// The range of person IDs.
-// IDs are chosen randomly from this range to include some "not found" cases.
-const MIN_PERSON_ID = 100;
-const MAX_PERSON_ID = 235000;
+import {
+  generateUpdatePersonPayload,
+  MAX_PERSON_ID,
+  MIN_PERSON_ID,
+} from './common.ts';
 
 export const options: Options = {
   insecureSkipTLSVerify: true,
@@ -71,7 +70,7 @@ export function smokeTest() {
   // const personId = faker.numbers.uintRange(MIN_PERSON_ID, MAX_PERSON_ID);
   const personId = 13373;
 
-  group('Smoke Test - All Endpoints', () => {
+  group('Smoke Test - User Service', () => {
     api.getPersonProfile(personId);
     api.getPersonAddresses(personId);
     api.getPersonBanking(personId);
