@@ -12,6 +12,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
+      - name: Docker Login
+        uses: docker/login-action@v3.5.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and Push Multi-Arch Keycloak Image
         working-directory: ./keycloak
         run: |
