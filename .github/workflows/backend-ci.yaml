@@ -117,14 +117,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
+      - name: Upgrade Brew
+        run: brew update && brew upgrade
+
       - name: Setup Colima
         run: brew install colima
 
       - name: Setup Docker
         run: brew install docker
-
-      - name: Stop Colima
-        run: colima stop --force
 
       - name: Start Colima
         run: colima start

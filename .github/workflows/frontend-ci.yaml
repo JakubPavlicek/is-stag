@@ -19,6 +19,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
+      - name: Upgrade Brew
+        run: brew update && brew upgrade
+
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4.4.0
         with:
@@ -37,9 +40,6 @@ jobs:
 
       - name: Setup Docker
         run: brew install docker
-
-      - name: Stop Colima
-        run: colima stop --force
 
       - name: Start Colima
         run: colima start
