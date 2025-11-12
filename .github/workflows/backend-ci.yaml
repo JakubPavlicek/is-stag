@@ -117,12 +117,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Setup Docker on macOS
-        uses: douglascamata/setup-docker-macos-action@v1.0.2
-        with:
-          lima: v1.2.1
-          colima: v0.9.1
-          colima-network-address: false
+      - name: Setup Colima
+        run: brew install colima
+
+      - name: Detup Docker
+        run: brew install docker
+
+      - name: Start Colima
+        run: colima start
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.6.0
@@ -144,3 +146,6 @@ jobs:
             -Dspring-boot.build-image.publish=true \
             -Dgithub.username=${{ secrets.GHCR_USERNAME }} \
             -Dgithub.password=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Stop Colima
+        run: colima stop
