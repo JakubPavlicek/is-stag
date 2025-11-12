@@ -38,11 +38,11 @@ jobs:
       - name: Setup Docker
         run: brew install docker
 
-      - name: Delete Colima
-        run: colima delete -f
+      - name: Stop Colima
+        run: colima stop --force
 
       - name: Start Colima
-        run: colima start --vm-type vz
+        run: colima start
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.6.0
