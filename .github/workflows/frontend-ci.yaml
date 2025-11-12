@@ -19,8 +19,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Login to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+      - name: GHCR login (bypass keychain)
+        run: |
+          mkdir -p /tmp/docker-config
+          echo '{}' > /tmp/docker-config/config.json
+          echo "${{ secrets.GITHUB_TOKEN }}" | DOCKER_CONFIG=/tmp/docker-config docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
 
       # TODO: Change NODE_ENV to prod
 
