@@ -117,9 +117,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Upgrade Brew
-        run: brew update && brew upgrade
-
       - name: Setup Colima
         run: brew install colima
 
@@ -127,7 +124,7 @@ jobs:
         run: brew install docker
 
       - name: Start Colima
-        run: colima start
+        run: colima start --arch aarch64 --cpu 2 --memory 4
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.6.0
