@@ -98,8 +98,11 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and Push Spring Boot Docker Images
+        env:
+          GITHUB_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mvn -B -T 1C -DskipTests package spring-boot:build-image \
             -Dspring-boot.build-image.publish=true \
-            -Dgithub.username=${{ secrets.GHCR_USERNAME }} \
-            -Dgithub.password=${{ secrets.GITHUB_TOKEN }}
+            -Dgithub.username=$GITHUB_USERNAME \
+            -Dgithub.password=$GITHUB_TOKEN
