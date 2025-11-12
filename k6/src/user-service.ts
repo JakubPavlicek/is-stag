@@ -4,8 +4,8 @@ import faker from 'k6/x/faker';
 import * as api from './user-api.ts';
 import { generateUpdatePersonPayload } from './common.ts';
 
-// The range of person's IDs.
-// IDs are chosen randomly to include some "not found" cases.
+// The range of person IDs.
+// IDs are chosen randomly from this range to include some "not found" cases.
 const MIN_PERSON_ID = 100;
 const MAX_PERSON_ID = 235000;
 
@@ -60,7 +60,7 @@ export const options: Options = {
         { duration: '2m', target: 0 },
       ],
       exec: 'browserScenario',
-      startTime: '10s', // Start after the Average Load test
+      startTime: '9m', // Start after the Average Load test
     },
   },
 };

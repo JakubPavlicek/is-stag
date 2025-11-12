@@ -149,6 +149,9 @@ releases:
     values:
       - infrastructure/observability/grafana/values.yaml
       - infrastructure/observability/grafana/values-{{ .Environment.Name }}.yaml
+    needs:
+      - redis-cache
+      - redis-rate-limiter
     hooks:
       - events: [ "presync" ]
         showlogs: true

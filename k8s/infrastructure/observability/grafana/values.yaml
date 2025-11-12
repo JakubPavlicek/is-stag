@@ -6,6 +6,11 @@ admin:
   userKey: username
   passwordKey: password
 
+dnsConfig:
+  options:
+    - name: ndots
+      value: "1"
+
 # Fix "Readiness probe failed: connection refused" error
 readinessProbe:
   initialDelaySeconds: 20

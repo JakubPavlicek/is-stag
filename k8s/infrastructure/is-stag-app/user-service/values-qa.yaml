@@ -2,6 +2,8 @@ spring:
   profiles:
     active: qa
 
+replicaCount: 2
+
 service:
   type: NodePort
   ports:
