@@ -6,7 +6,7 @@ import {
   generateUpdatePersonPayload,
   MAX_PERSON_ID,
   MIN_PERSON_ID,
-} from './common.ts';
+} from '../shared/common.ts';
 
 export const options: Options = {
   insecureSkipTLSVerify: true,

@@ -2,7 +2,7 @@ import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
 import faker from 'k6/x/faker';
 import * as api from './student-api.ts';
-import { STUDENT_IDS } from './common.ts';
+import { STUDENT_IDS } from '../shared/common.ts';
 
 export const options: Options = {
   insecureSkipTLSVerify: true,

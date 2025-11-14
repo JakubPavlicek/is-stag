@@ -1,8 +1,17 @@
 import faker from 'k6/x/faker';
 import { SharedArray } from 'k6/data';
 
-export const BASE_URL = __ENV.BASE_URL || 'https://is-stag.cz';
+// The test run ID
 export const TEST_RUN_ID = __ENV.K6_TEST_RUN_ID || '1';
+
+// The base URL of the REST API
+export const BASE_URL = __ENV.BASE_URL || 'https://is-stag.cz';
+// The gRPC server address
+export const GRPC_URL = __ENV.GRPC_URL || 'localhost:9090';
+// The path to the data directory
+export const DATA_DIR = '../../data';
+// The path to the proto files
+export const PROTO_DIR = '../../../proto';
 
 export const HEADERS = {
   'Accept-Language': 'cs',
@@ -18,7 +27,15 @@ export const MAX_PERSON_ID = 235000;
 export const STUDENT_IDS = new SharedArray(
   'student-ids',
   function (): string[] {
-    return JSON.parse(open('../data/student-ids.json'));
+    return JSON.parse(open(`${DATA_DIR}/student-ids.json`));
+  },
+);
+
+// A list of known codelist domains.
+export const CODELIST_DOMAINS = new SharedArray(
+  'codelist-domains',
+  function (): string[] {
+    return JSON.parse(open(`${DATA_DIR}/codelist-domains.json`));
   },
 );
 

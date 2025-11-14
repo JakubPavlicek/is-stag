@@ -1,6 +1,6 @@
 import { check } from 'k6';
 import http from 'k6/http';
-import { BASE_URL, HEADERS, TEST_RUN_ID } from './common.ts';
+import { BASE_URL, HEADERS, TEST_RUN_ID } from '../shared/common.ts';
 
 export function getStudentProfile(studentId: string) {
   const url = `${BASE_URL}/api/v1/students/${studentId}`;

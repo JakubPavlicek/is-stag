@@ -6,11 +6,6 @@ admin:
   userKey: username
   passwordKey: password
 
-dnsConfig:
-  options:
-    - name: ndots
-      value: "1"
-
 # Fix "Readiness probe failed: connection refused" error
 readinessProbe:
   initialDelaySeconds: 20
@@ -36,7 +31,7 @@ dashboardProviders:
         disableDeletion: false
         editable: true
         options:
-          path: /var/lib/grafana/plugins/redis-datasource/dashboards/redis.json
+          path: /var/lib/grafana/plugins/redis-datasource/dashboards
 
 dashboards:
   default:
@@ -69,8 +64,6 @@ dashboards:
     jvm-overview:
       gnetId: 18812
       revision: 4
-    redis:
-      file: /var/lib/grafana/plugins/redis-datasource/dashboards/redis.json
 
 datasources:
   datasources.yaml:

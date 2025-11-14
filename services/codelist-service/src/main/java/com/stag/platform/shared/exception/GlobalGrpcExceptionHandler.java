@@ -14,16 +14,40 @@ import net.devh.boot.grpc.server.advice.GrpcExceptionHandler;
 @GrpcAdvice
 public class GlobalGrpcExceptionHandler {
 
-    @GrpcExceptionHandler({
-        CodelistEntriesNotFoundException.class,
-        CountriesNotFoundException.class,
-        MunicipalityPartsNotFoundException.class,
-        HighSchoolNotFoundException.class,
-        HighSchoolFieldOfStudyNotFoundException.class
-    })
-    public Status handleResourceNotFoundException(RuntimeException e) {
-        log.warn("gRPC request failed, resource not found: {}", e.getMessage());
-        return Status.NOT_FOUND.withDescription(e.getMessage());
+    @GrpcExceptionHandler(CodelistEntriesNotFoundException.class)
+    public Status handleCodelistEntriesNotFoundException(CodelistEntriesNotFoundException ex) {
+        log.warn("gRPC request failed, codelist entries not found: {}", ex.getMessage());
+        return Status.NOT_FOUND.withDescription(ex.getMessage());
+    }
+
+    @GrpcExceptionHandler(CountriesNotFoundException.class)
+    public Status handleCountriesNotFoundException(CountriesNotFoundException ex) {
+        log.warn("gRPC request failed, countries not found: {}", ex.getMessage());
+        return Status.NOT_FOUND.withDescription(ex.getMessage());
+    }
+
+    @GrpcExceptionHandler(MunicipalityPartsNotFoundException.class)
+    public Status handleMunicipalityPartsNotFoundException(MunicipalityPartsNotFoundException ex) {
+        log.warn("gRPC request failed, municipality parts not found: {}", ex.getMessage());
+        return Status.NOT_FOUND.withDescription(ex.getMessage());
+    }
+
+    @GrpcExceptionHandler(HighSchoolNotFoundException.class)
+    public Status handleHighSchoolNotFoundException(HighSchoolNotFoundException ex) {
+        log.warn("gRPC request failed, high school not found: {}", ex.getMessage());
+        return Status.NOT_FOUND.withDescription(ex.getMessage());
+    }
+
+    @GrpcExceptionHandler(HighSchoolFieldOfStudyNotFoundException.class)
+    public Status handleHighSchoolFieldOfStudyNotFoundException(HighSchoolFieldOfStudyNotFoundException ex) {
+        log.warn("gRPC request failed, field of study not found: {}", ex.getMessage());
+        return Status.NOT_FOUND.withDescription(ex.getMessage());
+    }
+
+    @GrpcExceptionHandler(RuntimeException.class)
+    public Status handleRuntimeException(RuntimeException e) {
+        log.warn("gRPC request failed: {}", e.getMessage());
+        return Status.INTERNAL.withDescription(e.getMessage());
     }
 
 }

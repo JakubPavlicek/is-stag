@@ -5,7 +5,7 @@ import {
   HEADERS,
   TEST_RUN_ID,
   UpdatePersonRequest,
-} from './common.ts';
+} from '../shared/common.ts';
 
 export function getPersonProfile(personId: number) {
   const url = `${BASE_URL}/api/v1/persons/${personId}`;
