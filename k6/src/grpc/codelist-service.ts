@@ -1,17 +1,14 @@
-import { check, group, sleep } from 'k6';
+import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
-import grpc from 'k6/net/grpc';
 import faker from 'k6/x/faker';
-import { GRPC_URL, PROTO_DIR, CODELIST_DOMAINS } from '../shared/common.ts';
-
-const client = new grpc.Client();
-client.load([PROTO_DIR], 'stag/platform/codelist/v1/codelist_service.proto');
+import * as codelistClient from './codelist-client.ts';
+import { CODELIST_DOMAINS, CODELIST_VALUES, getRandomLanguage } from '../shared/common.ts';
 
 export const options: Options = {
   insecureSkipTLSVerify: true,
   thresholds: {
     grpc_req_duration: ['p(99) < 500'],
-    'grpc_req_failed{scenario:smoke}': ['rate == 0'],
+    'http_req_failed{scenario:smoke}': ['rate == 0'],
   },
   scenarios: {
     smoke: {
@@ -35,74 +32,76 @@ export const options: Options = {
   },
 };
 
+export function smokeTest() {
+  codelistClient.connect();
+
+  group('gRPC Smoke Test - CodelistService', () => {
+    const codelistRequest = {
+      codelist_keys: [{ domain: 'FAKULTA', low_value: 'FAV' }],
+      language: 'cs',
+    };
+
+    codelistClient.getCodelistValues(codelistRequest);
+
+    const personProfileRequest = {
+      codelist_keys: [{ domain: 'TITUL_PRED', low_value: '1' }],
+      birth_country_id: 203,
+      language: 'cs',
+    };
+
+    codelistClient.getPersonProfileData(personProfileRequest);
+
+    const personAddressRequest = {
+      permanent_municipality_part_id: 414727,
+      permanent_country_id: 203,
+      language: 'cs',
+    };
+
+    codelistClient.getPersonAddressData(personAddressRequest);
+
+    const personBankingRequest = {
+      codelist_keys: [{ domain: 'CIS_BANK', low_value: '0800' }],
+      euro_account_country_id: 203,
+      language: 'cs',
+    };
+
+    codelistClient.getPersonBankingData(personBankingRequest);
+
+    const personEducationRequest = {
+      high_school_id: '000082163',
+      high_school_country_id: 203,
+      language: 'cs',
+    };
+
+    codelistClient.getPersonEducationData(personEducationRequest);
+  });
+
+  codelistClient.close();
+}
+
+export function loadTest() {
+  codelistClient.connect();
+
+  group('gRPC Load Test - CodelistService', () => {
+    const request = {
+      codelist_keys: getRandomCodelistKeys(faker.numbers.uintRange(1, 2)),
+      language: getRandomLanguage(),
+    };
+
+    codelistClient.getCodelistValues(request);
+  });
+
+  codelistClient.close();
+  sleep(faker.numbers.float64Range(0.5, 1.5));
+}
+
 function getRandomCodelistKeys(count: number) {
   const keys = [];
   for (let i = 0; i < count; i++) {
     keys.push({
-      domain:
-        CODELIST_DOMAINS[
-          faker.numbers.uintRange(0, CODELIST_DOMAINS.length - 1)
-        ],
-      // This is a guess, might not exist, but good for load
-      low_value: faker.word.noun(),
+      domain: CODELIST_DOMAINS[faker.numbers.uintRange(0, CODELIST_DOMAINS.length - 1)],
+      low_value: CODELIST_VALUES[faker.numbers.uintRange(0, CODELIST_VALUES.length - 1)],
     });
   }
   return keys;
-}
-
-export function smokeTest() {
-  client.connect(GRPC_URL, { plaintext: true, reflect: true });
-
-  group('gRPC Smoke Test - CodelistService', () => {
-    // GetCodelistValues
-    let res = client.invoke(
-      'stag.platform.codelist.v1.CodelistService/GetCodelistValues',
-      {
-        codelist_keys: [{ domain: 'FAKULTA', low_value: 'FAV' }],
-        language: 'cs',
-      },
-    );
-    check(res, {
-      'GetCodelistValues: status is OK': (r) => r.status === grpc.StatusOK,
-    });
-
-    // GetPersonProfileData
-    res = client.invoke(
-      'stag.platform.codelist.v1.CodelistService/GetPersonProfileData',
-      {
-        codelist_keys: [{ domain: 'TITUL_PRED', low_value: 'BC' }],
-        birth_country_id: 203, // Czech Republic
-        language: 'cs',
-      },
-    );
-    check(res, {
-      'GetPersonProfileData: status is OK': (r) => r.status === grpc.StatusOK,
-    });
-
-    client.close();
-  });
-}
-
-export function loadTest() {
-  client.connect(GRPC_URL, { plaintext: true, reflect: true });
-
-  group('gRPC Load Test - CodelistService', () => {
-    const request = {
-      codelist_keys: getRandomCodelistKeys(faker.numbers.uintRange(1, 5)),
-      language: Math.random() < 0.5 ? 'cs' : 'en',
-    };
-
-    const response = client.invoke(
-      'stag.platform.codelist.v1.CodelistService/GetCodelistValues',
-      request,
-    );
-
-    check(response, {
-      'GetCodelistValues: status is OK': (r) => r.status === grpc.StatusOK,
-    });
-
-    client.close();
-  });
-
-  sleep(faker.numbers.float64Range(0.5, 1.5));
 }

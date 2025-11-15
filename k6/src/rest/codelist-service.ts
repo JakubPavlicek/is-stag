@@ -59,8 +59,7 @@ export function browserScenario() {
     sleep(faker.numbers.float64Range(0.2, 1));
 
     // User browses a random codelist domain
-    const domain =
-      CODELIST_DOMAINS[faker.numbers.uintRange(0, CODELIST_DOMAINS.length - 1)];
+    const domain = CODELIST_DOMAINS[faker.numbers.uintRange(0, CODELIST_DOMAINS.length - 1)];
     api.getDomainValues(domain);
   });
 

@@ -1,16 +1,8 @@
-import { check, group, sleep } from 'k6';
+import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
-import grpc from 'k6/net/grpc';
 import faker from 'k6/x/faker';
-import {
-  GRPC_URL,
-  PROTO_DIR,
-  MAX_PERSON_ID,
-  MIN_PERSON_ID,
-} from '../shared/common.ts';
-
-const client = new grpc.Client();
-// client.load([PROTO_DIR], 'stag/identity/person/v1/person_service.proto');
+import * as userClient from './user-client.ts';
+import { getRandomLanguage, MAX_PERSON_ID, MIN_PERSON_ID } from '../shared/common.ts';
 
 export const options: Options = {
   insecureSkipTLSVerify: true,
@@ -41,9 +33,9 @@ export const options: Options = {
 };
 
 export function smokeTest() {
-  client.connect(GRPC_URL, { plaintext: true, reflect: true });
+  userClient.connect();
 
-  const personId = 13373; // Use a known valid ID for smoke test
+  const personId = 13373;
 
   group('gRPC Smoke Test - PersonService', () => {
     const request = {
@@ -51,41 +43,26 @@ export function smokeTest() {
       language: 'cs',
     };
 
-    const response = client.invoke(
-      'stag.identity.person.v1.PersonService/GetPersonSimpleProfile',
-      request,
-    );
-
-    check(response, {
-      'GetPersonSimpleProfile: status is OK': (r) => r.status === grpc.StatusOK,
-    });
-
-    client.close();
+    userClient.getPersonSimpleProfile(request);
   });
+
+  userClient.close();
 }
 
 export function loadTest() {
-  client.connect(GRPC_URL, { plaintext: true, reflect: true });
+  userClient.connect();
 
   const personId = faker.numbers.uintRange(MIN_PERSON_ID, MAX_PERSON_ID);
 
   group('gRPC Load Test - PersonService', () => {
     const request = {
       person_id: personId,
-      language: Math.random() < 0.5 ? 'cs' : 'en',
+      language: getRandomLanguage(),
     };
 
-    const response = client.invoke(
-      'stag.identity.person.v1.PersonService/GetPersonSimpleProfile',
-      request,
-    );
-
-    check(response, {
-      'GetPersonSimpleProfile: status is OK': (r) => r.status === grpc.StatusOK,
-    });
-
-    client.close();
+    userClient.getPersonSimpleProfile(request);
   });
 
+  userClient.close();
   sleep(faker.numbers.float64Range(0.5, 1.5));
 }

@@ -70,6 +70,8 @@ public class ProfileService {
         return profile;
     }
 
+    // TODO: Add caching
+
     public SimpleProfile getPersonSimpleProfile(Integer personId, String language) {
         log.info("Fetching person simple profile for personId: {} with language: {}", personId, language);
 

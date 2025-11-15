@@ -23,21 +23,28 @@ export const HEADERS = {
 export const MIN_PERSON_ID = 100;
 export const MAX_PERSON_ID = 235000;
 
+export const MIN_STUDY_PROGRAM_ID = 1;
+export const MAX_STUDY_PROGRAM_ID = 2300;
+
+export const MIN_STUDY_PLAN_ID = 1;
+export const MAX_STUDY_PLAN_ID = 25000;
+
 // A list of known student IDs, loaded from a JSON file.
-export const STUDENT_IDS = new SharedArray(
-  'student-ids',
-  function (): string[] {
-    return JSON.parse(open(`${DATA_DIR}/student-ids.json`));
-  },
-);
+export const STUDENT_IDS = new SharedArray('student-ids', function (): string[] {
+  return JSON.parse(open(`${DATA_DIR}/student-ids.json`));
+});
 
 // A list of known codelist domains.
-export const CODELIST_DOMAINS = new SharedArray(
-  'codelist-domains',
-  function (): string[] {
-    return JSON.parse(open(`${DATA_DIR}/codelist-domains.json`));
-  },
-);
+export const CODELIST_DOMAINS = new SharedArray('codelist-domains', function (): string[] {
+  return JSON.parse(open(`${DATA_DIR}/codelist-domains.json`));
+});
+
+// A list of known codelist values.
+export const CODELIST_VALUES = new SharedArray('codelist-values', function (): string[] {
+  return JSON.parse(open(`${DATA_DIR}/codelist-values.json`));
+});
+
+export const getRandomLanguage = () => (Math.random() < 0.5 ? 'cs' : 'en');
 
 interface ContactUpdate {
   email?: string;

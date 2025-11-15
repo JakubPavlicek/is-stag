@@ -3,5 +3,6 @@
   "singleQuote": true,
   "trailingComma": "all",
   "importOrderSeparation": true,
-  "rangeEnd": 120
+  "rangeEnd": 135,
+  "printWidth": 135
 }

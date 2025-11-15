@@ -1,20 +1,20 @@
-import { check, group, sleep } from 'k6';
+import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
-import grpc from 'k6/net/grpc';
 import faker from 'k6/x/faker';
-import { GRPC_URL, PROTO_DIR } from '../shared/common.ts';
-
-const client = new grpc.Client();
-client.load(
-  [PROTO_DIR],
-  'stag/academics/studyplan/v1/study_plan_service.proto',
-);
+import * as studyPlanClient from './study-plan-client.ts';
+import {
+  getRandomLanguage,
+  MAX_STUDY_PLAN_ID,
+  MAX_STUDY_PROGRAM_ID,
+  MIN_STUDY_PLAN_ID,
+  MIN_STUDY_PROGRAM_ID,
+} from '../shared/common.ts';
 
 export const options: Options = {
   insecureSkipTLSVerify: true,
   thresholds: {
     grpc_req_duration: ['p(99) < 500'],
-    'grpc_req_failed{scenario:smoke}': ['rate == 0'],
+    'http_req_failed{scenario:smoke}': ['rate == 0'],
   },
   scenarios: {
     smoke: {
@@ -39,51 +39,34 @@ export const options: Options = {
 };
 
 export function smokeTest() {
-  client.connect(GRPC_URL, { plaintext: true, reflect: true });
+  studyPlanClient.connect();
 
   group('gRPC Smoke Test - StudyPlanService', () => {
     const request = {
-      study_program_id: 2709, // Guessed ID
-      study_plan_id: 99329, // Guessed ID
+      study_program_id: 223,
+      study_plan_id: 10,
       language: 'cs',
     };
 
-    const response = client.invoke(
-      'stag.academics.studyplan.v1.StudyPlanService/GetStudyProgramAndField',
-      request,
-    );
-
-    check(response, {
-      'GetStudyProgramAndField: status is OK': (r) =>
-        r.status === grpc.StatusOK,
-    });
-
-    client.close();
+    studyPlanClient.getStudyProgramAndField(request);
   });
+
+  studyPlanClient.close();
 }
 
 export function loadTest() {
-  client.connect(GRPC_URL, { plaintext: true, reflect: true });
+  studyPlanClient.connect();
 
   group('gRPC Load Test - StudyPlanService', () => {
     const request = {
-      study_program_id: faker.numbers.uintRange(2000, 3000),
-      study_plan_id: faker.numbers.uintRange(90000, 100000),
-      language: Math.random() < 0.5 ? 'cs' : 'en',
+      study_program_id: faker.numbers.uintRange(MIN_STUDY_PROGRAM_ID, MAX_STUDY_PROGRAM_ID),
+      study_plan_id: faker.numbers.uintRange(MIN_STUDY_PLAN_ID, MAX_STUDY_PLAN_ID),
+      language: getRandomLanguage(),
     };
 
-    const response = client.invoke(
-      'stag.academics.studyplan.v1.StudyPlanService/GetStudyProgramAndField',
-      request,
-    );
-
-    check(response, {
-      'GetStudyProgramAndField: status is OK': (r) =>
-        r.status === grpc.StatusOK,
-    });
-
-    client.close();
+    studyPlanClient.getStudyProgramAndField(request);
   });
 
+  studyPlanClient.close();
   sleep(faker.numbers.float64Range(0.5, 1.5));
 }

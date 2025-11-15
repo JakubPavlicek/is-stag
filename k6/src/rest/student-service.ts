@@ -47,8 +47,7 @@ export function smokeTest() {
 
 export function browserScenario() {
   // Select a random student ID from the list.
-  const studentId =
-    STUDENT_IDS[faker.numbers.uintRange(0, STUDENT_IDS.length - 1)];
+  const studentId = STUDENT_IDS[faker.numbers.uintRange(0, STUDENT_IDS.length - 1)];
 
   group('Student Browsing Journey', () => {
     api.getStudentProfile(studentId);
