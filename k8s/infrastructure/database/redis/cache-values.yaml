@@ -2,6 +2,9 @@ auth:
   existingSecret: redis-cache-secret
   existingSecretPasswordKey: redis-password
 
+global:
+  defaultStorageClass: standard
+
 sentinel:
   enabled: true
 

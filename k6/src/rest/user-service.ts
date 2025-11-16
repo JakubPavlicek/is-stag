@@ -2,11 +2,7 @@ import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
 import faker from 'k6/x/faker';
 import * as api from './user-api.ts';
-import {
-  generateUpdatePersonPayload,
-  MAX_PERSON_ID,
-  MIN_PERSON_ID,
-} from '../shared/common.ts';
+import { generateUpdatePersonPayload, MAX_PERSON_ID, MIN_PERSON_ID } from '../shared/common.ts';
 
 export const options: Options = {
   insecureSkipTLSVerify: true,
@@ -29,8 +25,8 @@ export const options: Options = {
     average_load: {
       executor: 'ramping-vus',
       stages: [
-        { duration: '2m', target: 50 },
-        { duration: '5m', target: 50 },
+        { duration: '2m', target: 200 },
+        { duration: '5m', target: 200 },
         { duration: '1m', target: 0 },
       ],
       exec: 'browserScenario',
@@ -40,8 +36,8 @@ export const options: Options = {
     editor_load: {
       executor: 'ramping-vus',
       stages: [
-        { duration: '2m', target: 5 },
-        { duration: '5m', target: 5 },
+        { duration: '2m', target: 20 },
+        { duration: '5m', target: 20 },
         { duration: '1m', target: 0 },
       ],
       exec: 'editorScenario',

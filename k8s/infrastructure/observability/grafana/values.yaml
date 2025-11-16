@@ -1,6 +1,13 @@
 service:
   port: 3000
 
+persistence:
+  enabled: true
+  storageClassName: standard
+
+initChownData:
+  enabled: false
+
 admin:
   existingSecret: grafana-secret
   userKey: username

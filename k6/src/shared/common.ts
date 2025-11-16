@@ -10,8 +10,6 @@ export const BASE_URL = __ENV.BASE_URL || 'https://is-stag.cz';
 export const GRPC_URL = __ENV.GRPC_URL || 'localhost:9090';
 // The path to the data directory
 export const DATA_DIR = '../../data';
-// The path to the proto files
-export const PROTO_DIR = '../../../proto';
 
 export const HEADERS = {
   'Accept-Language': 'cs',

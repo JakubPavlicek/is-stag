@@ -6,6 +6,9 @@ server:
   service:
     servicePort: 9090
 
+  persistentVolume:
+    storageClass: standard
+
   extraFlags:
     - web.enable-lifecycle
     - web.enable-otlp-receiver

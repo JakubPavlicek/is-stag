@@ -33,6 +33,8 @@ deploymentMode: SingleBinary
 
 singleBinary:
   replicas: 1
+  persistence:
+    storageClass: standard
 
 backend:
   replicas: 0

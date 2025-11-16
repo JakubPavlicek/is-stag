@@ -7,8 +7,6 @@
 repositories:
   - name: jetstack
     url: https://charts.jetstack.io
-  - name: bitnami
-    url: https://charts.bitnami.com/bitnami
   - name: grafana
     url: https://grafana.github.io/helm-charts
   - name: prometheus-community
@@ -90,8 +88,8 @@ releases:
   # Databases
   # ========================================
   - name: keycloak-postgresql
-    chart: bitnami/postgresql
-    version: 18.1.8
+    chart: oci://registry-1.docker.io/bitnamicharts/postgresql
+    version: 18.1.9
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/database/keycloak-postgresql/values.yaml
@@ -106,7 +104,7 @@ releases:
           - "--namespace={{ .Environment.Values.namespace }}"
 
   - name: redis-cache
-    chart: bitnami/redis
+    chart: oci://registry-1.docker.io/bitnamicharts/redis
     version: 23.2.12
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
@@ -123,7 +121,7 @@ releases:
           - "--namespace={{ .Environment.Values.namespace }}"
 
   - name: redis-rate-limiter
-    chart: bitnami/redis
+    chart: oci://registry-1.docker.io/bitnamicharts/redis
     version: 23.2.12
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600

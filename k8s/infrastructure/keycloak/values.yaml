@@ -67,9 +67,7 @@ extraEnv: |
     value: "gzip"
   - name: KC_TRACING_SERVICE_NAME
     value: "keycloak"
-  - name: KC_TRACING_RESOURCE_ATTRIBUTES
-    value: "service.name=keycloak,service.version=latest"
   - name: KC_TRACING_SAMPLER_TYPE
     value: "parentbased_traceidratio"
   - name: KC_TRACING_SAMPLER_RATIO
-    value: "1.0"
+    value: "0.01"

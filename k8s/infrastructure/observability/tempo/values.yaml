@@ -50,3 +50,7 @@ tempo:
           - service_name
           - operation
           - status_code
+
+persistence:
+  enabled: true
+  storageClassName: standard
