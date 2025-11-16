@@ -5,6 +5,8 @@
 #   helmfile -e qa destroy     # Destroy qa
 
 repositories:
+  - name: metallb
+    url: https://metallb.github.io/metallb
   - name: jetstack
     url: https://charts.jetstack.io
   - name: grafana
@@ -64,6 +66,31 @@ helmDefaults:
   timeout: 300
 
 releases:
+  # ========================================
+  # MetalLB
+  # ========================================
+  - name: metallb
+    chart: metallb/metallb
+    version: 0.15.2
+    namespace: "{{ .Environment.Values.namespace }}"
+    hooks:
+      - events: [ "postsync" ]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "infrastructure/metallb/ip-address-pool.yaml"
+          - "--namespace={{ .Environment.Values.namespace }}"
+      - events: [ "postsync" ]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "infrastructure/metallb/l2-advertisement.yaml"
+          - "--namespace={{ .Environment.Values.namespace }}"
+
   # ========================================
   # Cert-Manager
   # ========================================

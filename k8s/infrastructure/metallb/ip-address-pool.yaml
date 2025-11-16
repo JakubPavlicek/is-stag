@@ -1,0 +1,7 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ip-address-pool
+spec:
+  addresses:
+    - 10.96.0.0/12
