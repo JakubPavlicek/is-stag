@@ -4,4 +4,4 @@ metadata:
   name: ip-address-pool
 spec:
   addresses:
-    - 10.96.0.0/12
+    - 10.211.55.100-100.211.55.109

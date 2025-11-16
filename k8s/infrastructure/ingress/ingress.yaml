@@ -35,7 +35,3 @@ spec:
                 name: react-client
                 port:
                   number: 5173
-
-# TODO: Add Grafana to cluster and ingress
-# TODO: Add PersistenceVolume to Grafana so that it doesnt say: WARNING: Persistence is disabled!!! You will lose your data when the Grafana pod is terminated
-# TODO: Make Keycloak to use PersistenceVolumeClaim that is not EmptyDir (= a temporary directory that shares a pod's lifetime)

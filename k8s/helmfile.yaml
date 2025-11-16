@@ -73,6 +73,8 @@ releases:
     chart: metallb/metallb
     version: 0.15.2
     namespace: "{{ .Environment.Values.namespace }}"
+    values:
+      - infrastructure/metallb/values.yaml
     hooks:
       - events: [ "postsync" ]
         showlogs: true
