@@ -1,5 +1,8 @@
 package com.stag.identity.shared.grpc.mapper;
 
+import com.stag.identity.person.model.Profile;
+import com.stag.identity.person.service.data.AddressIdsLookupData;
+import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import com.stag.identity.shared.grpc.model.CodelistDomain;
 import com.stag.identity.shared.grpc.model.CodelistEntryId;
 import com.stag.identity.person.repository.projection.AddressView;
@@ -14,6 +17,8 @@ import com.stag.identity.person.service.data.EducationLookupData;
 import com.stag.identity.person.service.data.ProfileLookupData;
 import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistMeaning;
+import com.stag.platform.codelist.v1.GetAddressIdsByNamesRequest;
+import com.stag.platform.codelist.v1.GetAddressIdsByNamesResponse;
 import com.stag.platform.codelist.v1.GetCodelistValuesRequest;
 import com.stag.platform.codelist.v1.GetCodelistValuesResponse;
 import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
@@ -45,6 +50,13 @@ public interface CodelistMapper {
     @Mapping(target = "codelistKeys", ignore = true)
     GetCodelistValuesRequest toCodelistValuesRequest(SimpleProfileView simpleProfile, String language);
 
+    @Mapping(target = "birthCountryName", source = "birthPlace.country")
+    @Mapping(target = "countryName", source = "address.country")
+    @Mapping(target = "municipalityName", source = "address.municipality")
+    @Mapping(target = "municipalityPartName", source = "address.municipalityPart")
+    @Mapping(target = "districtName", source = "address.district")
+    GetAddressIdsByNamesRequest toAddressIdsRequest(Profile.BirthPlace birthPlace, PersonUpdateCommand.Address address, String language);
+
     @Mapping(target = "birthCountryId", source = "personProfile.birthCountryId")
     @Mapping(target = "citizenshipCountryId", source = "personProfile.citizenshipCountryId")
     @Mapping(target = "codelistKeys", ignore = true)
@@ -67,6 +79,8 @@ public interface CodelistMapper {
 
     @Mapping(target = "codelistMeanings", source = "codelistMeanings", qualifiedByName = "toMeaningMap")
     CodelistMeaningsLookupData toCodelistMeaningsData(GetCodelistValuesResponse response);
+
+    AddressIdsLookupData toAddressIdsLookupData(GetAddressIdsByNamesResponse response);
 
     @Mapping(target = "codelistMeanings", source = "codelistMeanings", qualifiedByName = "toMeaningMap")
     ProfileLookupData toPersonProfileData(GetPersonProfileDataResponse response);

@@ -18,6 +18,7 @@ import com.stag.identity.person.service.ProfileService;
 import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class PersonController implements PersonsApi {
     private final EducationService educationService;
 
     @Override
-    public ResponseEntity<PersonResponse> getPersonProfile(Integer personId, String language) {
+    public ResponseEntity<@NonNull PersonResponse> getPersonProfile(Integer personId, String language) {
         log.info("Person profile requested for personId: {} with language: {}", personId, language);
 
         Profile profile = profileService.getPersonProfile(personId, language);
@@ -44,17 +45,17 @@ public class PersonController implements PersonsApi {
     }
 
     @Override
-    public ResponseEntity<Void> updatePersonProfile(Integer personId, UpdatePersonRequest updatePersonRequest) {
+    public ResponseEntity<Void> updatePersonProfile(Integer personId, UpdatePersonRequest updatePersonRequest, String language) {
         log.info("Person profile update requested for personId: {}", personId);
 
         PersonUpdateCommand command = PersonApiMapper.INSTANCE.toPersonUpdateCommand(updatePersonRequest);
-        profileService.updatePersonProfile(personId, command);
+        profileService.updatePersonProfile(personId, command, language);
 
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<AddressesResponse> getPersonAddresses(Integer personId, String language) {
+    public ResponseEntity<@NonNull AddressesResponse> getPersonAddresses(Integer personId, String language) {
         log.info("Person addresses requested for personId: {} with language: {}", personId, language);
 
         Addresses addresses = addressService.getPersonAddresses(personId, language);
@@ -64,7 +65,7 @@ public class PersonController implements PersonsApi {
     }
 
     @Override
-    public ResponseEntity<BankAccountsResponse> getPersonBanking(Integer personId, String language) {
+    public ResponseEntity<@NonNull BankAccountsResponse> getPersonBanking(Integer personId, String language) {
         log.info("Person banking requested for personId: {} with language: {}", personId, language);
 
         Banking banking = bankingService.getPersonBanking(personId, language);
@@ -74,7 +75,7 @@ public class PersonController implements PersonsApi {
     }
 
     @Override
-    public ResponseEntity<EducationResponse> getPersonEducation(Integer personId, String language) {
+    public ResponseEntity<@NonNull EducationResponse> getPersonEducation(Integer personId, String language) {
         log.info("Person education requested for personId: {} with language: {}", personId, language);
 
         Education education = educationService.getPersonEducation(personId, language);

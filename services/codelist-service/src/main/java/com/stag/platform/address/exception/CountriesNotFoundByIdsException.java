@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class CountriesNotFoundException extends RuntimeException {
+public class CountriesNotFoundByIdsException extends RuntimeException {
 
     private final List<Integer> missingIds;
 
-    public CountriesNotFoundException(List<Integer> missingIds) {
+    public CountriesNotFoundByIdsException(List<Integer> missingIds) {
         super("Unable to find countries for IDs: [" + formatMissingIdsMessage(missingIds) + "]");
         this.missingIds = missingIds;
     }

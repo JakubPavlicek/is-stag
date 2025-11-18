@@ -1,9 +1,12 @@
 package com.stag.platform.shared.grpc.mapper;
 
 import com.google.protobuf.Message;
+import com.stag.platform.address.repository.projection.AddressIdsView;
 import com.stag.platform.address.repository.projection.AddressPlaceNameProjection;
 import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistMeaning;
+import com.stag.platform.codelist.v1.GetAddressIdsByNamesRequest;
+import com.stag.platform.codelist.v1.GetAddressIdsByNamesResponse;
 import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
 import com.stag.platform.codelist.v1.GetPersonAddressDataResponse;
 import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
@@ -36,6 +39,16 @@ import java.util.stream.Collectors;
 public interface CodelistMapper {
 
     CodelistMapper INSTANCE = Mappers.getMapper(CodelistMapper.class);
+
+    default Set<String> extractCountryNames(Message message) {
+        return switch (message) {
+            case GetAddressIdsByNamesRequest r -> extractValues(
+                Pair.of(r.hasBirthCountryName(), r.getBirthCountryName()),
+                Pair.of(r.hasCountryName(), r.getCountryName())
+            );
+            default -> throw new IllegalStateException("Unexpected value: " + message);
+        };
+    }
 
     default Set<Integer> extractCountryIds(Message message) {
         return switch (message) {
@@ -70,6 +83,17 @@ public interface CodelistMapper {
     List<CodelistEntryId> toCodelistEntryIds(List<CodelistKey> codelistKeys);
 
     List<CodelistMeaning> toCodelistMeanings(List<CodelistEntryMeaningProjection> entries);
+
+    @Mapping(target = "birthCountryId", source = "request.birthCountryName", qualifiedByName = "getCountryId")
+    @Mapping(target = "countryId", source = "request.countryName", qualifiedByName = "getCountryId")
+    @Mapping(target = "municipalityId", source = "addressIds.municipalityId")
+    @Mapping(target = "municipalityPartId", source = "addressIds.municipalityPartId")
+    @Mapping(target = "districtId", source = "addressIds.districtId")
+    GetAddressIdsByNamesResponse buildAddressIdsByNamesResponse(
+        GetAddressIdsByNamesRequest request,
+        @Context Map<String, Integer> countryIds,
+        AddressIdsView addressIds
+    );
 
     @Mapping(target = "birthCountryName", source = "birthCountryId", qualifiedByName = "getCountryName")
     @Mapping(target = "citizenshipCountryName", source = "citizenshipCountryId", qualifiedByName = "getCountryName")
@@ -135,6 +159,13 @@ public interface CodelistMapper {
             case GetPersonBankingDataResponse.Builder b -> b.addAllCodelistMeanings(codelistMeanings);
             default -> throw new IllegalStateException("Unexpected value: " + builder);
         }
+    }
+
+    @Named("getCountryId")
+    default Integer getCountryId(String countryName, @Context Map<String, Integer> countryIds) {
+        return Optional.ofNullable(countryIds)
+                       .map(ids -> ids.get(countryName))
+                       .orElse(null);
     }
 
     @Named("getCountryName")

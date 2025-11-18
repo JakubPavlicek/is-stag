@@ -12,6 +12,9 @@ service CodelistService {
   // Generic codelist lookup
   rpc GetCodelistValues(GetCodelistValuesRequest)
       returns (GetCodelistValuesResponse);
+  // Address name to ID lookup
+  rpc GetAddressIdsByNames(GetAddressIdsByNamesRequest)
+      returns (GetAddressIdsByNamesResponse);
 
   // Use-case specific methods
   rpc GetPersonProfileData(GetPersonProfileDataRequest)
@@ -37,6 +40,55 @@ message GetCodelistValuesRequest {
 
 message GetCodelistValuesResponse {
   repeated CodelistMeaning codelist_meanings = 1;
+}
+
+message GetAddressIdsByNamesRequest {
+  // Birth Country
+  optional string birth_country_name = 1 [
+    (buf.validate.field).string.max_len = 70
+  ];
+
+  // Country
+  optional string country_name = 2 [
+    (buf.validate.field).string.max_len = 70
+  ];
+
+  // Municipality
+  optional string municipality_name = 3 [
+    (buf.validate.field).string.max_len = 255
+  ];
+
+  // Municipality Part
+  optional string municipality_part_name = 4 [
+    (buf.validate.field).string.max_len = 255
+  ];
+
+  // District
+  optional string district_name = 5 [
+    (buf.validate.field).string.max_len = 100
+  ];
+
+  string language = 6 [
+    (buf.validate.field).string.in = "cs",
+    (buf.validate.field).string.in = "en"
+  ];
+}
+
+message GetAddressIdsByNamesResponse {
+  // Birth Country
+  optional int32 birth_country_id = 1;
+
+  // Country
+  optional int32 country_id = 2;
+
+  // Municipality
+  optional int64 municipality_id = 3;
+
+  // Municipality Part
+  optional int64 municipality_part_id = 4;
+
+  // District
+  optional int32 district_id = 5;
 }
 
 // Person Profile specific (only what's needed for GET /persons/{id})

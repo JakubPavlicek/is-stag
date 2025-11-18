@@ -1,15 +1,18 @@
 package com.stag.identity.person.service;
 
+import com.stag.identity.person.model.Profile;
 import com.stag.identity.person.repository.projection.AddressView;
 import com.stag.identity.person.repository.projection.BankView;
 import com.stag.identity.person.repository.projection.EducationView;
 import com.stag.identity.person.repository.projection.ProfileView;
 import com.stag.identity.person.repository.projection.SimpleProfileView;
+import com.stag.identity.person.service.data.AddressIdsLookupData;
 import com.stag.identity.person.service.data.CodelistMeaningsLookupData;
 import com.stag.identity.person.service.data.EducationLookupData;
 import com.stag.identity.person.service.data.AddressLookupData;
 import com.stag.identity.person.service.data.BankingLookupData;
 import com.stag.identity.person.service.data.ProfileLookupData;
+import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import com.stag.identity.shared.grpc.client.CodelistClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +62,14 @@ public class CodelistLookupService {
         log.debug("Completed fetching person education data");
 
         return CompletableFuture.completedFuture(educationLookupData);
+    }
+
+    public AddressIdsLookupData getAddressIdsData(Profile.BirthPlace birthPlace, PersonUpdateCommand.Address address, String language) {
+        log.info("Fetching person address ids data");
+        AddressIdsLookupData addressIdsData = codelistClient.getAddressIdsData(birthPlace, address, language);
+        log.debug("Completed fetching person address ids data");
+
+        return addressIdsData;
     }
 
     public CodelistMeaningsLookupData getSimpleProfileData(SimpleProfileView simpleProfile, String language) {

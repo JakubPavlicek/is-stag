@@ -1,17 +1,21 @@
 package com.stag.identity.shared.grpc.client;
 
+import com.stag.identity.person.model.Profile;
 import com.stag.identity.person.repository.projection.AddressView;
 import com.stag.identity.person.repository.projection.BankView;
 import com.stag.identity.person.repository.projection.EducationView;
 import com.stag.identity.person.repository.projection.ProfileView;
 import com.stag.identity.person.repository.projection.SimpleProfileView;
+import com.stag.identity.person.service.data.AddressIdsLookupData;
 import com.stag.identity.person.service.data.AddressLookupData;
 import com.stag.identity.person.service.data.BankingLookupData;
 import com.stag.identity.person.service.data.CodelistMeaningsLookupData;
 import com.stag.identity.person.service.data.EducationLookupData;
 import com.stag.identity.person.service.data.ProfileLookupData;
+import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import com.stag.identity.shared.grpc.mapper.CodelistMapper;
 import com.stag.platform.codelist.v1.CodelistServiceGrpc;
+import com.stag.platform.codelist.v1.GetAddressIdsByNamesRequest;
 import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
 import com.stag.platform.codelist.v1.GetPersonBankingDataRequest;
 import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
@@ -33,15 +37,6 @@ public class CodelistClient {
 
     private CodelistServiceGrpc.CodelistServiceBlockingStub codelistStub() {
         return codelistServiceStub.withDeadlineAfter(1, TimeUnit.SECONDS);
-    }
-
-    @CircuitBreaker(name = "codelist-service")
-    @Retry(name = "codelist-service")
-    public CodelistMeaningsLookupData getSimpleProfileData(SimpleProfileView simpleProfile, String language) {
-        var request = CodelistMapper.INSTANCE.toCodelistValuesRequest(simpleProfile, language);
-        var response = codelistStub().getCodelistValues(request);
-
-        return CodelistMapper.INSTANCE.toCodelistMeaningsData(response);
     }
 
     /// Get codelist data specifically for person profile (GET /persons/{personId})
@@ -108,6 +103,31 @@ public class CodelistClient {
         return CodelistMapper.INSTANCE.toPersonEducationData(response);
     }
 
+    /// Get codelist data specifically for person address update (PATCH /persons/{personId})
+    @CircuitBreaker(name = "codelist-service")
+    @Retry(name = "codelist-service")
+    public AddressIdsLookupData getAddressIdsData(Profile.BirthPlace birthPlace, PersonUpdateCommand.Address address, String language) {
+        var request = CodelistMapper.INSTANCE.toAddressIdsRequest(birthPlace, address, language);
+
+        // Skip call if no meaningful data to fetch
+        if (shouldSkipRequest(request)) {
+            log.debug("Skipping codelist-service call for person address ids data - no meaningful data to fetch");
+            return null;
+        }
+
+        var response = codelistStub().getAddressIdsByNames(request);
+        return CodelistMapper.INSTANCE.toAddressIdsLookupData(response);
+    }
+
+    @CircuitBreaker(name = "codelist-service")
+    @Retry(name = "codelist-service")
+    public CodelistMeaningsLookupData getSimpleProfileData(SimpleProfileView simpleProfile, String language) {
+        var request = CodelistMapper.INSTANCE.toCodelistValuesRequest(simpleProfile, language);
+        var response = codelistStub().getCodelistValues(request);
+
+        return CodelistMapper.INSTANCE.toCodelistMeaningsData(response);
+    }
+
     private boolean shouldSkipRequest(GetPersonProfileDataRequest request) {
         return !request.hasBirthCountryId()
             && !request.hasCitizenshipCountryId()
@@ -130,6 +150,14 @@ public class CodelistClient {
         return !request.hasHighSchoolId()
             && !request.hasHighSchoolFieldOfStudyNumber()
             && !request.hasHighSchoolCountryId();
+    }
+
+    private boolean shouldSkipRequest(GetAddressIdsByNamesRequest request) {
+        return !request.hasBirthCountryName()
+            && !request.hasCountryName()
+            && !request.hasMunicipalityName()
+            && !request.hasMunicipalityPartName()
+            && !request.hasDistrictName();
     }
 
 }

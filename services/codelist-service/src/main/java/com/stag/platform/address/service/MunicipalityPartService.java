@@ -1,7 +1,9 @@
 package com.stag.platform.address.service;
 
+import com.stag.platform.address.exception.AddressIdsNotFoundException;
 import com.stag.platform.address.exception.MunicipalityPartsNotFoundException;
 import com.stag.platform.address.repository.MunicipalityPartRepository;
+import com.stag.platform.address.repository.projection.AddressIdsView;
 import com.stag.platform.address.repository.projection.AddressPlaceNameProjection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +58,13 @@ public class MunicipalityPartService {
         return requestedIds.stream()
                            .filter(id -> !foundIds.contains(id))
                            .toList();
+    }
+
+    public AddressIdsView findAddressIdsByNames(String municipalityName, String municipalityPartName, String districtName) {
+        return municipalityPartRepository.findAddressIdsByNames(municipalityName, municipalityPartName, districtName)
+                                         .orElseThrow(() -> new AddressIdsNotFoundException(
+                                             List.of(municipalityName, municipalityPartName, districtName)
+                                         ));
     }
 
 }

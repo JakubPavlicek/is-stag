@@ -1,6 +1,7 @@
 package com.stag.platform.shared.grpc.service;
 
 import com.google.protobuf.Message;
+import com.stag.platform.address.repository.projection.AddressIdsView;
 import com.stag.platform.address.repository.projection.AddressPlaceNameProjection;
 import com.stag.platform.address.service.CountryService;
 import com.stag.platform.address.service.MunicipalityPartService;
@@ -35,16 +36,23 @@ class CodelistGrpcAsyncService {
     private final HighSchoolService highSchoolService;
     private final HighSchoolFieldOfStudyService highSchoolFieldOfStudyService;
 
-    public List<CodelistMeaning> fetchCodelistMeanings(List<CodelistKey> codelistKeys, String language) {
-        List<CodelistEntryId> entryIds = CodelistMapper.INSTANCE.toCodelistEntryIds(codelistKeys);
-        List<CodelistEntryMeaningProjection> entries = codelistEntryService.findMeaningsByIds(entryIds, language);
-        return CodelistMapper.INSTANCE.toCodelistMeanings(entries);
-    }
-
     @Async
     public CompletableFuture<List<CodelistMeaning>> fetchCodelistMeaningsAsync(List<CodelistKey> codelistKeys, String language) {
         List<CodelistMeaning> codelistValues = fetchCodelistMeanings(codelistKeys, language);
         return CompletableFuture.completedFuture(codelistValues);
+    }
+
+    @Async
+    public CompletableFuture<Map<String, Integer>> fetchCountryIdsAsync(Message request, String language) {
+        Set<String> countryNames = CodelistMapper.INSTANCE.extractCountryNames(request);
+        Map<String, Integer> countryIds = fetchCountryIds(countryNames, language);
+        return CompletableFuture.completedFuture(countryIds);
+    }
+
+    @Async
+    public CompletableFuture<AddressIdsView> fetchAddressIdsAsync(String municipalityName, String municipalityPartName, String districtName) {
+        AddressIdsView addressIds = municipalityPartService.findAddressIdsByNames(municipalityName, municipalityPartName, districtName);
+        return CompletableFuture.completedFuture(addressIds);
     }
 
     @Async
@@ -71,6 +79,18 @@ class CodelistGrpcAsyncService {
     public CompletableFuture<String> fetchHighSchoolFieldOfStudyAsync(boolean hasFieldOfStudyNumber, String fieldOfStudyNumber) {
         String fieldOfStudyName = fetchHighSchoolFieldOfStudy(hasFieldOfStudyNumber, fieldOfStudyNumber);
         return CompletableFuture.completedFuture(fieldOfStudyName);
+    }
+
+    public List<CodelistMeaning> fetchCodelistMeanings(List<CodelistKey> codelistKeys, String language) {
+        List<CodelistEntryId> entryIds = CodelistMapper.INSTANCE.toCodelistEntryIds(codelistKeys);
+        List<CodelistEntryMeaningProjection> entries = codelistEntryService.findMeaningsByIds(entryIds, language);
+        return CodelistMapper.INSTANCE.toCodelistMeanings(entries);
+    }
+
+    private Map<String, Integer> fetchCountryIds(Set<String> countryNames, String language) {
+        return countryNames.isEmpty()
+            ? Collections.emptyMap()
+            : countryService.findCountryIds(countryNames, language);
     }
 
     private Map<Integer, String> fetchCountryNames(Set<Integer> countryIds, String language) {

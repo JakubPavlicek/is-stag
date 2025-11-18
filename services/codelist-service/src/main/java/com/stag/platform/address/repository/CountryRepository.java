@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface CountryRepository extends JpaRepository<Country, Integer> {
@@ -51,5 +52,22 @@ public interface CountryRepository extends JpaRepository<Country, Integer> {
         """
     )
     List<CountryNameProjection> findNamesByIds(Collection<Integer> ids, String language);
+
+    @Query(
+        """
+        SELECT
+            c.id,
+            CASE
+                WHEN :language = 'en' THEN c.englishName
+                ELSE c.name
+            END AS name
+        FROM
+            Country c
+        WHERE
+            (:language = 'en' AND c.englishName IN :countryNames)
+            OR (c.name IN :countryNames)
+        """
+    )
+    List<CountryNameProjection> findIdsByNames(Collection<String> countryNames, String language);
 
 }

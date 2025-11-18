@@ -6,6 +6,7 @@ import com.stag.platform.address.service.AddressService;
 import com.stag.platform.api.AddressesApi;
 import com.stag.platform.api.dto.AddressListResponse;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,7 @@ public class AddressController implements AddressesApi {
     private final AddressService addressService;
 
     @Override
-    public ResponseEntity<AddressListResponse> getAddresses(String query, Integer limit) {
+    public ResponseEntity<@NonNull AddressListResponse> getAddresses(String query, Integer limit) {
         List<AddressSuggestion> addressSuggestions = addressService.findAddressSuggestions(query, limit);
         AddressListResponse addressesResponse = AddressApiMapper.INSTANCE.toAddressListResponse(addressSuggestions);
 

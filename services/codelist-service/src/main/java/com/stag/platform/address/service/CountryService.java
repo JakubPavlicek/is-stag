@@ -1,6 +1,7 @@
 package com.stag.platform.address.service;
 
-import com.stag.platform.address.exception.CountriesNotFoundException;
+import com.stag.platform.address.exception.CountriesNotFoundByIdsException;
+import com.stag.platform.address.exception.CountriesNotFoundByNamesException;
 import com.stag.platform.address.repository.CountryRepository;
 import com.stag.platform.address.repository.projection.CountryNameProjection;
 import com.stag.platform.address.repository.projection.CountryView;
@@ -29,10 +30,23 @@ public class CountryService {
     }
 
     @Transactional(readOnly = true)
+    public Map<String, Integer> findCountryIds(Collection<String> countryNames, String language) {
+        List<CountryNameProjection> foundCountryIds = countryRepository.findIdsByNames(countryNames, language);
+
+        ensureAllCountriesWereFoundByNames(countryNames, foundCountryIds);
+
+        return foundCountryIds.stream()
+                              .collect(Collectors.toMap(
+                                  CountryNameProjection::name,
+                                  CountryNameProjection::id
+                              ));
+    }
+
+    @Transactional(readOnly = true)
     public Map<Integer, String> findNamesByIds(Collection<Integer> countryIds, String language) {
         List<CountryNameProjection> foundCountries = countryRepository.findNamesByIds(countryIds, language);
 
-        ensureAllCountriesWereFound(countryIds, foundCountries);
+        ensureAllCountriesWereFoundByIds(countryIds, foundCountries);
 
         return foundCountries.stream()
                              .collect(Collectors.toMap(
@@ -41,7 +55,32 @@ public class CountryService {
                              ));
     }
 
-    private void ensureAllCountriesWereFound(Collection<Integer> requestedIds, List<CountryNameProjection> foundCountries) {
+    private void ensureAllCountriesWereFoundByNames(Collection<String> requestedNames, List<CountryNameProjection> foundCountries) {
+        // If counts match, all countries were found (assumes no duplicates in requestedNames)
+        if (requestedNames.size() == foundCountries.size()) {
+            return;
+        }
+
+        List<String> missingNames = getMissingNames(requestedNames, foundCountries);
+
+        // If, after filtering, there are names still missing, throw an exception
+        if (!missingNames.isEmpty()) {
+            throw new CountriesNotFoundByNamesException(missingNames);
+        }
+    }
+
+    private List<String> getMissingNames(Collection<String> requestedNames, List<CountryNameProjection> foundCountries) {
+        // Determine which IDs are missing
+        Set<String> foundNames = foundCountries.stream()
+                                               .map(CountryNameProjection::name)
+                                               .collect(Collectors.toSet());
+
+        return requestedNames.stream()
+                             .filter(name -> !foundNames.contains(name))
+                             .toList();
+    }
+
+    private void ensureAllCountriesWereFoundByIds(Collection<Integer> requestedIds, List<CountryNameProjection> foundCountries) {
         // If counts match, all countries were found (assumes no duplicates in requestedIds)
         if (requestedIds.size() == foundCountries.size()) {
             return;
@@ -51,7 +90,7 @@ public class CountryService {
 
         // If, after filtering, there are IDs still missing, throw an exception
         if (!missingIds.isEmpty()) {
-            throw new CountriesNotFoundException(missingIds);
+            throw new CountriesNotFoundByIdsException(missingIds);
         }
     }
 

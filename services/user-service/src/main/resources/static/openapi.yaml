@@ -62,6 +62,7 @@ paths:
       description: Update a person by their unique identifier.
       operationId: updatePersonProfile
       parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
         - $ref: '#/components/parameters/PersonId'
       requestBody:
         description: Person details to be updated.

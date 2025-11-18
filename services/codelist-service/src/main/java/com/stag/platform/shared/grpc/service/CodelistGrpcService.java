@@ -1,8 +1,11 @@
 package com.stag.platform.shared.grpc.service;
 
+import com.stag.platform.address.repository.projection.AddressIdsView;
 import com.stag.platform.address.repository.projection.AddressPlaceNameProjection;
 import com.stag.platform.codelist.v1.CodelistMeaning;
 import com.stag.platform.codelist.v1.CodelistServiceGrpc;
+import com.stag.platform.codelist.v1.GetAddressIdsByNamesRequest;
+import com.stag.platform.codelist.v1.GetAddressIdsByNamesResponse;
 import com.stag.platform.codelist.v1.GetCodelistValuesRequest;
 import com.stag.platform.codelist.v1.GetCodelistValuesResponse;
 import com.stag.platform.codelist.v1.GetPersonAddressDataRequest;
@@ -45,6 +48,27 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                                                 .build();
 
         completeResponse(responseObserver, response);
+    }
+
+    @Override
+    public void getAddressIdsByNames(
+        GetAddressIdsByNamesRequest request,
+        StreamObserver<GetAddressIdsByNamesResponse> responseObserver
+    ) {
+        CompletableFuture<Map<String, Integer>> countryIdsFuture = asyncService.fetchCountryIdsAsync(request, request.getLanguage());
+
+        CompletableFuture<AddressIdsView> addressIdsFuture = asyncService.fetchAddressIdsAsync(
+            request.getMunicipalityName(), request.getMunicipalityPartName(), request.getDistrictName()
+        );
+
+        CompletableFuture.allOf(countryIdsFuture, addressIdsFuture)
+                         .thenApply(_ -> CodelistMapper.INSTANCE.buildAddressIdsByNamesResponse(
+                             request,
+                             countryIdsFuture.join(),
+                             addressIdsFuture.join()
+                         ))
+                         .thenAccept(response -> completeResponse(responseObserver, response))
+                         .exceptionally(ex -> errorResponse(responseObserver, ex));
     }
 
     @Override

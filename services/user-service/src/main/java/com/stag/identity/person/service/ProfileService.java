@@ -8,6 +8,7 @@ import com.stag.identity.person.model.SimpleProfile;
 import com.stag.identity.person.repository.PersonRepository;
 import com.stag.identity.person.repository.projection.ProfileView;
 import com.stag.identity.person.repository.projection.SimpleProfileView;
+import com.stag.identity.person.service.data.AddressIdsLookupData;
 import com.stag.identity.person.service.data.CodelistMeaningsLookupData;
 import com.stag.identity.person.service.data.ProfileLookupData;
 import com.stag.identity.person.service.dto.PersonUpdateCommand;
@@ -70,8 +71,7 @@ public class ProfileService {
         return profile;
     }
 
-    // TODO: Add caching
-
+    @Cacheable(value = "person-simple-profile", key = "{#personId, #language}")
     public SimpleProfile getPersonSimpleProfile(Integer personId, String language) {
         log.info("Fetching person simple profile for personId: {} with language: {}", personId, language);
 
@@ -94,24 +94,60 @@ public class ProfileService {
     }
 
     @Transactional
-    public void updatePersonProfile(Integer personId, PersonUpdateCommand command) {
+    @PreAuthorize("""
+        hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
+        || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)
+    """)
+    public void updatePersonProfile(Integer personId, PersonUpdateCommand command, String language) {
         Person person = personRepository.findById(personId)
                                         .orElseThrow(() -> new PersonNotFoundException(personId));
 
-        String uniqueEmail = "jpvlck@seznam.cz";
+        ObjectUtils.updateIfNotNull(command.birthSurname(), person::setBirthSurname);
 
-        person.setEmail(uniqueEmail);
-        personRepository.saveAndFlush(person);
+        updateContact(person, command.contact());
+        updateTitles(person, command.titles());
 
-//        ObjectUtils.updateIfNotNull(command.birthSurname(), person::setBirthSurname);
-//        ObjectUtils.updateIfNotNull(command.maritalStatus(), person::setMaritalStatus);
-//
-//        updateContact(person, command.contact());
-//        updateTitles(person, command.titles());
-//
-//        // TODO: update BirthPlace and TemporaryAddress
-//
-//        bankingService.updatePersonBankAccount(person, command.bankAccount());
+        bankingService.updatePersonBankAccount(person, command.bankAccount());
+
+        // TODO: get the codelist value of marital status and set it
+        ObjectUtils.updateIfNotNull(command.maritalStatus(), person::setMaritalStatus);
+
+        // TODO: update BirthPlace and TemporaryAddress
+        updateAddresses(person, command.birthPlace(), command.temporaryAddress(), language);
+    }
+
+    private void updateAddresses(Person person, Profile.BirthPlace birthPlace, PersonUpdateCommand.Address address, String language) {
+        if (birthPlace == null && address == null) {
+            return;
+        }
+
+        if (birthPlace != null) {
+            ObjectUtils.updateIfNotNull(birthPlace.city(), person::setBirthPlace);
+        }
+
+        if (address != null) {
+            ObjectUtils.updateIfNotNull(address.street(), person::setTemporaryStreet);
+            ObjectUtils.updateIfNotNull(address.streetNumber(), person::setTemporaryStreetNumber);
+            ObjectUtils.updateIfNotNull(address.zipCode(), person::setTemporaryZipCode);
+            ObjectUtils.updateIfNotNull(address.postOffice(), person::setPostOfficeForeign);
+        }
+
+        AddressIdsLookupData addressIdsData = codelistLookupService.getAddressIdsData(birthPlace, address, language);
+
+        if (addressIdsData != null) {
+            // Czech address
+            if (addressIdsData.countryId() == 203) {
+                // Need to use the retrieved address ids that were validated
+            }
+
+            // Temporary address is different from domicile address
+            if (!person.getDomicileCountryId().equals(addressIdsData.countryId())) {
+
+            }
+            else {
+
+            }
+        }
     }
 
     private void updateContact(Person person, Profile.Contact contact) {

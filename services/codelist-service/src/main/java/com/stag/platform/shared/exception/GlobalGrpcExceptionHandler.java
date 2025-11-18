@@ -1,6 +1,8 @@
 package com.stag.platform.shared.exception;
 
-import com.stag.platform.address.exception.CountriesNotFoundException;
+import com.stag.platform.address.exception.AddressIdsNotFoundException;
+import com.stag.platform.address.exception.CountriesNotFoundByIdsException;
+import com.stag.platform.address.exception.CountriesNotFoundByNamesException;
 import com.stag.platform.address.exception.MunicipalityPartsNotFoundException;
 import com.stag.platform.education.exception.HighSchoolFieldOfStudyNotFoundException;
 import com.stag.platform.education.exception.HighSchoolNotFoundException;
@@ -20,8 +22,14 @@ public class GlobalGrpcExceptionHandler {
         return Status.NOT_FOUND.withDescription(ex.getMessage());
     }
 
-    @GrpcExceptionHandler(CountriesNotFoundException.class)
-    public Status handleCountriesNotFoundException(CountriesNotFoundException ex) {
+    @GrpcExceptionHandler(AddressIdsNotFoundException.class)
+    public Status handleAddressIdsNotFoundException(AddressIdsNotFoundException ex) {
+        log.warn("gRPC request failed, address ids not found: {}", ex.getMessage());
+        return Status.NOT_FOUND.withDescription(ex.getMessage());
+    }
+
+    @GrpcExceptionHandler({ CountriesNotFoundByIdsException.class, CountriesNotFoundByNamesException.class })
+    public Status handleCountriesNotFoundException(Exception ex) {
         log.warn("gRPC request failed, countries not found: {}", ex.getMessage());
         return Status.NOT_FOUND.withDescription(ex.getMessage());
     }
