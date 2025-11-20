@@ -118,7 +118,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.1.9
+    version: 18.1.10
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/database/keycloak-postgresql/values.yaml
@@ -171,7 +171,7 @@ releases:
   # ========================================
   - name: grafana
     chart: grafana/grafana
-    version: 10.1.4
+    version: 10.1.5
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/grafana/values.yaml
@@ -216,7 +216,7 @@ releases:
   # ========================================
   - name: opentelemetry-operator
     chart: open-telemetry/opentelemetry-operator
-    version: 0.99.0
+    version: 0.99.2
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - cert-manager
