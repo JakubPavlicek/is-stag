@@ -48,7 +48,7 @@
         <protobuf-maven-plugin.version>4.0.3</protobuf-maven-plugin.version>
 
         <!-- Hibernate ORM Processor for JPA Metamodel generation -->
-        <hibernate-processor.version>7.1.6.Final</hibernate-processor.version>
+        <hibernate-processor.version>7.1.10.Final</hibernate-processor.version>
 
         <!-- Tools -->
         <httpclient5.version>5.6-alpha1</httpclient5.version>
@@ -60,7 +60,7 @@
         <lombok.version>1.18.42</lombok.version>
 
         <!-- Cloud Native Buildpacks -->
-        <image.builder.version>0.0.81</image.builder.version>
+        <image.builder.version>0.0.82</image.builder.version>
         <buildpack-java.version>20.2.1</buildpack-java.version>
         <buildpack-health-checker.version>2.11.1</buildpack-health-checker.version>
     </properties>

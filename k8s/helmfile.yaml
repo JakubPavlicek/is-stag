@@ -118,7 +118,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.1.11
+    version: 18.1.13
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/database/keycloak-postgresql/values.yaml
@@ -233,6 +233,7 @@ releases:
           - "-c"
           - |
             kubectl wait --for=condition=available --timeout=300s deployment/opentelemetry-operator -n {{ .Environment.Values.namespace }}
+            sleep 5
             until kubectl get endpoints opentelemetry-operator-webhook -n {{ .Environment.Values.namespace }} -o jsonpath='{.subsets}' | grep -q "addresses"; do
               sleep 5
             done
