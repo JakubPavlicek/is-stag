@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'keycloak/**'
+      - '.github/workflows/keycloak-ci.yaml'
 
 jobs:
   build-and-publish-keycloak:
