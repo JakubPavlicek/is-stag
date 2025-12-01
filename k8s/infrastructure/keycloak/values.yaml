@@ -1,7 +1,7 @@
 fullnameOverride: keycloak
 
 image:
-  repository: docker.io/jakubpavlicek/is-stag-keycloak
+  repository: ghcr.io/jakubpavlicek/is-stag-keycloak
   tag: latest
 
 command:
