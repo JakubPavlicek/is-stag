@@ -9,9 +9,6 @@ command:
   - "start"
   - "--import-realm"
 
-# Additional init containers, e. g. for providing custom themes
-extraInitContainers: ""
-
 http:
   relativePath: /auth
 

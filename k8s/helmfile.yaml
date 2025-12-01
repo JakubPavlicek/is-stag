@@ -191,7 +191,7 @@ releases:
 
   - name: prometheus
     chart: prometheus-community/prometheus
-    version: 27.46.0
+    version: 27.48.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/prometheus/values.yaml
@@ -245,7 +245,7 @@ releases:
   # ========================================
   - name: keycloak
     chart: codecentric/keycloakx
-    version: 7.1.4
+    version: 7.1.5
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - opentelemetry-operator
