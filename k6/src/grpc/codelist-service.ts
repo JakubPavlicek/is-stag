@@ -2,7 +2,9 @@ import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
 import faker from 'k6/x/faker';
 import * as codelistClient from './codelist-client.ts';
-import { CODELIST_DOMAINS, CODELIST_VALUES, getRandomLanguage } from '../shared/common.ts';
+import { getRandomLanguage } from '../shared/common.ts';
+import { CODELIST_VALUES } from '../../data/codelist-values.ts';
+import { CODELIST_DOMAINS } from '../../data/codelist-domains.ts';
 
 export const options: Options = {
   insecureSkipTLSVerify: true,

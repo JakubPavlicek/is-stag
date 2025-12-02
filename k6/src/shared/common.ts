@@ -1,5 +1,4 @@
 import faker from 'k6/x/faker';
-import { SharedArray } from 'k6/data';
 
 // The test run ID
 export const TEST_RUN_ID = __ENV.K6_TEST_RUN_ID || '1';
@@ -8,8 +7,6 @@ export const TEST_RUN_ID = __ENV.K6_TEST_RUN_ID || '1';
 export const BASE_URL = __ENV.BASE_URL || 'https://is-stag.cz';
 // The gRPC server address
 export const GRPC_URL = __ENV.GRPC_URL || 'localhost:9090';
-// The path to the data directory
-export const DATA_DIR = '../../data';
 
 export const HEADERS = {
   'Accept-Language': 'cs',
@@ -26,21 +23,6 @@ export const MAX_STUDY_PROGRAM_ID = 2300;
 
 export const MIN_STUDY_PLAN_ID = 1;
 export const MAX_STUDY_PLAN_ID = 25000;
-
-// A list of known student IDs, loaded from a JSON file.
-export const STUDENT_IDS = new SharedArray('student-ids', function (): string[] {
-  return JSON.parse(open(`${DATA_DIR}/student-ids.json`));
-});
-
-// A list of known codelist domains.
-export const CODELIST_DOMAINS = new SharedArray('codelist-domains', function (): string[] {
-  return JSON.parse(open(`${DATA_DIR}/codelist-domains.json`));
-});
-
-// A list of known codelist values.
-export const CODELIST_VALUES = new SharedArray('codelist-values', function (): string[] {
-  return JSON.parse(open(`${DATA_DIR}/codelist-values.json`));
-});
 
 export const getRandomLanguage = () => (Math.random() < 0.5 ? 'cs' : 'en');
 

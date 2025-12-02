@@ -2,7 +2,7 @@ import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
 import faker from 'k6/x/faker';
 import * as api from './codelist-api.ts';
-import { CODELIST_DOMAINS } from '../shared/common.ts';
+import { CODELIST_DOMAINS } from '../../data/codelist-domains.ts';
 
 export const options: Options = {
   insecureSkipTLSVerify: true,

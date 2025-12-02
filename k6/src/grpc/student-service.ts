@@ -2,7 +2,8 @@ import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
 import faker from 'k6/x/faker';
 import * as studentClient from './student-client.ts';
-import { MAX_PERSON_ID, MIN_PERSON_ID, STUDENT_IDS } from '../shared/common.ts';
+import { MAX_PERSON_ID, MIN_PERSON_ID } from '../shared/common.ts';
+import { STUDENT_IDS } from '../../data/student-ids.ts';
 
 export const options: Options = {
   insecureSkipTLSVerify: true,
