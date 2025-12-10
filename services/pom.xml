@@ -42,10 +42,10 @@
 
         <!-- gRPC -->
         <grpc.version>1.77.0</grpc.version>
-        <protobuf-java.version>4.33.1</protobuf-java.version>
+        <protobuf-java.version>4.33.2</protobuf-java.version>
         <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
-        <protovalidate.version>1.0.1</protovalidate.version>
-        <protobuf-maven-plugin.version>4.0.3</protobuf-maven-plugin.version>
+        <protovalidate.version>1.1.0</protovalidate.version>
+        <protobuf-maven-plugin.version>4.1.1</protobuf-maven-plugin.version>
 
         <!-- Hibernate ORM Processor for JPA Metamodel generation -->
         <hibernate-processor.version>7.1.10.Final</hibernate-processor.version>
@@ -60,8 +60,8 @@
         <lombok.version>1.18.42</lombok.version>
 
         <!-- Cloud Native Buildpacks -->
-        <image.builder.version>0.0.82</image.builder.version>
-        <buildpack-java.version>20.2.1</buildpack-java.version>
+        <image.builder.version>0.0.87</image.builder.version>
+        <buildpack-java.version>20.3.0</buildpack-java.version>
         <buildpack-health-checker.version>2.11.1</buildpack-health-checker.version>
     </properties>
 

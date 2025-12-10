@@ -71,7 +71,7 @@ releases:
   # ========================================
   - name: metallb
     chart: metallb/metallb
-    version: 0.15.2
+    version: 0.15.3
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/metallb/values.yaml
@@ -98,7 +98,7 @@ releases:
   # ========================================
   - name: cert-manager
     chart: jetstack/cert-manager
-    version: v1.19.1
+    version: v1.19.2
     namespace: "{{ .Environment.Values.namespace }}"
     set:
       - name: crds.enabled
@@ -171,7 +171,7 @@ releases:
   # ========================================
   - name: grafana
     chart: grafana/grafana
-    version: 10.2.0
+    version: 10.3.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/grafana/values.yaml
@@ -191,7 +191,7 @@ releases:
 
   - name: prometheus
     chart: prometheus-community/prometheus
-    version: 27.48.0
+    version: 27.50.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/prometheus/values.yaml
@@ -199,7 +199,7 @@ releases:
 
   - name: loki
     chart: grafana/loki
-    version: 6.46.0
+    version: 6.48.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/loki/values.yaml
@@ -258,7 +258,7 @@ releases:
   # ========================================
   - name: ingress-nginx
     chart: ingress-nginx/ingress-nginx
-    version: 4.14.0
+    version: 4.14.1
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     needs:
