@@ -118,7 +118,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.1.13
+    version: 18.1.14
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/database/keycloak-postgresql/values.yaml
@@ -134,7 +134,7 @@ releases:
 
   - name: redis-cache
     chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 24.0.0
+    version: 24.0.8
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     values:
@@ -151,7 +151,7 @@ releases:
 
   - name: redis-rate-limiter
     chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 24.0.0
+    version: 24.0.8
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     values:
@@ -171,7 +171,7 @@ releases:
   # ========================================
   - name: grafana
     chart: grafana/grafana
-    version: 10.3.0
+    version: 10.3.1
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/grafana/values.yaml
@@ -191,7 +191,7 @@ releases:
 
   - name: prometheus
     chart: prometheus-community/prometheus
-    version: 27.50.0
+    version: 27.50.1
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/prometheus/values.yaml
@@ -199,7 +199,7 @@ releases:
 
   - name: loki
     chart: grafana/loki
-    version: 6.48.0
+    version: 6.49.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/loki/values.yaml
@@ -216,7 +216,7 @@ releases:
   # ========================================
   - name: opentelemetry-operator
     chart: open-telemetry/opentelemetry-operator
-    version: 0.99.2
+    version: 0.100.0
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - cert-manager

@@ -60,9 +60,9 @@
         <lombok.version>1.18.42</lombok.version>
 
         <!-- Cloud Native Buildpacks -->
-        <image.builder.version>0.0.87</image.builder.version>
-        <buildpack-java.version>20.3.0</buildpack-java.version>
-        <buildpack-health-checker.version>2.11.1</buildpack-health-checker.version>
+        <image.builder.version>0.0.88</image.builder.version>
+        <buildpack-java.version>20.4.0</buildpack-java.version>
+        <buildpack-health-checker.version>2.12.0</buildpack-health-checker.version>
     </properties>
 
     <modules>
