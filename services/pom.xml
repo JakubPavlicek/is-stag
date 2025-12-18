@@ -20,7 +20,7 @@
         <!-- Java and Maven -->
         <java.version>25</java.version>
         <java-required-version>[25,)</java-required-version>
-        <maven-required-version>[3.9.11,)</maven-required-version>
+        <maven-required-version>[3.9.12,)</maven-required-version>
 
         <!-- GitHub Container Registry -->
         <!-- Default username for local builds; override in CI with -Dgithub.username=... -->
@@ -60,7 +60,7 @@
         <lombok.version>1.18.42</lombok.version>
 
         <!-- Cloud Native Buildpacks -->
-        <image.builder.version>0.0.88</image.builder.version>
+        <image.builder.version>0.0.89</image.builder.version>
         <buildpack-java.version>20.4.0</buildpack-java.version>
         <buildpack-health-checker.version>2.12.0</buildpack-health-checker.version>
     </properties>
@@ -78,20 +78,6 @@
         <module>codelist-service</module>
         <module>user-service</module>
     </modules>
-
-    <repositories>
-        <repository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <dependencyManagement>
         <dependencies>

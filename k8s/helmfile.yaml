@@ -171,7 +171,7 @@ releases:
   # ========================================
   - name: grafana
     chart: grafana/grafana
-    version: 10.3.1
+    version: 10.3.2
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/grafana/values.yaml
@@ -191,7 +191,7 @@ releases:
 
   - name: prometheus
     chart: prometheus-community/prometheus
-    version: 27.50.1
+    version: 27.52.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/prometheus/values.yaml
@@ -216,7 +216,7 @@ releases:
   # ========================================
   - name: opentelemetry-operator
     chart: open-telemetry/opentelemetry-operator
-    version: 0.100.0
+    version: 0.101.0
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - cert-manager

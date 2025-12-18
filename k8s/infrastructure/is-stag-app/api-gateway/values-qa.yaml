@@ -1,5 +1,4 @@
 spring:
-  profiles:
-    active: qa
+  profile: qa
 
-replicaCount: 2
+replicaCount: 1

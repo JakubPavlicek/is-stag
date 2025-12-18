@@ -12,6 +12,9 @@ service:
     grpc: 9020
 database:
   enabled: true
+  proxy:
+    username: portalproxy
+    password: demo
 probes:
   readiness:
     path: /actuator/health/readiness

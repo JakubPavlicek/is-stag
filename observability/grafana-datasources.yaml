@@ -8,12 +8,12 @@ datasources:
     editable: true
     jsonData:
       derivedFields:
-        - name: "trace_id"
-          matcherType: "label"
-          matcherRegex: "trace_id"
-          url: "$${__value.raw}"
-          datasourceUid: "tempo"
-          urlDisplayLabel: "Trace: $${__value.raw}"
+        - name: trace_id
+          matcherType: label
+          matcherRegex: trace_id
+          url: "${__value.raw}"
+          datasourceUid: tempo
+          urlDisplayLabel: "Trace: ${__value.raw}"
 
   - name: Tempo
     type: tempo
@@ -23,19 +23,21 @@ datasources:
     jsonData:
       tracesToLogsV2:
         customQuery: true
-        datasourceUid: "loki"
+        datasourceUid: loki
         query: '{$${__tags}} | trace_id = "$${__trace.traceId}"'
         tags:
           - key: "service.name"
             value: "service_name"
       serviceMap:
-        datasourceUid: "prometheus"
+        datasourceUid: prometheus
+      tracesToMetrics:
+        datasourceUid: prometheus
       search:
         hide: false
       nodeGraph:
         enabled: true
       lokiSearch:
-        datasourceUid: "loki"
+        datasourceUid: loki
 
   - name: Prometheus
     type: prometheus
@@ -43,8 +45,40 @@ datasources:
     url: http://prometheus:9090
     editable: true
     jsonData:
-      timeInterval: 60s
+      timeInterval: 10s
       exemplarTraceIdDestinations:
         - name: trace_id
           datasourceUid: tempo
-          urlDisplayLabel: "Trace: $${__value.raw}"
+          urlDisplayLabel: "Trace: ${__value.raw}"
+
+  - name: Redis Cache
+    type: redis-datasource
+    uid: redis-cache
+    url: redis://redis-cache:6379
+    editable: true
+    jsonData:
+      client: standalone
+      poolSize: 5
+      timeout: 10
+      pipelineWindow: 0
+      pingInterval: 0
+      tlsAuth: false
+      tlsSkipVerify: false
+    secureJsonData:
+      password: redis
+
+  - name: Redis Rate Limiter
+    type: redis-datasource
+    uid: redis-rate-limiter
+    url: redis://redis-rate-limiter:6379
+    editable: true
+    jsonData:
+      client: standalone
+      poolSize: 5
+      timeout: 10
+      pipelineWindow: 0
+      pingInterval: 0
+      tlsAuth: false
+      tlsSkipVerify: false
+    secureJsonData:
+      password: redis

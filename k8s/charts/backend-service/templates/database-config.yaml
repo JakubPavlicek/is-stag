@@ -4,4 +4,5 @@ metadata:
   name: {{ .Values.name }}-database-config
   namespace: {{ .Release.Namespace }}
 data:
+  SPRING_PROFILES_ACTIVE: {{ .Values.spring.profile | quote }}
   SPRING_DATASOURCE_URL: {{ .Values.database.url | quote }}

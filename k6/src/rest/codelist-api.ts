@@ -2,23 +2,6 @@ import http from 'k6/http';
 import { check } from 'k6';
 import { BASE_URL, HEADERS, TEST_RUN_ID } from '../shared/common.ts';
 
-export function getAddresses(query: string, limit: number) {
-  const url = `${BASE_URL}/api/v1/addresses?query=${query}&limit=${limit}`;
-  const params = {
-    headers: HEADERS,
-    tags: {
-      name: 'GET /addresses',
-      testId: TEST_RUN_ID,
-    },
-  };
-
-  const res = http.get(url, params);
-
-  check(res, {
-    'GET /addresses: status is 200': (r) => r.status === 200,
-  });
-}
-
 export function getCountries() {
   const url = `${BASE_URL}/api/v1/countries`;
   const params = {

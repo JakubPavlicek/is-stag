@@ -30,9 +30,6 @@ spec:
             - containerPort: {{ .Values.service.ports.grpc }}
               name: grpc
             {{ end }}
-          env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: {{ .Values.spring.profiles.active }}
           envFrom:
             - configMapRef:
                 name: {{ .Values.name }}-database-config

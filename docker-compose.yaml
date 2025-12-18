@@ -45,7 +45,8 @@ services:
       - "8180:8080"
     command: start-dev --import-realm
     networks:
-      - is-stag-network
+      - is-stag-frontend
+      - is-stag-backend
 
   redis-cache:
     profiles:
@@ -63,7 +64,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - is-stag-network
+      - is-stag-backend
 
   redis-rate-limiter:
     profiles:
@@ -81,7 +82,7 @@ services:
     ports:
       - "6380:6379"
     networks:
-      - is-stag-network
+      - is-stag-backend
 
   react-client:
     profiles:
@@ -100,7 +101,8 @@ services:
       api-gateway:
         condition: service_started
     networks:
-      - is-stag-network
+      - is-stag-frontend
+      - is-stag-backend
 
   api-gateway:
     profiles:
@@ -122,6 +124,7 @@ services:
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: api-gateway
+      OTEL_RESOURCE_ATTRIBUTES: service.name=api-gateway,service.namespace=dev,service.version=0.0.1,environment=dev
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
       OTEL_TRACES_SAMPLER_ARG: 1.0
@@ -138,7 +141,7 @@ services:
       redis-rate-limiter:
         condition: service_healthy
     networks:
-      - is-stag-network
+      - is-stag-backend
 
   student-service:
     profiles:
@@ -155,6 +158,7 @@ services:
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: student-service
+      OTEL_RESOURCE_ATTRIBUTES: service.name=student-service,service.namespace=dev,service.version=0.0.1,environment=dev
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
       OTEL_TRACES_SAMPLER_ARG: 1.0
@@ -171,7 +175,7 @@ services:
       otel:
         condition: service_started
     networks:
-      - is-stag-network
+      - is-stag-backend
 
   study-plan-service:
     profiles:
@@ -188,6 +192,7 @@ services:
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: study-plan-service
+      OTEL_RESOURCE_ATTRIBUTES: service.name=study-plan-service,service.namespace=dev,service.version=0.0.1,environment=dev
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
       OTEL_TRACES_SAMPLER_ARG: 1.0
@@ -204,7 +209,7 @@ services:
       otel:
         condition: service_started
     networks:
-      - is-stag-network
+      - is-stag-backend
 
   user-service:
     profiles:
@@ -212,14 +217,16 @@ services:
     container_name: user-service
     image: ghcr.io/jakubpavlicek/user-service:0.0.1
     pull_policy: never
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: dev
-      SPRING_DATASOURCE_URL: "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=atreus.zcu.cz)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=pelops.zcu.cz)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=DEMO_SERVICE)(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"
       JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: user-service
+      OTEL_RESOURCE_ATTRIBUTES: service.name=user-service,service.namespace=dev,service.version=0.0.1,environment=dev
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
       OTEL_TRACES_SAMPLER_ARG: 1.0
@@ -236,7 +243,7 @@ services:
       otel:
         condition: service_started
     networks:
-      - is-stag-network
+      - is-stag-backend
 
   codelist-service:
     profiles:
@@ -253,6 +260,7 @@ services:
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_EXPORTER_OTLP_COMPRESSION: gzip
       OTEL_SERVICE_NAME: codelist-service
+      OTEL_RESOURCE_ATTRIBUTES: service.name=codelist-service,service.namespace=dev,service.version=0.0.1,environment=dev
       OTEL_METRICS_EXPORTER: otlp
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
       OTEL_TRACES_SAMPLER_ARG: 1.0
@@ -269,7 +277,7 @@ services:
       otel:
         condition: service_started
     networks:
-      - is-stag-network
+      - is-stag-backend
 
   # --- Observability ---
 
@@ -294,7 +302,8 @@ services:
       tempo:
         condition: service_started
     networks:
-      - is-stag-network
+      - is-stag-backend
+      - is-stag-observability
 
   loki:
     profiles:
@@ -308,7 +317,7 @@ services:
     ports:
       - "3100"
     networks:
-      - is-stag-network
+      - is-stag-observability
 
   grafana:
     profiles:
@@ -319,12 +328,16 @@ services:
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_INSTALL_PLUGINS=redis-datasource
     volumes:
       - ./observability/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/default.yml
+      - ./observability/grafana-dashboards.yaml:/etc/grafana/provisioning/dashboards/default.yml
+      - ./observability/dashboards:/etc/grafana/provisioning/dashboards/json
     ports:
       - "3000:3000"
     networks:
-      - is-stag-network
+      - is-stag-observability
+      - is-stag-backend
 
   tempo:
     profiles:
@@ -339,7 +352,7 @@ services:
       - "4317"
       - "4318"
     networks:
-      - is-stag-network
+      - is-stag-observability
 
   prometheus:
     profiles:
@@ -357,9 +370,12 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - is-stag-network
+      - is-stag-observability
 
-# TODO: add specific networks (split backend and frontend)
 networks:
-  is-stag-network:
+  is-stag-frontend:
+    driver: bridge
+  is-stag-backend:
+    driver: bridge
+  is-stag-observability:
     driver: bridge

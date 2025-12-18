@@ -1,4 +1,4 @@
-name: generic-service
+name: backend-service
 
 replicaCount: 1
 
@@ -20,13 +20,16 @@ service:
     grpcNodePort: null
 
 spring:
-  profiles:
-    active: ""
+  profile: ""
 
 database:
   url: "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=atreus.zcu.cz)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=pelops.zcu.cz)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=DEMO_SERVICE)(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"
   username: "install"
   password: "demo"
+  proxy:
+    username: ""
+    password: ""
+    target_username: "install2"
 
 probes:
   readiness:

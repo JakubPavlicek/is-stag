@@ -24,8 +24,12 @@ export const options: Options = {
     average_load: {
       executor: 'ramping-vus',
       stages: [
-        { duration: '2m', target: 50 },
-        { duration: '5m', target: 50 },
+        { duration: '2m', target: 100 },
+        { duration: '1m', target: 100 },
+        { duration: '2m', target: 300 },
+        { duration: '1m', target: 300 },
+        { duration: '2m', target: 500 },
+        { duration: '1m', target: 500 },
         { duration: '1m', target: 0 },
       ],
       exec: 'browserScenario',

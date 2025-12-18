@@ -24,8 +24,10 @@ export const options: Options = {
     average_load: {
       executor: 'ramping-vus',
       stages: [
-        { duration: '2m', target: 20 },
-        { duration: '5m', target: 20 },
+        { duration: '2m', target: 100 },
+        { duration: '1m', target: 100 },
+        { duration: '2m', target: 300 },
+        { duration: '1m', target: 300 },
         { duration: '1m', target: 0 },
       ],
       exec: 'browserScenario',
@@ -38,7 +40,6 @@ export const options: Options = {
 
 export function smokeTest() {
   group('Smoke Test - Codelist Service', () => {
-    api.getAddresses('plzen', 5);
     api.getCountries();
     const domains = api.getDomains();
     if (domains && domains.domains.length > 0) {
@@ -50,10 +51,6 @@ export function smokeTest() {
 
 export function browserScenario() {
   group('Codelist Browsing Journey', () => {
-    // User searches for an address
-    api.getAddresses(faker.address.city(), faker.numbers.uintRange(3, 10));
-    sleep(faker.numbers.float64Range(0.2, 1));
-
     // User looks up countries
     api.getCountries();
     sleep(faker.numbers.float64Range(0.2, 1));
