@@ -19,7 +19,7 @@ services:
       KC_TRACING_PROTOCOL: grpc
       KC_TRACING_COMPRESSION: gzip
       KC_TRACING_SERVICE_NAME: keycloak
-      KC_TRACING_RESOURCE_ATTRIBUTES: service.name=keycloak,service.version=latest,environment=dev
+      KC_TRACING_RESOURCE_ATTRIBUTES: service.name=keycloak,service.version=26.4.7,environment=dev
       KC_TRACING_SAMPLER_TYPE: parentbased_traceidratio
       KC_TRACING_SAMPLER_RATIO: 1.0
     healthcheck:
@@ -286,7 +286,7 @@ services:
       - dev
       - prod
     container_name: otel
-    image: otel/opentelemetry-collector-contrib:latest
+    image: otel/opentelemetry-collector-contrib:0.142.0
     command: [ --config=/etc/otel-config.yml ]
     volumes:
       - ./observability/opentel-config.yaml:/etc/otel-config.yml
@@ -310,7 +310,7 @@ services:
       - dev
       - prod
     container_name: loki
-    image: grafana/loki:latest
+    image: grafana/loki:3.6.3
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./observability/loki-config.yaml:/etc/loki/local-config.yaml
@@ -324,7 +324,7 @@ services:
       - dev
       - prod
     container_name: grafana
-    image: grafana/grafana:latest
+    image: grafana/grafana:12.3
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -344,7 +344,7 @@ services:
       - dev
       - prod
     container_name: tempo
-    image: grafana/tempo:latest
+    image: grafana/tempo:2.9.0
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./observability/tempo-config.yaml:/etc/tempo.yaml
@@ -359,7 +359,7 @@ services:
       - dev
       - prod
     container_name: prometheus
-    image: prom/prometheus:latest
+    image: prom/prometheus:v3.8.1
     command: [
       --config.file=/etc/prometheus/prometheus.yml,
       --web.enable-otlp-receiver,

@@ -1,7 +1,6 @@
 package com.stag.identity.shared.grpc.mapper;
 
-import com.stag.identity.shared.grpc.model.CodelistDomain;
-import com.stag.identity.shared.grpc.model.CodelistEntryId;
+import com.stag.identity.person.model.Profile;
 import com.stag.identity.person.repository.projection.AddressView;
 import com.stag.identity.person.repository.projection.BankView;
 import com.stag.identity.person.repository.projection.EducationView;
@@ -12,6 +11,9 @@ import com.stag.identity.person.service.data.BankingLookupData;
 import com.stag.identity.person.service.data.CodelistMeaningsLookupData;
 import com.stag.identity.person.service.data.EducationLookupData;
 import com.stag.identity.person.service.data.ProfileLookupData;
+import com.stag.identity.person.service.data.ProfileUpdateLookupData;
+import com.stag.identity.shared.grpc.model.CodelistDomain;
+import com.stag.identity.shared.grpc.model.CodelistEntryId;
 import com.stag.platform.codelist.v1.CodelistKey;
 import com.stag.platform.codelist.v1.CodelistMeaning;
 import com.stag.platform.codelist.v1.GetCodelistValuesRequest;
@@ -24,6 +26,8 @@ import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
 import com.stag.platform.codelist.v1.GetPersonEducationDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
+import com.stag.platform.codelist.v1.GetPersonProfileUpdateDataRequest;
+import com.stag.platform.codelist.v1.GetPersonProfileUpdateDataResponse;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -50,6 +54,10 @@ public interface CodelistMapper {
     @Mapping(target = "codelistKeys", ignore = true)
     GetPersonProfileDataRequest toPersonProfileDataRequest(ProfileView personProfile, String language);
 
+    @Mapping(target = "titlePrefix", source = "titles.prefix")
+    @Mapping(target = "titleSuffix", source = "titles.suffix")
+    GetPersonProfileUpdateDataRequest toPersonProfileUpdateDataRequest(String maritalStatus, String birthCountryName, Profile.Titles titles);
+
     @Mapping(target = "permanentCountryId", source = "personAddress.permanentCountryId")
     @Mapping(target = "permanentMunicipalityPartId", source = "personAddress.permanentMunicipalityPartId")
     @Mapping(target = "temporaryCountryId", source = "personAddress.temporaryCountryId")
@@ -70,6 +78,8 @@ public interface CodelistMapper {
 
     @Mapping(target = "codelistMeanings", source = "codelistMeanings", qualifiedByName = "toMeaningMap")
     ProfileLookupData toPersonProfileData(GetPersonProfileDataResponse response);
+
+    ProfileUpdateLookupData toProfileUpdateLookupData(GetPersonProfileUpdateDataResponse response);
 
     @Mapping(target = "permanentStreet", source = "personAddress.permanentStreet")
     @Mapping(target = "permanentStreetNumber", source = "personAddress.permanentStreetNumber")

@@ -156,11 +156,11 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
-#          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
+#          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
+          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
-      host: redis-cache
-#      host: localhost
+#      host: redis-cache
+      host: localhost
       port: 6379
       password: redis

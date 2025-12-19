@@ -13,7 +13,10 @@ import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
 import com.stag.platform.codelist.v1.GetPersonEducationDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
+import com.stag.platform.codelist.v1.GetPersonProfileUpdateDataRequest;
+import com.stag.platform.codelist.v1.GetPersonProfileUpdateDataResponse;
 import com.stag.platform.education.repository.projection.HighSchoolAddressProjection;
+import com.stag.platform.entry.service.dto.PersonProfileLowValues;
 import com.stag.platform.shared.grpc.mapper.CodelistMapper;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +66,26 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                              request,
                              codelistMeaningsFuture.join(),
                              countryNamesFuture.join()
+                         ))
+                         .thenAccept(response -> completeResponse(responseObserver, response))
+                         .exceptionally(ex -> errorResponse(responseObserver, ex));
+    }
+
+    @Override
+    public void getPersonProfileUpdateData(
+        GetPersonProfileUpdateDataRequest request,
+        StreamObserver<GetPersonProfileUpdateDataResponse> responseObserver
+    ) {
+        CompletableFuture<PersonProfileLowValues> codelistLowValuesFuture =
+            asyncService.fetchCodelistLowValuesAsync(request.getMaritalStatus(), request.getTitlePrefix(), request.getTitleSuffix());
+
+        CompletableFuture<Integer> birthCountryIdFuture =
+            asyncService.fetchCountryIdAsync(request.getBirthCountryName());
+
+        CompletableFuture.allOf(codelistLowValuesFuture, birthCountryIdFuture)
+                         .thenApply(_ -> CodelistMapper.INSTANCE.buildPersonProfileUpdateDataResponse(
+                             codelistLowValuesFuture.join(),
+                             birthCountryIdFuture.join()
                          ))
                          .thenAccept(response -> completeResponse(responseObserver, response))
                          .exceptionally(ex -> errorResponse(responseObserver, ex));

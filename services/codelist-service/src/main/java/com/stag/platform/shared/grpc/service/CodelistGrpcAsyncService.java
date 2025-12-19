@@ -12,6 +12,7 @@ import com.stag.platform.education.service.HighSchoolService;
 import com.stag.platform.entry.entity.CodelistEntryId;
 import com.stag.platform.entry.repository.projection.CodelistEntryMeaningProjection;
 import com.stag.platform.entry.service.CodelistEntryService;
+import com.stag.platform.entry.service.dto.PersonProfileLowValues;
 import com.stag.platform.shared.grpc.mapper.CodelistMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,18 @@ class CodelistGrpcAsyncService {
         Set<Integer> countryIds = CodelistMapper.INSTANCE.extractCountryIds(request);
         Map<Integer, String> countryNames = fetchCountryNames(countryIds, language);
         return CompletableFuture.completedFuture(countryNames);
+    }
+
+    @Async
+    public CompletableFuture<PersonProfileLowValues> fetchCodelistLowValuesAsync(String maritalStatus, String titlePrefix, String titleSuffix) {
+        PersonProfileLowValues codes = codelistEntryService.findPersonProfileLowValues(maritalStatus, titlePrefix, titleSuffix);
+        return CompletableFuture.completedFuture(codes);
+    }
+
+    @Async
+    public CompletableFuture<Integer> fetchCountryIdAsync(String birthCountryName) {
+        Integer birthCountryId = countryService.findCountryIdByName(birthCountryName);
+        return CompletableFuture.completedFuture(birthCountryId);
     }
 
     @Async

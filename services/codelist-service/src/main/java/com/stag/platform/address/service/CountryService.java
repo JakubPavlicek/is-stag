@@ -1,6 +1,7 @@
 package com.stag.platform.address.service;
 
 import com.stag.platform.address.exception.CountriesNotFoundException;
+import com.stag.platform.address.exception.CountryNotFoundException;
 import com.stag.platform.address.repository.CountryRepository;
 import com.stag.platform.address.repository.projection.CountryNameProjection;
 import com.stag.platform.address.repository.projection.CountryView;
@@ -23,9 +24,17 @@ public class CountryService {
 
     private final CountryRepository countryRepository;
 
+    @Transactional(readOnly = true)
     @Cacheable(value = "countries", key = "#language")
     public Set<CountryView> getCountries(String language) {
         return countryRepository.findAllValidCountries(language);
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(value = "country-id", key = "#countryName")
+    public Integer findCountryIdByName(String countryName) {
+        return countryRepository.findCountryIdByName(countryName)
+                                .orElseThrow(() -> new CountryNotFoundException(countryName));
     }
 
     @Transactional(readOnly = true)
@@ -67,4 +76,3 @@ public class CountryService {
     }
 
 }
-

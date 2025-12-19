@@ -12,9 +12,11 @@ import com.stag.platform.codelist.v1.GetPersonEducationDataRequest;
 import com.stag.platform.codelist.v1.GetPersonEducationDataResponse;
 import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileDataResponse;
+import com.stag.platform.codelist.v1.GetPersonProfileUpdateDataResponse;
 import com.stag.platform.education.repository.projection.HighSchoolAddressProjection;
 import com.stag.platform.entry.entity.CodelistEntryId;
 import com.stag.platform.entry.repository.projection.CodelistEntryMeaningProjection;
+import com.stag.platform.entry.service.dto.PersonProfileLowValues;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -78,6 +80,14 @@ public interface CodelistMapper {
         GetPersonProfileDataRequest request,
         @Context List<CodelistMeaning> codelistMeanings,
         @Context Map<Integer, String> countryNames
+    );
+
+    @Mapping(target = "maritalStatusLowValue", source = "profileLowValues.maritalStatusLowValue")
+    @Mapping(target = "titlePrefixLowValue", source = "profileLowValues.titlePrefixLowValue")
+    @Mapping(target = "titleSuffixLowValue", source = "profileLowValues.titleSuffixLowValue")
+    GetPersonProfileUpdateDataResponse buildPersonProfileUpdateDataResponse(
+        PersonProfileLowValues profileLowValues,
+        Integer birthCountryId
     );
 
     @Mapping(target = "permanentCountryName", source = "permanentCountryId", qualifiedByName = "getCountryName")

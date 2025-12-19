@@ -51,8 +51,9 @@ spring:
           plan_cache_max_size: 4096
         jdbc:
           fetch_size: 50
-        generate_statistics: true
         dialect: org.hibernate.dialect.OracleDialect
+        format_sql: true
+        generate_statistics: true
     hibernate:
       ddl-auto: none
     open-in-view: false
@@ -61,9 +62,9 @@ spring:
     driver-class-name: oracle.jdbc.OracleDriver
     # Oracle Proxy Authentication Configuration
     proxy:
-      username: ${DATASOURCE_PROXY_USERNAME:portalproxy}
-      password: ${DATASOURCE_PROXY_PASSWORD:demo}
-      target-username: ${DATASOURCE_TARGET_USERNAME:install2}
+      username: ${DATASOURCE_PROXY_USERNAME}
+      password: ${DATASOURCE_PROXY_PASSWORD}
+      target-username: ${DATASOURCE_TARGET_USERNAME}
     hikari:
       auto-commit: false
       minimum-idle: 5
@@ -178,18 +179,14 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
-#          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
+#          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
+          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
-      host: redis-cache
-#      host: localhost
+#      host: redis-cache
+      host: localhost
       port: 6379
       password: redis
 
-#grpc:
-#  client:
-#    student-service:
-#      address: static://localhost:9030
-#    codelist-service:
-#      address: static://localhost:9010
+GRPC_CLIENT_STUDENT-SERVICE_ADDRESS: static://localhost:9030
+GRPC_CLIENT_CODELIST-SERVICE_ADDRESS: static://localhost:9010

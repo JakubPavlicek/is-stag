@@ -8,22 +8,8 @@ public record PersonUpdateCommand(
     Profile.Contact contact,
     Profile.Titles titles,
     Profile.BirthPlace birthPlace,
-    Address temporaryAddress,
     BankAccount bankAccount
 ) {
-
-    public record Address(
-        String country,
-        String district,
-        String municipality,
-        String municipalityPart,
-        String street,
-        String streetNumber,
-        String zipCode,
-        String postOffice
-    ) {
-
-    }
 
     public record BankAccount(
         String prefix,

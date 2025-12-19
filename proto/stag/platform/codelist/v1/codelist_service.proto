@@ -16,6 +16,8 @@ service CodelistService {
   // Use-case specific methods
   rpc GetPersonProfileData(GetPersonProfileDataRequest)
       returns (GetPersonProfileDataResponse);
+  rpc GetPersonProfileUpdateData(GetPersonProfileUpdateDataRequest)
+      returns (GetPersonProfileUpdateDataResponse);
   rpc GetPersonAddressData(GetPersonAddressDataRequest)
       returns (GetPersonAddressDataResponse);
   rpc GetPersonBankingData(GetPersonBankingDataRequest)
@@ -39,7 +41,7 @@ message GetCodelistValuesResponse {
   repeated CodelistMeaning codelist_meanings = 1;
 }
 
-// Person Profile specific (only what's needed for GET /persons/{id})
+// Person Profile specific (GET /persons/{personId})
 message GetPersonProfileDataRequest {
   repeated CodelistKey codelist_keys = 1 [
     (buf.validate.field).repeated.max_items = 10
@@ -65,7 +67,33 @@ message GetPersonProfileDataResponse {
   optional string citizenship_country_name = 3;
 }
 
-// Person Address specific (only what's needed for GET /persons/{id}/addresses)
+// Person Profile Update specific (PATCH /persons/{personId})
+message GetPersonProfileUpdateDataRequest {
+  optional string marital_status = 1 [
+    (buf.validate.field).string.max_len = 240
+  ];
+
+  optional string title_prefix = 2 [
+    (buf.validate.field).string.max_len = 240
+  ];
+
+  optional string title_suffix = 3 [
+    (buf.validate.field).string.max_len = 240
+  ];
+
+  optional string birth_country_name = 4 [
+    (buf.validate.field).string.max_len = 70
+  ];
+}
+
+message GetPersonProfileUpdateDataResponse {
+  optional string marital_status_low_value = 1;
+  optional string title_prefix_low_value = 2;
+  optional string title_suffix_low_value = 3;
+  optional int32 birth_country_id = 4;
+}
+
+// Person Address specific (GET /persons/{personId}/addresses)
 message GetPersonAddressDataRequest {
   // Permanent address
   optional int64 permanent_municipality_part_id = 1 [
@@ -105,7 +133,7 @@ message GetPersonAddressDataResponse {
   optional string temporary_country_name = 8;
 }
 
-// Banking specific request (for GET /persons/{id}/banking)
+// Banking specific request (GET /persons/{personId}/banking)
 message GetPersonBankingDataRequest {
   repeated CodelistKey codelist_keys = 1 [
     (buf.validate.field).repeated.max_items = 10
@@ -126,7 +154,7 @@ message GetPersonBankingDataResponse {
   optional string euro_account_country_name = 2;
 }
 
-// Education specific request (for GET /persons/{id}/education)
+// Education specific request (GET /persons/{personId}/education)
 message GetPersonEducationDataRequest {
   optional string high_school_id = 1 [
     (buf.validate.field).string.max_len = 10
@@ -157,7 +185,8 @@ message GetPersonEducationDataResponse {
   optional string high_school_country_name = 7;
 }
 
-// Generic messages
+// --- Generic messages ---
+
 message CodelistKey {
   string domain = 1 [
     (buf.validate.field).string.min_len = 1,

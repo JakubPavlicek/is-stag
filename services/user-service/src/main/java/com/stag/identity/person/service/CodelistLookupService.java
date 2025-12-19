@@ -1,15 +1,17 @@
 package com.stag.identity.person.service;
 
+import com.stag.identity.person.model.Profile;
 import com.stag.identity.person.repository.projection.AddressView;
 import com.stag.identity.person.repository.projection.BankView;
 import com.stag.identity.person.repository.projection.EducationView;
 import com.stag.identity.person.repository.projection.ProfileView;
 import com.stag.identity.person.repository.projection.SimpleProfileView;
-import com.stag.identity.person.service.data.CodelistMeaningsLookupData;
-import com.stag.identity.person.service.data.EducationLookupData;
 import com.stag.identity.person.service.data.AddressLookupData;
 import com.stag.identity.person.service.data.BankingLookupData;
+import com.stag.identity.person.service.data.CodelistMeaningsLookupData;
+import com.stag.identity.person.service.data.EducationLookupData;
 import com.stag.identity.person.service.data.ProfileLookupData;
+import com.stag.identity.person.service.data.ProfileUpdateLookupData;
 import com.stag.identity.shared.grpc.client.CodelistClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,14 @@ public class CodelistLookupService {
         log.debug("Completed fetching person profile data");
 
         return CompletableFuture.completedFuture(profileLookupData);
+    }
+
+    public ProfileUpdateLookupData getPersonProfileUpdateData(String maritalStatus, String birthCountryName, Profile.Titles titles) {
+        log.info("Fetching person profile update data");
+        ProfileUpdateLookupData profileUpdateLookupData = codelistClient.getPersonProfileUpdateData(maritalStatus, birthCountryName, titles);
+        log.debug("Completed fetching person profile update data");
+
+        return profileUpdateLookupData;
     }
 
     @Async

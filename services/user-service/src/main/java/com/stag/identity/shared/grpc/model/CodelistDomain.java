@@ -1,7 +1,5 @@
 package com.stag.identity.shared.grpc.model;
 
-// TODO: use english names
-
 public enum CodelistDomain {
     TITUL_PRED,
     TITUL_ZA,

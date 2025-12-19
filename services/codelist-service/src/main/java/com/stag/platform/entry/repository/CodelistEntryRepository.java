@@ -1,16 +1,17 @@
 package com.stag.platform.entry.repository;
 
-import com.stag.platform.entry.repository.projection.CodelistEntryMeaningProjection;
 import com.stag.platform.entry.entity.CodelistEntry;
 import com.stag.platform.entry.entity.CodelistEntryId;
+import com.stag.platform.entry.repository.projection.CodelistEntryMeaningProjection;
 import com.stag.platform.entry.repository.projection.DomainValueView;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Collection;
 import java.util.List;
 
-public interface CodelistEntryRepository extends JpaRepository<CodelistEntry, CodelistEntryId> {
+public interface CodelistEntryRepository extends JpaRepository<CodelistEntry, CodelistEntryId>, JpaSpecificationExecutor<CodelistEntry> {
 
     @Query(
         """

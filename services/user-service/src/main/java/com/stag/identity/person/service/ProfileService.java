@@ -10,6 +10,7 @@ import com.stag.identity.person.repository.projection.ProfileView;
 import com.stag.identity.person.repository.projection.SimpleProfileView;
 import com.stag.identity.person.service.data.CodelistMeaningsLookupData;
 import com.stag.identity.person.service.data.ProfileLookupData;
+import com.stag.identity.person.service.data.ProfileUpdateLookupData;
 import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import com.stag.identity.person.util.DataBoxValidator;
 import com.stag.identity.shared.util.ObjectUtils;
@@ -70,8 +71,7 @@ public class ProfileService {
         return profile;
     }
 
-    // TODO: Add caching
-
+    @Cacheable(value = "person-simple-profile", key = "{#personId, #language}")
     public SimpleProfile getPersonSimpleProfile(Integer personId, String language) {
         log.info("Fetching person simple profile for personId: {} with language: {}", personId, language);
 
@@ -94,24 +94,43 @@ public class ProfileService {
     }
 
     @Transactional
+    @PreAuthorize("""
+        hasRole('AD')
+        || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)
+    """)
     public void updatePersonProfile(Integer personId, PersonUpdateCommand command) {
+        log.info("Updating person profile for personId: {}", personId);
+
         Person person = personRepository.findById(personId)
                                         .orElseThrow(() -> new PersonNotFoundException(personId));
 
-        String uniqueEmail = "jpvlck@seznam.cz";
+        ObjectUtils.updateIfNotNull(command.birthSurname(), person::setBirthSurname);
+        updateContact(person, command.contact());
+        bankingService.updatePersonBankAccount(person, command.bankAccount());
 
-        person.setEmail(uniqueEmail);
-        personRepository.saveAndFlush(person);
+        Profile.BirthPlace birthPlace = command.birthPlace();
+        if (birthPlace != null) {
+            ObjectUtils.updateIfNotNull(birthPlace.city(), person::setBirthPlace);
+        }
 
-//        ObjectUtils.updateIfNotNull(command.birthSurname(), person::setBirthSurname);
-//        ObjectUtils.updateIfNotNull(command.maritalStatus(), person::setMaritalStatus);
-//
-//        updateContact(person, command.contact());
-//        updateTitles(person, command.titles());
-//
-//        // TODO: update BirthPlace and TemporaryAddress
-//
-//        bankingService.updatePersonBankAccount(person, command.bankAccount());
+        log.debug("Checking person profile update data for personId: {}", personId);
+
+        // Check if provided data are valid by calling the codelist-service and get the birthCountryId
+        ProfileUpdateLookupData profileUpdateLookupData = codelistLookupService.getPersonProfileUpdateData(
+            command.maritalStatus(),
+            birthPlace != null ? birthPlace.country() : null,
+            command.titles()
+        );
+
+        log.debug("Successfully checked person profile update data for personId: {}", personId);
+
+        // Update the values that were validated by codelist-service
+        ObjectUtils.updateIfNotNull(profileUpdateLookupData.maritalStatusLowValue(), person::setMaritalStatus);
+        ObjectUtils.updateIfNotNull(profileUpdateLookupData.titlePrefixLowValue(), person::setTitlePrefix);
+        ObjectUtils.updateIfNotNull(profileUpdateLookupData.titleSuffixLowValue(), person::setTitleSuffix);
+        ObjectUtils.updateIfNotNull(profileUpdateLookupData.birthCountryId(), person::setBirthCountryId);
+
+        log.info("Successfully updated person profile for personId: {}", personId);
     }
 
     private void updateContact(Person person, Profile.Contact contact) {
@@ -122,11 +141,6 @@ public class ProfileService {
         if (DataBoxValidator.isValidDataBoxId(contact.dataBox())) {
             person.setDataBox(contact.dataBox());
         }
-    }
-
-    private void updateTitles(Person person, Profile.Titles titles) {
-        ObjectUtils.updateIfNotNull(titles.prefix(), person::setTitlePrefix);
-        ObjectUtils.updateIfNotNull(titles.suffix(), person::setTitleSuffix);
     }
 
 }

@@ -258,8 +258,6 @@ components:
           $ref: '#/components/schemas/TitlesUpdate'
         birthPlace:
           $ref: '#/components/schemas/BirthPlaceUpdate'
-        temporaryAddress:
-          $ref: '#/components/schemas/AddressUpdate'
         bankAccount:
           $ref: '#/components/schemas/BankAccountUpdate'
 
@@ -302,30 +300,6 @@ components:
           $ref: '#/components/schemas/Contact/properties/mobile'
         dataBox:
           $ref: '#/components/schemas/Contact/properties/dataBox'
-
-    AddressUpdate:
-      type: object
-      title: Address Update
-      description: Object containing address details to be updated.
-      additionalProperties: false
-      nullable: false
-      properties:
-        country:
-          $ref: '#/components/schemas/Address/properties/country'
-        district:
-          $ref: '#/components/schemas/Address/properties/district'
-        municipality:
-          $ref: '#/components/schemas/Address/properties/municipality'
-        municipalityPart:
-          $ref: '#/components/schemas/Address/properties/municipalityPart'
-        street:
-          $ref: '#/components/schemas/Address/properties/street'
-        streetNumber:
-          $ref: '#/components/schemas/Address/properties/streetNumber'
-        zipCode:
-          $ref: '#/components/schemas/Address/properties/zipCode'
-        postOffice:
-          $ref: '#/components/schemas/ForeignAddress/properties/postOffice'
 
     BankAccountUpdate:
       type: object
@@ -484,7 +458,7 @@ components:
           nullable: true
           description: Birth city of the person.
           example: Prague
-          maxLength: 100
+          maxLength: 75
 
     Titles:
       type: object
