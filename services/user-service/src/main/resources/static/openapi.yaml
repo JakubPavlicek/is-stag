@@ -27,7 +27,12 @@ paths:
       tags:
         - persons
       summary: Get person
-      description: Retrieve a person by their unique identifier.
+      description: |
+        Retrieve a person by their unique identifier.
+
+        **Required Roles:**
+        * `AD`, `DE`, `PR`, `SR`, `SP`, `VY`, `VK`
+        * `ST` (only if accessing their own data)
       operationId: getPersonProfile
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
@@ -95,7 +100,12 @@ paths:
       tags:
         - persons
       summary: Get person addresses
-      description: Retrieve addresses associated with a person by their unique identifier.
+      description: |
+        Retrieve addresses associated with a person by their unique identifier.
+
+        **Required Roles:**
+        * `AD`, `DE`, `PR`, `SR`, `SP`, `VY`, `VK`
+        * `ST` (only if accessing their own data)
       operationId: getPersonAddresses
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
@@ -129,7 +139,12 @@ paths:
       tags:
         - persons
       summary: Get person banking information
-      description: Retrieve banking information associated with a person by their unique identifier.
+      description: |
+        Retrieve banking information associated with a person by their unique identifier.
+
+        **Required Roles:**
+        * `AD`, `DE`, `PR`, `SR`, `SP`, `VY`, `VK`
+        * `ST` (only if accessing their own data)
       operationId: getPersonBanking
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
@@ -163,7 +178,12 @@ paths:
       tags:
         - persons
       summary: Get person education information
-      description: Retrieve education information associated with a person by their unique identifier.
+      description: |
+        Retrieve education information associated with a person by their unique identifier.
+
+        **Required Roles:**
+        * `AD`, `DE`, `PR`, `SR`, `SP`, `VY`, `VK`
+        * `ST` (only if accessing their own data)
       operationId: getPersonEducation
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
