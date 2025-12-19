@@ -5,7 +5,7 @@ package stag.academics.student.v1;
 import "buf/validate/validate.proto";
 
 option java_package = "com.stag.academics.student.v1";
-option java_outer_classname = "UserServiceProto";
+option java_outer_classname = "StudentServiceProto";
 option java_multiple_files = true;
 
 service StudentService {
@@ -18,7 +18,7 @@ service StudentService {
 
 message GetStudentIdsRequest {
   int32 person_id = 1 [
-    (buf.validate.field).int32.gte = 0
+    (buf.validate.field).int32.gte = 1
   ];
 }
 
