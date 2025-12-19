@@ -164,3 +164,5 @@ spring:
       host: localhost
       port: 6379
       password: redis
+
+GRPC_CLIENT_CODELIST-SERVICE_ADDRESS: static://localhost:9010

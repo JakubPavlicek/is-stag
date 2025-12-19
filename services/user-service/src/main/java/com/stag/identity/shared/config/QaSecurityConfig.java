@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class QaSecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) {
         return http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize ->

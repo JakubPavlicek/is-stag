@@ -39,7 +39,5 @@ jobs:
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # TODO: Change NODE_ENV to prod
-
       - name: Build Docker Image with Buildpacks
         run: npm run pack -- --publish

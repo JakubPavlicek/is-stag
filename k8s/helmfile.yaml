@@ -118,7 +118,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.1.14
+    version: 18.1.15
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/database/keycloak-postgresql/values.yaml
@@ -134,7 +134,7 @@ releases:
 
   - name: redis-cache
     chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 24.0.8
+    version: 24.1.0
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     values:
@@ -151,7 +151,7 @@ releases:
 
   - name: redis-rate-limiter
     chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 24.0.8
+    version: 24.1.0
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     values:
@@ -171,7 +171,7 @@ releases:
   # ========================================
   - name: grafana
     chart: grafana/grafana
-    version: 10.3.2
+    version: 10.4.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/grafana/values.yaml
@@ -216,7 +216,7 @@ releases:
   # ========================================
   - name: opentelemetry-operator
     chart: open-telemetry/opentelemetry-operator
-    version: 0.101.0
+    version: 0.102.0
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - cert-manager

@@ -20,8 +20,6 @@ tags:
 
 paths:
 
-  # TODO: add the roles to the description of the endpoints
-
   /students/{studentId}:
     get:
       security:
@@ -31,8 +29,10 @@ paths:
       summary: Get student
       description: |
         Retrieve a student by their unique identifier.
-        
-        **Required Roles:** `AD`, `DE`, `PR`, `SR`, `SP`, `VY`, `VK`
+
+        **Required Roles:**
+        * `AD`, `DE`, `PR`, `SR`, `SP`, `VY`, `VK`
+        * `ST` (only if accessing their own data)
       operationId: getStudentProfile
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'

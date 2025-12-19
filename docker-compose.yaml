@@ -34,7 +34,7 @@ services:
           exec 3<&-; exec 3>&-; exit 1; \
         fi"
       ]
-      start_period: 30s
+      start_period: 20s
       interval: 10s
       timeout: 5s
       retries: 5
@@ -140,6 +140,14 @@ services:
         condition: service_healthy
       redis-rate-limiter:
         condition: service_healthy
+      codelist-service:
+        condition: service_healthy
+      student-service:
+        condition: service_healthy
+      study-plan-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
     networks:
       - is-stag-backend
 
@@ -168,8 +176,6 @@ services:
       - "8030:8030"
       - "9030:9030"
     depends_on:
-      api-gateway:
-        condition: service_healthy
       redis-cache:
         condition: service_healthy
       otel:
@@ -202,8 +208,6 @@ services:
       - "8050:8050"
       - "9050:9050"
     depends_on:
-      api-gateway:
-        condition: service_healthy
       redis-cache:
         condition: service_healthy
       otel:
@@ -236,8 +240,6 @@ services:
       - "8020:8020"
       - "9020:9020"
     depends_on:
-      api-gateway:
-        condition: service_healthy
       redis-cache:
         condition: service_healthy
       otel:
@@ -270,8 +272,6 @@ services:
       - "8010:8010"
       - "9010:9010"
     depends_on:
-      api-gateway:
-        condition: service_healthy
       redis-cache:
         condition: service_healthy
       otel:

@@ -21,7 +21,6 @@ public class SecurityConfig {
         "/v3/api-docs/swagger-config"
     };
 
-    // TODO: make the actuator endpoints protected by an ADMIN role
     @Bean
     public SecurityWebFilterChain filterChain(ServerHttpSecurity http) {
         return http
@@ -31,6 +30,7 @@ public class SecurityConfig {
                 .pathMatchers("/api/*/openapi.yaml").permitAll()
                 .pathMatchers(SWAGGER_URLS).permitAll()
                 .pathMatchers("/api/v1/addresses/**", "/api/v1/countries/**", "/api/v1/domains/**").permitAll()
+                .pathMatchers("/actuator/**").hasRole("AD")
                 .anyExchange().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->

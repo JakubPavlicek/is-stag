@@ -26,7 +26,10 @@ paths:
       tags:
         - countries
       summary: Get all countries
-      description: Retrieve list of all countries available in the system.
+      description: |
+        Retrieve list of all countries available in the system.
+
+        **Required Roles:** None (Public access)
       operationId: getCountries
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
@@ -51,7 +54,10 @@ paths:
       tags:
         - domains
       summary: Get all domains
-      description: Retrieve list of all domains available in the code lists system.
+      description: |
+        Retrieve list of all domains available in the code lists system.
+
+        **Required Roles:** None (Public access)
       operationId: getDomains
       responses:
         '200':
@@ -76,7 +82,10 @@ paths:
       tags:
         - domains
       summary: Get domain values
-      description: Retrieve a domain values by its unique identifier.
+      description: |
+        Retrieve a domain values by its unique identifier.
+
+        **Required Roles:** None (Public access)
       operationId: getDomainValues
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'

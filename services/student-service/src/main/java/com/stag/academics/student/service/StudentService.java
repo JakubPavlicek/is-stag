@@ -9,6 +9,7 @@ import com.stag.academics.student.service.data.SimpleProfileLookupData;
 import com.stag.academics.student.service.data.StudyProgramAndFieldLookupData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,7 @@ public class StudentService {
                                 .orElseThrow(() -> new StudentNotFoundException(studentId));
     }
 
+    @Cacheable(value = "student-profile", key = "{#studentId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
         || #studentId == principal.claims['studentId']

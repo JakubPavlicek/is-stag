@@ -53,20 +53,13 @@
         </dependency>
 
         <!-- gRPC -->
-        <!-- TODO: this can be server only (client is not needed) -->
         <dependency>
             <groupId>net.devh</groupId>
-            <artifactId>grpc-spring-boot-starter</artifactId>
+            <artifactId>grpc-server-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.stag</groupId>
             <artifactId>grpc-common</artifactId>
-        </dependency>
-
-        <!-- Hibernate ORM Processor for JPA Metamodel generation -->
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-processor</artifactId>
         </dependency>
 
         <!-- OpenAPI -->

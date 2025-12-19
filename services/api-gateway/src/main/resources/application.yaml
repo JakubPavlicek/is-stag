@@ -17,8 +17,8 @@ logging:
 filter-templates:
   request_rate_limiter_args: &request_rate_limiter_args
     key-resolver: "#{@emailKeyResolver}"
-    redis-rate-limiter.replenishRate: 10
-    redis-rate-limiter.burstCapacity: 20
+    redis-rate-limiter.replenishRate: ${gateway.ratelimit.rate:10}
+    redis-rate-limiter.burstCapacity: ${gateway.ratelimit.burst:20}
     redis-rate-limiter.requestedTokens: 1
 
   circuitbreaker_args: &circuitbreaker_args
@@ -123,15 +123,6 @@ spring:
                 - Path=/api/user-service/**
               filters:
                 - RewritePath=/api/user-service/(?<segment>.*), /$\{segment}
-#  http:
-#    client:
-#      connect-timeout: 10s
-#      read-timeout: 10s
-#    clients:
-#      connect-timeout: 10s
-#      read-timeout: 10s
-#      imperative:
-#        factory: http_components
   webflux:
     problemdetails:
       enabled: true
@@ -218,21 +209,6 @@ spring:
 
 ---
 
-# Templates for API Gateway filters
-filter-templates:
-  circuitbreaker_args: &circuitbreaker_args
-    fallbackUri: forward:/fallback
-
-  retry_args: &retry_args
-    retries: 2
-    methods: GET, PATCH
-    statuses: BAD_GATEWAY, GATEWAY_TIMEOUT, SERVICE_UNAVAILABLE
-    backoff:
-      firstBackoff: 50ms
-      maxBackoff: 100ms
-      factor: 2
-      basedOnPreviousValue: true
-
 spring:
   config:
     activate:
@@ -245,75 +221,11 @@ spring:
           - redis-rate-limiter:26379
         password: redis
       password: redis
-  cloud:
-    gateway:
-      server:
-        webflux:
-          routes:
-            # Service routes
-            - id: codelist-service
-              uri: ${CODELIST-SERVICE_ADDRESS:http://codelist-service:8010}
-              predicates:
-                - Path=/api/v1/addresses/**,/api/v1/countries/**,/api/v1/domains/**
-              filters:
-                - RemoveRequestHeader=Authorization
-                - name: CircuitBreaker
-                  args:
-                    <<: *circuitbreaker_args
-                    name: codelist-service
-                - name: Retry
-                  args:
-                    <<: *retry_args
-            - id: student-service
-              uri: ${STUDENT-SERVICE_ADDRESS:http://student-service:8030}
-              predicates:
-                - Path=/api/v1/students/**
-              filters:
-                - name: CircuitBreaker
-                  args:
-                    <<: *circuitbreaker_args
-                    name: student-service
-                - name: Retry
-                  args:
-                    <<: *retry_args
-            - id: user-service
-              uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
-              predicates:
-                - Path=/api/v1/users/**,/api/v1/persons/**
-              filters:
-                - name: CircuitBreaker
-                  args:
-                    <<: *circuitbreaker_args
-                    name: user-service
-                - name: Retry
-                  args:
-                    <<: *retry_args
 
-            # OpenAPI routes for aggregation
-            - id: swagger-config
-              uri: ${API-GATEWAY_ADDRESS:http://api-gateway:8100}
-              predicates:
-                - Path=/api/v3/api-docs/swagger-config
-              filters:
-                - SetPath=/v3/api-docs/swagger-config
-            - id: codelist-service-openapi
-              uri: ${CODELIST-SERVICE_ADDRESS:http://codelist-service:8010}
-              predicates:
-                - Path=/api/codelist-service/**
-              filters:
-                - RewritePath=/api/codelist-service/(?<segment>.*), /$\{segment}
-            - id: student-service-openapi
-              uri: ${STUDENT-SERVICE_ADDRESS:http://student-service:8030}
-              predicates:
-                - Path=/api/student-service/**
-              filters:
-                - RewritePath=/api/student-service/(?<segment>.*), /$\{segment}
-            - id: user-service-openapi
-              uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
-              predicates:
-                - Path=/api/user-service/**
-              filters:
-                - RewritePath=/api/user-service/(?<segment>.*), /$\{segment}
+gateway:
+  ratelimit:
+    rate: 10000
+    burst: 10000
 
 ---
 

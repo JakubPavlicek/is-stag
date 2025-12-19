@@ -25,7 +25,7 @@ public class StudyPlanClient {
 
     @Cacheable(value = "study-program-and-field", key = "{#studyProgramId, #studyPlanId, #language}")
     @CircuitBreaker(name = "study-plan-service")
-    @Retry(name = "grpc-retry")
+    @Retry(name = "study-plan-service")
     public StudyProgramAndFieldLookupData getStudyProgramAndField(Long studyProgramId, Long studyPlanId, String language) {
         log.info("Fetching study program: {}, field of study with plan: {}", studyProgramId, studyPlanId);
 
