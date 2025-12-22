@@ -42,7 +42,7 @@ public class StudentService {
     @Cacheable(value = "student-profile", key = "{#studentId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
-        || #studentId == principal.claims['studentId']
+        || #studentId.equalsIgnoreCase(principal.claims['studentId'])
     """)
     public Profile getStudentProfile(String studentId, String language) {
         log.info("Fetching student profile for studentId: {} with language: {}", studentId, language);

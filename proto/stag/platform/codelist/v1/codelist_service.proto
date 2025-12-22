@@ -48,11 +48,11 @@ message GetPersonProfileDataRequest {
   ];
 
   optional int32 birth_country_id = 2 [
-    (buf.validate.field).int32.gte = 1
+    (buf.validate.field).int32.gte = 0
   ];
 
   optional int32 citizenship_country_id = 3 [
-    (buf.validate.field).int32.gte = 1
+    (buf.validate.field).int32.gte = 0
   ];
 
   string language = 4 [
@@ -97,20 +97,20 @@ message GetPersonProfileUpdateDataResponse {
 message GetPersonAddressDataRequest {
   // Permanent address
   optional int64 permanent_municipality_part_id = 1 [
-    (buf.validate.field).int64.gte = 1
+    (buf.validate.field).int64.gte = 0
   ];
 
   optional int32 permanent_country_id = 2 [
-    (buf.validate.field).int32.gte = 1
+    (buf.validate.field).int32.gte = 0
   ];
 
   // Temporary address
   optional int64 temporary_municipality_part_id = 3 [
-    (buf.validate.field).int64.gte = 1
+    (buf.validate.field).int64.gte = 0
   ];
 
   optional int32 temporary_country_id = 4 [
-    (buf.validate.field).int32.gte = 1
+    (buf.validate.field).int32.gte = 0
   ];
 
   string language = 5 [
@@ -140,7 +140,7 @@ message GetPersonBankingDataRequest {
   ];
 
   optional int32 euro_account_country_id = 2 [
-    (buf.validate.field).int32.gte = 1
+    (buf.validate.field).int32.gte = 0
   ];
 
   string language = 3 [
@@ -166,7 +166,7 @@ message GetPersonEducationDataRequest {
   ];
 
   optional int32 high_school_country_id = 3 [
-    (buf.validate.field).int32.gte = 1
+    (buf.validate.field).int32.gte = 0
   ];
 
   string language = 4 [

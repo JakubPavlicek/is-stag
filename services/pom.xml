@@ -51,11 +51,11 @@
         <hibernate-processor.version>7.1.10.Final</hibernate-processor.version>
 
         <!-- Tools -->
-        <httpclient5.version>5.6-alpha1</httpclient5.version>
+        <httpclient5.version>5.6</httpclient5.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <mapstruct-protobuf-spi.version>1.52.0</mapstruct-protobuf-spi.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <openapi-generator.version>7.17.0</openapi-generator.version>
+        <openapi-generator.version>7.18.0</openapi-generator.version>
         <iban4j.version>3.2.11-RELEASE</iban4j.version>
         <lombok.version>1.18.42</lombok.version>
 

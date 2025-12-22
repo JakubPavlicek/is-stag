@@ -1,0 +1,58 @@
+{
+  "app_name": "University Portal",
+  "loading": "Loading...",
+  "login": "Login",
+  "logout": "Logout",
+  "welcome": "Welcome",
+  "sidebar": {
+    "home": "Home",
+    "my_data": "My Data"
+  },
+  "my_data": {
+    "title": "My Data",
+    "basic_info": {
+      "title": "Basic Information",
+      "name": "Name and Surname",
+      "personal_number": "Personal Number",
+      "study_program": "Study Program",
+      "field_of_study": "Field of Study"
+    },
+    "addresses": {
+      "title": "Addresses",
+      "permanent": "Permanent Residence",
+      "temporary": "Temporary Residence",
+      "district": "District",
+      "no_street": "No street",
+      "not_provided": "Address not provided"
+    },
+    "personal_info": {
+      "title": "Personal Information",
+      "title_before": "Title before name",
+      "title_after": "Title after name",
+      "birth_number": "Birth Number",
+      "birth_date": "Date of Birth",
+      "birth_surname": "Birth Surname",
+      "citizenship": "Citizenship",
+      "birth_place_country": "Place of Birth - Country",
+      "birth_place_city": "Place of Birth - City",
+      "marital_status": "Marital Status"
+    },
+    "contact": {
+      "title": "Contact Information",
+      "email": "E-mail",
+      "phone": "Phone",
+      "mobile": "Mobile",
+      "databox": "Data Box"
+    },
+    "bank": {
+      "title": "Bank Account",
+      "account_standard": "Current Account",
+      "account_euro": "Euro Account",
+      "iban": "IBAN",
+      "owner": "Account Owner",
+      "not_provided": "Account not provided"
+    },
+    "loading": "Loading...",
+    "error_not_available": "Student data not available. Please login."
+  }
+}

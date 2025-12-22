@@ -15,11 +15,11 @@ service StudyPlanService {
 
 message GetStudyProgramAndFieldRequest {
   int64 study_program_id = 1 [
-    (buf.validate.field).int64.gte = 1
+    (buf.validate.field).int64.gte = 0
   ];
 
   int64 study_plan_id = 2 [
-    (buf.validate.field).int64.gte = 1
+    (buf.validate.field).int64.gte = 0
   ];
 
   string language = 3 [

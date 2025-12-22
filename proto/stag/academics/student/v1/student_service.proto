@@ -18,7 +18,7 @@ service StudentService {
 
 message GetStudentIdsRequest {
   int32 person_id = 1 [
-    (buf.validate.field).int32.gte = 1
+    (buf.validate.field).int32.gte = 0
   ];
 }
 
