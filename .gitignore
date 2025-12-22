@@ -44,10 +44,11 @@ build/
 
 ### AI ###
 .crush
-#.gemini
+.gemini
 GEMINI.md
 DATABASE.md
 MICROSERVICES.md
+FRONTEND.md
 API.md
 
 ### Kubernetes ###
