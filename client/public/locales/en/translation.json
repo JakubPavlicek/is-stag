@@ -1,6 +1,7 @@
 {
   "app_name": "University Portal",
   "loading": "Loading...",
+  "loading_app": "Loading application...",
   "login": "Login",
   "logout": "Logout",
   "welcome": "Welcome",

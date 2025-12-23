@@ -1,6 +1,7 @@
 {
   "app_name": "Univerzitní Portál",
   "loading": "Načítání...",
+  "loading_app": "Načítání aplikace...",
   "login": "Přihlásit se",
   "logout": "Odhlásit se",
   "welcome": "Vítejte",
