@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
 import { ModeToggle } from '../mode-toggle'
 import { Sidebar } from './Sidebar'
@@ -38,8 +38,9 @@ export function Header() {
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-60 p-0">
-            <Sidebar className="border-none w-full" onNavigate={() => setIsOpen(false)} />
+          <SheetContent side="left" className="w-60 p-0" aria-describedby={undefined}>
+            <SheetTitle className="sr-only">Menu</SheetTitle>
+            <Sidebar className="w-full border-none" onNavigate={() => setIsOpen(false)} />
           </SheetContent>
         </Sheet>
       </div>

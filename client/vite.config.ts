@@ -8,9 +8,21 @@ import { defineConfig } from 'vite'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+const ReactCompilerConfig = {
+  target: '19',
+}
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [tanstackRouter(), react(), tailwindcss()],
+  plugins: [
+    tanstackRouter(),
+    react({
+      babel: {
+        plugins: [['babel-plugin-react-compiler', ReactCompilerConfig]],
+      },
+    }),
+    tailwindcss(),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
