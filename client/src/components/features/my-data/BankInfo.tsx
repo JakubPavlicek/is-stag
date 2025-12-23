@@ -1,9 +1,12 @@
 import type { ElementType } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { CreditCard, Euro, User } from 'lucide-react'
+import { CreditCard, Edit, Euro, User } from 'lucide-react'
 
 import type { components } from '@/api/user/schema'
+import { BankInfoForm } from '@/components/features/my-data/forms/BankInfoForm'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 type Banking = components['schemas']['BankAccountsResponse']
@@ -13,15 +16,28 @@ function AccountBlock({
   title,
   account,
   icon: Icon,
-}: Readonly<{ title: string; account?: Account | null; icon: ElementType }>) {
+  onEdit,
+}: Readonly<{
+  title: string
+  account?: Account | null
+  icon: ElementType
+  onEdit?: () => void
+}>) {
   const { t } = useTranslation()
 
   if (!account) {
     return (
       <div className="text-muted-foreground/50 flex flex-col gap-2 rounded-xl border border-dashed p-4">
-        <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4" />
-          <span className="text-sm font-medium">{title}</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Icon className="h-4 w-4" />
+            <span className="text-sm font-medium">{title}</span>
+          </div>
+          {onEdit && (
+            <Button variant="ghost" size="icon" onClick={onEdit} className="h-8 w-8">
+              <Edit className="h-3 w-3" />
+            </Button>
+          )}
         </div>
         <p className="pl-6 text-sm">{t('my_data.bank.not_provided')}</p>
       </div>
@@ -39,11 +55,18 @@ function AccountBlock({
           <Icon className="h-4 w-4" />
           <h4 className="text-foreground text-sm font-semibold tracking-tight">{title}</h4>
         </div>
-        <div className="text-right">
-          <p className="text-primary text-lg font-bold tracking-tight">
-            {fullAccount || '-'} / {account.bankCode || '-'}
-          </p>
-          <p className="text-muted-foreground text-xs font-medium">{account.bankName || '-'}</p>
+        <div className="flex items-start gap-2">
+          <div className="text-right">
+            <p className="text-primary text-lg font-bold tracking-tight">
+              {fullAccount || '-'} / {account.bankCode || '-'}
+            </p>
+            <p className="text-muted-foreground text-xs font-medium">{account.bankName || '-'}</p>
+          </div>
+          {onEdit && (
+            <Button variant="ghost" size="icon" onClick={onEdit} className="-mt-1 h-8 w-8">
+              <Edit className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       </div>
 
@@ -76,8 +99,9 @@ function AccountBlock({
   )
 }
 
-export function BankInfo({ banking }: Readonly<{ banking: Banking }>) {
+export function BankInfo({ banking, personId }: Readonly<{ banking: Banking; personId: number }>) {
   const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
 
   return (
     <Card>
@@ -89,6 +113,7 @@ export function BankInfo({ banking }: Readonly<{ banking: Banking }>) {
           title={t('my_data.bank.account_standard')}
           account={banking.account}
           icon={CreditCard}
+          onEdit={() => setOpen(true)}
         />
         <AccountBlock
           title={t('my_data.bank.account_euro')}
@@ -96,6 +121,12 @@ export function BankInfo({ banking }: Readonly<{ banking: Banking }>) {
           icon={Euro}
         />
       </CardContent>
+      <BankInfoForm
+        personId={personId}
+        account={banking.account}
+        open={open}
+        onOpenChange={setOpen}
+      />
     </Card>
   )
 }

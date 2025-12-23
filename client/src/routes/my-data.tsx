@@ -86,9 +86,9 @@ function MyData() {
       <div className="grid gap-6">
         <BasicInfo student={student} />
         {addresses && <AddressInfo addresses={addresses} />}
-        {person?.contact && <ContactInfo contact={person.contact} />}
+        {person?.contact && <ContactInfo contact={person.contact} personId={person.personId} />}
         {person && <PersonalInfo person={person} />}
-        {banking && <BankInfo banking={banking} />}
+        {banking && person && <BankInfo banking={banking} personId={person.personId} />}
       </div>
     </div>
   )

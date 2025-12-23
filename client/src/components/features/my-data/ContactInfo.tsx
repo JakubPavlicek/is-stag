@@ -1,9 +1,11 @@
-import type { ElementType } from 'react'
+import { type ElementType, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { AtSign, Box, Phone, Smartphone } from 'lucide-react'
+import { AtSign, Box, Edit, Phone, Smartphone } from 'lucide-react'
 
 import type { components } from '@/api/user/schema'
+import { ContactForm } from '@/components/features/my-data/forms/ContactForm'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 type Contact = components['schemas']['Contact']
@@ -28,20 +30,28 @@ function ContactItem({
   )
 }
 
-export function ContactInfo({ contact }: Readonly<{ contact: Contact }>) {
+export function ContactInfo({
+  contact,
+  personId,
+}: Readonly<{ contact: Contact; personId: number }>) {
   const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>{t('my_data.contact.title')}</CardTitle>
+        <Button variant="ghost" size="icon" onClick={() => setOpen(true)}>
+          <Edit className="h-4 w-4" />
+        </Button>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <CardContent className="grid grid-cols-1 gap-4 pt-4 lg:grid-cols-2">
         <ContactItem icon={AtSign} label={t('my_data.contact.email')} value={contact.email} />
         <ContactItem icon={Phone} label={t('my_data.contact.phone')} value={contact.phone} />
         <ContactItem icon={Smartphone} label={t('my_data.contact.mobile')} value={contact.mobile} />
         <ContactItem icon={Box} label={t('my_data.contact.databox')} value={contact.dataBox} />
       </CardContent>
+      <ContactForm personId={personId} contact={contact} open={open} onOpenChange={setOpen} />
     </Card>
   )
 }

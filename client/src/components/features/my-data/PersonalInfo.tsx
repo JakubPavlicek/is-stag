@@ -1,6 +1,11 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Edit } from 'lucide-react'
+
 import type { components } from '@/api/user/schema'
+import { PersonalInfoForm } from '@/components/features/my-data/forms/PersonalInfoForm'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatDate } from '@/lib/utils'
 
@@ -8,13 +13,17 @@ type Person = components['schemas']['PersonResponse']
 
 export function PersonalInfo({ person }: Readonly<{ person: Person }>) {
   const { t, i18n } = useTranslation()
+  const [open, setOpen] = useState(false)
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>{t('my_data.personal_info.title')}</CardTitle>
+        <Button variant="ghost" size="icon" onClick={() => setOpen(true)}>
+          <Edit className="h-4 w-4" />
+        </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4">
         <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
           <div>
             <p className="text-muted-foreground text-sm font-medium">
@@ -77,6 +86,7 @@ export function PersonalInfo({ person }: Readonly<{ person: Person }>) {
           </div>
         </div>
       </CardContent>
+      <PersonalInfoForm person={person} open={open} onOpenChange={setOpen} />
     </Card>
   )
 }
