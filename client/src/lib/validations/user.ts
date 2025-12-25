@@ -44,7 +44,11 @@ export const personalInfoSchema = z.object({
     prefix: z.string().max(240).or(z.literal('')),
     suffix: z.string().max(240).or(z.literal('')),
   }),
-  birthSurname: z.string().max(100).or(z.literal('')),
+  birthSurname: z
+    .string()
+    .max(100)
+    .regex(/^[\p{L} .'-]+$/u, 'validation.invalid_surname')
+    .or(z.literal('')),
   maritalStatus: z.string().max(240).or(z.literal('')),
   birthPlace: z.object({
     country: z.string().max(70).min(1),

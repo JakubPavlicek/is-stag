@@ -77,6 +77,7 @@
   },
   "validation": {
     "invalid_email": "Neplatná e-mailová adresa",
+    "invalid_surname": "Neplatné příjmení",
     "max_length": "Maximálně {{length}} znaků",
     "invalid_phone": "Neplatný formát telefonního čísla (např. +420123456789)",
     "invalid_mobile": "Neplatný formát mobilního čísla (např. +420123456789)",

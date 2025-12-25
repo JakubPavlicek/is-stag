@@ -101,7 +101,7 @@ export function BankInfoForm({
           }}
           className="grid gap-4 py-4"
         >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 items-start">
             <div className="col-span-1">
               <form.Field
                 name="accountNumberPrefix"

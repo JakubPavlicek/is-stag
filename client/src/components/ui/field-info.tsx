@@ -47,7 +47,7 @@ export function FormField({
   className?: string
 }>) {
   return (
-    <div className={cn('grid gap-2', className)}>
+    <div className={cn('grid gap-2 items-start', className)}>
       <Label
         htmlFor={field.name}
         className={field.state.meta.errors.length ? 'text-destructive' : ''}
