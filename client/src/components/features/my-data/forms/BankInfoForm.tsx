@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query'
 
 import type { components } from '@/api/user/schema'
 import { Button } from '@/components/ui/button'
+import { Combobox } from '@/components/ui/combobox'
 import {
   Dialog,
   DialogContent,
@@ -15,7 +16,7 @@ import {
 } from '@/components/ui/dialog'
 import { FormField } from '@/components/ui/field-info'
 import { Input } from '@/components/ui/input'
-import { $user } from '@/lib/api'
+import { $codelist, $user } from '@/lib/api'
 import { bankAccountSchema } from '@/lib/validations/user'
 
 type Account = components['schemas']['BankAccount']
@@ -33,8 +34,13 @@ export function BankInfoForm({
   open,
   onOpenChange,
 }: Readonly<BankInfoFormProps>) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const queryClient = useQueryClient()
+  const lang = (i18n.language?.split('-')[0] || 'cs') as 'cs' | 'en'
+
+  const { data: banks } = $codelist.useQuery('get', '/domains/{domain}', {
+    params: { path: { domain: 'CIS_BANK' }, header: { 'Accept-Language': lang } },
+  })
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}', {
     onSuccess: () => {
@@ -129,11 +135,18 @@ export function BankInfoForm({
             name="bankCode"
             children={(field) => (
               <FormField field={field} label={t('my_data.bank.bank_code')}>
-                <Input
-                  name={field.name}
+                <Combobox
                   value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onSelect={(value) => field.handleChange(value)}
+                  options={
+                    banks?.values.map((bank) => ({
+                      value: bank.abbreviation ?? bank.key,
+                      label: `${bank.abbreviation ?? bank.key} - ${bank.name}`,
+                    })) ?? []
+                  }
+                  placeholder={t('common.select_option')}
+                  emptyText={t('common.no_option_found')}
+                  modal
                 />
               </FormField>
             )}

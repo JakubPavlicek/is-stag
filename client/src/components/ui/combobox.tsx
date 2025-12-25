@@ -50,9 +50,9 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between", !value && "text-muted-foreground", className)}
+          className={cn("h-auto w-full justify-between", !value && "text-muted-foreground", className)}
         >
-          <span className="truncate">
+          <span className="text-left">
             {value
               ? options.find((option) => option.value === value)?.label
               : placeholder}
@@ -99,14 +99,15 @@ export function Combobox({
                     onSelect(option.value === value ? "" : option.value)
                     setOpen(false)
                   }}
+                  className="items-start"
                 >
                   <Check
                     className={cn(
-                      "mr-2 h-4 w-4",
+                      "mr-2 h-4 w-4 mt-0.5",
                       value === option.value ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {option.label}
+                  <span className="flex-1 text-left">{option.label}</span>
                 </CommandItem>
               ))}
             </CommandGroup>
