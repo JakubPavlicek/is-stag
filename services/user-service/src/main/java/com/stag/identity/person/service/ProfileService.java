@@ -16,7 +16,9 @@ import com.stag.identity.person.util.DataBoxValidator;
 import com.stag.identity.shared.util.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,6 +96,12 @@ public class ProfileService {
     }
 
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(value = "person-profile", key = "{#personId, 'cs'}"),
+        @CacheEvict(value = "person-profile", key = "{#personId, 'en'}"),
+        @CacheEvict(value = "person-simple-profile", key = "{#personId, 'cs'}"),
+        @CacheEvict(value = "person-simple-profile", key = "{#personId, 'en'}")
+    })
     @PreAuthorize("""
         hasRole('AD')
         || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)

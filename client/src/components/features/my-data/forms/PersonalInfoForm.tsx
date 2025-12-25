@@ -15,7 +15,8 @@ import {
 } from '@/components/ui/dialog'
 import { FormField } from '@/components/ui/field-info'
 import { Input } from '@/components/ui/input'
-import { $user } from '@/lib/api'
+import { $codelist, $user } from '@/lib/api'
+import { cn } from '@/lib/utils'
 import { personalInfoSchema } from '@/lib/validations/user'
 
 type Person = components['schemas']['PersonResponse']
@@ -30,6 +31,20 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const personId = person.personId
+
+  const { data: titlesBefore } = $codelist.useQuery('get', '/domains/{domain}', {
+    params: { path: { domain: 'TITUL_PRED' } },
+  })
+
+  const { data: titlesAfter } = $codelist.useQuery('get', '/domains/{domain}', {
+    params: { path: { domain: 'TITUL_ZA' } },
+  })
+
+  const { data: maritalStatus } = $codelist.useQuery('get', '/domains/{domain}', {
+    params: { path: { domain: 'STAV' } },
+  })
+
+  const { data: countries } = $codelist.useQuery('get', '/countries')
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}', {
     onSuccess: () => {
@@ -94,12 +109,22 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
               name="titles.prefix"
               children={(field) => (
                 <FormField field={field} label={t('my_data.personal_info.title_before')}>
-                  <Input
+                  <select
                     name={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                  />
+                    className={cn(
+                      'border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+                    )}
+                  >
+                    <option value="" />
+                    {titlesBefore?.values.map((title) => (
+                      <option key={title.key} value={title.abbreviation ?? title.key}>
+                        {title.abbreviation}
+                      </option>
+                    ))}
+                  </select>
                 </FormField>
               )}
             />
@@ -107,12 +132,22 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
               name="titles.suffix"
               children={(field) => (
                 <FormField field={field} label={t('my_data.personal_info.title_after')}>
-                  <Input
+                  <select
                     name={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                  />
+                    className={cn(
+                      'border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+                    )}
+                  >
+                    <option value="" />
+                    {titlesAfter?.values.map((title) => (
+                      <option key={title.key} value={title.abbreviation ?? title.key}>
+                        {title.abbreviation}
+                      </option>
+                    ))}
+                  </select>
                 </FormField>
               )}
             />
@@ -136,12 +171,22 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
               name="maritalStatus"
               children={(field) => (
                 <FormField field={field} label={t('my_data.personal_info.marital_status')}>
-                  <Input
+                  <select
                     name={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                  />
+                    className={cn(
+                      'border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+                    )}
+                  >
+                    <option value="" />
+                    {maritalStatus?.values.map((status) => (
+                      <option key={status.key} value={status.name}>
+                        {status.name}
+                      </option>
+                    ))}
+                  </select>
                 </FormField>
               )}
             />
@@ -152,12 +197,22 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
               name="birthPlace.country"
               children={(field) => (
                 <FormField field={field} label={t('my_data.personal_info.birth_place_country')}>
-                  <Input
+                  <select
                     name={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                  />
+                    className={cn(
+                      'border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+                    )}
+                  >
+                    <option value="" />
+                    {countries?.countries.map((country) => (
+                      <option key={country.id} value={country.name}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
                 </FormField>
               )}
             />
