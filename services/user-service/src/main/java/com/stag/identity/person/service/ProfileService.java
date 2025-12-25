@@ -100,7 +100,9 @@ public class ProfileService {
         @CacheEvict(value = "person-profile", key = "{#personId, 'cs'}"),
         @CacheEvict(value = "person-profile", key = "{#personId, 'en'}"),
         @CacheEvict(value = "person-simple-profile", key = "{#personId, 'cs'}"),
-        @CacheEvict(value = "person-simple-profile", key = "{#personId, 'en'}")
+        @CacheEvict(value = "person-simple-profile", key = "{#personId, 'en'}"),
+        @CacheEvict(value = "person-banking", key = "{#personId, 'cs'}"),
+        @CacheEvict(value = "person-banking", key = "{#personId, 'en'}"),
     })
     @PreAuthorize("""
         hasRole('AD')
@@ -133,15 +135,22 @@ public class ProfileService {
         log.debug("Successfully checked person profile update data for personId: {}", personId);
 
         // Update the values that were validated by codelist-service
-        ObjectUtils.updateIfNotNull(profileUpdateLookupData.maritalStatusLowValue(), person::setMaritalStatus);
-        ObjectUtils.updateIfNotNull(profileUpdateLookupData.titlePrefixLowValue(), person::setTitlePrefix);
-        ObjectUtils.updateIfNotNull(profileUpdateLookupData.titleSuffixLowValue(), person::setTitleSuffix);
-        ObjectUtils.updateIfNotNull(profileUpdateLookupData.birthCountryId(), person::setBirthCountryId);
+        if (profileUpdateLookupData != null) {
+            ObjectUtils.updateIfNotNull(profileUpdateLookupData.maritalStatusLowValue(), person::setMaritalStatus);
+            ObjectUtils.updateIfNotNull(profileUpdateLookupData.titlePrefixLowValue(), person::setTitlePrefix);
+            ObjectUtils.updateIfNotNull(profileUpdateLookupData.titleSuffixLowValue(), person::setTitleSuffix);
+            ObjectUtils.updateIfNotNull(profileUpdateLookupData.birthCountryId(), person::setBirthCountryId);
+        }
 
         log.info("Successfully updated person profile for personId: {}", personId);
     }
 
     private void updateContact(Person person, Profile.Contact contact) {
+        if (contact == null) {
+            log.debug("Contact is null, no updates to perform for personId: {}", person.getId());
+            return;
+        }
+
         ObjectUtils.updateIfNotNull(contact.email(), person::setEmail);
         ObjectUtils.updateIfNotNull(contact.phone(), person::setPhone);
         ObjectUtils.updateIfNotNull(contact.mobile(), person::setMobile);

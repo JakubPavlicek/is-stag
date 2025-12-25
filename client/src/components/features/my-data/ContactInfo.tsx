@@ -16,7 +16,7 @@ function ContactItem({
   value,
 }: Readonly<{ icon: ElementType; label: string; value?: string | null }>) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border p-3">
+    <div className="hover:bg-accent/20 flex items-center gap-3 rounded-lg border p-3 hover:shadow-md">
       <div className="bg-muted flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
         <Icon className="text-primary h-4 w-4" />
       </div>

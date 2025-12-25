@@ -59,7 +59,8 @@ export function Combobox({
           </span>
           <div className="ml-2 flex items-center gap-1">
             {value && (
-              <button
+              <div
+                role="button"
                 tabIndex={0}
                 onClick={(e) => {
                   e.stopPropagation()
@@ -74,7 +75,7 @@ export function Combobox({
                 className="flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center opacity-50 hover:opacity-100"
               >
                 <X className="h-4 w-4" />
-              </button>
+              </div>
             )}
             <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
           </div>

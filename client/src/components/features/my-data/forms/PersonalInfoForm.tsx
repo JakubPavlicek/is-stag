@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 import type { components } from '@/api/user/schema'
 import { Button } from '@/components/ui/button'
@@ -56,9 +57,11 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
         queryKey: ['persons', personId],
       })
       onOpenChange(false)
+      toast.success(t('saved_successfully'))
     },
     onError: (error) => {
       console.error(error)
+      toast.error(t('error_occured'))
     },
   })
 

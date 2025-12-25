@@ -286,7 +286,7 @@ components:
       title: Birth Place Update
       description: Object containing birth place to be updated.
       additionalProperties: false
-      nullable: false
+      nullable: true
       properties:
         country:
           $ref: '#/components/schemas/BirthPlace/properties/country'
@@ -298,7 +298,7 @@ components:
       title: Titles Update
       description: Object containing titles to be updated.
       additionalProperties: false
-      nullable: false
+      nullable: true
       properties:
         prefix:
           $ref: '#/components/schemas/Title'
@@ -310,7 +310,7 @@ components:
       title: Contact Update
       description: Object containing contact details to be updated.
       additionalProperties: false
-      nullable: false
+      nullable: true
       properties:
         email:
           $ref: '#/components/schemas/Contact/properties/email'
@@ -326,7 +326,7 @@ components:
       title: Bank Account Update
       description: Object containing bank account details to be updated.
       additionalProperties: false
-      nullable: false
+      nullable: true
       properties:
         accountNumberPrefix:
           $ref: '#/components/schemas/BankAccount/properties/accountNumberPrefix'

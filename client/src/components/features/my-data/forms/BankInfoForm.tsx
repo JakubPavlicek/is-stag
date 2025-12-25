@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from '@tanstack/react-router'
+import { toast } from 'sonner'
 
 import type { components } from '@/api/user/schema'
 import { Button } from '@/components/ui/button'
@@ -36,6 +38,7 @@ export function BankInfoForm({
 }: Readonly<BankInfoFormProps>) {
   const { t, i18n } = useTranslation()
   const queryClient = useQueryClient()
+  const router = useRouter()
   const lang = (i18n.language?.split('-')[0] || 'cs') as 'cs' | 'en'
 
   const { data: banks } = $codelist.useQuery('get', '/domains/{domain}', {
@@ -43,20 +46,19 @@ export function BankInfoForm({
   })
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}', {
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['persons', personId], // Should probably also invalidate '/persons/{personId}/banking' but that depends on implementation details. 'persons' key covers all usually? No, I should invalidate banking specific key.
+    onSuccess: async () => {
+      // Invalidate banking query
+      await queryClient.invalidateQueries({
+        queryKey: ['get', '/persons/{personId}/banking'],
+        refetchType: 'inactive',
       })
-      // Invalidate banking specifically
-      queryClient.invalidateQueries({
-        queryKey: $user.queryOptions('get', '/persons/{personId}/banking', {
-          params: { path: { personId } },
-        }).queryKey,
-      })
+      await router.invalidate()
       onOpenChange(false)
+      toast.success(t('saved_successfully'))
     },
     onError: (error) => {
       console.error(error)
+      toast.error(t('error_occured'))
     },
   })
 

@@ -75,7 +75,7 @@ function AccountBlock({
 
       <div className="grid gap-3 pt-2">
         {account.iban && (
-          <div className="bg-muted/50 flex items-center gap-2 rounded-md px-3 py-2 text-sm">
+          <div className="bg-background/50 flex items-center gap-2 rounded-md border px-3 py-2 text-sm">
             <span className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
               {t('my_data.bank.iban')}
             </span>

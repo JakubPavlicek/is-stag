@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 import type { components } from '@/api/user/schema'
 import { Button } from '@/components/ui/button'
@@ -43,11 +44,11 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
         queryKey: ['persons', personId], // Broad invalidation
       })
       onOpenChange(false)
-      // toast.success(t('saved_successfully'))
+      toast.success(t('saved_successfully'))
     },
     onError: (error) => {
       console.error(error)
-      // toast.error(t('error_occured'))
+      toast.error(t('error_occured'))
     },
   })
 
@@ -91,56 +92,56 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <form.Field
               name="email"
-            children={(field) => (
-              <FormField field={field} label={t('my_data.contact.email')}>
-                <Input
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </FormField>
-            )}
-          />
+              children={(field) => (
+                <FormField field={field} label={t('my_data.contact.email')}>
+                  <Input
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                </FormField>
+              )}
+            />
             <form.Field
               name="phone"
-            children={(field) => (
-              <FormField field={field} label={t('my_data.contact.phone')}>
-                <Input
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </FormField>
-            )}
-          />
+              children={(field) => (
+                <FormField field={field} label={t('my_data.contact.phone')}>
+                  <Input
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                </FormField>
+              )}
+            />
             <form.Field
               name="mobile"
-            children={(field) => (
-              <FormField field={field} label={t('my_data.contact.mobile')}>
-                <Input
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </FormField>
-            )}
-          />
+              children={(field) => (
+                <FormField field={field} label={t('my_data.contact.mobile')}>
+                  <Input
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                </FormField>
+              )}
+            />
             <form.Field
               name="dataBox"
-            children={(field) => (
-              <FormField field={field} label={t('my_data.contact.databox')}>
-                <Input
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </FormField>
-            )}
-          />
+              children={(field) => (
+                <FormField field={field} label={t('my_data.contact.databox')}>
+                  <Input
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                </FormField>
+              )}
+            />
           </div>
           <DialogFooter>
             <form.Subscribe

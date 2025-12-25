@@ -69,8 +69,8 @@ public class CodelistClient {
     public ProfileUpdateLookupData getPersonProfileUpdateData(String maritalStatus, String birthCountryName, Profile.Titles titles) {
         var request = CodelistMapper.INSTANCE.toPersonProfileUpdateDataRequest(maritalStatus, birthCountryName, titles);
 
-        // Skip call if no meaningful data to fetch
-        if (shouldSkipRequest(request)) {
+        // Skip call if no meaningful data to fetch (can be null if )
+        if (request == null || shouldSkipRequest(request)) {
             log.debug("Skipping codelist-service call for person profile update data - no meaningful data to fetch");
             return null;
         }
