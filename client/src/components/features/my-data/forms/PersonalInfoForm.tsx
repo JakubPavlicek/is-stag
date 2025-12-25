@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query'
 
 import type { components } from '@/api/user/schema'
 import { Button } from '@/components/ui/button'
+import { Combobox } from '@/components/ui/combobox'
 import {
   Dialog,
   DialogContent,
@@ -16,7 +17,6 @@ import {
 import { FormField } from '@/components/ui/field-info'
 import { Input } from '@/components/ui/input'
 import { $codelist, $user } from '@/lib/api'
-import { cn } from '@/lib/utils'
 import { personalInfoSchema } from '@/lib/validations/user'
 
 type Person = components['schemas']['PersonResponse']
@@ -28,23 +28,26 @@ interface PersonalInfoFormProps {
 }
 
 export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<PersonalInfoFormProps>) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const queryClient = useQueryClient()
   const personId = person.personId
+  const lang = (i18n.language?.split('-')[0] || 'cs') as 'cs' | 'en'
 
   const { data: titlesBefore } = $codelist.useQuery('get', '/domains/{domain}', {
-    params: { path: { domain: 'TITUL_PRED' } },
+    params: { path: { domain: 'TITUL_PRED' }, header: { 'Accept-Language': lang } },
   })
 
   const { data: titlesAfter } = $codelist.useQuery('get', '/domains/{domain}', {
-    params: { path: { domain: 'TITUL_ZA' } },
+    params: { path: { domain: 'TITUL_ZA' }, header: { 'Accept-Language': lang } },
   })
 
   const { data: maritalStatus } = $codelist.useQuery('get', '/domains/{domain}', {
-    params: { path: { domain: 'STAV' } },
+    params: { path: { domain: 'STAV' }, header: { 'Accept-Language': lang } },
   })
 
-  const { data: countries } = $codelist.useQuery('get', '/countries')
+  const { data: countries } = $codelist.useQuery('get', '/countries', {
+    params: { header: { 'Accept-Language': lang } },
+  })
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}', {
     onSuccess: () => {
@@ -109,22 +112,19 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
               name="titles.prefix"
               children={(field) => (
                 <FormField field={field} label={t('my_data.personal_info.title_before')}>
-                  <select
-                    name={field.name}
+                  <Combobox
                     value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className={cn(
-                      'border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-                    )}
-                  >
-                    <option value="" />
-                    {titlesBefore?.values.map((title) => (
-                      <option key={title.key} value={title.abbreviation ?? title.key}>
-                        {title.abbreviation}
-                      </option>
-                    ))}
-                  </select>
+                    onSelect={(value) => field.handleChange(value)}
+                    options={
+                      titlesBefore?.values.map((title) => ({
+                        value: title.abbreviation ?? title.key,
+                        label: title.abbreviation ?? title.key,
+                      })) ?? []
+                    }
+                    placeholder={t('common.select_option')}
+                    emptyText={t('common.no_option_found')}
+                    modal
+                  />
                 </FormField>
               )}
             />
@@ -132,22 +132,19 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
               name="titles.suffix"
               children={(field) => (
                 <FormField field={field} label={t('my_data.personal_info.title_after')}>
-                  <select
-                    name={field.name}
+                  <Combobox
                     value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className={cn(
-                      'border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-                    )}
-                  >
-                    <option value="" />
-                    {titlesAfter?.values.map((title) => (
-                      <option key={title.key} value={title.abbreviation ?? title.key}>
-                        {title.abbreviation}
-                      </option>
-                    ))}
-                  </select>
+                    onSelect={(value) => field.handleChange(value)}
+                    options={
+                      titlesAfter?.values.map((title) => ({
+                        value: title.abbreviation ?? title.key,
+                        label: title.abbreviation ?? title.key,
+                      })) ?? []
+                    }
+                    placeholder={t('common.select_option')}
+                    emptyText={t('common.no_option_found')}
+                    modal
+                  />
                 </FormField>
               )}
             />
@@ -171,22 +168,19 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
               name="maritalStatus"
               children={(field) => (
                 <FormField field={field} label={t('my_data.personal_info.marital_status')}>
-                  <select
-                    name={field.name}
+                  <Combobox
                     value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className={cn(
-                      'border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-                    )}
-                  >
-                    <option value="" />
-                    {maritalStatus?.values.map((status) => (
-                      <option key={status.key} value={status.name}>
-                        {status.name}
-                      </option>
-                    ))}
-                  </select>
+                    onSelect={(value) => field.handleChange(value)}
+                    options={
+                      maritalStatus?.values.map((status) => ({
+                        value: status.name,
+                        label: status.name,
+                      })) ?? []
+                    }
+                    placeholder={t('common.select_option')}
+                    emptyText={t('common.no_option_found')}
+                    modal
+                  />
                 </FormField>
               )}
             />
@@ -197,22 +191,19 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
               name="birthPlace.country"
               children={(field) => (
                 <FormField field={field} label={t('my_data.personal_info.birth_place_country')}>
-                  <select
-                    name={field.name}
+                  <Combobox
                     value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className={cn(
-                      'border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-                    )}
-                  >
-                    <option value="" />
-                    {countries?.countries.map((country) => (
-                      <option key={country.id} value={country.name}>
-                        {country.name}
-                      </option>
-                    ))}
-                  </select>
+                    onSelect={(value) => field.handleChange(value)}
+                    options={
+                      countries?.countries.map((country) => ({
+                        value: country.name,
+                        label: country.name,
+                      })) ?? []
+                    }
+                    placeholder={t('common.select_option')}
+                    emptyText={t('common.no_option_found')}
+                    modal
+                  />
                 </FormField>
               )}
             />

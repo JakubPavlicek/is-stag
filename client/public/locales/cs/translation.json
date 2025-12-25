@@ -9,6 +9,10 @@
   "login": "Přihlásit se",
   "logout": "Odhlásit se",
   "welcome": "Vítejte",
+  "common": {
+    "select_option": "Vyberte možnost...",
+    "no_option_found": "Žádná možnost nenalezena."
+  },
   "sidebar": {
     "home": "Domů",
     "my_data": "Moje údaje"

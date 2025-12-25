@@ -9,6 +9,10 @@
   "login": "Login",
   "logout": "Logout",
   "welcome": "Welcome",
+  "common": {
+    "select_option": "Select option...",
+    "no_option_found": "No option found."
+  },
   "sidebar": {
     "home": "Home",
     "my_data": "My Data"
