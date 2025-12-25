@@ -123,7 +123,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
           }}
           className="grid gap-4 py-4"
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <form.Field
               name="titles.prefix"
               children={(field) => (
@@ -166,7 +166,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <form.Field
               name="birthSurname"
               children={(field) => (
@@ -202,7 +202,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <form.Field
               name="birthPlace.country"
               children={(field) => (

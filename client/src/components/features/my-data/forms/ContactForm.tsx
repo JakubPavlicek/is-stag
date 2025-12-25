@@ -88,8 +88,9 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
           }}
           className="grid gap-4 py-4"
         >
-          <form.Field
-            name="email"
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <form.Field
+              name="email"
             children={(field) => (
               <FormField field={field} label={t('my_data.contact.email')}>
                 <Input
@@ -101,8 +102,8 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
               </FormField>
             )}
           />
-          <form.Field
-            name="phone"
+            <form.Field
+              name="phone"
             children={(field) => (
               <FormField field={field} label={t('my_data.contact.phone')}>
                 <Input
@@ -114,8 +115,8 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
               </FormField>
             )}
           />
-          <form.Field
-            name="mobile"
+            <form.Field
+              name="mobile"
             children={(field) => (
               <FormField field={field} label={t('my_data.contact.mobile')}>
                 <Input
@@ -127,8 +128,8 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
               </FormField>
             )}
           />
-          <form.Field
-            name="dataBox"
+            <form.Field
+              name="dataBox"
             children={(field) => (
               <FormField field={field} label={t('my_data.contact.databox')}>
                 <Input
@@ -140,6 +141,7 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
               </FormField>
             )}
           />
+          </div>
           <DialogFooter>
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
