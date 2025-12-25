@@ -34,22 +34,7 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
   const queryClient = useQueryClient()
   const router = useRouter()
 
-  const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}', {
-    onSuccess: async () => {
-      // Invalidate person info query
-      await queryClient.invalidateQueries({
-        queryKey: ['get', '/persons/{personId}'],
-        refetchType: 'inactive',
-      })
-      await router.invalidate()
-      onOpenChange(false)
-      toast.success(t('saved_successfully'))
-    },
-    onError: (error) => {
-      console.error(error)
-      toast.error(t('error_occured'))
-    },
-  })
+  const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}')
 
   const form = useForm({
     defaultValues: {
@@ -62,12 +47,34 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
       onChange: contactSchema,
     },
     onSubmit: async ({ value }) => {
-      await mutateAsync({
+      const promise = mutateAsync({
         params: {
           path: { personId },
         },
         body: {
-          contact: value,
+          contact: {
+            email: value.email || null,
+            phone: value.phone || null,
+            mobile: value.mobile || null,
+            dataBox: value.dataBox || null,
+          },
+        },
+      }).then(async () => {
+        // Invalidate person info query
+        await queryClient.invalidateQueries({
+          queryKey: ['get', '/persons/{personId}'],
+          refetchType: 'inactive',
+        })
+        await router.invalidate()
+        onOpenChange(false)
+      })
+
+      toast.promise(promise, {
+        loading: t('saving'),
+        success: t('saved_successfully'),
+        error: (error) => {
+          console.error(error)
+          return t('error_occured')
         },
       })
     },

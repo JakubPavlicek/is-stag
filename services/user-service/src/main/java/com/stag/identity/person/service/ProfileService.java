@@ -151,9 +151,14 @@ public class ProfileService {
             return;
         }
 
-        ObjectUtils.updateIfNotNull(contact.email(), person::setEmail);
-        ObjectUtils.updateIfNotNull(contact.phone(), person::setPhone);
-        ObjectUtils.updateIfNotNull(contact.mobile(), person::setMobile);
+        person.setEmail(contact.email());
+        person.setPhone(contact.phone());
+        person.setMobile(contact.mobile());
+
+        if (contact.dataBox() == null) {
+            person.setDataBox(null);
+            return;
+        }
 
         if (DataBoxValidator.isValidDataBoxId(contact.dataBox())) {
             person.setDataBox(contact.dataBox());

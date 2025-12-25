@@ -74,5 +74,15 @@
     },
     "loading": "Loading...",
     "error_not_available": "Student data not available. Please login."
+  },
+  "validation": {
+    "invalid_email": "Invalid email address",
+    "max_length": "Max {{length}} characters",
+    "invalid_phone": "Invalid phone number format (e.g. +420123456789)",
+    "invalid_mobile": "Invalid mobile number format (e.g. +420123456789)",
+    "exact_length": "Must be exactly {{length}} characters",
+    "invalid_databox": "Invalid Data Box ID format",
+    "digits_only": "Must contain only digits",
+    "required": "Required field"
   }
 }

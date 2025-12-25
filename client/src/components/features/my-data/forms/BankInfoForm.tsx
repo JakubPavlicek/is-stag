@@ -45,22 +45,7 @@ export function BankInfoForm({
     params: { path: { domain: 'CIS_BANK' }, header: { 'Accept-Language': lang } },
   })
 
-  const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}', {
-    onSuccess: async () => {
-      // Invalidate banking query
-      await queryClient.invalidateQueries({
-        queryKey: ['get', '/persons/{personId}/banking'],
-        refetchType: 'inactive',
-      })
-      await router.invalidate()
-      onOpenChange(false)
-      toast.success(t('saved_successfully'))
-    },
-    onError: (error) => {
-      console.error(error)
-      toast.error(t('error_occured'))
-    },
-  })
+  const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}')
 
   const form = useForm({
     defaultValues: {
@@ -74,12 +59,28 @@ export function BankInfoForm({
       onChange: bankAccountSchema,
     },
     onSubmit: async ({ value }) => {
-      await mutateAsync({
+      const promise = mutateAsync({
         params: {
           path: { personId },
         },
         body: {
           bankAccount: value,
+        },
+      }).then(async () => {
+        // Invalidate banking query
+        await queryClient.invalidateQueries({
+          queryKey: ['get', '/persons/{personId}/banking'],
+        })
+        await router.invalidate()
+        onOpenChange(false)
+      })
+
+      toast.promise(promise, {
+        loading: t('saving'),
+        success: t('saved_successfully'),
+        error: (error) => {
+          console.error(error)
+          return t('error_occured')
         },
       })
     },

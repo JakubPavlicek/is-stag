@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 
+import { useTranslation } from 'react-i18next'
 import type { ValidationError } from '@tanstack/react-form'
 
 import { Label } from '@/components/ui/label'
@@ -16,11 +17,18 @@ interface MinimalFieldApi {
 }
 
 function FieldInfo({ field }: Readonly<{ field: MinimalFieldApi }>) {
+  const { t } = useTranslation()
+
   return (
     <>
       {field.state.meta.isTouched && field.state.meta.errors.length ? (
         <p className="text-destructive text-[0.8rem] font-medium">
-          {field.state.meta.errors.map((error) => error?.toString()).join(', ')}
+          {field.state.meta.errors
+            .map((error) => {
+              const message = (error as any)?.message ?? error
+              return t(message)
+            })
+            .join(', ')}
         </p>
       ) : null}
     </>

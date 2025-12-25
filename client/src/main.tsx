@@ -1,14 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { useTranslation } from 'react-i18next'
-import { Toaster } from 'sonner'
 
 import { ReactKeycloakProvider, useKeycloak } from '@react-keycloak/web'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
+import { Toaster } from 'sonner'
 
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider, useTheme } from '@/components/theme-provider'
 
 import './i18n'
 import './index.css'
@@ -33,6 +33,7 @@ declare module '@tanstack/react-router' {
 function App() {
   const { initialized } = useKeycloak()
   const { t } = useTranslation()
+  const { theme } = useTheme()
 
   if (!initialized) {
     return (
@@ -46,7 +47,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      <Toaster />
+      <Toaster theme={theme} richColors closeButton position="top-right" />
     </QueryClientProvider>
   )
 }

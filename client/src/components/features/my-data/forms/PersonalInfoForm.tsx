@@ -53,22 +53,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
     params: { header: { 'Accept-Language': lang } },
   })
 
-  const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}', {
-    onSuccess: async () => {
-      // Invalidate person info query
-      await queryClient.invalidateQueries({
-        queryKey: ['get', '/persons/{personId}'],
-        refetchType: 'inactive',
-      })
-      await router.invalidate()
-      onOpenChange(false)
-      toast.success(t('saved_successfully'))
-    },
-    onError: (error) => {
-      console.error(error)
-      toast.error(t('error_occured'))
-    },
-  })
+  const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}')
 
   const form = useForm({
     defaultValues: {
@@ -87,7 +72,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
       onChange: personalInfoSchema,
     },
     onSubmit: async ({ value }) => {
-      await mutateAsync({
+      const promise = mutateAsync({
         params: {
           path: { personId },
         },
@@ -96,6 +81,23 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
           birthSurname: value.birthSurname,
           maritalStatus: value.maritalStatus,
           birthPlace: value.birthPlace,
+        },
+      }).then(async () => {
+        // Invalidate person info query
+        await queryClient.invalidateQueries({
+          queryKey: ['get', '/persons/{personId}'],
+          refetchType: 'inactive',
+        })
+        await router.invalidate()
+        onOpenChange(false)
+      })
+
+      toast.promise(promise, {
+        loading: t('saving'),
+        success: t('saved_successfully'),
+        error: (error) => {
+          console.error(error)
+          return t('error_occured')
         },
       })
     },
