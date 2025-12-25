@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { useEffect } from 'react'
 
 import { AddressInfo } from '@/components/features/my-data/AddressInfo'
 import { BankInfo } from '@/components/features/my-data/BankInfo'
@@ -68,8 +69,13 @@ export const Route = createFileRoute('/my-data')({
 })
 
 function MyData() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { student, person, addresses, banking } = Route.useLoaderData()
+  const router = useRouter()
+
+  useEffect(() => {
+    router.invalidate()
+  }, [i18n.language, router])
 
   if (!student) {
     return (

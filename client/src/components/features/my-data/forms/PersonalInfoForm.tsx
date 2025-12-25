@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
@@ -91,6 +92,21 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
       })
     },
   })
+
+  useEffect(() => {
+    form.reset({
+      titles: {
+        prefix: person.titles?.prefix ?? '',
+        suffix: person.titles?.suffix ?? '',
+      },
+      birthSurname: person.birthSurname ?? '',
+      maritalStatus: person.maritalStatus ?? '',
+      birthPlace: {
+        country: person.birthPlace?.country ?? '',
+        city: person.birthPlace?.city ?? '',
+      },
+    })
+  }, [person, form])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
