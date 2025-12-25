@@ -75,7 +75,7 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-106.25">
+      <DialogContent className="sm:max-w-150">
         <DialogHeader>
           <DialogTitle>{t('my_data.contact.edit_title')}</DialogTitle>
           <DialogDescription>{t('my_data.contact.edit_description')}</DialogDescription>

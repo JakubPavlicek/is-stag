@@ -50,9 +50,9 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("h-auto w-full justify-between", !value && "text-muted-foreground", className)}
+          className={cn("h-auto w-full justify-between min-w-0 shadow-sm", !value && "text-muted-foreground", className)}
         >
-          <span className="text-left">
+          <span className="flex-1 truncate text-left">
             {value
               ? options.find((option) => option.value === value)?.label
               : placeholder}
