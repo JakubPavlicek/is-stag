@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 import type { components } from '@/api/user/schema'
@@ -32,6 +33,7 @@ interface PersonalInfoFormProps {
 export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<PersonalInfoFormProps>) {
   const { t, i18n } = useTranslation()
   const queryClient = useQueryClient()
+  const router = useRouter()
   const personId = person.personId
   const lang = (i18n.language?.split('-')[0] || 'cs') as 'cs' | 'en'
 
@@ -52,10 +54,13 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
   })
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}', {
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['persons', personId],
+    onSuccess: async () => {
+      // Invalidate person info query
+      await queryClient.invalidateQueries({
+        queryKey: ['get', '/persons/{personId}'],
+        refetchType: 'inactive',
       })
+      await router.invalidate()
       onOpenChange(false)
       toast.success(t('saved_successfully'))
     },

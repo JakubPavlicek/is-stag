@@ -376,12 +376,14 @@ components:
           nullable: false
           description: First name of the person.
           example: John
+          pattern: "^[\\p{L} .'-]+$"
           maxLength: 100
         lastName:
           type: string
           nullable: false
           description: Last name of the person.
           example: Doe
+          pattern: "^[\\p{L} .'-]+$"
           maxLength: 100
         birthSurname:
           title: Birth Surname
@@ -389,6 +391,7 @@ components:
           nullable: true
           description: Birth surname of the person.
           example: Smith
+          pattern: "^[\\p{L} .'-]+$"
           maxLength: 100
         contact:
           $ref: '#/components/schemas/Contact'

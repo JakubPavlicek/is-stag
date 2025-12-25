@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 import type { components } from '@/api/user/schema'
@@ -31,18 +32,16 @@ interface ContactFormProps {
 export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<ContactFormProps>) {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}', {
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: $user.queryOptions('get', '/persons/{personId}', {
-          params: { path: { personId } },
-        }).queryKey, // Simplification, need actual key construction or general invalidation
+    onSuccess: async () => {
+      // Invalidate person info query
+      await queryClient.invalidateQueries({
+        queryKey: ['get', '/persons/{personId}'],
+        refetchType: 'inactive',
       })
-      // Also invalidate contact specific query if it existed separately? No, contact is part of person.
-      queryClient.invalidateQueries({
-        queryKey: ['persons', personId], // Broad invalidation
-      })
+      await router.invalidate()
       onOpenChange(false)
       toast.success(t('saved_successfully'))
     },
