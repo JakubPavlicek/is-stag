@@ -31,7 +31,7 @@ export function Header() {
 
   return (
     <header className="bg-background flex h-16 items-center gap-4 border-b px-6 shadow-sm">
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="hover:bg-accent transition-colors">

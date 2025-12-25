@@ -50,27 +50,30 @@ function AccountBlock({
 
   return (
     <div className="bg-card/50 hover:bg-accent/20 flex flex-col gap-4 rounded-xl border p-4 transition-all hover:shadow-md">
-      <div className="flex items-start justify-between gap-4">
-        <div className="text-primary flex items-center gap-2">
-          <Icon className="h-4 w-4" />
-          <h4 className="text-foreground text-sm font-semibold tracking-tight">{title}</h4>
-        </div>
-        <div className="flex items-start gap-2">
-          <div className="text-right">
-            <p className="text-primary text-lg font-bold tracking-tight">
-              {fullAccount || '-'} / {account.bankCode || '-'}
-            </p>
-            <p className="text-muted-foreground text-xs font-medium">{account.bankName || '-'}</p>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <div className="text-primary flex items-center gap-2">
+            <Icon className="h-4 w-4" />
+            <h4 className="text-foreground text-sm font-semibold tracking-tight">{title}</h4>
           </div>
           {onEdit && (
-            <Button variant="ghost" size="icon" onClick={onEdit} className="-mt-1 h-8 w-8">
+            <Button variant="ghost" size="icon" onClick={onEdit} className="-mt-2 -mr-2 h-8 w-8">
               <Edit className="h-4 w-4" />
             </Button>
           )}
         </div>
+
+        <div className="flex flex-col gap-1">
+          <div className="text-primary flex flex-wrap items-baseline gap-x-1 text-xl font-bold tracking-tight">
+            <span>
+              {fullAccount || '-'}/{account.bankCode || '-'}
+            </span>
+          </div>
+          <p className="text-muted-foreground text-sm font-medium">{account.bankName || '-'}</p>
+        </div>
       </div>
 
-      <div className="grid gap-3">
+      <div className="grid gap-3 pt-2">
         {account.iban && (
           <div className="bg-muted/50 flex items-center gap-2 rounded-md px-3 py-2 text-sm">
             <span className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
