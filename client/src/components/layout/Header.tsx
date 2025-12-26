@@ -11,6 +11,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
@@ -47,35 +49,37 @@ export function Header() {
 
       <div className="flex-1" />
 
-      <ModeToggle />
+      <div className="mr-2 flex items-center gap-2">
+        <ModeToggle />
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hover:bg-accent hover:text-accent-foreground transition-all duration-200 hover:scale-105 active:scale-95"
-          >
-            <Globe className="h-5 w-5" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-40">
-          <DropdownMenuItem
-            onClick={() => changeLanguage('cs')}
-            className="flex cursor-pointer items-center gap-2"
-          >
-            <CZ title="Čeština" className="h-4 w-6 rounded-sm shadow-sm" />
-            <span>Čeština</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => changeLanguage('en')}
-            className="flex cursor-pointer items-center gap-2"
-          >
-            <GB title="English" className="h-4 w-6 rounded-sm shadow-sm" />
-            <span>English</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-accent hover:text-accent-foreground transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              <Globe className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem
+              onClick={() => changeLanguage('cs')}
+              className="flex cursor-pointer items-center gap-2"
+            >
+              <CZ title="Čeština" className="h-4 w-6 rounded-sm shadow-sm" />
+              <span>Čeština</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => changeLanguage('en')}
+              className="flex cursor-pointer items-center gap-2"
+            >
+              <GB title="English" className="h-4 w-6 rounded-sm shadow-sm" />
+              <span>English</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
       {keycloak.authenticated ? (
         <DropdownMenu>
@@ -93,9 +97,10 @@ export function Header() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem className="bg-muted/50 cursor-default font-semibold opacity-100">
+            <DropdownMenuLabel className="font-semibold">
               {keycloak.tokenParsed?.name || keycloak.tokenParsed?.preferred_username}
-            </DropdownMenuItem>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => keycloak.logout()}
               className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"

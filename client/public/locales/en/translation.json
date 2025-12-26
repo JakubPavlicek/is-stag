@@ -11,11 +11,38 @@
   "welcome": "Welcome",
   "common": {
     "select_option": "Select option...",
-    "no_option_found": "No option found."
+    "no_option_found": "No option found.",
+    "coming_soon": "Coming Soon",
+    "open": "Open"
   },
   "sidebar": {
     "home": "Home",
     "my_data": "My Data"
+  },
+  "home": {
+    "title": "University Portal",
+    "subtitle": "The central hub for managing your studies and university agenda.",
+    "login_description": "Please login to access study data, course enrollment, and profile management.",
+    "welcome_user": "Welcome back, {{name}}",
+    "dashboard_title": "Dashboard",
+    "cards": {
+      "my_data": "My Data",
+      "my_data_desc": "Manage personal details, addresses, contacts, and bank accounts.",
+      "study": "Studies",
+      "study_desc": "Overview of grades, exams, and study plans.",
+      "schedule": "Schedule",
+      "schedule_desc": "Your current class schedule and room reservations.",
+      "news": "News",
+      "news_desc": "Important announcements from the rectorate and faculties."
+    },
+    "public": {
+      "portal_title": "Student Portal",
+      "portal_desc": "Access all your personal information, study results, and university correspondence in one secure place.",
+      "scheduling_title": "Scheduling",
+      "scheduling_desc": "Manage your timetable, sign up for exams, and book rooms for study sessions or events.",
+      "academics_title": "Academics",
+      "academics_desc": "Track your academic progress, view study plans, and download necessary documents and certificates."
+    }
   },
   "my_data": {
     "title": "My Data",
