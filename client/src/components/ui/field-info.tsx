@@ -17,7 +17,7 @@ interface MinimalFieldApi {
 }
 
 function FieldInfo({ field }: Readonly<{ field: MinimalFieldApi }>) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation(['translation', 'zod'])
 
   return (
     <>
@@ -25,8 +25,14 @@ function FieldInfo({ field }: Readonly<{ field: MinimalFieldApi }>) {
         <p className="text-destructive text-[0.8rem] font-medium">
           {field.state.meta.errors
             .map((error) => {
-              const message = (error as any)?.message ?? error
-              return t(message)
+              const message =
+                typeof error === 'object' && error && 'message' in error
+                  ? (error as { message: string }).message
+                  : error
+              const msgString = message as string
+              return i18n.exists(msgString, { ns: 'zod' })
+                ? t(msgString, { ns: 'zod' })
+                : msgString
             })
             .join(', ')}
         </p>

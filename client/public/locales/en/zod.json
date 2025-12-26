@@ -1,0 +1,44 @@
+{
+  "invalid_email": "Invalid email address",
+  "invalid_surname": "Invalid surname",
+  "max_length": "Max {{length}} characters",
+  "invalid_phone": "Invalid phone number format (e.g. +420123456789)",
+  "invalid_mobile": "Invalid mobile number format (e.g. +420123456789)",
+  "exact_length": "Must be exactly {{length}} characters",
+  "invalid_databox": "Invalid Data Box ID format",
+  "digits_only": "Must contain only digits",
+  "required": "Required field",
+  "phone": "Phone",
+  "dataBox": "Data Box",
+  "email": "E-mail",
+  "mobile": "Mobile",
+  "accountNumberPrefix": "Account Prefix",
+  "accountNumberSuffix": "Account Number",
+  "bankCode": "Bank Code",
+  "holderName": "Account Holder",
+  "holderAddress": "Holder Address",
+  "titles": {
+    "prefix": "Title Before",
+    "suffix": "Title After"
+  },
+  "birthSurname": "Birth Surname",
+  "maritalStatus": "Marital Status",
+  "birthPlace": {
+    "country": "Birth Place - Country",
+    "city": "Birth Place - City"
+  },
+  "errors": {
+    "invalid_literal": "Invalid literal value, expected {{expected}}",
+    "too_small": {
+      "string": {
+        "exact": "String must contain exactly {{minimum}} character(s)"
+      }
+    },
+    "too_big": {
+      "string": {
+        "exact": "String must contain exactly {{maximum}} character(s)",
+        "inclusive": "String must contain at most {{maximum}} character(s)"
+      }
+    }
+  }
+}

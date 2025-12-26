@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
@@ -86,6 +87,18 @@ export function BankInfoForm({
     },
   })
 
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        accountNumberPrefix: account?.accountNumberPrefix ?? '',
+        accountNumberSuffix: account?.accountNumberSuffix ?? '',
+        bankCode: account?.bankCode ?? '',
+        holderName: account?.holderName ?? '',
+        holderAddress: account?.holderAddress ?? '',
+      })
+    }
+  }, [open, account, form])
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-125">
@@ -101,7 +114,7 @@ export function BankInfoForm({
           }}
           className="grid gap-4 py-4"
         >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 items-start">
+          <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3">
             <div className="col-span-1">
               <form.Field
                 name="accountNumberPrefix"

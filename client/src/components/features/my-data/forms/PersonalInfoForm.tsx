@@ -83,11 +83,18 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
           birthPlace: value.birthPlace,
         },
       }).then(async () => {
+        // Invalidate student info query
+        await queryClient.invalidateQueries({
+          queryKey: ['get', '/students/{studentId}'],
+          refetchType: 'inactive',
+        })
+
         // Invalidate person info query
         await queryClient.invalidateQueries({
           queryKey: ['get', '/persons/{personId}'],
           refetchType: 'inactive',
         })
+
         await router.invalidate()
         onOpenChange(false)
       })
@@ -104,19 +111,21 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
   })
 
   useEffect(() => {
-    form.reset({
-      titles: {
-        prefix: person.titles?.prefix ?? '',
-        suffix: person.titles?.suffix ?? '',
-      },
-      birthSurname: person.birthSurname ?? '',
-      maritalStatus: person.maritalStatus ?? '',
-      birthPlace: {
-        country: person.birthPlace?.country ?? '',
-        city: person.birthPlace?.city ?? '',
-      },
-    })
-  }, [person, form])
+    if (open) {
+      form.reset({
+        titles: {
+          prefix: person.titles?.prefix ?? '',
+          suffix: person.titles?.suffix ?? '',
+        },
+        birthSurname: person.birthSurname ?? '',
+        maritalStatus: person.maritalStatus ?? '',
+        birthPlace: {
+          country: person.birthPlace?.country ?? '',
+          city: person.birthPlace?.city ?? '',
+        },
+      })
+    }
+  }, [person, form, open])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -133,7 +142,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
           }}
           className="grid gap-4 py-4"
         >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 items-start">
+          <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
             <form.Field
               name="titles.prefix"
               children={(field) => (
@@ -142,10 +151,15 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
                     value={field.state.value}
                     onSelect={(value) => field.handleChange(value)}
                     options={
-                      titlesBefore?.values.map((title) => ({
-                        value: title.abbreviation ?? title.key,
-                        label: title.abbreviation ?? title.key,
-                      })) ?? []
+                      titlesBefore?.values
+                        .map((title) => ({
+                          value: title.abbreviation ?? title.key,
+                          label: title.abbreviation ?? title.key,
+                        }))
+                        .filter(
+                          (value, index, self) =>
+                            index === self.findIndex((t) => t.value === value.value),
+                        ) ?? []
                     }
                     placeholder={t('common.select_option')}
                     emptyText={t('common.no_option_found')}
@@ -176,7 +190,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 items-start">
+          <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
             <form.Field
               name="birthSurname"
               children={(field) => (
@@ -212,7 +226,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 items-start">
+          <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
             <form.Field
               name="birthPlace.country"
               children={(field) => (

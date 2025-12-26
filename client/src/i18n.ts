@@ -12,8 +12,8 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'cs',
+    ns: ['translation', 'zod'],
     debug: import.meta.env.DEV,
-
     interpolation: {
       escapeValue: false,
     },

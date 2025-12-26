@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
@@ -80,6 +81,17 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
     },
   })
 
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        email: contact.email ?? '',
+        phone: contact.phone ?? '',
+        mobile: contact.mobile ?? '',
+        dataBox: contact.dataBox ?? '',
+      })
+    }
+  }, [open, contact, form])
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-150">
@@ -95,7 +107,7 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
           }}
           className="grid gap-4 py-4"
         >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 items-start">
+          <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
             <form.Field
               name="email"
               children={(field) => (

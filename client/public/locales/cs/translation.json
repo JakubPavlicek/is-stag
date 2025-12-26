@@ -74,16 +74,5 @@
     },
     "loading": "Načítání...",
     "error_not_available": "Údaje o studentovi nejsou k dispozici. Prosím přihlašte se."
-  },
-  "validation": {
-    "invalid_email": "Neplatná e-mailová adresa",
-    "invalid_surname": "Neplatné příjmení",
-    "max_length": "Maximálně {{length}} znaků",
-    "invalid_phone": "Neplatný formát telefonního čísla (např. +420123456789)",
-    "invalid_mobile": "Neplatný formát mobilního čísla (např. +420123456789)",
-    "exact_length": "Musí mít přesně {{length}} znaků",
-    "invalid_databox": "Neplatný formát ID datové schránky",
-    "digits_only": "Musí obsahovat pouze číslice",
-    "required": "Povinné pole"
   }
 }

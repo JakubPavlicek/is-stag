@@ -1,0 +1,44 @@
+{
+  "invalid_email": "Neplatná e-mailová adresa",
+  "invalid_surname": "Neplatné příjmení",
+  "max_length": "Maximálně {{length}} znaků",
+  "invalid_phone": "Neplatný formát telefonního čísla (např. +420123456789)",
+  "invalid_mobile": "Neplatný formát mobilního čísla (např. +420123456789)",
+  "exact_length": "Musí mít přesně {{length}} znaků",
+  "invalid_databox": "Neplatný formát ID datové schránky",
+  "digits_only": "Musí obsahovat pouze číslice",
+  "required": "Povinné pole",
+  "phone": "Telefon",
+  "dataBox": "Datová schránka",
+  "email": "E-mail",
+  "mobile": "Mobil",
+  "accountNumberPrefix": "Předčíslí",
+  "accountNumberSuffix": "Číslo účtu",
+  "bankCode": "Kód banky",
+  "holderName": "Majitel účtu",
+  "holderAddress": "Adresa majitele",
+  "titles": {
+    "prefix": "Titul před jménem",
+    "suffix": "Titul za jménem"
+  },
+  "birthSurname": "Rodné příjmení",
+  "maritalStatus": "Rodinný stav",
+  "birthPlace": {
+    "country": "Místo narození - stát",
+    "city": "Místo narození - město"
+  },
+  "errors": {
+    "invalid_literal": "Neplatná hodnota, očekáváno {{expected}}",
+    "too_small": {
+      "string": {
+        "exact": "Musí obsahovat přesně {{minimum}} znaků"
+      }
+    },
+    "too_big": {
+      "string": {
+        "exact": "Musí obsahovat přesně {{maximum}} znaků",
+        "inclusive": "Maximálně {{maximum}} znaků"
+      }
+    }
+  }
+}
