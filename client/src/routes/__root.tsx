@@ -1,5 +1,8 @@
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { QueryClient } from '@tanstack/react-query'
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
+import { Outlet, createRootRouteWithContext, useRouter } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import { Header } from '@/components/layout/Header'
@@ -10,7 +13,18 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  component: () => (
+  component: RootComponent,
+})
+
+function RootComponent() {
+  const { i18n } = useTranslation()
+  const router = useRouter()
+
+  useEffect(() => {
+    router.invalidate()
+  }, [i18n.language, router])
+
+  return (
     <div className="flex min-h-screen flex-col lg:flex-row">
       <div className="hidden lg:block">
         <Sidebar />
@@ -23,5 +37,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       </div>
       <TanStackRouterDevtools />
     </div>
-  ),
-})
+  )
+}
+

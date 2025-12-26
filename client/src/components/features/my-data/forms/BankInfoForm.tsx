@@ -2,9 +2,6 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
-import { toast } from 'sonner'
 
 import type { components } from '@/api/user/schema'
 import { Button } from '@/components/ui/button'
@@ -19,7 +16,9 @@ import {
 } from '@/components/ui/dialog'
 import { FormField } from '@/components/ui/field-info'
 import { Input } from '@/components/ui/input'
-import { $codelist, $user } from '@/lib/api'
+import { useCodelist } from '@/hooks/use-codelists'
+import { useFormSubmit } from '@/hooks/use-form-submit'
+import { $user } from '@/lib/api'
 import { bankAccountSchema } from '@/lib/validations/user'
 
 type Account = components['schemas']['BankAccount']
@@ -37,14 +36,10 @@ export function BankInfoForm({
   open,
   onOpenChange,
 }: Readonly<BankInfoFormProps>) {
-  const { t, i18n } = useTranslation()
-  const queryClient = useQueryClient()
-  const router = useRouter()
-  const lang = (i18n.language?.split('-')[0] || 'cs') as 'cs' | 'en'
+  const { t } = useTranslation()
+  const { handleSubmit } = useFormSubmit()
 
-  const { data: banks } = $codelist.useQuery('get', '/domains/{domain}', {
-    params: { path: { domain: 'CIS_BANK' }, header: { 'Accept-Language': lang } },
-  })
+  const { data: banks } = useCodelist('CIS_BANK')
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}')
 
@@ -60,41 +55,28 @@ export function BankInfoForm({
       onChange: bankAccountSchema,
     },
     onSubmit: async ({ value }) => {
-      const promise = mutateAsync({
-        params: {
-          path: { personId },
+      await handleSubmit(
+        {
+          params: { path: { personId } },
+          body: { bankAccount: value },
         },
-        body: {
-          bankAccount: value,
+        {
+          mutationFn: mutateAsync,
+          invalidateKeys: [['get', '/persons/{personId}/banking']],
+          onSuccess: () => onOpenChange(false),
         },
-      }).then(async () => {
-        // Invalidate banking query
-        await queryClient.invalidateQueries({
-          queryKey: ['get', '/persons/{personId}/banking'],
-        })
-        await router.invalidate()
-        onOpenChange(false)
-      })
-
-      toast.promise(promise, {
-        loading: t('saving'),
-        success: t('saved_successfully'),
-        error: (error) => {
-          console.error(error)
-          return t('error_occured')
-        },
-      })
+      )
     },
   })
 
   useEffect(() => {
-    if (open) {
+    if (open && account) {
       form.reset({
-        accountNumberPrefix: account?.accountNumberPrefix ?? '',
-        accountNumberSuffix: account?.accountNumberSuffix ?? '',
-        bankCode: account?.bankCode ?? '',
-        holderName: account?.holderName ?? '',
-        holderAddress: account?.holderAddress ?? '',
+        accountNumberPrefix: account.accountNumberPrefix ?? '',
+        accountNumberSuffix: account.accountNumberSuffix ?? '',
+        bankCode: account.bankCode ?? '',
+        holderName: account.holderName ?? '',
+        holderAddress: account.holderAddress ?? '',
       })
     }
   }, [open, account, form])

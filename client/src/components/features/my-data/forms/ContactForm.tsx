@@ -2,9 +2,6 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
-import { toast } from 'sonner'
 
 import type { components } from '@/api/user/schema'
 import { Button } from '@/components/ui/button'
@@ -18,6 +15,7 @@ import {
 } from '@/components/ui/dialog'
 import { FormField } from '@/components/ui/field-info'
 import { Input } from '@/components/ui/input'
+import { useFormSubmit } from '@/hooks/use-form-submit'
 import { $user } from '@/lib/api'
 import { contactSchema } from '@/lib/validations/user'
 
@@ -32,8 +30,7 @@ interface ContactFormProps {
 
 export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<ContactFormProps>) {
   const { t } = useTranslation()
-  const queryClient = useQueryClient()
-  const router = useRouter()
+  const { handleSubmit } = useFormSubmit()
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}')
 
@@ -48,36 +45,24 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
       onChange: contactSchema,
     },
     onSubmit: async ({ value }) => {
-      const promise = mutateAsync({
-        params: {
-          path: { personId },
-        },
-        body: {
-          contact: {
-            email: value.email || null,
-            phone: value.phone || null,
-            mobile: value.mobile || null,
-            dataBox: value.dataBox || null,
+      await handleSubmit(
+        {
+          params: { path: { personId } },
+          body: {
+            contact: {
+              email: value.email || null,
+              phone: value.phone || null,
+              mobile: value.mobile || null,
+              dataBox: value.dataBox || null,
+            },
           },
         },
-      }).then(async () => {
-        // Invalidate person info query
-        await queryClient.invalidateQueries({
-          queryKey: ['get', '/persons/{personId}'],
-          refetchType: 'inactive',
-        })
-        await router.invalidate()
-        onOpenChange(false)
-      })
-
-      toast.promise(promise, {
-        loading: t('saving'),
-        success: t('saved_successfully'),
-        error: (error) => {
-          console.error(error)
-          return t('error_occured')
+        {
+          mutationFn: mutateAsync,
+          invalidateKeys: [['get', '/persons/{personId}']],
+          onSuccess: () => onOpenChange(false),
         },
-      })
+      )
     },
   })
 

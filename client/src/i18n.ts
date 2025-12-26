@@ -12,6 +12,8 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'cs',
+    supportedLngs: ['cs', 'en'],
+    load: 'languageOnly',
     ns: ['translation', 'zod'],
     debug: import.meta.env.DEV,
     interpolation: {

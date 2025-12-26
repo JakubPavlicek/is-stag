@@ -2,9 +2,6 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useForm } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
-import { toast } from 'sonner'
 
 import type { components } from '@/api/user/schema'
 import { Button } from '@/components/ui/button'
@@ -19,7 +16,9 @@ import {
 } from '@/components/ui/dialog'
 import { FormField } from '@/components/ui/field-info'
 import { Input } from '@/components/ui/input'
-import { $codelist, $user } from '@/lib/api'
+import { useCodelist, useCountries } from '@/hooks/use-codelists'
+import { useFormSubmit } from '@/hooks/use-form-submit'
+import { $user } from '@/lib/api'
 import { personalInfoSchema } from '@/lib/validations/user'
 
 type Person = components['schemas']['PersonResponse']
@@ -31,27 +30,14 @@ interface PersonalInfoFormProps {
 }
 
 export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<PersonalInfoFormProps>) {
-  const { t, i18n } = useTranslation()
-  const queryClient = useQueryClient()
-  const router = useRouter()
+  const { t } = useTranslation()
+  const { handleSubmit } = useFormSubmit()
   const personId = person.personId
-  const lang = (i18n.language?.split('-')[0] || 'cs') as 'cs' | 'en'
 
-  const { data: titlesBefore } = $codelist.useQuery('get', '/domains/{domain}', {
-    params: { path: { domain: 'TITUL_PRED' }, header: { 'Accept-Language': lang } },
-  })
-
-  const { data: titlesAfter } = $codelist.useQuery('get', '/domains/{domain}', {
-    params: { path: { domain: 'TITUL_ZA' }, header: { 'Accept-Language': lang } },
-  })
-
-  const { data: maritalStatus } = $codelist.useQuery('get', '/domains/{domain}', {
-    params: { path: { domain: 'STAV' }, header: { 'Accept-Language': lang } },
-  })
-
-  const { data: countries } = $codelist.useQuery('get', '/countries', {
-    params: { header: { 'Accept-Language': lang } },
-  })
+  const { data: titlesBefore } = useCodelist('TITUL_PRED')
+  const { data: titlesAfter } = useCodelist('TITUL_ZA')
+  const { data: maritalStatus } = useCodelist('STAV')
+  const { data: countries } = useCountries()
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}')
 
@@ -72,41 +58,25 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
       onChange: personalInfoSchema,
     },
     onSubmit: async ({ value }) => {
-      const promise = mutateAsync({
-        params: {
-          path: { personId },
+      await handleSubmit(
+        {
+          params: { path: { personId } },
+          body: {
+            titles: value.titles,
+            birthSurname: value.birthSurname,
+            maritalStatus: value.maritalStatus,
+            birthPlace: value.birthPlace,
+          },
         },
-        body: {
-          titles: value.titles,
-          birthSurname: value.birthSurname,
-          maritalStatus: value.maritalStatus,
-          birthPlace: value.birthPlace,
+        {
+          mutationFn: mutateAsync,
+          invalidateKeys: [
+            ['get', '/students/{studentId}'],
+            ['get', '/persons/{personId}'],
+          ],
+          onSuccess: () => onOpenChange(false),
         },
-      }).then(async () => {
-        // Invalidate student info query
-        await queryClient.invalidateQueries({
-          queryKey: ['get', '/students/{studentId}'],
-          refetchType: 'inactive',
-        })
-
-        // Invalidate person info query
-        await queryClient.invalidateQueries({
-          queryKey: ['get', '/persons/{personId}'],
-          refetchType: 'inactive',
-        })
-
-        await router.invalidate()
-        onOpenChange(false)
-      })
-
-      toast.promise(promise, {
-        loading: t('saving'),
-        success: t('saved_successfully'),
-        error: (error) => {
-          console.error(error)
-          return t('error_occured')
-        },
-      })
+      )
     },
   })
 
