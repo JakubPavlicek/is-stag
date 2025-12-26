@@ -11,9 +11,22 @@ import { formatDate } from '@/lib/utils'
 
 type Person = components['schemas']['PersonResponse']
 
+function PersonalItem({ label, value }: Readonly<{ label: string; value: string | null }>) {
+  return (
+    <div>
+      <p className="text-muted-foreground text-sm font-medium">{label}</p>
+      <p className="font-medium">{value || '-'}</p>
+    </div>
+  )
+}
+
 export function PersonalInfo({ person }: Readonly<{ person: Person }>) {
   const { t, i18n } = useTranslation()
   const [open, setOpen] = useState(false)
+
+  const citizenship = [person.citizenship?.country, person.citizenship?.qualifier]
+    .filter(Boolean)
+    .join(' ')
 
   return (
     <Card>
@@ -25,65 +38,39 @@ export function PersonalInfo({ person }: Readonly<{ person: Person }>) {
       </CardHeader>
       <CardContent className="pt-4">
         <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              {t('my_data.personal_info.title_before')}
-            </p>
-            <p className="font-medium">{person.titles?.prefix || '-'}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              {t('my_data.personal_info.title_after')}
-            </p>
-            <p className="font-medium">{person.titles?.suffix || '-'}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              {t('my_data.personal_info.birth_number')}
-            </p>
-            <p className="font-medium">{person.birthNumber || '-'}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              {t('my_data.personal_info.birth_date')}
-            </p>
-            <p className="font-medium">
-              {person.birthDate ? formatDate(person.birthDate, i18n.language) : '-'}
-            </p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              {t('my_data.personal_info.birth_surname')}
-            </p>
-            <p className="font-medium">{person.birthSurname || '-'}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              {t('my_data.personal_info.citizenship')}
-            </p>
-            <p className="font-medium">
-              {person.citizenship?.country || '-'}
-              {person.citizenship?.qualifier && ` (${person.citizenship.qualifier})`}
-            </p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              {t('my_data.personal_info.birth_place_country')}
-            </p>
-            <p className="font-medium">{person.birthPlace?.country || '-'}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              {t('my_data.personal_info.birth_place_city')}
-            </p>
-            <p className="font-medium">{person.birthPlace?.city || '-'}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              {t('my_data.personal_info.marital_status')}
-            </p>
-            <p className="font-medium">{person.maritalStatus || '-'}</p>
-          </div>
+          <PersonalItem
+            label={t('my_data.personal_info.title_before')}
+            value={person.titles?.prefix}
+          />
+          <PersonalItem
+            label={t('my_data.personal_info.title_after')}
+            value={person.titles?.suffix}
+          />
+          <PersonalItem
+            label={t('my_data.personal_info.birth_number')}
+            value={person.birthNumber}
+          />
+          <PersonalItem
+            label={t('my_data.personal_info.birth_date')}
+            value={person.birthDate ? formatDate(person.birthDate, i18n.language) : null}
+          />
+          <PersonalItem
+            label={t('my_data.personal_info.birth_surname')}
+            value={person.birthSurname}
+          />
+          <PersonalItem label={t('my_data.personal_info.citizenship')} value={citizenship} />
+          <PersonalItem
+            label={t('my_data.personal_info.birth_place_country')}
+            value={person.birthPlace?.country}
+          />
+          <PersonalItem
+            label={t('my_data.personal_info.birth_place_city')}
+            value={person.birthPlace?.city}
+          />
+          <PersonalItem
+            label={t('my_data.personal_info.marital_status')}
+            value={person.maritalStatus}
+          />
         </div>
       </CardContent>
       <PersonalInfoForm person={person} open={open} onOpenChange={setOpen} />
