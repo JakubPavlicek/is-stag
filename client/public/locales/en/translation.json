@@ -73,6 +73,6 @@
       "not_provided": "Account not provided"
     },
     "loading": "Loading...",
-    "error_not_available": "Student data not available. Please login."
+    "error_not_available": "Student data not available. Please login as a student."
   }
 }
