@@ -34,7 +34,7 @@ public class CodelistEntrySpecification {
     }
 
     private static void addPredicateIfPresent(List<Predicate> predicates, CriteriaBuilder cb, Root<CodelistEntry> root, String domain, String meaning) {
-        if (meaning == null) {
+        if (meaning == null || meaning.isBlank()) {
             return;
         }
 

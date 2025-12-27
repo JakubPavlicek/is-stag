@@ -13,7 +13,6 @@ import com.stag.identity.person.service.data.ProfileLookupData;
 import com.stag.identity.person.service.data.ProfileUpdateLookupData;
 import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import com.stag.identity.person.util.DataBoxValidator;
-import com.stag.identity.shared.util.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -115,13 +114,13 @@ public class ProfileService {
         Person person = personRepository.findById(personId)
                                         .orElseThrow(() -> new PersonNotFoundException(personId));
 
-        ObjectUtils.updateIfNotNull(command.birthSurname(), person::setBirthSurname);
+        person.setBirthSurname(command.birthSurname());
         updateContact(person, command.contact());
         bankingService.updatePersonBankAccount(person, command.bankAccount());
 
         Profile.BirthPlace birthPlace = command.birthPlace();
         if (birthPlace != null) {
-            ObjectUtils.updateIfNotNull(birthPlace.city(), person::setBirthPlace);
+            person.setBirthPlace(birthPlace.city());
         }
 
         log.debug("Checking person profile update data for personId: {}", personId);
@@ -137,10 +136,10 @@ public class ProfileService {
 
         // Update the values that were validated by codelist-service
         if (profileUpdateLookupData != null) {
-            ObjectUtils.updateIfNotNull(profileUpdateLookupData.maritalStatusLowValue(), person::setMaritalStatus);
-            ObjectUtils.updateIfNotNull(profileUpdateLookupData.titlePrefixLowValue(), person::setTitlePrefix);
-            ObjectUtils.updateIfNotNull(profileUpdateLookupData.titleSuffixLowValue(), person::setTitleSuffix);
-            ObjectUtils.updateIfNotNull(profileUpdateLookupData.birthCountryId(), person::setBirthCountryId);
+            person.setMaritalStatus(profileUpdateLookupData.maritalStatusLowValue());
+            person.setTitlePrefix(profileUpdateLookupData.titlePrefixLowValue());
+            person.setTitleSuffix(profileUpdateLookupData.titleSuffixLowValue());
+            person.setBirthCountryId(profileUpdateLookupData.birthCountryId());
         }
 
         log.info("Successfully updated person profile for personId: {}", personId);

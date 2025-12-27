@@ -5,12 +5,12 @@ export const contactSchema = z.object({
   phone: z
     .string()
     .max(20)
-    .regex(/^\+?\d{1,20}$/, 'invalid_phone')
+    .regex(/^\+?\d+$/, 'invalid_phone')
     .or(z.literal('')),
   mobile: z
     .string()
     .max(30)
-    .regex(/^\+?\d{1,30}$/, 'invalid_mobile')
+    .regex(/^\+?\d+$/, 'invalid_mobile')
     .or(z.literal('')),
   dataBox: z
     .string()
@@ -20,21 +20,9 @@ export const contactSchema = z.object({
 })
 
 export const bankAccountSchema = z.object({
-  accountNumberPrefix: z
-    .string()
-    .max(6)
-    .regex(/^\d{1,6}$/, 'digits_only')
-    .or(z.literal('')),
-  accountNumberSuffix: z
-    .string()
-    .max(10)
-    .regex(/^\d{1,10}$/, 'digits_only')
-    .or(z.literal('')),
-  bankCode: z
-    .string()
-    .length(4)
-    .regex(/^\d{4}$/, 'digits_only')
-    .or(z.literal('')),
+  accountNumberPrefix: z.string().max(6).regex(/^\d+$/, 'digits_only').or(z.literal('')),
+  accountNumberSuffix: z.string().max(10).regex(/^\d+$/, 'digits_only').or(z.literal('')),
+  bankCode: z.string().length(4).regex(/^\d+$/, 'digits_only').or(z.literal('')),
   holderName: z.string().max(255).or(z.literal('')),
   holderAddress: z.string().max(255).or(z.literal('')),
 })
@@ -51,7 +39,7 @@ export const personalInfoSchema = z.object({
     .or(z.literal('')),
   maritalStatus: z.string().max(240).or(z.literal('')),
   birthPlace: z.object({
-    country: z.string().max(70).min(1),
+    country: z.string().max(70).or(z.literal('')),
     city: z.string().max(75).or(z.literal('')),
   }),
 })

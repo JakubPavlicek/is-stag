@@ -1,6 +1,7 @@
 package com.stag.identity.shared.exception;
 
 import com.stag.identity.person.exception.InvalidAccountNumberException;
+import com.stag.identity.person.exception.InvalidBankAccountException;
 import com.stag.identity.person.exception.InvalidDataBoxException;
 import com.stag.identity.person.exception.PersonNotFoundException;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
@@ -52,7 +53,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    @ExceptionHandler({ InvalidAccountNumberException.class, InvalidDataBoxException.class })
+    @ExceptionHandler({ InvalidAccountNumberException.class, InvalidDataBoxException.class, InvalidBankAccountException.class })
     public ProblemDetail handleInvalidException(Exception ex) {
         log.warn(ex.getMessage());
 

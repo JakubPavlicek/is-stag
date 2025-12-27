@@ -257,7 +257,7 @@ export interface components {
              * @description Birth country of the person.
              * @example Czech Republic
              */
-            country: string;
+            country: string | null;
             /**
              * City
              * @description Birth city of the person.

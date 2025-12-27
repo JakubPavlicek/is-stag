@@ -31,8 +31,12 @@ public class CountryService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "country-id", key = "#countryName")
+    @Cacheable(value = "country-id", key = "#countryName", unless = "#result == null")
     public Integer findCountryIdByName(String countryName) {
+        if (countryName == null || countryName.isBlank()) {
+            return null;
+        }
+
         return countryRepository.findCountryIdByName(countryName)
                                 .orElseThrow(() -> new CountryNotFoundException(countryName));
     }

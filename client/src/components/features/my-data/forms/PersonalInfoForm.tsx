@@ -62,10 +62,16 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
         {
           params: { path: { personId } },
           body: {
-            titles: value.titles,
-            birthSurname: value.birthSurname,
-            maritalStatus: value.maritalStatus,
-            birthPlace: value.birthPlace,
+            titles: {
+              prefix: value.titles.prefix || null,
+              suffix: value.titles.suffix || null,
+            },
+            birthSurname: value.birthSurname || null,
+            maritalStatus: value.maritalStatus || null,
+            birthPlace: {
+              country: value.birthPlace.country || null,
+              city: value.birthPlace.city ?? null,
+            },
           },
         },
         {

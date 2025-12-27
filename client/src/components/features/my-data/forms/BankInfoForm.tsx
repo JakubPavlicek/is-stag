@@ -58,7 +58,15 @@ export function BankInfoForm({
       await handleSubmit(
         {
           params: { path: { personId } },
-          body: { bankAccount: value },
+          body: {
+            bankAccount: {
+              accountNumberPrefix: value.accountNumberPrefix || null,
+              accountNumberSuffix: value.accountNumberSuffix || null,
+              bankCode: value.bankCode || null,
+              holderName: value.holderName || null,
+              holderAddress: value.holderAddress || null,
+            },
+          },
         },
         {
           mutationFn: mutateAsync,

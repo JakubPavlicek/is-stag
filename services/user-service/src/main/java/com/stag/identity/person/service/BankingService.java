@@ -1,15 +1,16 @@
 package com.stag.identity.person.service;
 
 import com.stag.identity.person.entity.Person;
+import com.stag.identity.person.exception.InvalidBankAccountException;
 import com.stag.identity.person.exception.PersonNotFoundException;
 import com.stag.identity.person.mapper.BankingMapper;
 import com.stag.identity.person.model.Banking;
+import com.stag.identity.person.model.Profile;
 import com.stag.identity.person.repository.PersonRepository;
 import com.stag.identity.person.repository.projection.BankView;
 import com.stag.identity.person.service.data.BankingLookupData;
 import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import com.stag.identity.person.util.BankAccountValidator;
-import com.stag.identity.shared.util.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.iban4j.CountryCode;
@@ -66,13 +67,21 @@ public class BankingService {
             return;
         }
 
-        // Update basic fields using an Optional-like pattern
-        ObjectUtils.updateIfNotNull(bankAccount.bankCode(), person::setBankCode);
-        ObjectUtils.updateIfNotNull(bankAccount.holderName(), person::setAccountHolder);
-        ObjectUtils.updateIfNotNull(bankAccount.holderAddress(), person::setAccountAddress);
+        // Update account holder and address
+        person.setAccountHolder(bankAccount.holderName());
+        person.setAccountAddress(bankAccount.holderAddress());
 
-        // Update account number components with validation
-        updateAccountNumber(person, bankAccount);
+        // User wants to remove his bank account (all fields explicitly null)
+        if (bankAccount.bankCode() == null && bankAccount.prefix() == null && bankAccount.suffix() == null) {
+            clearBankAccount(person);
+            return;
+        }
+
+        // Validate the bank account numbers combination
+        validateBankAccountCombination(bankAccount.prefix(), bankAccount.suffix(), bankAccount.bankCode());
+
+        // Update account numbers with checksum validation
+        updateAccountNumbers(person, bankAccount);
 
         // Update IBAN using current or new values
         updateIban(person, bankAccount);
@@ -80,25 +89,60 @@ public class BankingService {
         log.info("Successfully updated bank account for personId: {}", person.getId());
     }
 
-    private void updateIban(Person person, PersonUpdateCommand.BankAccount bankAccount) {
-        String prefix = ObjectUtils.getValueOrDefault(bankAccount.prefix(), person.getAccountPrefix());
-        String suffix = ObjectUtils.getValueOrDefault(bankAccount.suffix(), person.getAccountSuffix());
-        String bankCode = ObjectUtils.getValueOrDefault(bankAccount.bankCode(), person.getBankCode());
+    private void clearBankAccount(Person person) {
+        log.info("Clearing bank account for personId: {}", person.getId());
+        person.setBankCode(null);
+        person.setAccountPrefix(null);
+        person.setAccountSuffix(null);
+        person.setAccountIban(null);
+    }
 
-        Iban iban = generateIban(prefix, suffix, bankCode);
-
-        if (iban != null) {
-            person.setAccountIban(iban.toString());
+    private void validateBankAccountCombination(String prefix, String suffix, String bankCode) {
+        // If the suffix (account number) is present, bank code must be present
+        if (suffix != null && bankCode == null) {
+            throw new InvalidBankAccountException("Bank code is mandatory when an account number (suffix) is present.");
+        }
+        // If bank code is present, a suffix (account number) must be present
+        if (bankCode != null && suffix == null) {
+            throw new InvalidBankAccountException("Account number (suffix) is mandatory when a bank code is present.");
+        }
+        // If the prefix is present, the suffix must be present
+        if (prefix != null && suffix == null) {
+            throw new InvalidBankAccountException("Account number (suffix) is mandatory when a prefix is present.");
         }
     }
 
-    private static void updateAccountNumber(Person person, PersonUpdateCommand.BankAccount bankAccount) {
+    private static void updateAccountNumbers(Person person, PersonUpdateCommand.BankAccount bankAccount) {
+        person.setBankCode(bankAccount.bankCode());
+
+        // User can remove the prefix
+        if (bankAccount.prefix() == null) {
+            person.setAccountPrefix(null);
+        }
+
+        // Validate and update prefix
         if (BankAccountValidator.isValidChecksum(bankAccount.prefix())) {
             person.setAccountPrefix(bankAccount.prefix());
         }
+        // Validate and update suffix
         if (BankAccountValidator.isValidChecksum(bankAccount.suffix())) {
             person.setAccountSuffix(bankAccount.suffix());
         }
+    }
+
+    private void updateIban(Person person, PersonUpdateCommand.BankAccount bankAccount) {
+        String prefix = bankAccount.prefix() != null ? bankAccount.prefix() : person.getAccountPrefix();
+        String suffix = bankAccount.suffix() != null ? bankAccount.suffix() : person.getAccountSuffix();
+        String bankCode = bankAccount.bankCode() != null ? bankAccount.bankCode() : person.getBankCode();
+
+        Iban iban = generateIban(prefix, suffix, bankCode);
+
+        if (iban == null) {
+            person.setAccountIban(null);
+            return;
+        }
+
+        person.setAccountIban(iban.toString());
     }
 
     private Iban generateIban(String prefix, String suffix, String bankCode) {

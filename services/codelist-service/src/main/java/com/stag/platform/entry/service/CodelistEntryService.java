@@ -80,7 +80,7 @@ public class CodelistEntryService {
     }
 
     private String findLowValueOrCollectMissing(List<CodelistEntry> entries, CodelistDomain domain, String meaning, List<MissingMeaning> missingMeanings) {
-        if (meaning == null) {
+        if (meaning == null || meaning.isBlank()) {
             return null;
         }
 

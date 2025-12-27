@@ -471,7 +471,7 @@ components:
         country:
           title: Country
           type: string
-          nullable: false
+          nullable: true
           description: Birth country of the person.
           example: Czech Republic
           maxLength: 70
