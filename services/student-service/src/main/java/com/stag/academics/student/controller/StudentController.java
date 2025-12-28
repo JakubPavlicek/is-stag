@@ -11,14 +11,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/// **Student Controller**
+///
+/// REST API controller for student operations. Implements OpenAPI-generated
+/// interface for managing students.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
 public class StudentController implements StudentsApi {
 
+    /// Student Service
     private final StudentService studentService;
 
+    /// Retrieves a student profile by ID with localized data.
+    ///
+    /// @param studentId the student identifier
+    /// @param language the language code for localization
+    /// @return response entity containing student profile
     @Override
     public ResponseEntity<StudentResponse> getStudentProfile(String studentId, String language) {
         log.info("Student profile requested for studentId: {} with language: {}", studentId, language);

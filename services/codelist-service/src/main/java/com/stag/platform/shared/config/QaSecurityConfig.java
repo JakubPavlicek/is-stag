@@ -9,11 +9,21 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
+/// **QA Environment Security Configuration**
+///
+/// Provides permissive security for QA and testing environments. **Only active** with `qa` profile.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Profile("qa")
 @Configuration
 @EnableWebSecurity
 public class QaSecurityConfig {
 
+    /// Creates a permissive security filter chain for QA testing.
+    ///
+    /// @param http HttpSecurity configuration
+    /// @return Security filter chain with all checks disabled
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
         return http

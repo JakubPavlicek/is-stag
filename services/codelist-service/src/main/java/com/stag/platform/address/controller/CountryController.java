@@ -13,14 +13,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
 
+/// **Country Controller**
+///
+/// REST API endpoint for country data retrieval.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
 public class CountryController implements CountriesApi {
 
+    /// Country Service
     private final CountryService countryService;
 
+    /// Retrieves all valid countries in the specified language.
+    ///
+    /// @param language Language code ('cs' or 'en')
+    /// @return Response containing a list of countries
     @Override
     public ResponseEntity<CountryListResponse> getCountries(String language) {
         log.info("Countries requested in language: {}", language);

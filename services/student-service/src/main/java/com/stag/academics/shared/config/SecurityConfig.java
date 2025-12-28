@@ -13,18 +13,34 @@ import org.springframework.security.oauth2.server.resource.authentication.Expres
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+/// **Security Configuration**
+///
+/// Production security configuration for the Student service.
+/// Configures OAuth2 JWT authentication with Keycloak and role-based authorization.
+/// Active for all profiles except 'qa'.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Profile("!qa")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    /// Swagger UI endpoint patterns for public access
     private static final String[] SWAGGER_URLS = {
         "/swagger-ui.html",
         "/swagger-ui/**",
         "/v3/api-docs/swagger-config"
     };
 
+    /// Configures the security filter chain with JWT authentication and authorization rules.
+    ///
+    /// Permits public access to health checks, OpenAPI docs, and Swagger UI.
+    /// Requires authentication for all other endpoints and 'AD' role for actuator.
+    ///
+    /// @param http the HTTP security configuration
+    /// @return configured security filter chain
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
         return http
@@ -45,18 +61,27 @@ public class SecurityConfig {
             .build();
     }
 
+    /// Creates authorities converter that extracts roles from Keycloak JWT claims.
+    ///
+    /// Extracts roles from the 'realm_access.roles' claim and prefixes with 'ROLE_'.
+    ///
+    /// @return expression-based JWT authorities converter
     @Bean
     public ExpressionJwtGrantedAuthoritiesConverter expressionConverter() {
-        // Extract roles from the realm_access.roles claim and prefix with "ROLE_"
+        // Extract roles from the realm_access.roles claim
         ExpressionJwtGrantedAuthoritiesConverter expressionConverter =
             new ExpressionJwtGrantedAuthoritiesConverter(
                 new SpelExpressionParser().parseRaw("[realm_access][roles]")
             );
+        // Prefix roles with "ROLE_" for Spring Security
         expressionConverter.setAuthorityPrefix("ROLE_");
 
         return expressionConverter;
     }
 
+    /// Creates JWT authentication converter with custom authorities' extraction.
+    ///
+    /// @return JWT authentication converter
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter jwtAuthConverter = new JwtAuthenticationConverter();

@@ -11,6 +11,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
+/// **Student Async Service**
+///
+/// Handles asynchronous operations for fetching external student-related data
+/// from Person and Study Plan services via gRPC clients.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -19,6 +26,11 @@ public class StudentAsyncService {
     private final UserClient userClient;
     private final StudyPlanClient studyPlanClient;
 
+    /// Asynchronously fetches person profile data for a student.
+    ///
+    /// @param personId the person identifier
+    /// @param language the language code for localized data
+    /// @return completable future containing simple profile data
     @Async
     public CompletableFuture<SimpleProfileLookupData> getPersonSimpleProfileData(
         Integer personId,
@@ -32,6 +44,12 @@ public class StudentAsyncService {
         return CompletableFuture.completedFuture(simpleProfileLookupData);
     }
 
+    /// Asynchronously fetches study program and field of study data.
+    ///
+    /// @param studyProgramId the study program identifier
+    /// @param studyPlanId the study plan identifier
+    /// @param language the language code for localized data
+    /// @return a completable future containing study program and field data
     @Async
     public CompletableFuture<StudyProgramAndFieldLookupData> getStudyProgramAndField(
         Long studyProgramId,

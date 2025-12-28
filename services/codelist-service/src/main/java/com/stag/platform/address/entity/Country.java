@@ -12,6 +12,12 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
+/// **Country Entity**
+///
+/// Represents a country.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

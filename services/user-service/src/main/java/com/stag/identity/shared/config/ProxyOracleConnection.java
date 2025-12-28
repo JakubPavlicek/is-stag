@@ -22,9 +22,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+/// **Proxy Oracle Connection Wrapper**
+///
 /// A wrapper for a physical Oracle connection that manages the lifecycle of a proxy session.
 /// It delegates all calls to the physical connection but intercepts the close() call
 /// to ensure the proxy session is terminated before the physical connection is returned to the pool.
+/// This prevents proxy session leaks in connection pooling scenarios.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 public class ProxyOracleConnection implements Connection {
 
@@ -32,12 +38,19 @@ public class ProxyOracleConnection implements Connection {
     private final OracleConnection oracleConnection;
     private boolean isClosed = false;
 
+    /// Constructs a new ProxyOracleConnection wrapper.
+    ///
+    /// @param physicalConnection the physical Oracle connection with an active proxy session
+    /// @throws SQLException if the connection cannot be unwrapped
     public ProxyOracleConnection(Connection physicalConnection) throws SQLException {
         this.physicalConnection = physicalConnection;
         this.oracleConnection = physicalConnection.unwrap(OracleConnection.class);
     }
 
     /// Intercepts the close() call to manage the proxy session lifecycle.
+    /// Closes the Oracle proxy session first, then returns the physical connection to the pool.
+    ///
+    /// @throws SQLException if an error occurs during closing
     @Override
     public void close() throws SQLException {
         if (isClosed) {

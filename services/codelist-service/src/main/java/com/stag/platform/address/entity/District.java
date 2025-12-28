@@ -17,6 +17,12 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
+/// **District Entity**
+///
+/// Represents a district (okres) within a region.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

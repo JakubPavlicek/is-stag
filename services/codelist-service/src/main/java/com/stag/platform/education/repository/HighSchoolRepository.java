@@ -7,8 +7,18 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
+/// **High School Repository**
+///
+/// Data access layer for high school entities with address projection queries.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 public interface HighSchoolRepository extends JpaRepository<HighSchool, String> {
 
+    /// Retrieves high school address information by school ID.
+    ///
+    /// @param id the high school ID
+    /// @return optional containing the address projection if found
     @Query(
         """
         SELECT new com.stag.platform.education.repository.projection.HighSchoolAddressProjection(

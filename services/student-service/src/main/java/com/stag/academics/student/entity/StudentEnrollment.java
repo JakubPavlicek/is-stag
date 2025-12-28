@@ -14,6 +14,13 @@ import org.hibernate.annotations.ColumnDefault;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/// **Student Enrollment Entity**
+///
+/// Represents a student's enrollment in a specific study plan for an academic year.
+/// Tracks credits, grades, year of study, and academic performance metrics.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

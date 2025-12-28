@@ -11,6 +11,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/// **Domain Entity**
+///
+/// Represents a codelist domain category.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

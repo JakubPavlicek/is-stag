@@ -13,18 +13,33 @@ import org.springframework.security.oauth2.server.resource.authentication.Expres
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+/// **Security Configuration**
+///
+/// Production security configuration with OAuth2 resource server and JWT authentication.
+/// Extracts roles from Keycloak JWT tokens (realm_access.roles claim) and enforces
+/// method-level security via @PreAuthorize. Public endpoints include health checks,
+/// OpenAPI docs, and Swagger UI.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Profile("!qa")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    /// Swagger UI and OpenAPI documentation publuc endpoints
     private static final String[] SWAGGER_URLS = {
         "/swagger-ui.html",
         "/swagger-ui/**",
         "/v3/api-docs/swagger-config"
     };
 
+    /// Configures a Spring Security filter chain with JWT authentication.
+    /// Enables CSRF protection, OAuth2 resource server, and stateless session management.
+    ///
+    /// @param http the HTTP security configuration
+    /// @return configured security filter chain
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
         return http
@@ -45,6 +60,10 @@ public class SecurityConfig {
             .build();
     }
 
+    /// Creates JWT authorities converter extracting roles from Keycloak token.
+    /// Reads realm_access.roles claim and prefixes with "ROLE_" for Spring Security.
+    ///
+    /// @return expression-based JWT authorities converter
     @Bean
     public ExpressionJwtGrantedAuthoritiesConverter expressionConverter() {
         // Extract roles from the realm_access.roles claim and prefix with "ROLE_"
@@ -57,6 +76,9 @@ public class SecurityConfig {
         return expressionConverter;
     }
 
+    /// Configures JWT authentication converter with custom authorities' extraction.
+    ///
+    /// @return JWT authentication converter
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter jwtAuthConverter = new JwtAuthenticationConverter();

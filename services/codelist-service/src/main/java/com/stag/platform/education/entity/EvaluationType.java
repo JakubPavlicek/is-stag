@@ -21,6 +21,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/// **Evaluation Type Entity**
+///
+/// Represents an evaluation/grading type system (e.g., ECTS, numeric grades).
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

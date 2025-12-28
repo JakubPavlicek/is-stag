@@ -16,6 +16,12 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+/// **Codelist Entry ID**
+///
+/// Composite primary key for codelist entries (domain, low value, subsystem code).
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

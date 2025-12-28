@@ -11,8 +11,22 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Collection;
 import java.util.List;
 
+/// **Codelist Entry Repository**
+///
+/// Data access layer for codelist entries with specification support.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 public interface CodelistEntryRepository extends JpaRepository<CodelistEntry, CodelistEntryId>, JpaSpecificationExecutor<CodelistEntry> {
 
+    /// Retrieves domain values for a specific domain with language-specific meanings.
+    ///
+    /// Returns only valid entries (isValid != 'N') sorted by meaning and order.
+    /// Uses COALESCE to fall back to Czech when English translation is unavailable.
+    ///
+    /// @param domain Domain name
+    /// @param language Language code ('cs' or 'en')
+    /// @return List of domain value views
     @Query(
         """
         SELECT new com.stag.platform.entry.repository.projection.DomainValueView(
@@ -37,7 +51,13 @@ public interface CodelistEntryRepository extends JpaRepository<CodelistEntry, Co
     )
     List<DomainValueView> findDomainValuesByDomain(String domain, String language);
 
-    /// Using COALESCE because not all values have their English translation
+    /// Retrieves codelist entry meanings by IDs with language-specific translations.
+    ///
+    /// Uses COALESCE to fall back to Czech when English translation is unavailable.
+    ///
+    /// @param ids Collection of codelist entry IDs
+    /// @param language Language code ('cs' or 'en')
+    /// @return List of codelist entry meaning projections
     @Query(
         """
         SELECT

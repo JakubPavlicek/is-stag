@@ -9,11 +9,22 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
+/// **QA Security Configuration**
+///
+/// Simplified security configuration for QA/testing environments. Disables CSRF
+/// and permits all requests without authentication for easier testing.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Profile("qa")
 @Configuration
 @EnableWebSecurity
 public class QaSecurityConfig {
 
+    /// Configures a permissive security filter chain for QA environment.
+    ///
+    /// @param http the HTTP security builder
+    /// @return configured security filter chain with all access permitted
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
         return http

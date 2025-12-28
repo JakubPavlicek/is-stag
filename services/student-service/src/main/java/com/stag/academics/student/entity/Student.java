@@ -23,6 +23,14 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/// **Student Entity**
+///
+/// Represents a student record in the university information system.
+/// Contains comprehensive student information including enrollment details,
+/// study progress, contact information, and administrative data.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

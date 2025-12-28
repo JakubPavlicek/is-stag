@@ -26,20 +26,41 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/// **Profile Service**
+///
+/// Business logic for person profile operations. Handles full and simple profile
+/// retrieval with localized codelist data, student ID lookups, and profile updates.
+/// Uses caching and async data fetching for optimal performance.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ProfileService {
 
+    /// Person Repository
     private final PersonRepository personRepository;
 
+    /// Banking Service
     private final BankingService bankingService;
 
+    /// Codelist Lookup Service
     private final CodelistLookupService codelistLookupService;
+    /// Student Lookup Service
     private final StudentLookupService studentLookupService;
 
+    /// Transaction Template for transaction management
     private final TransactionTemplate transactionTemplate;
 
+    /// Retrieves a full person profile with enriched codelist data and student IDs.
+    /// Fetches profile projection, then asynchronously loads student IDs and
+    /// localized codelist meanings. Result is cached per person ID and language.
+    ///
+    /// @param personId the person identifier
+    /// @param language the language code for codelist localization
+    /// @return complete profile with localized data
+    /// @throws PersonNotFoundException if person not found
     @Cacheable(value = "person-profile", key = "{#personId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
@@ -72,6 +93,14 @@ public class ProfileService {
         return profile;
     }
 
+    /// Retrieves simplified person profile with basic localized codelist data.
+    /// Lighter alternative to full profile for scenarios requiring only essential
+    /// personal information. Result is cached per person ID and language.
+    ///
+    /// @param personId the person identifier
+    /// @param language the language code for codelist localization
+    /// @return simple profile with localized data
+    /// @throws PersonNotFoundException if person not found
     @Cacheable(value = "person-simple-profile", key = "{#personId, #language}")
     public SimpleProfile getPersonSimpleProfile(Integer personId, String language) {
         log.info("Fetching person simple profile for personId: {} with language: {}", personId, language);
@@ -94,6 +123,13 @@ public class ProfileService {
         return simpleProfile;
     }
 
+    /// Updates person profile information including contact details, banking, and personal data.
+    /// Validates codelist values (marital status, birth country, titles) via codelist service.
+    /// Evicts all related caches (profiles, banking, student) after a successful update.
+    ///
+    /// @param personId the person identifier
+    /// @param command the update command containing new profile data
+    /// @throws PersonNotFoundException if person not found
     @Transactional
     @Caching(evict = {
         @CacheEvict(value = "person-profile", key = "{#personId, 'cs'}"),
@@ -145,6 +181,11 @@ public class ProfileService {
         log.info("Successfully updated person profile for personId: {}", personId);
     }
 
+    /// Updates person contact information including email, phone, mobile, and data box.
+    /// Validates a data box ID format if provided. Skips update if contact is null.
+    ///
+    /// @param person the person entity to update
+    /// @param contact the new contact information
     private void updateContact(Person person, Profile.Contact contact) {
         if (contact == null) {
             log.debug("Contact is null, no updates to perform for personId: {}", person.getId());

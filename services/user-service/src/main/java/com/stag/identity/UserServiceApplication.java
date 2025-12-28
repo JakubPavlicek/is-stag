@@ -8,6 +8,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+/// **User Service Application**
+///
+/// Main entry point for the User/Identity microservice. Manages person entities,
+/// profiles, addresses, education, and banking information. Integrates with
+/// Student and Codelist services via gRPC. Enables async processing and caching.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @EnableAsync
 @EnableCaching
 @EnableGrpcClients(
@@ -19,6 +27,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 public class UserServiceApplication {
 
+    /// Main method to launch the User Service application.
+    ///
+    /// @param args command-line arguments
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);
     }

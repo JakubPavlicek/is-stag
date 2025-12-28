@@ -13,13 +13,25 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CompletableFuture;
 
+/// **Study Plan gRPC Service**
+///
+/// gRPC service implementation for study plan operations. Handles concurrent
+/// fetching of study program and field of study data using async service.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @RequiredArgsConstructor
 @GrpcService
 public class StudyPlanGrpcService extends StudyPlanServiceGrpc.StudyPlanServiceImplBase {
 
+    /// Study Plan Async Service for asynchronous data fetching.
     private final StudyPlanAsyncGrpcService asyncService;
 
+    /// Retrieves study program and field of study concurrently.
+    ///
+    /// @param request the gRPC request with IDs and language
+    /// @param responseObserver the response stream observer
     @Override
     public void getStudyProgramAndField(
         GetStudyProgramAndFieldRequest request,
@@ -39,11 +51,20 @@ public class StudyPlanGrpcService extends StudyPlanServiceGrpc.StudyPlanServiceI
                          .exceptionally(ex -> errorResponse(responseObserver, ex));
     }
 
+    /// Completes the gRPC response stream successfully.
+    ///
+    /// @param responseObserver the response stream observer
+    /// @param response the response to send
     private <T> void completeResponse(StreamObserver<T> responseObserver, T response) {
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 
+    /// Handles error response in gRPC stream.
+    ///
+    /// @param responseObserver the response stream observer
+    /// @param ex the exception that occurred
+    /// @return null for exceptional completion
     private <T> Void errorResponse(StreamObserver<T> responseObserver, Throwable ex) {
         log.error("Error processing request", ex.getCause());
         responseObserver.onError(ex.getCause());

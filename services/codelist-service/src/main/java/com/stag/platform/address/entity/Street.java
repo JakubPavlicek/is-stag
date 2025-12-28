@@ -17,6 +17,12 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
+/// **Street Entity**
+///
+/// Represents a street within a municipality.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

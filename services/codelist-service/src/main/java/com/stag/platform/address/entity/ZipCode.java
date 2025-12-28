@@ -15,6 +15,12 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
+/// **Zip Code Entity**
+///
+/// Represents postal code information.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

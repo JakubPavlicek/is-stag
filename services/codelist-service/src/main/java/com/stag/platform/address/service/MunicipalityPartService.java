@@ -14,6 +14,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/// **Municipality Part Service**
+///
+/// Manages municipality part data retrieval for address information.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,6 +27,11 @@ public class MunicipalityPartService {
 
     private final MunicipalityPartRepository municipalityPartRepository;
 
+    /// Retrieves address place names by municipality part IDs.
+    ///
+    /// @param ids Collection of municipality part IDs
+    /// @return Map of IDs to address place names
+    /// @throws MunicipalityPartsNotFoundException if any IDs are missing
     @Transactional(readOnly = true)
     public Map<Long, AddressPlaceNameProjection> findAddressNamesByIds(Collection<Long> ids) {
         List<AddressPlaceNameProjection> foundMunicipalityParts = municipalityPartRepository.findAddressNamesByIds(ids);
@@ -34,6 +45,11 @@ public class MunicipalityPartService {
                                      ));
     }
 
+    /// Validates that all requested municipality parts were found.
+    ///
+    /// @param requestedIds Collection of requested municipality part IDs
+    /// @param foundMunicipalityParts List of found municipality part projections
+    /// @throws MunicipalityPartsNotFoundException if any IDs are missing
     private void ensureAllMunicipalityPartsWereFound(Collection<Long> requestedIds, List<AddressPlaceNameProjection> foundMunicipalityParts) {
         // If counts match, all municipality parts were found (assumes no duplicates in requestedIds)
         if (requestedIds.size() == foundMunicipalityParts.size()) {
@@ -48,6 +64,11 @@ public class MunicipalityPartService {
         }
     }
 
+    /// Identifies municipality part IDs that were not found.
+    ///
+    /// @param requestedIds Collection of requested municipality part IDs
+    /// @param foundMunicipalityParts List of found municipality part projections
+    /// @return List of missing IDs
     private List<Long> getMissingIds(Collection<Long> requestedIds, List<AddressPlaceNameProjection> foundMunicipalityParts) {
         Set<Long> foundIds = foundMunicipalityParts.stream()
                                                    .map(AddressPlaceNameProjection::municipalityPartId)

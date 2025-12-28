@@ -31,6 +31,14 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+/// **Global Exception Handler**
+///
+/// Centralized REST exception handler for the application. Handles domain-specific
+/// exceptions, validation errors, gRPC exceptions, circuit breaker failures, and
+/// async wrapper exceptions. Returns RFC 7807 Problem Detail responses.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -39,11 +47,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String SERVICE_UNAVAILABLE = "Service is currently unavailable. Please try again later.";
     private static final String REQUEST_RAISED = "Request {} raised";
 
+    /// Extracts request URI from web request.
+    ///
+    /// @param request the web request
+    /// @return request URI string
     private String getRequestURI(WebRequest request) {
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
         return servletWebRequest.getRequest().getRequestURI();
     }
 
+    /// Handles field of study not found exceptions.
+    ///
+    /// @param ex the exception
+    /// @return problem detail with NOT_FOUND status
     @ExceptionHandler(FieldOfStudyNotFoundException.class)
     public ProblemDetail handleFieldOfStudyNotFoundException(FieldOfStudyNotFoundException ex) {
         log.warn(ex.getMessage());
@@ -54,6 +70,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    /// Handles study program not found exceptions.
+    ///
+    /// @param ex the exception
+    /// @return problem detail with NOT_FOUND status
     @ExceptionHandler(StudyProgramNotFoundException.class)
     public ProblemDetail handleStudyProgramNotFoundException(StudyProgramNotFoundException ex) {
         log.warn(ex.getMessage());
@@ -64,6 +84,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    /// Handles validation errors from method arguments.
+    ///
+    /// @param ex the validation exception
+    /// @param headers the HTTP headers
+    /// @param status the HTTP status
+    /// @param request the web request
+    /// @return response entity with validation error details
     @Override
     protected ResponseEntity<@NonNull Object> handleMethodArgumentNotValid(
         @NonNull MethodArgumentNotValidException ex,
@@ -82,6 +109,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
+    /// Extracts field errors from validation exception.
+    ///
+    /// @param ex the validation exception
+    /// @return map of field names to error messages
     private Map<String, List<String>> getErrors(MethodArgumentNotValidException ex) {
         return ex.getBindingResult()
                  .getFieldErrors()
@@ -92,6 +123,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                  ));
     }
 
+    /// Handles constraint violation exceptions.
+    ///
+    /// @param e the constraint violation exception
+    /// @param request the HTTP request
+    /// @return problem detail with constraint violation details
     @ExceptionHandler(ConstraintViolationException.class)
     public ProblemDetail handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
         log.error(REQUEST_RAISED, request.getRequestURI(), e);
@@ -103,6 +139,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    /// Extracts constraint violations from exception.
+    ///
+    /// @param ex the constraint violation exception
+    /// @return map of property paths to violation messages
     private Map<String, List<String>> getConstraintViolations(ConstraintViolationException ex) {
         return ex.getConstraintViolations()
                  .stream()
@@ -112,6 +152,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                  ));
     }
 
+    /// Handles malformed request body exceptions.
+    ///
+    /// @param ex the exception
+    /// @param headers the HTTP headers
+    /// @param status the HTTP status
+    /// @param request the web request
+    /// @return response entity with error details
     @Override
     protected ResponseEntity<@NonNull Object> handleHttpMessageNotReadable(
         @NonNull HttpMessageNotReadableException ex,
@@ -127,6 +174,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.of(problemDetail).build();
     }
 
+    /// Handles circuit breaker open exceptions.
+    ///
+    /// @param ex the circuit breaker exception
+    /// @return problem detail with SERVICE_UNAVAILABLE status
     @ExceptionHandler(CallNotPermittedException.class)
     public ProblemDetail handleCallNotPermittedException(CallNotPermittedException ex) {
         log.error("Circuit breaker is open", ex);
@@ -137,6 +188,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    /// Handles gRPC status exceptions by mapping to HTTP status codes.
+    ///
+    /// @param ex the gRPC status runtime exception
+    /// @return problem detail with appropriate HTTP status
     @ExceptionHandler(StatusRuntimeException.class)
     public ProblemDetail handleGrpcException(StatusRuntimeException ex) {
         log.warn("gRPC call failed: {}", ex.getMessage());
@@ -149,6 +204,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    /// Handles async wrapper exceptions by unwrapping and delegating to specific handlers.
+    ///
+    /// @param ex the async wrapper exception
+    /// @param request the HTTP request
+    /// @return problem detail based on underlying cause
     @ExceptionHandler({ CompletionException.class, ExecutionException.class})
     public ProblemDetail handleAsyncWrapperExceptions(Exception ex, HttpServletRequest request) {
         // Special handling for gRPC exceptions
@@ -163,6 +223,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleException(ex, request);
     }
 
+    /// Handles all other uncaught exceptions.
+    ///
+    /// @param ex the exception
+    /// @param request the HTTP request
+    /// @return problem detail with INTERNAL_SERVER_ERROR status
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleException(Exception ex, HttpServletRequest request) {
         log.error(REQUEST_RAISED, request.getRequestURI(), ex);
@@ -173,6 +238,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    /// Maps gRPC status codes to HTTP problem details.
+    ///
+    /// @param grpcStatus the gRPC status
+    /// @return mapped problem detail information
     private GrpcProblemDetail toGrpcProblemDetail(Status grpcStatus) {
         return switch (grpcStatus.getCode()) {
             case NOT_FOUND -> new GrpcProblemDetail(HttpStatus.NOT_FOUND, "Resource Not Found", "Resource not found");
@@ -188,6 +257,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         };
     }
 
+    /// Internal record for gRPC problem detail mapping.
+    ///
+    /// @param status the HTTP status
+    /// @param title the problem title
+    /// @param detail the problem detail message
     private record GrpcProblemDetail(
         HttpStatus status,
         String title,

@@ -15,6 +15,15 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 
+/// **Person Entity**
+///
+/// Comprehensive entity representing a person with extensive personal information
+/// including identification, addresses (domicile, temporary, foreign), education,
+/// banking details, health specifics, and administrative data. Supports both
+/// Czech and foreign addresses and institutions.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @DynamicUpdate

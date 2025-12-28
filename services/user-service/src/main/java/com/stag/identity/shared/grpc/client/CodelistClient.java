@@ -24,16 +24,33 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+/// **Codelist gRPC Client**
+///
+/// gRPC client for codelist-service communication. Fetches localized codelist
+/// meanings for person data enrichment with circuit breaker and retry patterns
+/// for resilience. Optimizes calls by skipping requests with no meaningful data.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @Service
 public class CodelistClient {
 
+    /// Codelist Service stub
     private final CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub;
 
+    /// Constructor for CodelistClient
+    ///
+    /// @param codelistServiceStub the gRPC blocking stub for codelist service
     public CodelistClient(CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub) {
         this.codelistServiceStub = codelistServiceStub;
     }
 
+    /// Fetches codelist meanings for simple profile enrichment.
+    ///
+    /// @param simpleProfile the simple profile projection
+    /// @param language the language code for localization
+    /// @return enriched codelist meanings data
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public CodelistMeaningsLookupData getSimpleProfileData(SimpleProfileView simpleProfile, String language) {
@@ -43,7 +60,12 @@ public class CodelistClient {
         return CodelistMapper.INSTANCE.toCodelistMeaningsData(response);
     }
 
-    /// Get codelist data specifically for person profile (GET /persons/{personId})
+    /// Fetches codelist data for full person profile enrichment.
+    /// Skips call if no meaningful data to fetch for optimization.
+    ///
+    /// @param personProfile the profile projection
+    /// @param language the language code for localization
+    /// @return enriched profile lookup data or null if skipped
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public ProfileLookupData getPersonProfileData(ProfileView personProfile, String language) {
@@ -59,7 +81,13 @@ public class CodelistClient {
         return CodelistMapper.INSTANCE.toPersonProfileData(response);
     }
 
-    /// Get codelist data specifically for person profile update (PATCH /persons/{personId})
+    /// Validates and resolves codelist values for profile update operations.
+    /// Returns resolved low values and IDs for database persistence.
+    ///
+    /// @param maritalStatus the marital status meaning to validate
+    /// @param birthCountryName the birth country name to resolve
+    /// @param titles the titles to validate
+    /// @return validated profile update data or empty object if skipped
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public ProfileUpdateLookupData getPersonProfileUpdateData(String maritalStatus, String birthCountryName, Profile.Titles titles) {
@@ -75,7 +103,12 @@ public class CodelistClient {
         return CodelistMapper.INSTANCE.toProfileUpdateLookupData(response);
     }
 
-    /// Get codelist data specifically for person addresses (GET /persons/{personId}/addresses)
+    /// Fetches codelist data for person addresses with localized location names.
+    /// Skips call if no meaningful data to fetch for optimization.
+    ///
+    /// @param addressView the address projection
+    /// @param language the language code for localization
+    /// @return enriched address lookup data or null if skipped
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public AddressLookupData getPersonAddressData(AddressView addressView, String language) {
@@ -91,7 +124,12 @@ public class CodelistClient {
         return CodelistMapper.INSTANCE.toPersonAddressData(response, addressView);
     }
 
-    /// Get codelist data specifically for person banking (GET /persons/{personId}/banking)
+    /// Fetches codelist data for person banking with localized bank names.
+    /// Skips call if no meaningful data to fetch for optimization.
+    ///
+    /// @param bankView the banking projection
+    /// @param language the language code for localization
+    /// @return enriched banking lookup data or null if skipped
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public BankingLookupData getPersonBankingData(BankView bankView, String language) {
@@ -107,7 +145,12 @@ public class CodelistClient {
         return CodelistMapper.INSTANCE.toPersonBankingData(response);
     }
 
-    /// Get codelist data specifically for person education (GET /persons/{personId}/education)
+    /// Fetches codelist data for person education with school and field of study details.
+    /// Skips call if no meaningful data to fetch for optimization.
+    ///
+    /// @param personEducation the education projection
+    /// @param language the language code for localization
+    /// @return enriched education lookup data or null if skipped
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public EducationLookupData getPersonEducationData(EducationView personEducation, String language) {
@@ -123,12 +166,14 @@ public class CodelistClient {
         return CodelistMapper.INSTANCE.toPersonEducationData(response);
     }
 
+    /// Checks if a profile data request should be skipped based on empty fields.
     private boolean shouldSkipRequest(GetPersonProfileDataRequest request) {
         return !request.hasBirthCountryId()
             && !request.hasCitizenshipCountryId()
             && request.getCodelistKeysCount() == 0;
     }
 
+    /// Checks if a profile update request should be skipped based on empty fields.
     private boolean shouldSkipRequest(GetPersonProfileUpdateDataRequest request) {
         return !request.hasMaritalStatus()
             && !request.hasTitlePrefix()
@@ -136,6 +181,7 @@ public class CodelistClient {
             && !request.hasBirthCountryName();
     }
 
+    /// Checks if the address data request should be skipped based on empty fields.
     private boolean shouldSkipRequest(GetPersonAddressDataRequest request) {
         return !request.hasPermanentMunicipalityPartId()
             && !request.hasPermanentCountryId()
@@ -143,11 +189,13 @@ public class CodelistClient {
             && !request.hasTemporaryCountryId();
     }
 
+    /// Checks if banking data request should be skipped based on empty fields.
     private boolean shouldSkipRequest(GetPersonBankingDataRequest request) {
         return !request.hasEuroAccountCountryId()
             && request.getCodelistKeysCount() == 0;
     }
 
+    /// Checks if education data request should be skipped based on empty fields.
     private boolean shouldSkipRequest(GetPersonEducationDataRequest request) {
         return !request.hasHighSchoolId()
             && !request.hasHighSchoolFieldOfStudyNumber()

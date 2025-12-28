@@ -20,19 +20,34 @@ import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+/// **JWT Configuration with Enhanced Caching and Resilience**
+///
+/// Configures an enhanced JWT decoder with advanced caching, refresh-ahead strategies,
+/// and outage tolerance for production environments. This configuration is **disabled**
+/// for the `qa` profile.
+///
+/// @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/enhanced-jwk-retrieval">JWKs Retrieval</a>
+/// @see <a href="https://github.com/spring-projects/spring-security/pull/17046">JwkSource Pull Request</a>
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Profile("!qa")
 @Slf4j
 @Configuration
 public class JwtConfig {
 
+    /// JWK Set URI from application configuration (e.g., Keycloak endpoint)
     @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
     private String jwkSetUri;
 
-    /// @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/enhanced-jwk-retrieval">JWKs Retrieval</a>
-    /// @see <a href="https://github.com/spring-projects/spring-security/pull/17046">JwkSource Pull Request</a>
+    /// Creates an enhanced JWT decoder with caching and resilience features.
+    ///
+    /// @return Configured `JwtDecoder` with enhanced JWK source
+    /// @throws MalformedURLException if the JWK Set URI is invalid
     @Bean
     @Primary
     public JwtDecoder enhancedJwtDecoder() throws MalformedURLException {
+        // Convert a configured URI string to URL object
         URL jwkSetURL = URI.create(jwkSetUri).toURL();
 
         // Build the Nimbus-enhanced JWK source with caching and retry capabilities

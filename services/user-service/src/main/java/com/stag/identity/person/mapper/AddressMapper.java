@@ -9,11 +9,25 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+/// **Address Mapper**
+///
+/// MapStruct mapper for transforming address projections to domain models.
+/// Enriches Czech addresses with localized country, district, and municipality names.
+/// Handles both domestic (permanent/temporary) and foreign addresses.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Mapper(uses = { CodelistValueResolver.class })
 public interface AddressMapper {
 
+    /// AddressMapper Instance
     AddressMapper INSTANCE = Mappers.getMapper(AddressMapper.class);
 
+    /// Maps address projection to complete addresses model with all address types.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data with localized names
+    /// @return addresses model with Czech and foreign addresses
     @Mapping(target = "permanentAddress", source = "personAddress", qualifiedByName = "toPermanentAddress")
     @Mapping(target = "temporaryAddress", source = "personAddress", qualifiedByName = "toTemporaryAddress")
     @Mapping(target = "foreignPermanentAddress", source = "personAddress", qualifiedByName = "toForeignPermanentAddress")
@@ -23,6 +37,11 @@ public interface AddressMapper {
         @Context AddressLookupData data
     );
 
+    /// Maps permanent Czech address with localized location names.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data
+    /// @return permanent address model
     @Named("toPermanentAddress")
     @Mapping(target = "street", source = "permanentStreet")
     @Mapping(target = "streetNumber", source = "permanentStreetNumber")
@@ -36,6 +55,11 @@ public interface AddressMapper {
         @Context AddressLookupData data
     );
 
+    /// Maps temporary Czech address with localized location names.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data
+    /// @return temporary address model
     @Named("toTemporaryAddress")
     @Mapping(target = "street", source = "temporaryStreet")
     @Mapping(target = "streetNumber", source = "temporaryStreetNumber")
@@ -49,6 +73,10 @@ public interface AddressMapper {
         @Context AddressLookupData data
     );
 
+    /// Maps foreign permanent address with manually entered location data.
+    ///
+    /// @param personAddress the address projection
+    /// @return foreign permanent address model
     @Named("toForeignPermanentAddress")
     @Mapping(target = "zipCode", source = "foreignPermanentZipCode")
     @Mapping(target = "municipality", source = "foreignPermanentMunicipality")
@@ -56,6 +84,10 @@ public interface AddressMapper {
     @Mapping(target = "postOffice", source = "foreignPermanentPostOffice")
     Addresses.ForeignAddress toForeignPermanentAddress(AddressView personAddress);
 
+    /// Maps foreign temporary address with manually entered location data.
+    ///
+    /// @param personAddress the address projection
+    /// @return foreign temporary address model
     @Named("toForeignTemporaryAddress")
     @Mapping(target = "zipCode", source = "foreignTemporaryZipCode")
     @Mapping(target = "municipality", source = "foreignTemporaryMunicipality")
@@ -63,6 +95,7 @@ public interface AddressMapper {
     @Mapping(target = "postOffice", source = "foreignTemporaryPostOffice")
     Addresses.ForeignAddress toForeignTemporaryAddress(AddressView personAddress);
 
+    /// Resolves permanent municipality name from lookup data.
     @Named("permanentMunicipalityName")
     default String permanentMunicipalityName(
         AddressView personAddress,
@@ -71,6 +104,7 @@ public interface AddressMapper {
         return data.permanentMunicipality();
     }
 
+    /// Resolves permanent municipality part name from lookup data.
     @Named("permanentMunicipalityPartName")
     default String permanentMunicipalityPartName(
         AddressView personAddress,
@@ -79,6 +113,7 @@ public interface AddressMapper {
         return data.permanentMunicipalityPart();
     }
 
+    /// Resolves permanent district name from lookup data.
     @Named("permanentDistrictName")
     default String permanentDistrictName(
         AddressView personAddress,
@@ -87,6 +122,7 @@ public interface AddressMapper {
         return data.permanentDistrict();
     }
 
+    /// Resolves permanent country name from lookup data.
     @Named("permanentCountryName")
     default String permanentCountryName(
         AddressView personAddress,
@@ -95,6 +131,7 @@ public interface AddressMapper {
         return data.permanentCountry();
     }
 
+    /// Resolves temporary municipality name from lookup data.
     @Named("temporaryMunicipalityName")
     default String temporaryMunicipalityName(
         AddressView personAddress,
@@ -103,6 +140,7 @@ public interface AddressMapper {
         return data.temporaryMunicipality();
     }
 
+    /// Resolves temporary municipality part name from lookup data.
     @Named("temporaryMunicipalityPartName")
     default String temporaryMunicipalityPartName(
         AddressView personAddress,
@@ -111,6 +149,7 @@ public interface AddressMapper {
         return data.temporaryMunicipalityPart();
     }
 
+    /// Resolves temporary district name from lookup data.
     @Named("temporaryDistrictName")
     default String temporaryDistrictName(
         AddressView personAddress,
@@ -119,6 +158,7 @@ public interface AddressMapper {
         return data.temporaryDistrict();
     }
 
+    /// Resolves temporary country name from lookup data.
     @Named("temporaryCountryName")
     default String temporaryCountryName(
         AddressView personAddress,
@@ -126,4 +166,5 @@ public interface AddressMapper {
     ) {
         return data.temporaryCountry();
     }
+
 }

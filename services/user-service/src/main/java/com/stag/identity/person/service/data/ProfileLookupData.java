@@ -5,6 +5,14 @@ import lombok.Builder;
 
 import java.util.Map;
 
+/// **Profile Lookup Data**
+///
+/// Enriched data from codelist service for profile mappings. Contains localized
+/// codelist meanings (nationality, marital status, titles, gender) and resolved
+/// country names for birthplace and citizenship.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Builder
 public record ProfileLookupData(
     Map<CodelistEntryId, String> codelistMeanings,

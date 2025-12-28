@@ -21,6 +21,14 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
+/// **Study Plan Entity**
+///
+/// Represents a study plan for a specific academic year and field of study.
+/// Contains details about credit requirements, semester structure, language,
+/// and specialization options. Supports plan versioning and copying.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

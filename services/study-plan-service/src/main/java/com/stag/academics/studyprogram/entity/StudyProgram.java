@@ -15,6 +15,15 @@ import org.hibernate.annotations.ColumnDefault;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/// **Study Program Entity**
+///
+/// Represents a study program with comprehensive information including multilingual
+/// descriptions, accreditation details, degree requirements, and administrative
+/// settings. Supports various program types, forms, and accreditation statuses.
+/// Contains extensive localization for Czech, English, and additional languages.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

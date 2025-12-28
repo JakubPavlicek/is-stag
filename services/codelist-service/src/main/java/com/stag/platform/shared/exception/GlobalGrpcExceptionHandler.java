@@ -12,10 +12,23 @@ import grpcstarter.server.feature.exceptionhandling.annotation.GrpcExceptionHand
 import io.grpc.Status;
 import lombok.extern.slf4j.Slf4j;
 
+/// **Global gRPC Exception Handler**
+///
+/// Centralized exception handler that translates application exceptions into appropriate
+/// gRPC status codes for gRPC service methods.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @GrpcAdvice
 public class GlobalGrpcExceptionHandler {
 
+    /// Handles resource not found exceptions by returning `NOT_FOUND` status.
+    ///
+    /// Applies to exceptions indicating missing data in codelists, addresses, or education domains.
+    ///
+    /// @param ex Caught exception
+    /// @return gRPC NOT_FOUND status with an exception message
     @GrpcExceptionHandler({
         CodelistEntriesNotFoundException.class,
         CodelistMeaningsNotFoundException.class,
@@ -30,6 +43,10 @@ public class GlobalGrpcExceptionHandler {
         return Status.NOT_FOUND.withDescription(ex.getMessage());
     }
 
+    /// Handles all other runtime exceptions by returning `INTERNAL` status.
+    ///
+    /// @param e The caught runtime exception
+    /// @return gRPC INTERNAL status with an exception message
     @GrpcExceptionHandler(RuntimeException.class)
     public Status handleRuntimeException(RuntimeException e) {
         log.warn("gRPC request failed: {}", e.getMessage());

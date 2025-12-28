@@ -21,6 +21,12 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
+/// **Municipality Part Entity**
+///
+/// Represents a part/district of a municipality (část obce).
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -10,18 +10,33 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/// **Oracle Proxy DataSource**
+///
 /// A DataSource wrapper that automatically opens and closes Oracle proxy sessions.
 /// It extends Spring's DelegatingDataSource for robustness and compatibility.
+/// Each connection obtained from this DataSource will have an active proxy session
+/// for the configured target user.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 public class OracleProxyDataSource extends DelegatingDataSource {
 
     private final String targetUser;
 
+    /// Constructs a new OracleProxyDataSource.
+    ///
+    /// @param targetDataSource the underlying DataSource to delegate to
+    /// @param targetUser the Oracle user to proxy as
     public OracleProxyDataSource(DataSource targetDataSource, String targetUser) {
         super(targetDataSource);
         this.targetUser = targetUser;
     }
 
+    /// Gets a connection with an active Oracle proxy session.
+    ///
+    /// @return a Connection wrapped in ProxyOracleConnection
+    /// @throws SQLException if the proxy session cannot be opened
     @Override
     @NonNull
     public Connection getConnection() throws SQLException {
@@ -60,6 +75,11 @@ public class OracleProxyDataSource extends DelegatingDataSource {
         }
     }
 
+    /// This method is not supported in the proxy setup.
+    ///
+    /// @param username ignored
+    /// @param password ignored
+    /// @throws UnsupportedOperationException always
     @Override
     @NonNull
     public Connection getConnection(@NonNull String username, @NonNull String password) {

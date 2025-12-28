@@ -13,18 +13,31 @@ import org.springframework.security.oauth2.server.resource.authentication.Expres
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+/// **Security Configuration**
+///
+/// Spring Security configuration for production environments. Configures OAuth2
+/// resource server with JWT authentication, role-based access control from
+/// Keycloak realm_access.roles, and endpoint authorization rules.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Profile("!qa")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    /// Swagger public URLs.
     private static final String[] SWAGGER_URLS = {
         "/swagger-ui.html",
         "/swagger-ui/**",
         "/v3/api-docs/swagger-config"
     };
 
+    /// Configures the security filter chain with OAuth2 and JWT authentication.
+    ///
+    /// @param http the HTTP security builder
+    /// @return configured security filter chain
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
         return http
@@ -45,6 +58,9 @@ public class SecurityConfig {
             .build();
     }
 
+    /// Creates converter for extracting granted authorities from JWT realm roles.
+    ///
+    /// @return expression-based JWT granted authorities converter
     @Bean
     public ExpressionJwtGrantedAuthoritiesConverter expressionConverter() {
         // Extract roles from the realm_access.roles claim and prefix with "ROLE_"
@@ -57,6 +73,9 @@ public class SecurityConfig {
         return expressionConverter;
     }
 
+    /// Creates JWT authentication converter with custom authorities converter.
+    ///
+    /// @return JWT authentication converter
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter jwtAuthConverter = new JwtAuthenticationConverter();

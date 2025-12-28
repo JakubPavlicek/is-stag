@@ -27,13 +27,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/// **Codelist gRPC Service**
+///
+/// Synchronous gRPC service implementation for codelist data retrieval.
+/// Orchestrates async operations for fetching person profile, address, banking, and education data.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @RequiredArgsConstructor
 @GrpcService
 public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImplBase {
 
+    /// Async service for concurrent data fetching
     private final CodelistGrpcAsyncService asyncService;
 
+    /// Retrieves codelist meanings for provided keys.
+    ///
+    /// @param request Request containing codelist keys and language
+    /// @param responseObserver Response stream observer
     @Override
     public void getCodelistValues(
         GetCodelistValuesRequest request,
@@ -50,6 +62,10 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
         completeResponse(responseObserver, response);
     }
 
+    /// Retrieves person profile data including codelist meanings and country names.
+    ///
+    /// @param request Request containing profile data and codelist keys
+    /// @param responseObserver Response stream observer
     @Override
     public void getPersonProfileData(
         GetPersonProfileDataRequest request,
@@ -71,6 +87,10 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                          .exceptionally(ex -> errorResponse(responseObserver, ex));
     }
 
+    /// Retrieves person profile update data including low values and country ID.
+    ///
+    /// @param request Request containing marital status, titles, and country name
+    /// @param responseObserver Response stream observer
     @Override
     public void getPersonProfileUpdateData(
         GetPersonProfileUpdateDataRequest request,
@@ -91,6 +111,10 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                          .exceptionally(ex -> errorResponse(responseObserver, ex));
     }
 
+    /// Retrieves person address data including municipality and country information.
+    ///
+    /// @param request Request containing address IDs and language
+    /// @param responseObserver Response stream observer
     @Override
     public void getPersonAddressData(
         GetPersonAddressDataRequest request,
@@ -112,6 +136,10 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                          .exceptionally(ex -> errorResponse(responseObserver, ex));
     }
 
+    /// Retrieves person banking data including codelist meanings and country name.
+    ///
+    /// @param request Request containing banking data and codelist keys
+    /// @param responseObserver Response stream observer
     @Override
     public void getPersonBankingData(
         GetPersonBankingDataRequest request,
@@ -133,6 +161,10 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                          .exceptionally(ex -> errorResponse(responseObserver, ex));
     }
 
+    /// Retrieves person education data including high school and field of study information.
+    ///
+    /// @param request Request containing education IDs and language
+    /// @param responseObserver Response stream observer
     @Override
     public void getPersonEducationData(
         GetPersonEducationDataRequest request,
@@ -158,11 +190,20 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
                          .exceptionally(ex -> errorResponse(responseObserver, ex));
     }
 
+    /// Completes the gRPC response by sending the result and marking the stream as completed.
+    ///
+    /// @param responseObserver Response stream observer
+    /// @param response Response to send
     private <T> void completeResponse(StreamObserver<T> responseObserver, T response) {
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 
+    /// Handles errors by logging and sending error status to the client.
+    ///
+    /// @param responseObserver Response stream observer
+    /// @param ex Exception that occurred
+    /// @return null
     private <T> Void errorResponse(StreamObserver<T> responseObserver, Throwable ex) {
         log.error("Error processing request", ex.getCause());
         responseObserver.onError(ex.getCause());

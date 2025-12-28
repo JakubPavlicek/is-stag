@@ -8,8 +8,18 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Collection;
 import java.util.List;
 
+/// **Municipality Part Repository**
+///
+/// Data access layer for municipality part entities.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 public interface MunicipalityPartRepository extends JpaRepository<MunicipalityPart, Long> {
 
+    /// Retrieves address place names (municipality part, municipality, district) by IDs.
+    ///
+    /// @param ids collection of municipality part IDs to fetch
+    /// @return list of address place name projections
     @Query(
         """
         SELECT new com.stag.platform.address.repository.projection.AddressPlaceNameProjection(

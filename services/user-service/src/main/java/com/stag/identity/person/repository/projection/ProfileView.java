@@ -2,6 +2,14 @@ package com.stag.identity.person.repository.projection;
 
 import java.time.LocalDate;
 
+/// **Profile View Projection**
+///
+/// Comprehensive view of a person's profile containing personal identification,
+/// contact information, birth details, citizenship, and document data.
+/// Used for full profile retrieval.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 public record ProfileView(
     Integer id,
     String firstName,

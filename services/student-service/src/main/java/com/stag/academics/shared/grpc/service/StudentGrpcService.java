@@ -13,20 +13,34 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+/// **Student gRPC Service**
+///
+/// gRPC service implementation for student operations. Exposes methods for
+/// retrieving student IDs and person mappings via gRPC protocol.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @RequiredArgsConstructor
 @GrpcService
 public class StudentGrpcService extends StudentServiceGrpc.StudentServiceImplBase {
 
+    /// Student service
     private final StudentService studentService;
 
+    /// Retrieves all student IDs associated with a person via gRPC.
+    ///
+    /// @param request the gRPC request containing person ID
+    /// @param responseObserver the response stream observer
     @Override
     public void getStudentIds(
         GetStudentIdsRequest request,
         StreamObserver<GetStudentIdsResponse> responseObserver
     ) {
+        // Fetch student IDs from service
         List<String> studentIds = studentService.findAllStudentIds(request.getPersonId());
 
+        // Build and send gRPC response
         var response = GetStudentIdsResponse.newBuilder()
                                             .addAllStudentIds(studentIds)
                                             .build();
@@ -35,13 +49,19 @@ public class StudentGrpcService extends StudentServiceGrpc.StudentServiceImplBas
         responseObserver.onCompleted();
     }
 
+    /// Retrieves person ID for a given student via gRPC.
+    ///
+    /// @param request the gRPC request containing student ID
+    /// @param responseObserver the response stream observer
     @Override
     public void getStudentPersonId(
         GetStudentPersonIdRequest request,
         StreamObserver<GetStudentPersonIdResponse> responseObserver
     ) {
+        // Fetch person ID from service
         Integer personId = studentService.findPersonId(request.getStudentId());
 
+        // Build and send gRPC response
         var response = GetStudentPersonIdResponse.newBuilder()
                                                  .setPersonId(personId)
                                                  .build();

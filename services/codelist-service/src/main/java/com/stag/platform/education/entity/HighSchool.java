@@ -19,6 +19,12 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
+/// **High School Entity**
+///
+/// Represents a secondary school (střední škola) with address and validity information.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

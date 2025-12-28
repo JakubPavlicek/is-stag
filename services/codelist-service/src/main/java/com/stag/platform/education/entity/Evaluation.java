@@ -19,6 +19,12 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/// **Evaluation Entity**
+///
+/// Represents a specific evaluation/grade within an evaluation type.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

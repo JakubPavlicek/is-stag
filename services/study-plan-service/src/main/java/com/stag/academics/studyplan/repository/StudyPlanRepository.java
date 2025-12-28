@@ -7,8 +7,20 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
+/// **Study Plan Repository**
+///
+/// Data access layer for study plan entities. Provides methods to retrieve
+/// field of study information associated with study plans.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 public interface StudyPlanRepository extends JpaRepository<StudyPlan, Long> {
 
+    /// Finds the field of study for a given study plan with a localized name.
+    ///
+    /// @param studyPlanId the study plan identifier
+    /// @param language the language code (e.g., 'en', 'cz')
+    /// @return optional field of study view with localized data
     @Query(
         """
         SELECT new com.stag.academics.fieldofstudy.repository.projection.FieldOfStudyView(

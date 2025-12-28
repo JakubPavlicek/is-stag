@@ -17,6 +17,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/// **Country Service**
+///
+/// Manages country data retrieval with caching support.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,12 +30,21 @@ public class CountryService {
 
     private final CountryRepository countryRepository;
 
+    /// Retrieves all valid countries in the specified language.
+    ///
+    /// @param language Language code ('cs' or 'en')
+    /// @return Set of country views
     @Transactional(readOnly = true)
     @Cacheable(value = "countries", key = "#language")
     public Set<CountryView> getCountries(String language) {
         return countryRepository.findAllValidCountries(language);
     }
 
+    /// Finds country ID by country name.
+    ///
+    /// @param countryName Country name to search for
+    /// @return Country ID or null if the name is blank
+    /// @throws CountryNotFoundException if the country is not found
     @Transactional(readOnly = true)
     @Cacheable(value = "country-id", key = "#countryName", unless = "#result == null")
     public Integer findCountryIdByName(String countryName) {
@@ -41,6 +56,12 @@ public class CountryService {
                                 .orElseThrow(() -> new CountryNotFoundException(countryName));
     }
 
+    /// Retrieves country names by IDs in the specified language.
+    ///
+    /// @param countryIds Collection of country IDs
+    /// @param language Language code
+    /// @return Map of IDs to country names
+    /// @throws CountriesNotFoundException if any IDs are missing
     @Transactional(readOnly = true)
     public Map<Integer, String> findNamesByIds(Collection<Integer> countryIds, String language) {
         List<CountryNameProjection> foundCountries = countryRepository.findNamesByIds(countryIds, language);
@@ -54,6 +75,11 @@ public class CountryService {
                              ));
     }
 
+    /// Validates that all requested countries were found.
+    ///
+    /// @param requestedIds Collection of requested country IDs
+    /// @param foundCountries List of found country projections
+    /// @throws CountriesNotFoundException if any IDs are missing
     private void ensureAllCountriesWereFound(Collection<Integer> requestedIds, List<CountryNameProjection> foundCountries) {
         // If counts match, all countries were found (assumes no duplicates in requestedIds)
         if (requestedIds.size() == foundCountries.size()) {
@@ -68,6 +94,11 @@ public class CountryService {
         }
     }
 
+    /// Identifies country IDs that were not found.
+    ///
+    /// @param requestedIds Collection of requested country IDs
+    /// @param foundCountries List of found country projections
+    /// @return List of missing country IDs
     private List<Integer> getMissingIds(Collection<Integer> requestedIds, List<CountryNameProjection> foundCountries) {
         // Determine which IDs are missing
         Set<Integer> foundIds = foundCountries.stream()

@@ -15,16 +15,35 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.concurrent.CompletableFuture;
 
+/// **Education Service**
+///
+/// Business logic for a person's education information. Retrieves education history
+/// with localized field of study data from codelist service. Results are cached
+/// per person ID and language.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class EducationService {
 
+    /// Person Repository
     private final PersonRepository personRepository;
+    /// Codelist Lookup Service
     private final CodelistLookupService codelistLookupService;
 
+    /// Transaction Template for transaction management
     private final TransactionTemplate transactionTemplate;
 
+    /// Retrieves person's education information with localized field of study names.
+    /// Fetches education projection then asynchronously loads codelist data
+    /// for all education-related fields.
+    ///
+    /// @param personId the person identifier
+    /// @param language the language code for codelist localization
+    /// @return education information with localized data
+    /// @throws PersonNotFoundException if person not found
     @Cacheable(value = "person-education", key = "{#personId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')

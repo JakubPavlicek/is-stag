@@ -4,6 +4,13 @@ import lombok.Builder;
 
 import java.io.Serializable;
 
+/// **Addresses Model**
+///
+/// Person address information.
+/// Includes permanent and temporary addresses with localized country/state data.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Builder
 public record Addresses(
     Address permanentAddress,
@@ -12,6 +19,7 @@ public record Addresses(
     ForeignAddress foreignTemporaryAddress
 ) implements Serializable {
 
+    /// Address with full structure including district and municipality part.
     @Builder
     public record Address(
         String street,
@@ -25,6 +33,7 @@ public record Addresses(
 
     }
 
+    /// Foreign address with a simplified structure for international locations.
     @Builder
     public record ForeignAddress(
         String zipCode,

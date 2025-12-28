@@ -18,6 +18,12 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
+/// **Municipality Entity**
+///
+/// Represents a municipality (obec) within a district.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

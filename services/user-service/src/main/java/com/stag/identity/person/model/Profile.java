@@ -6,6 +6,14 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+/// **Profile Model**
+///
+/// Complete person profile containing personal information, contact details,
+/// citizenship, and associated student IDs. Used for full profile retrieval
+/// with localized codelist meanings.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Builder
 public record Profile(
     Integer personId,
@@ -24,6 +32,7 @@ public record Profile(
     String maritalStatus
 ) implements Serializable {
 
+    /// Contact information including email, phone, mobile, and Czech data box.
     public record Contact(
         String email,
         String phone,
@@ -33,6 +42,7 @@ public record Profile(
 
     }
 
+    /// Academic and professional titles (prefix like "Ing." and suffix like "PhD.").
     public record Titles(
         String prefix,
         String suffix
@@ -40,6 +50,7 @@ public record Profile(
 
     }
 
+    /// Birth place information with city name and country.
     public record BirthPlace(
         String city,
         String country
@@ -47,6 +58,7 @@ public record Profile(
 
     }
 
+    /// Citizenship information with country name and citizenship qualifier.
     public record Citizenship(
         String country,
         String qualifier

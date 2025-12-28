@@ -15,16 +15,35 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.concurrent.CompletableFuture;
 
+/// **Address Service**
+///
+/// Business logic for person address operations. Retrieves permanent, temporary,
+/// and foreign addresses with localized country/state data from codelist service.
+/// Results are cached per person ID and language for performance.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class AddressService {
 
+    /// Person repository
     private final PersonRepository personRepository;
+    /// Codelist Lookup service
     private final CodelistLookupService codelistLookupService;
 
+    /// Transaction Template for transaction management
     private final TransactionTemplate transactionTemplate;
 
+    /// Retrieves all person addresses with localized country and state names.
+    /// Fetches address projection then asynchronously loads codelist data
+    /// for all address types (permanent, temporary, foreign).
+    ///
+    /// @param personId the person identifier
+    /// @param language the language code for codelist localization
+    /// @return addresses with localized geographic data
+    /// @throws PersonNotFoundException if person not found
     @Cacheable(value = "person-addresses", key = "{#personId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')

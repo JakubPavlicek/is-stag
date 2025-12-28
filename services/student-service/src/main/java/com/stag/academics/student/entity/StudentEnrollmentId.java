@@ -12,6 +12,13 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+/// **Student Enrollment ID**
+///
+/// Composite primary key for student enrollment consisting of student ID,
+/// year of validity, and study plan ID.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Embeddable
@@ -45,6 +52,10 @@ public class StudentEnrollmentId implements Serializable {
     )
     private Long studyPlanId;
 
+    /// Checks equality based on student ID, year of validity, and study plan ID.
+    ///
+    /// @param o the object to compare
+    /// @return true if objects are equal
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -59,6 +70,9 @@ public class StudentEnrollmentId implements Serializable {
             Objects.equals(this.studentId, entity.studentId);
     }
 
+    /// Generates hash code based on composite key fields.
+    ///
+    /// @return hash code value
     @Override
     public int hashCode() {
         return Objects.hash(studyPlanId, yearOfValidity, studentId);

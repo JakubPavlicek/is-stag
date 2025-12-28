@@ -9,6 +9,12 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+/// **High School Field Of Study Entity**
+///
+/// Represents a high school field of study (obor střední školy).
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Getter
 @Setter
 @Entity

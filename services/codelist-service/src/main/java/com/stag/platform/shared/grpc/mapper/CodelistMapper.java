@@ -34,11 +34,23 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/// **Codelist Mapper**
+///
+/// MapStruct mapper for converting between gRPC protobuf messages and internal domain models.
+/// Handles complex mappings for person profile, address, banking, and education data.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface CodelistMapper {
 
+    /// Mapper instance
     CodelistMapper INSTANCE = Mappers.getMapper(CodelistMapper.class);
 
+    /// Extracts country IDs from gRPC request messages.
+    ///
+    /// @param message gRPC request message
+    /// @return Set of country IDs present in the message
     default Set<Integer> extractCountryIds(Message message) {
         return switch (message) {
             case GetPersonProfileDataRequest r -> extractValues(
@@ -59,6 +71,10 @@ public interface CodelistMapper {
         };
     }
 
+    /// Extracts municipality part IDs from gRPC request messages.
+    ///
+    /// @param message gRPC request message
+    /// @return Set of municipality part IDs present in the message
     default Set<Long> extractMunicipalityPartIds(Message message) {
         return switch (message) {
             case GetPersonAddressDataRequest r -> extractValues(
@@ -69,10 +85,24 @@ public interface CodelistMapper {
         };
     }
 
+    /// Converts gRPC codelist keys to internal codelist entry IDs.
+    ///
+    /// @param codelistKeys List of gRPC codelist keys
+    /// @return List of codelist entry IDs
     List<CodelistEntryId> toCodelistEntryIds(List<CodelistKey> codelistKeys);
 
+    /// Converts internal codelist entries to gRPC codelist meanings.
+    ///
+    /// @param entries List of codelist entry meaning projections
+    /// @return List of gRPC codelist meanings
     List<CodelistMeaning> toCodelistMeanings(List<CodelistEntryMeaningProjection> entries);
 
+    /// Builds person profile data response from request and context data.
+    ///
+    /// @param request Person profile data request
+    /// @param codelistMeanings Codelist meanings context
+    /// @param countryNames Country names context
+    /// @return Person profile data response
     @Mapping(target = "birthCountryName", source = "birthCountryId", qualifiedByName = "getCountryName")
     @Mapping(target = "citizenshipCountryName", source = "citizenshipCountryId", qualifiedByName = "getCountryName")
     @Mapping(target = "codelistMeanings", ignore = true)
@@ -82,6 +112,11 @@ public interface CodelistMapper {
         @Context Map<Integer, String> countryNames
     );
 
+    /// Builds person profile update data response from low values and country ID.
+    ///
+    /// @param profileLowValues Person profile low values
+    /// @param birthCountryId Birth country ID
+    /// @return Person profile update data response
     @Mapping(target = "maritalStatusLowValue", source = "profileLowValues.maritalStatusLowValue")
     @Mapping(target = "titlePrefixLowValue", source = "profileLowValues.titlePrefixLowValue")
     @Mapping(target = "titleSuffixLowValue", source = "profileLowValues.titleSuffixLowValue")
@@ -90,6 +125,12 @@ public interface CodelistMapper {
         Integer birthCountryId
     );
 
+    /// Builds person address data response from request and context data.
+    ///
+    /// @param request Person address data request
+    /// @param addressNames Address names context
+    /// @param countryNames Country names context
+    /// @return Person address data response
     @Mapping(target = "permanentCountryName", source = "permanentCountryId", qualifiedByName = "getCountryName")
     @Mapping(target = "temporaryCountryName", source = "temporaryCountryId", qualifiedByName = "getCountryName")
     @Mapping(target = "permanentMunicipalityName", source = "permanentMunicipalityPartId", qualifiedByName = "getMunicipalityName")
@@ -104,6 +145,12 @@ public interface CodelistMapper {
         @Context Map<Integer, String> countryNames
     );
 
+    /// Builds person banking data response from request and context data.
+    ///
+    /// @param request Person banking data request
+    /// @param codelistMeanings Codelist meanings context
+    /// @param countryNames Country names context
+    /// @return Person banking data response
     @Mapping(target = "euroAccountCountryName", source = "euroAccountCountryId", qualifiedByName = "getCountryName")
     @Mapping(target = "codelistMeanings", ignore = true)
     GetPersonBankingDataResponse buildPersonBankingDataResponse(
@@ -112,6 +159,13 @@ public interface CodelistMapper {
         @Context Map<Integer, String> countryNames
     );
 
+    /// Builds person education data response from request and context data.
+    ///
+    /// @param request Person education data request
+    /// @param highSchoolAddress High school address projection
+    /// @param fieldOfStudy Field of study name
+    /// @param countryNames Country names context
+    /// @return Person education data response
     @Mapping(target = "highSchoolName", source = "highSchoolAddress.name")
     @Mapping(target = "highSchoolStreet", source = "highSchoolAddress.street")
     @Mapping(target = "highSchoolZipCode", source = "highSchoolAddress.zipCode")
@@ -126,11 +180,19 @@ public interface CodelistMapper {
         @Context Map<Integer, String> countryNames
     );
 
+    /// Converts codelist entry meaning projection to gRPC codelist meaning.
+    ///
+    /// @param entry Codelist entry meaning projection
+    /// @return gRPC codelist meaning
     @Mapping(target = "domain", source = "id.domain")
     @Mapping(target = "lowValue", source = "id.lowValue")
     @Mapping(target = "meaning", source = "meaning")
     CodelistMeaning toCodelistMeaning(CodelistEntryMeaningProjection entry);
 
+    /// Adds codelist meanings to response builder after mapping.
+    ///
+    /// @param codelistMeanings List of codelist meanings
+    /// @param builder Response builder
     @AfterMapping
     default void addCodelistMeanings(
         @Context List<CodelistMeaning> codelistMeanings,
@@ -147,6 +209,11 @@ public interface CodelistMapper {
         }
     }
 
+    /// Retrieves country name from context map.
+    ///
+    /// @param countryId Country ID
+    /// @param countryNames Country names map
+    /// @return Country name or null
     @Named("getCountryName")
     default String getCountryName(Integer countryId, @Context Map<Integer, String> countryNames) {
         return Optional.ofNullable(countryNames)
@@ -154,6 +221,11 @@ public interface CodelistMapper {
                        .orElse(null);
     }
 
+    /// Retrieves municipality name from context map.
+    ///
+    /// @param municipalityPartId Municipality part ID
+    /// @param addressNames Address names map
+    /// @return Municipality name or null
     @Named("getMunicipalityName")
     default String getMunicipalityName(
         Long municipalityPartId,
@@ -165,6 +237,11 @@ public interface CodelistMapper {
                        .orElse(null);
     }
 
+    /// Retrieves municipality part name from context map.
+    ///
+    /// @param municipalityPartId Municipality part ID
+    /// @param addressNames Address names map
+    /// @return Municipality part name or null
     @Named("getMunicipalityPartName")
     default String getMunicipalityPartName(
         Long municipalityPartId,
@@ -176,6 +253,11 @@ public interface CodelistMapper {
                        .orElse(null);
     }
 
+    /// Retrieves district name from context map.
+    ///
+    /// @param municipalityPartId Municipality part ID
+    /// @param addressNames Address names map
+    /// @return District name or null
     @Named("getDistrictName")
     default String getDistrictName(
         Long municipalityPartId,
@@ -187,6 +269,10 @@ public interface CodelistMapper {
                        .orElse(null);
     }
 
+    /// Extracts non-null values from pairs when the first element is true.
+    ///
+    /// @param pairs Varargs of boolean-value pairs
+    /// @return Set of extracted values
     @SafeVarargs
     private <T> Set<T> extractValues(Pair<Boolean, T>... pairs) {
         return Arrays.stream(pairs)

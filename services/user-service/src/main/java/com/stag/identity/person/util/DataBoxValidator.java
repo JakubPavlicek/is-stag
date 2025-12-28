@@ -6,16 +6,30 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/// **Data Box ID Validator**
+///
+/// Utility class for validating Czech data box identifiers. Data boxes use a 7-character
+/// base32-encoded format with Luhn mod-32 checksum validation. The validator ensures
+/// both format correctness and checksum integrity.
+///
+/// @author Jakub Pavlíček
+/// @version 1.0.0
 public class DataBoxValidator {
 
+    /// Private constructor to prevent instantiation
     private DataBoxValidator() {
     }
 
-    // Allowed characters (base32 alphabet used by data boxes)
+    /// Allowed characters - base32 alphabet used by Czech data boxes
     private static final String ALPHABET = "abcdefghijkmnpqrstuvwxyz23456789";
+    /// Base for mod-32 calculation
     private static final int BASE = ALPHABET.length(); // 32
+    /// Map of characters to their numeric values
     private static final Map<Character, Integer> CHAR_TO_VALUE = buildCharToValueMap();
 
+    /// Builds the character-to-value mapping for base32 alphabet.
+    ///
+    /// @return immutable map of characters to their numeric values
     private static Map<Character, Integer> buildCharToValueMap() {
         Map<Character, Integer> map = new HashMap<>();
         for (int i = 0; i < ALPHABET.length(); i++) {
@@ -24,6 +38,11 @@ public class DataBoxValidator {
         return Collections.unmodifiableMap(map);
     }
 
+    /// Validates a data box ID using format and checksum verification.
+    ///
+    /// @param id the data box ID to validate (must be 7 characters)
+    /// @return true if valid
+    /// @throws InvalidDataBoxException if the checksum is invalid
     public static boolean isValidDataBoxId(String id) {
         if (id == null || id.length() != 7) {
             return false;
@@ -55,6 +74,10 @@ public class DataBoxValidator {
         return true;
     }
 
+    /// Computes the Luhn mod-32 checksum for a given input string.
+    ///
+    /// @param input the payload string (6 characters)
+    /// @return the computed checksum value (0-31)
     private static int computeLuhn32(String input) {
         int factor = 2;
         int sum = 0;
