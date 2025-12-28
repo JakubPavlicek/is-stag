@@ -32,6 +32,12 @@ interface ComboboxProps {
   modal?: boolean
 }
 
+/**
+ * Searchable dropdown/combobox component.
+ * - Allows users to search and select from a list of options.
+ * - Supports clearing the selection via an 'X' icon.
+ * - Built on top of Command and Popover primitives.
+ */
 export function Combobox({
   options,
   value,
@@ -58,6 +64,7 @@ export function Combobox({
               : placeholder}
           </span>
           <div className="ml-2 flex items-center gap-1">
+            {/* Clear button - only shown when a value is selected */}
             {value && (
               <div
                 role="button"
@@ -84,6 +91,7 @@ export function Combobox({
       <PopoverContent className="w-75 p-0" align="start">
         <Command
           filter={(value, search) => {
+            // Custom filter: case-insensitive substring match
             if (value.toLowerCase().includes(search.toLowerCase())) return 1
             return 0
           }}
@@ -97,6 +105,7 @@ export function Combobox({
                   key={option.value}
                   value={option.label}
                   onSelect={() => {
+                    // Toggle selection: deselect if already selected, otherwise select
                     onSelect(option.value === value ? "" : option.value)
                     setOpen(false)
                   }}

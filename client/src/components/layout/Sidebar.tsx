@@ -6,6 +6,13 @@ import { GraduationCap, Home, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
+/**
+ * The main sidebar navigation component.
+ * - Displays the application logo.
+ * - Provides navigation links (Home, My Data).
+ * - Highlights the active route.
+ * - Supports an `onNavigate` callback for mobile menu closing.
+ */
 export function Sidebar({
   className,
   onNavigate,
@@ -44,7 +51,9 @@ export function Sidebar({
               variant={isPathActive('/my-data') ? 'secondary' : 'ghost'}
               className={cn(
                 'w-full justify-start',
-                isPathActive('/my-data') ? 'bg-secondary font-semibold shadow-sm' : 'text-foreground',
+                isPathActive('/my-data')
+                  ? 'bg-secondary font-semibold shadow-sm'
+                  : 'text-foreground',
               )}
             >
               <User className={cn('mr-2 h-4 w-4', isPathActive('/my-data') && 'text-primary')} />

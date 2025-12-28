@@ -16,6 +16,11 @@ interface MinimalFieldApi {
   }
 }
 
+/**
+ * Displays validation errors for a form field.
+ * - Only shows errors if the field has been touched.
+ * - Attempts to translate error messages using the 'zod' namespace.
+ */
 function FieldInfo({ field }: Readonly<{ field: MinimalFieldApi }>) {
   const { t, i18n } = useTranslation(['translation', 'zod'])
 
@@ -25,11 +30,13 @@ function FieldInfo({ field }: Readonly<{ field: MinimalFieldApi }>) {
         <p className="text-destructive text-[0.8rem] font-medium">
           {field.state.meta.errors
             .map((error) => {
+              // Extract the message string from the error object
               const message =
                 typeof error === 'object' && error && 'message' in error
                   ? (error as { message: string }).message
                   : error
               const msgString = message as string
+              // Check if translation exists in 'zod' namespace, otherwise use raw message
               return i18n.exists(msgString, { ns: 'zod' })
                 ? t(msgString, { ns: 'zod' })
                 : msgString
@@ -41,6 +48,11 @@ function FieldInfo({ field }: Readonly<{ field: MinimalFieldApi }>) {
   )
 }
 
+/**
+ * Form field wrapper component.
+ * - Combines a label, input (children), and error display.
+ * - Highlights the label in red if there are validation errors.
+ */
 export function FormField({
   field,
   label,

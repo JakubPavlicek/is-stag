@@ -29,6 +29,12 @@ interface PersonalInfoFormProps {
   onOpenChange: (open: boolean) => void
 }
 
+/**
+ * Modal form for editing detailed personal information.
+ * - Manages titles, birth details, marital status, and place of birth.
+ * - Utilizes codelists for titles, marital status, and countries.
+ * - Validates inputs using `personalInfoSchema`.
+ */
 export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<PersonalInfoFormProps>) {
   const { t } = useTranslation()
   const { handleSubmit } = useFormSubmit()
@@ -41,6 +47,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}')
 
+  // Configure a form with initial values from the person object.
   const form = useForm({
     defaultValues: {
       titles: {
@@ -58,10 +65,12 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
       onChange: personalInfoSchema,
     },
     onSubmit: async ({ value }) => {
+      // Wrapper to handle API submission life-cycle (loading state, error handling)
       await handleSubmit(
         {
           params: { path: { personId } },
           body: {
+            // Map form values back to the API schema structure.
             titles: {
               prefix: value.titles.prefix || null,
               suffix: value.titles.suffix || null,
@@ -76,6 +85,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
         },
         {
           mutationFn: mutateAsync,
+          // Invalidate both student and person queries to ensure all views are up to date
           invalidateKeys: [
             ['get', '/students/{studentId}'],
             ['get', '/persons/{personId}'],
@@ -86,6 +96,7 @@ export function PersonalInfoForm({ person, open, onOpenChange }: Readonly<Person
     },
   })
 
+  // Reset form state when the dialog is re-opened to ensure we don't display old edits
   useEffect(() => {
     if (open) {
       form.reset({

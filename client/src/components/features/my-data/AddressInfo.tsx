@@ -9,6 +9,11 @@ import { cn } from '@/lib/utils'
 type Addresses = components['schemas']['AddressesResponse']
 type Address = components['schemas']['Address']
 
+/**
+ * Renders a single address block (permanent or temporary).
+ * - Shows placeholder UI if address is null/undefined.
+ * - Formats address parts into readable lines.
+ */
 function AddressBlock({
   title,
   address,
@@ -16,6 +21,7 @@ function AddressBlock({
 }: Readonly<{ title: string; address?: Address | null; className?: string }>) {
   const { t } = useTranslation()
 
+  // Show an empty state with a dashed border if no address data is available
   if (!address) {
     return (
       <div
@@ -33,6 +39,7 @@ function AddressBlock({
     )
   }
 
+  // Format address parts into display-ready strings, filtering out nulls/empty values
   const streetLine = [address.street, address.streetNumber].filter(Boolean).join(' ')
   const cityLine = [address.zipCode, address.municipality].filter(Boolean).join(' ')
   const metaLine = [address.district, address.country].filter(Boolean).join(' • ')
@@ -78,6 +85,11 @@ function AddressBlock({
   )
 }
 
+/**
+ * Displays user's address information.
+ * - Shows Permanent and Temporary addresses side-by-side.
+ * - Handles missing address data gracefully with visual feedback.
+ */
 export function AddressInfo({ addresses }: Readonly<{ addresses: Addresses }>) {
   const { t } = useTranslation()
 

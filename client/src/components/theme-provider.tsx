@@ -20,6 +20,12 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
+/**
+ * Provides theme management (dark/light/system) for the application.
+ * - Persists preference in `localStorage`.
+ * - Updates the `<html>` element classList to apply tailwind dark mode.
+ * - Listens for system preference changes when in 'system' mode.
+ */
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
@@ -32,8 +38,10 @@ export function ThemeProvider({
   useEffect(() => {
     const root = globalThis.document.documentElement
 
+    // Clear existing theme classes to prevent conflicts
     root.classList.remove('light', 'dark')
 
+    // If 'system' is selected, check the OS preference media query
     if (theme === 'system') {
       const systemTheme = globalThis.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
@@ -43,6 +51,7 @@ export function ThemeProvider({
       return
     }
 
+    // Otherwise apply the explicit theme choice
     root.classList.add(theme)
   }, [theme])
 
@@ -57,6 +66,10 @@ export function ThemeProvider({
   return <ThemeProviderContext.Provider value={value}>{children}</ThemeProviderContext.Provider>
 }
 
+/**
+ * Custom hook to access the theme context.
+ * Throws error if used outside `ThemeProvider`.
+ */
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext)
 

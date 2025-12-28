@@ -11,6 +11,13 @@ type SubmitOptions<TData, TError, TVariables> = {
   successMessage?: string
 }
 
+/**
+ * A custom hook to handle form submissions with standardized feedback and cache invalidation.
+ *
+ * Wraps the mutation logic in a toast promise for better UX.
+ * - Handles success (invalidates queries, router, shows success toast).
+ * - Handles errors (shows error toast, logs error).
+ */
 export function useFormSubmit() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
@@ -33,6 +40,8 @@ export function useFormSubmit() {
       }
 
       if (invalidateKeys.length > 0) {
+        // Invalidate specific query keys to ensure data consistency across the app.
+        // Using 'inactive' refetchType allows queries to be marked as stale without forcing an immediate refetching if they aren't currently visible.
         await Promise.all(
           invalidateKeys.map((key) =>
             queryClient.invalidateQueries({
@@ -43,6 +52,7 @@ export function useFormSubmit() {
         )
       }
 
+      // Invalidate the router context to trigger a reload of route loaders, ensuring the UI reflects the latest server state.
       await router.invalidate()
 
       if (onSuccess) {

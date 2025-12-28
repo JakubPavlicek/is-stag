@@ -2,6 +2,11 @@ import { useTranslation } from 'react-i18next'
 
 import { Calendar, GraduationCap, User } from 'lucide-react'
 
+/**
+ * A section displaying public features of the application.
+ * - Showcased on the landing page for unauthenticated users.
+ * - Highlights key capabilities: Portal access, Scheduling, and Academics.
+ */
 export function PublicFeatures() {
   const { t } = useTranslation()
 

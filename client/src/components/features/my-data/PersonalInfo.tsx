@@ -11,6 +11,7 @@ import { formatDate } from '@/lib/utils'
 
 type Person = components['schemas']['PersonResponse']
 
+/** Renders a single personal info item (label-value pair). */
 function PersonalItem({ label, value }: Readonly<{ label: string; value: string | null }>) {
   return (
     <div>
@@ -20,10 +21,15 @@ function PersonalItem({ label, value }: Readonly<{ label: string; value: string 
   )
 }
 
+/**
+ * Displays user's personal information (titles, birth details, citizenship, etc.).
+ * - Includes an edit button that opens a modal form (`PersonalInfoForm`).
+ */
 export function PersonalInfo({ person }: Readonly<{ person: Person }>) {
   const { t, i18n } = useTranslation()
   const [open, setOpen] = useState(false)
 
+  // Construct citizenship display string (country + qualifier if available)
   const citizenship = [person.citizenship?.country, person.citizenship?.qualifier]
     .filter(Boolean)
     .join(' ')

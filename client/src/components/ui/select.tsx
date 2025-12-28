@@ -4,12 +4,20 @@ import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
+/** Select root component - wraps Radix UI Select.Root. */
 const Select = SelectPrimitive.Root
 
+/** Select group component - groups select items with an optional label. */
 const SelectGroup = SelectPrimitive.Group
 
+/** Select value component - displays the currently selected value. */
 const SelectValue = SelectPrimitive.Value
 
+/**
+ * Trigger button select.
+ * - Opens the dropdown when clicked.
+ * - Displays the current value or placeholder.
+ */
 const SelectTrigger = React.forwardRef<
   React.ComponentRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
@@ -30,6 +38,9 @@ const SelectTrigger = React.forwardRef<
 ))
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
 
+/**
+ * Scroll up button for long select lists.
+ */
 const SelectScrollUpButton = React.forwardRef<
   React.ComponentRef<typeof SelectPrimitive.ScrollUpButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
@@ -47,6 +58,7 @@ const SelectScrollUpButton = React.forwardRef<
 ))
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
 
+/** Scroll down button for long select lists. */
 const SelectScrollDownButton = React.forwardRef<
   React.ComponentRef<typeof SelectPrimitive.ScrollDownButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
@@ -65,6 +77,11 @@ const SelectScrollDownButton = React.forwardRef<
 SelectScrollDownButton.displayName =
   SelectPrimitive.ScrollDownButton.displayName
 
+/**
+ * Select a dropdown content container.
+ * - Rendered in a portal with animated entrance/exit.
+ * - Includes scroll buttons for long lists.
+ */
 const SelectContent = React.forwardRef<
   React.ComponentRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
@@ -97,6 +114,7 @@ const SelectContent = React.forwardRef<
 ))
 SelectContent.displayName = SelectPrimitive.Content.displayName
 
+/** Select label for grouped items. */
 const SelectLabel = React.forwardRef<
   React.ComponentRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
@@ -109,6 +127,11 @@ const SelectLabel = React.forwardRef<
 ))
 SelectLabel.displayName = SelectPrimitive.Label.displayName
 
+/**
+ * Item select component.
+ * - Individual option in the dropdown.
+ * - Shows a checkmark when selected.
+ */
 const SelectItem = React.forwardRef<
   React.ComponentRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
@@ -131,6 +154,7 @@ const SelectItem = React.forwardRef<
 ))
 SelectItem.displayName = SelectPrimitive.Item.displayName
 
+/** Select separator - divides groups of items. */
 const SelectSeparator = React.forwardRef<
   React.ComponentRef<typeof SelectPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>

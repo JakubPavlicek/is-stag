@@ -16,10 +16,17 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
 })
 
+/**
+ * The root component layout.
+ * - Displays the sidebar on large screens and header on all screens.
+ * - Renders child routes via `<Outlet />`.
+ * - Invalidates router cache when the language changes to ensure fresh localized data.
+ */
 function RootComponent() {
   const { i18n } = useTranslation()
   const router = useRouter()
 
+  // Invalidate all router loaders when the language changes to refetch localized data
   useEffect(() => {
     router.invalidate()
   }, [i18n.language, router])
@@ -39,4 +46,3 @@ function RootComponent() {
     </div>
   )
 }
-

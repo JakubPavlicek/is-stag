@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+/** Validation schema for user contact information. */
 export const contactSchema = z.object({
   email: z.string().email('invalid_email').or(z.literal('')),
   phone: z
@@ -19,6 +20,7 @@ export const contactSchema = z.object({
     .or(z.literal('')),
 })
 
+/** Validation schema for bank account details. */
 export const bankAccountSchema = z.object({
   accountNumberPrefix: z.string().max(6).regex(/^\d+$/, 'digits_only').or(z.literal('')),
   accountNumberSuffix: z.string().max(10).regex(/^\d+$/, 'digits_only').or(z.literal('')),
@@ -27,6 +29,7 @@ export const bankAccountSchema = z.object({
   holderAddress: z.string().max(255).or(z.literal('')),
 })
 
+/** Validation schema for personal information. */
 export const personalInfoSchema = z.object({
   titles: z.object({
     prefix: z.string().max(240).or(z.literal('')),

@@ -5,6 +5,11 @@ import { GraduationCap, LogIn } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
+/**
+ * The hero section of the landing page.
+ * - Displays the application title and subtitle.
+ * - Shows a login button if the user is not authenticated.
+ */
 export function HeroSection() {
   const { t } = useTranslation()
   const { keycloak } = useKeycloak()

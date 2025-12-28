@@ -30,11 +30,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+/**
+ * Main App Component.
+ * - Handles Keycloak initialization state.
+ * - Shows a loader while checking authentication status.
+ * - Sets up QueryClient, Router, and Toast notifications.
+ */
 function App() {
   const { initialized } = useKeycloak()
   const { t } = useTranslation()
   const { theme } = useTheme()
 
+  // Wait for Keycloak to finish initialization (checking auth status)
   if (!initialized) {
     return (
       <div className="bg-background flex h-screen flex-col items-center justify-center gap-2">

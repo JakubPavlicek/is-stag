@@ -12,6 +12,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 type Banking = components['schemas']['BankAccountsResponse']
 type Account = components['schemas']['BankAccount']
 
+/**
+ * Renders a single bank account block (standard or Euro account).
+ * - Shows placeholder UI if an account is null/undefined.
+ * - Displays account number, bank details, IBAN, and holder information.
+ * - Optionally allows editing via the provided `onEdit` callback.
+ */
 function AccountBlock({
   title,
   account,
@@ -25,6 +31,7 @@ function AccountBlock({
 }>) {
   const { t } = useTranslation()
 
+  // Show empty state with edit button if no account data exists
   if (!account) {
     return (
       <div className="text-muted-foreground/50 flex flex-col gap-2 rounded-xl border border-dashed p-4">
@@ -44,6 +51,7 @@ function AccountBlock({
     )
   }
 
+  // Construct the full account number by joining prefix and suffix (if they exist)
   const fullAccount = [account.accountNumberPrefix, account.accountNumberSuffix]
     .filter(Boolean)
     .join('-')
@@ -102,6 +110,11 @@ function AccountBlock({
   )
 }
 
+/**
+ * Displays user's banking information (Standard and Euro accounts).
+ * - Allows editing of the standard account via `BankInfoForm`.
+ * - Shows account details like number, bank code, IBAN, and holder info.
+ */
 export function BankInfo({ banking, personId }: Readonly<{ banking: Banking; personId: number }>) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)

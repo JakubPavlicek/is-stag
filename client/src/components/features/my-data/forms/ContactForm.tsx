@@ -28,13 +28,20 @@ interface ContactFormProps {
   onOpenChange: (open: boolean) => void
 }
 
+/**
+ * Modal form for editing user contact information (email, phone, etc.).
+ * - Validates inputs with `contactSchema`.
+ * - Handles success/error feedback.
+ */
 export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<ContactFormProps>) {
   const { t } = useTranslation()
   const { handleSubmit } = useFormSubmit()
 
   const { mutateAsync } = $user.useMutation('patch', '/persons/{personId}')
 
+  // Initialize the form with TanStack Form
   const form = useForm({
+    // Map initial API data to form state fields
     defaultValues: {
       email: contact.email ?? '',
       phone: contact.phone ?? '',
@@ -45,11 +52,13 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
       onChange: contactSchema,
     },
     onSubmit: async ({ value }) => {
+      // Use helper to handle submission state, error catching, and success notifications
       await handleSubmit(
         {
           params: { path: { personId } },
           body: {
             contact: {
+              // Convert empty strings back to null for the API if necessary.
               email: value.email || null,
               phone: value.phone || null,
               mobile: value.mobile || null,
@@ -59,6 +68,7 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
         },
         {
           mutationFn: mutateAsync,
+          // Invalidate the user data query to refresh the UI immediately
           invalidateKeys: [['get', '/persons/{personId}']],
           onSuccess: () => onOpenChange(false),
         },
@@ -66,6 +76,8 @@ export function ContactForm({ personId, contact, open, onOpenChange }: Readonly<
     },
   })
 
+  // Reset form values whenever the modal opens to ensure we don't show stale state
+  // if the user closed the modal without saving previously modified data.
   useEffect(() => {
     if (open) {
       form.reset({

@@ -3,10 +3,21 @@ import * as PopoverPrimitive from "@radix-ui/react-popover"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Popover root component - wraps Radix UI Popover.Root.
+ * - Manages the open/closed state of the popover.
+ */
 const Popover = PopoverPrimitive.Root
 
+/** Popover trigger - element that opens the popover when clicked. */
 const PopoverTrigger = PopoverPrimitive.Trigger
 
+/**
+ * Popover content container.
+ * - Positioned relative to the trigger element.
+ * - Rendered in a portal with animated entrance/exit.
+ * - Used for tooltips, dropdowns, and contextual menus.
+ */
 const PopoverContent = React.forwardRef<
   React.ComponentRef<typeof PopoverPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>

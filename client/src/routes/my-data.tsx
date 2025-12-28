@@ -13,16 +13,25 @@ import { loadStudentData } from '@/lib/loaders'
 export const Route = createFileRoute('/my-data')({
   component: MyData,
   loader: async ({ context: { queryClient } }) => {
+    // Extract student ID from Keycloak token
     const studentId = keycloak.tokenParsed?.studentId
 
+    // Return null values if no student ID is present (unauthenticated or missing data)
     if (!studentId) {
       return { student: null, person: null, addresses: null, banking: null }
     }
 
+    // Pre-fetch student data before rendering the page
     return loadStudentData(queryClient, studentId)
   },
 })
 
+/**
+ * The 'My Data' page component.
+ * - Displays comprehensive student information.
+ * - Sections: Basic Info, Addresses, Contact, Personal Info, Bank Info.
+ * - Data is pre-fetched via the route loader.
+ */
 function MyData() {
   const { t } = useTranslation()
   const { student, person, addresses, banking } = Route.useLoaderData()

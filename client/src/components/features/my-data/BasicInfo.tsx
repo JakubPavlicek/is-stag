@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils'
 
 type Student = components['schemas']['StudentResponse']
 
+/** Renders a single basic info item (label-value pair). */
 function BasicItem({
   label,
   value,
@@ -19,9 +20,14 @@ function BasicItem({
   )
 }
 
+/**
+ * Displays basic student information.
+ * - Shows name (with titles), personal number (student ID), study program, and field of study.
+ */
 export function BasicInfo({ student }: Readonly<{ student: Student }>) {
   const { t } = useTranslation()
 
+  // Construct full name with academic titles (prefix + name + suffix), filtering out empty values
   const fullTitle = [
     student.titles?.prefix,
     student.firstName,

@@ -10,6 +10,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 type Contact = components['schemas']['Contact']
 
+/**
+ * Renders a single contact item with an icon.
+ * - Displays label and value in a card layout.
+ */
 function ContactItem({
   icon: Icon,
   label,
@@ -30,6 +34,10 @@ function ContactItem({
   )
 }
 
+/**
+ * Displays user's contact information (Email, Phone, Mobile, DataBox).
+ * - Allows editing via a modal form (`ContactForm`).
+ */
 export function ContactInfo({
   contact,
   personId,

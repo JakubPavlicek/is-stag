@@ -20,15 +20,24 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/s
 import { ModeToggle } from '../mode-toggle'
 import { Sidebar } from './Sidebar'
 
+/**
+ * Global application header.
+ * - Contains the mobile sidebar toggle.
+ * - Theme toggle (ModeToggle).
+ * - Language switcher (Globe icon).
+ * - User profile dropdown (Login/Logout, User info).
+ */
 export function Header() {
   const { t, i18n } = useTranslation()
   const { keycloak } = useKeycloak()
   const [isOpen, setIsOpen] = useState(false)
 
+  // Switch i18n language dynamically
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng)
   }
 
+  // Extract user initials for the avatar fallback (e.g. "John Doe" -> "JD")
   const userInitials = keycloak.tokenParsed?.name?.substring(0, 2).toUpperCase() || 'U'
 
   return (

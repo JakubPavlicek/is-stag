@@ -2,6 +2,11 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
+/**
+ * Standard input component with consistent styling.
+ * - Wraps the native HTML input element.
+ * - Includes focus states, disabled states, and file input styling.
+ */
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   ({ className, type, ...props }, ref) => {
     return (

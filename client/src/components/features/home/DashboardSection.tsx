@@ -9,6 +9,12 @@ interface DashboardSectionProps {
   userName: string
 }
 
+/**
+ * The main dashboard section for authenticated users.
+ * - Displays a welcome message.
+ * - Provides quick access cards to key features (My Data, Study, Schedule, News).
+ * - Currently, only "My Data" is active; others are placeholders marked as "Coming Soon".
+ */
 export function DashboardSection({ userName }: Readonly<DashboardSectionProps>) {
   const { t } = useTranslation()
 

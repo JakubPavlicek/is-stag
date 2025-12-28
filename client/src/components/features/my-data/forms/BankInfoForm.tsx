@@ -30,6 +30,12 @@ interface BankInfoFormProps {
   onOpenChange: (open: boolean) => void
 }
 
+/**
+ * A modal form to edit a user's bank account details.
+ * - Validates input using `bankAccountSchema`.
+ * - Fetches bank codes from 'CIS_BANK' codelist.
+ * - Submits changes via `useFormSubmit` which handles cache invalidation and user feedback.
+ */
 export function BankInfoForm({
   personId,
   account,
@@ -59,6 +65,7 @@ export function BankInfoForm({
         {
           params: { path: { personId } },
           body: {
+            // Map form values to API payload, converting empty strings to null where necessary.
             bankAccount: {
               accountNumberPrefix: value.accountNumberPrefix || null,
               accountNumberSuffix: value.accountNumberSuffix || null,
@@ -70,6 +77,7 @@ export function BankInfoForm({
         },
         {
           mutationFn: mutateAsync,
+          // Invalidate the 'get banking' query to refresh the displayed data immediately after saving.
           invalidateKeys: [['get', '/persons/{personId}/banking']],
           onSuccess: () => onOpenChange(false),
         },

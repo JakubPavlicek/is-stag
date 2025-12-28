@@ -9,9 +9,16 @@ export const Route = createFileRoute('/')({
   component: Index,
 })
 
+/**
+ * The homepage route component.
+ * - Always shows the `HeroSection`.
+ * - If authenticated: shows `DashboardSection` with user content.
+ * - If not authenticated: shows `PublicFeatures` marketing content.
+ */
 function Index() {
   const { keycloak } = useKeycloak()
 
+  // Extract the user's first name or fallback to username or "Student"
   const userName =
     keycloak.tokenParsed?.given_name || keycloak.tokenParsed?.preferred_username || 'Student'
 
