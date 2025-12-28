@@ -36,7 +36,7 @@ declare module '@tanstack/react-router' {
  * - Shows a loader while checking authentication status.
  * - Sets up QueryClient, Router, and Toast notifications.
  */
-function App() {
+export function App() {
   const { initialized } = useKeycloak()
   const { t } = useTranslation()
   const { theme } = useTheme()
