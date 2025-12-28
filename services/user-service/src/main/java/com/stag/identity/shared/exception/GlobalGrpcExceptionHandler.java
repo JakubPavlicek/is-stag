@@ -1,10 +1,10 @@
 package com.stag.identity.shared.exception;
 
 import com.stag.identity.person.exception.PersonNotFoundException;
+import grpcstarter.server.feature.exceptionhandling.annotation.GrpcAdvice;
+import grpcstarter.server.feature.exceptionhandling.annotation.GrpcExceptionHandler;
 import io.grpc.Status;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.server.advice.GrpcAdvice;
-import net.devh.boot.grpc.server.advice.GrpcExceptionHandler;
 
 @Slf4j
 @GrpcAdvice

@@ -22,27 +22,23 @@ import com.stag.platform.codelist.v1.GetPersonProfileUpdateDataRequest;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 public class CodelistClient {
 
-    @GrpcClient("codelist-service")
-    private CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub;
+    private final CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub;
 
-    private CodelistServiceGrpc.CodelistServiceBlockingStub codelistStub() {
-        return codelistServiceStub.withDeadlineAfter(1, TimeUnit.SECONDS);
+    public CodelistClient(CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub) {
+        this.codelistServiceStub = codelistServiceStub;
     }
 
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public CodelistMeaningsLookupData getSimpleProfileData(SimpleProfileView simpleProfile, String language) {
         var request = CodelistMapper.INSTANCE.toCodelistValuesRequest(simpleProfile, language);
-        var response = codelistStub().getCodelistValues(request);
+        var response = codelistServiceStub.getCodelistValues(request);
 
         return CodelistMapper.INSTANCE.toCodelistMeaningsData(response);
     }
@@ -59,7 +55,7 @@ public class CodelistClient {
             return null;
         }
 
-        var response = codelistStub().getPersonProfileData(request);
+        var response = codelistServiceStub.getPersonProfileData(request);
         return CodelistMapper.INSTANCE.toPersonProfileData(response);
     }
 
@@ -75,7 +71,7 @@ public class CodelistClient {
             return new ProfileUpdateLookupData(null, null, null, null);
         }
 
-        var response = codelistStub().getPersonProfileUpdateData(request);
+        var response = codelistServiceStub.getPersonProfileUpdateData(request);
         return CodelistMapper.INSTANCE.toProfileUpdateLookupData(response);
     }
 
@@ -91,7 +87,7 @@ public class CodelistClient {
             return null;
         }
 
-        var response = codelistStub().getPersonAddressData(request);
+        var response = codelistServiceStub.getPersonAddressData(request);
         return CodelistMapper.INSTANCE.toPersonAddressData(response, addressView);
     }
 
@@ -107,7 +103,7 @@ public class CodelistClient {
             return null;
         }
 
-        var response = codelistStub().getPersonBankingData(request);
+        var response = codelistServiceStub.getPersonBankingData(request);
         return CodelistMapper.INSTANCE.toPersonBankingData(response);
     }
 
@@ -123,7 +119,7 @@ public class CodelistClient {
             return null;
         }
 
-        var response = codelistStub().getPersonEducationData(request);
+        var response = codelistServiceStub.getPersonEducationData(request);
         return CodelistMapper.INSTANCE.toPersonEducationData(response);
     }
 

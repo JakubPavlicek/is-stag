@@ -7,10 +7,10 @@ import com.stag.platform.education.exception.HighSchoolFieldOfStudyNotFoundExcep
 import com.stag.platform.education.exception.HighSchoolNotFoundException;
 import com.stag.platform.entry.exception.CodelistEntriesNotFoundException;
 import com.stag.platform.entry.exception.CodelistMeaningsNotFoundException;
+import grpcstarter.server.feature.exceptionhandling.annotation.GrpcAdvice;
+import grpcstarter.server.feature.exceptionhandling.annotation.GrpcExceptionHandler;
 import io.grpc.Status;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.server.advice.GrpcAdvice;
-import net.devh.boot.grpc.server.advice.GrpcExceptionHandler;
 
 @Slf4j
 @GrpcAdvice

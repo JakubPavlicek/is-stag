@@ -18,10 +18,10 @@ import com.stag.platform.codelist.v1.GetPersonProfileUpdateDataResponse;
 import com.stag.platform.education.repository.projection.HighSchoolAddressProjection;
 import com.stag.platform.entry.service.dto.PersonProfileLowValues;
 import com.stag.platform.shared.grpc.mapper.CodelistMapper;
+import grpcstarter.server.GrpcService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.server.service.GrpcService;
 
 import java.util.List;
 import java.util.Map;

@@ -6,21 +6,18 @@ import com.stag.academics.student.v1.StudentServiceGrpc;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 public class StudentClient {
 
-    @GrpcClient("student-service")
-    private StudentServiceGrpc.StudentServiceBlockingStub studentServiceStub;
+    private final StudentServiceGrpc.StudentServiceBlockingStub studentServiceStub;
 
-    private StudentServiceGrpc.StudentServiceBlockingStub studentStub() {
-        return studentServiceStub.withDeadlineAfter(1, TimeUnit.SECONDS);
+    public StudentClient(StudentServiceGrpc.StudentServiceBlockingStub studentServiceStub) {
+        this.studentServiceStub = studentServiceStub;
     }
 
     @CircuitBreaker(name = "student-service")
@@ -29,7 +26,7 @@ public class StudentClient {
         var request = GetStudentIdsRequest.newBuilder()
                                           .setPersonId(personId)
                                           .build();
-        var response = studentStub().getStudentIds(request);
+        var response = studentServiceStub.getStudentIds(request);
         return response.getStudentIdsList();
     }
 
@@ -39,7 +36,7 @@ public class StudentClient {
         var request = GetStudentPersonIdRequest.newBuilder()
                                                .setStudentId(studentId)
                                                .build();
-        var response = studentStub().getStudentPersonId(request);
+        var response = studentServiceStub.getStudentPersonId(request);
         return response.getPersonId();
     }
 

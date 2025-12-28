@@ -54,12 +54,12 @@
 
         <!-- gRPC -->
         <dependency>
-            <groupId>net.devh</groupId>
-            <artifactId>grpc-server-spring-boot-starter</artifactId>
+            <groupId>io.github.danielliu1123</groupId>
+            <artifactId>grpc-server-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.stag</groupId>
-            <artifactId>grpc-common</artifactId>
+            <groupId>io.github.danielliu1123</groupId>
+            <artifactId>grpc-starter-protovalidate</artifactId>
         </dependency>
 
         <!-- OpenAPI -->
@@ -132,6 +132,11 @@
             <artifactId>spring-boot-starter-security-oauth2-resource-server-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-testing-proto</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -168,6 +173,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <!-- gRPC Protobuf Plugin -->
+            <plugin>
+                <groupId>io.github.ascopes</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

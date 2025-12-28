@@ -6,10 +6,10 @@ import com.stag.academics.student.v1.GetStudentIdsResponse;
 import com.stag.academics.student.v1.GetStudentPersonIdRequest;
 import com.stag.academics.student.v1.GetStudentPersonIdResponse;
 import com.stag.academics.student.v1.StudentServiceGrpc;
+import grpcstarter.server.GrpcService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.server.service.GrpcService;
 
 import java.util.List;
 

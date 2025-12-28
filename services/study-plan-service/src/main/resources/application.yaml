@@ -8,14 +8,24 @@ server:
 grpc:
   server:
     port: 9050
+    reflection:
+      enabled: true
   client:
-    codelist-service:
-      address: ${GRPC_CLIENT_CODELIST-SERVICE_ADDRESS:static://codelist-service:9010}
-      negotiation-type: plaintext
-      enable-keep-alive: true
-      keep-alive-time: 30s
-      keep-alive-timeout: 5s
-      max-inbound-message-size: 4MB
+    channels:
+      - authority: ${GRPC_CLIENT_CODELIST-SERVICE_ADDRESS:codelist-service:9010}
+        classes:
+          - com.stag.platform.codelist.v1.CodelistServiceGrpc.CodelistServiceBlockingStub
+        compression: gzip
+        max-inbound-message-size:
+          bytes: 4194304 # 4MB
+        deadline: 1000 # 1s
+        retry:
+          enabled: false # Handled by Resilience4j
+    clients:
+      - com.stag.platform.codelist.v1.CodelistServiceGrpc.CodelistServiceBlockingStub
+    enabled: true
+  validation:
+    enabled: true
 
 logging:
   level:
@@ -165,4 +175,4 @@ spring:
       port: 6379
       password: redis
 
-GRPC_CLIENT_CODELIST-SERVICE_ADDRESS: static://localhost:9010
+GRPC_CLIENT_CODELIST-SERVICE_ADDRESS: localhost:9010

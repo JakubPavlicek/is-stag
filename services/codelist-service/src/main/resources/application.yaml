@@ -8,6 +8,11 @@ server:
 grpc:
   server:
     port: 9010
+    reflection:
+      enabled: true
+  validation:
+    server:
+      enabled: true
 
 #logging:
 #  level:

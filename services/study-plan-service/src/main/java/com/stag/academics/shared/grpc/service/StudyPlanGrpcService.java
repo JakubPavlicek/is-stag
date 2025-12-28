@@ -6,10 +6,10 @@ import com.stag.academics.studyplan.v1.GetStudyProgramAndFieldRequest;
 import com.stag.academics.studyplan.v1.GetStudyProgramAndFieldResponse;
 import com.stag.academics.studyplan.v1.StudyPlanServiceGrpc;
 import com.stag.academics.studyprogram.repository.projection.StudyProgramView;
+import grpcstarter.server.GrpcService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.server.service.GrpcService;
 
 import java.util.concurrent.CompletableFuture;
 

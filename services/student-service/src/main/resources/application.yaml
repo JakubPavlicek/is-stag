@@ -8,21 +8,34 @@ server:
 grpc:
   server:
     port: 9030
+    reflection:
+      enabled: true
   client:
-    user-service:
-      address: ${GRPC_CLIENT_USER-SERVICE_ADDRESS:static://user-service:9020}
-      negotiation-type: plaintext
-      enable-keep-alive: true
-      keep-alive-time: 30s
-      keep-alive-timeout: 5s
-      max-inbound-message-size: 4MB
-    study-plan-service:
-      address: ${GRPC_CLIENT_STUDY-PLAN-SERVICE_ADDRESS:static://study-plan-service:9050}
-      negotiation-type: plaintext
-      enable-keep-alive: true
-      keep-alive-time: 30s
-      keep-alive-timeout: 5s
-      max-inbound-message-size: 4MB
+    channels:
+      - authority: ${GRPC_CLIENT_USER-SERVICE_ADDRESS:user-service:9020}
+        classes:
+          - com.stag.identity.person.v1.PersonServiceGrpc.PersonServiceBlockingStub
+        compression: gzip
+        max-inbound-message-size:
+          bytes: 4194304 # 4MB
+        deadline: 1000 # 1s
+        retry:
+          enabled: false # Handled by Resilience4j
+      - authority: ${GRPC_CLIENT_STUDY-PLAN-SERVICE_ADDRESS:study-plan-service:9050}
+        classes:
+          - com.stag.academics.studyplan.v1.StudyPlanServiceGrpc.StudyPlanServiceBlockingStub
+        compression: gzip
+        max-inbound-message-size:
+          bytes: 4194304 # 4MB
+        deadline: 1000 # 1s
+        retry:
+          enabled: false # Handled by Resilience4j
+    clients:
+      - com.stag.identity.person.v1.PersonServiceGrpc.PersonServiceBlockingStub
+      - com.stag.academics.studyplan.v1.StudyPlanServiceGrpc.StudyPlanServiceBlockingStub
+    enabled: true
+  validation:
+    enabled: true
 
 #logging:
 #  level:
@@ -183,5 +196,5 @@ spring:
       port: 6379
       password: redis
 
-GRPC_CLIENT_USER-SERVICE_ADDRESS: static://localhost:9020
-GRPC_CLIENT_STUDY-PLAN-SERVICE_ADDRESS: static://localhost:9050
+GRPC_CLIENT_USER-SERVICE_ADDRESS: localhost:9020
+GRPC_CLIENT_STUDY-PLAN-SERVICE_ADDRESS: localhost:9050

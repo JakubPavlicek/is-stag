@@ -6,10 +6,10 @@ import com.stag.identity.person.v1.GetPersonSimpleProfileRequest;
 import com.stag.identity.person.v1.GetPersonSimpleProfileResponse;
 import com.stag.identity.person.v1.PersonServiceGrpc;
 import com.stag.identity.shared.grpc.mapper.PersonMapper;
+import grpcstarter.server.GrpcService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.server.service.GrpcService;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -43,7 +43,7 @@
         <!-- gRPC -->
         <grpc.version>1.78.0</grpc.version>
         <protobuf-java.version>4.33.2</protobuf-java.version>
-        <grpc-starter.version>3.1.0.RELEASE</grpc-starter.version>
+        <grpc-starter.version>4.0.1</grpc-starter.version>
         <protovalidate.version>1.1.0</protovalidate.version>
         <protobuf-maven-plugin.version>4.1.1</protobuf-maven-plugin.version>
 
@@ -66,9 +66,6 @@
     </properties>
 
     <modules>
-        <!-- Shared modules -->
-        <module>shared/grpc-common</module>
-
         <!-- Infrastructure services -->
         <module>api-gateway</module>
 
@@ -92,36 +89,11 @@
 
             <!-- gRPC -->
             <dependency>
-                <groupId>io.grpc</groupId>
-                <artifactId>grpc-bom</artifactId>
-                <version>${grpc.version}</version>
+                <groupId>io.github.danielliu1123</groupId>
+                <artifactId>grpc-starter-dependencies</artifactId>
+                <version>${grpc-starter.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.devh</groupId>
-                <artifactId>grpc-spring-boot-starter</artifactId>
-                <version>${grpc-starter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.devh</groupId>
-                <artifactId>grpc-server-spring-boot-starter</artifactId>
-                <version>${grpc-starter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.protobuf</groupId>
-                <artifactId>protobuf-java</artifactId>
-                <version>${protobuf-java.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>build.buf</groupId>
-                <artifactId>protovalidate</artifactId>
-                <version>${protovalidate.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.stag</groupId>
-                <artifactId>grpc-common</artifactId>
-                <version>${project.version}</version>
             </dependency>
 
             <!-- Hibernate ORM Processor for JPA Metamodel generation -->
@@ -334,6 +306,7 @@
                         <sourceDirectories>
                             <sourceDirectory>${maven.multiModuleProjectDirectory}/proto</sourceDirectory>
                         </sourceDirectories>
+                        <registerAsCompilationRoot>true</registerAsCompilationRoot>
                         <binaryMavenPlugins>
                             <binaryMavenPlugin>
                                 <groupId>io.grpc</groupId>
