@@ -38,6 +38,10 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final String INVALID_VALUE = "Invalid Value";
+    private static final String SERVICE_UNAVAILABLE = "Service is currently unavailable. Please try again later.";
+    private static final String REQUEST_RAISED = "Request {} raised";
+
     private String getRequestURI(WebRequest request) {
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
         return servletWebRequest.getRequest().getRequestURI();
@@ -58,7 +62,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn(ex.getMessage());
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        problemDetail.setTitle("Invalid Value");
+        problemDetail.setTitle(INVALID_VALUE);
 
         return problemDetail;
     }
@@ -80,10 +84,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         @NonNull HttpStatusCode status,
         @NonNull WebRequest request
     ) {
-        log.error("Request {} raised", getRequestURI(request), ex);
+        log.error(REQUEST_RAISED, getRequestURI(request), ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
-        problemDetail.setTitle("Invalid Value");
+        problemDetail.setTitle(INVALID_VALUE);
         problemDetail.setProperty("errors", getErrors(ex));
 
         return ResponseEntity.of(problemDetail)
@@ -103,10 +107,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ProblemDetail handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
-        log.error("Request {} raised", request.getRequestURI(), e);
+        log.error(REQUEST_RAISED, request.getRequestURI(), e);
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problemDetail.setTitle("Invalid Value");
+        problemDetail.setTitle(INVALID_VALUE);
         problemDetail.setProperty("violations", getConstraintViolations(e));
 
         return problemDetail;
@@ -128,10 +132,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         @NonNull HttpStatusCode status,
         @NonNull WebRequest request
     ) {
-        log.error("Request {} raised", getRequestURI(request), ex);
+        log.error(REQUEST_RAISED, getRequestURI(request), ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, ex.getMostSpecificCause().getMessage());
-        problemDetail.setTitle("Invalid Value");
+        problemDetail.setTitle(INVALID_VALUE);
 
         return ResponseEntity.of(problemDetail).build();
     }
@@ -140,10 +144,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail handleCallNotPermittedException(CallNotPermittedException ex) {
         log.error("Circuit breaker is open", ex);
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-            HttpStatus.SERVICE_UNAVAILABLE,
-            "Service is currently unavailable. Please try again later."
-        );
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, SERVICE_UNAVAILABLE);
         problemDetail.setTitle("Service Unavailable");
 
         return problemDetail;
@@ -177,7 +178,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleException(Exception ex, HttpServletRequest request) {
-        log.error("Request {} raised", request.getRequestURI(), ex);
+        log.error(REQUEST_RAISED, request.getRequestURI(), ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
         problemDetail.setTitle("Internal Server Error");
@@ -194,8 +195,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             case ALREADY_EXISTS -> new GrpcProblemDetail(HttpStatus.CONFLICT, "Already Exists", "Already exists");
             case FAILED_PRECONDITION -> new GrpcProblemDetail(HttpStatus.PRECONDITION_FAILED, "Failed Precondition", "Failed precondition");
             case UNIMPLEMENTED -> new GrpcProblemDetail(HttpStatus.NOT_IMPLEMENTED, "Unimplemented", "Unimplemented");
-            case UNAVAILABLE -> new GrpcProblemDetail(HttpStatus.SERVICE_UNAVAILABLE, "Service Unavailable", "Service is currently unavailable. Please try again later.");
-            case DEADLINE_EXCEEDED -> new GrpcProblemDetail(HttpStatus.GATEWAY_TIMEOUT, "Gateway Timeout", "Service is currently unavailable. Please try again later.");
+            case UNAVAILABLE -> new GrpcProblemDetail(HttpStatus.SERVICE_UNAVAILABLE, "Service Unavailable", SERVICE_UNAVAILABLE);
+            case DEADLINE_EXCEEDED -> new GrpcProblemDetail(HttpStatus.GATEWAY_TIMEOUT, "Gateway Timeout", SERVICE_UNAVAILABLE);
             default -> new GrpcProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", "Internal server error");
         };
     }

@@ -3,6 +3,7 @@ package com.stag.identity.shared.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import oracle.jdbc.OracleConnection;
+import oracle.jdbc.SwitchableBugFix;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -60,7 +61,7 @@ public class OracleProxyDataSourceConfig {
         config.addDataSourceProperty(OracleConnection.CONNECTION_PROPERTY_DEFAULT_ROW_PREFETCH, "500");
         config.addDataSourceProperty(OracleConnection.CONNECTION_PROPERTY_DEFAULT_CONNECTION_VALIDATION, "LOCAL");
         config.addDataSourceProperty(OracleConnection.CONNECTION_PROPERTY_IMPLICIT_STATEMENT_CACHE_SIZE, "200");
-        config.addDataSourceProperty(OracleConnection.CONNECTION_PROPERTY_AUTO_COMMIT_SPEC_COMPLIANT, "false");
+        config.addDataSourceProperty(OracleConnection.CONNECTION_PROPERTY_DISABLED_BUG_FIXES, SwitchableBugFix.BugNumber.BUG_11891661);
 
         return config;
     }
