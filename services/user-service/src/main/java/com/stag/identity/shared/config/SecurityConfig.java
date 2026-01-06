@@ -28,7 +28,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    /// Swagger UI and OpenAPI documentation publuc endpoints
+    /// Swagger UI and OpenAPI documentation public endpoints
     private static final String[] SWAGGER_URLS = {
         "/swagger-ui.html",
         "/swagger-ui/**",

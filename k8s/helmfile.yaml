@@ -171,7 +171,7 @@ releases:
   # ========================================
   - name: grafana
     chart: grafana/grafana
-    version: 10.4.0
+    version: 10.5.3
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/grafana/values.yaml
@@ -191,7 +191,7 @@ releases:
 
   - name: prometheus
     chart: prometheus-community/prometheus
-    version: 27.52.0
+    version: 28.1.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/prometheus/values.yaml

@@ -12,16 +12,23 @@ services:
       KC_HTTP_RELATIVE_PATH: /auth
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
+      KC_TELEMETRY_SERVICE_NAME: keycloak
+      KC_TELEMETRY_RESOURCE_ATTRIBUTES: service.version=1.0.0,environment=dev
 
       # OpenTelemetry Tracing
       KC_TRACING_ENABLED: true
       KC_TRACING_ENDPOINT: http://otel:4317
       KC_TRACING_PROTOCOL: grpc
       KC_TRACING_COMPRESSION: gzip
-      KC_TRACING_SERVICE_NAME: keycloak
-      KC_TRACING_RESOURCE_ATTRIBUTES: service.name=keycloak,service.version=26.4.7,environment=dev
       KC_TRACING_SAMPLER_TYPE: parentbased_traceidratio
       KC_TRACING_SAMPLER_RATIO: 1.0
+
+      # OpenTelemetry Logs
+      KC_TELEMETRY_LOGS_ENABLED: true
+      KC_TELEMETRY_LOGS_ENDPOINT: http://otel:4317
+      KC_TELEMETRY_LOGS_PROTOCOL: grpc
+      KC_TELEMETRY_LOGS_LEVEL: DEBUG
+      KC_LOG_MDC_ENABLED: true
     healthcheck:
       test: [
         "CMD-SHELL",
@@ -43,7 +50,7 @@ services:
         condition: service_started
     ports:
       - "8180:8080"
-    command: start-dev --import-realm
+    command: start-dev --import-realm --features=opentelemetry-logs
     networks:
       - is-stag-frontend
       - is-stag-backend

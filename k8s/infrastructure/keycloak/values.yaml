@@ -8,6 +8,7 @@ command:
   - "/opt/keycloak/bin/kc.sh"
   - "start"
   - "--import-realm"
+  - "--features=opentelemetry-logs"
 
 http:
   relativePath: /auth
@@ -53,6 +54,10 @@ extraEnv: |
   - name: KC_HOSTNAME_STRICT_HTTPS
     value: "true"
   
+  # OpenTelemetry
+  - name: KC_TELEMETRY_SERVICE_NAME
+    value: "keycloak"
+
   # OpenTelemetry Tracing
   - name: KC_TRACING_ENABLED
     value: "true"
@@ -62,9 +67,19 @@ extraEnv: |
     value: "grpc"
   - name: KC_TRACING_COMPRESSION
     value: "gzip"
-  - name: KC_TRACING_SERVICE_NAME
-    value: "keycloak"
   - name: KC_TRACING_SAMPLER_TYPE
     value: "parentbased_traceidratio"
   - name: KC_TRACING_SAMPLER_RATIO
-    value: "0.01"
+    value: "1.0"
+  
+  # OpenTelemetry Logs
+  - name: KC_TELEMETRY_LOGS_ENABLED
+    value: "true"
+  - name: KC_TELEMETRY_LOGS_ENDPOINT
+    value: "http://otel-collector:4317"
+  - name: KC_TELEMETRY_LOGS_PROTOCOL
+    value: "grpc"
+  - name: KC_TELEMETRY_LOGS_LEVEL
+    value: "DEBUG"
+  - name: KC_LOG_MDC_ENABLED
+    value: "true"
