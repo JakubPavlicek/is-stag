@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: grafana-route
+spec:
+  parentRefs:
+    - name: grafana-gateway
+      sectionName: https
+      kind: Gateway
+  hostnames:
+    - grafana.is-stag.internal
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: grafana
+          port: 3000

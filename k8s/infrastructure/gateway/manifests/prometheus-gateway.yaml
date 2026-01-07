@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: prometheus-gateway
+  annotations:
+    cert-manager.io/issuer: selfsigned-issuer
+spec:
+  gatewayClassName: nginx
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: prometheus.is-stag.internal
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: selfsigned-prometheus-cert-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Same

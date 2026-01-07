@@ -21,6 +21,9 @@ keycloak:
   url: https://is-stag.cz/auth
   realm: is-stag
 
+api:
+  url: https://is-stag.cz/api/v1
+
 probes:
   readiness:
     path: /

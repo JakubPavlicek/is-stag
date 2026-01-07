@@ -1,0 +1,6 @@
+nginxGateway:
+  name: nginx-gateway
+
+# We will use cert-manager to generate certs
+certGenerator:
+  enabled: false

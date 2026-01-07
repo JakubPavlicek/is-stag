@@ -6,3 +6,4 @@ metadata:
 data:
   VITE_KEYCLOAK_URL: {{ .Values.keycloak.url | quote }}
   VITE_KEYCLOAK_REALM: {{ .Values.keycloak.realm | quote }}
+  VITE_API_URL: {{ .Values.api.url | quote }}

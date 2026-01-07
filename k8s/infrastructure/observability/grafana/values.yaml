@@ -65,9 +65,6 @@ dashboards:
           type: datasource
           pluginId: tempo
           value: tempo
-    ingress-nginx:
-      gnetId: 21336
-      revision: 1
     jvm-overview:
       gnetId: 18812
       revision: 4

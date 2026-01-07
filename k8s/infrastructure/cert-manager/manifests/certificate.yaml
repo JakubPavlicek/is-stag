@@ -3,9 +3,9 @@ kind: Certificate
 metadata:
   name: selfsigned-cert
 spec:
-  dnsNames:
-    - is-stag.cz
-  secretName: selfsigned-cert-tls
   issuerRef:
     name: selfsigned-issuer
     kind: Issuer
+  dnsNames:
+    - is-stag.cz
+  secretName: selfsigned-cert-tls
