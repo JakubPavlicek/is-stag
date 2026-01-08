@@ -1,4 +1,4 @@
-package com.stag.identity.shared.config;
+package com.stag.academics.shared.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,21 +9,22 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-/// **QA Security Configuration**
+/// **Performance Test Security Configuration**
 ///
-/// Test/QA environment security configuration with all security disabled.
-/// Permits all requests without authentication for simplified testing and
-/// development workflows. Activated only with "qa" Spring profile.
+/// Minimal security configuration for performance testing environments.
+/// Disables authentication and authorization for K6 load testing.
+/// Active only when the 'perftest' profile is enabled.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
-@Profile("qa")
+@Profile("perftest")
 @Configuration
 @EnableWebSecurity
-public class QaSecurityConfig {
+public class PerftestSecurityConfig {
 
-    /// Configures a permissive security filter chain for QA environment.
-    /// Disables CSRF and authentication for all endpoints.
+    /// Configures a permissive security filter chain for performance testing environment.
+    ///
+    /// Disables CSRF protection and permits all requests without authentication.
     ///
     /// @param http the HTTP security configuration
     /// @return configured security filter chain
@@ -31,9 +32,7 @@ public class QaSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) {
         return http
             .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(authorize ->
-                authorize.anyRequest().permitAll()
-            )
+            .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .build();
     }

@@ -9,19 +9,19 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-/// **QA Security Configuration**
+/// **Performance Test Security Configuration**
 ///
-/// Simplified security configuration for QA/testing environments. Disables CSRF
-/// and permits all requests without authentication for easier testing.
+/// Simplified security configuration for performance testing environments. Disables CSRF
+/// and permits all requests without authentication for K6 load testing.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
-@Profile("qa")
+@Profile("perftest")
 @Configuration
 @EnableWebSecurity
-public class QaSecurityConfig {
+public class PerftestSecurityConfig {
 
-    /// Configures a permissive security filter chain for QA environment.
+    /// Configures a permissive security filter chain for performance testing environment.
     ///
     /// @param http the HTTP security builder
     /// @return configured security filter chain with all access permitted

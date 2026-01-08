@@ -7,19 +7,19 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
-/// **QA Environment Security Configuration**
+/// **Performance Test Security Configuration**
 ///
-/// Provides a **permissive** security configuration for QA and testing environments.
-/// This configuration is **only active** when the `qa` Spring profile is enabled.
+/// Provides a **permissive** security configuration for performance testing environments.
+/// This configuration is **only active** when the `perftest` Spring profile is enabled.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
-@Profile("qa")
+@Profile("perftest")
 @Configuration
 @EnableWebFluxSecurity
-public class QaSecurityConfig {
+public class PerftestSecurityConfig {
 
-    /// Creates a permissive security filter chain for QA environments.
+    /// Creates a permissive security filter chain for performance testing environments.
     ///
     /// @param http ServerHttpSecurity to configure
     /// @return Configured SecurityWebFilterChain with all security disabled

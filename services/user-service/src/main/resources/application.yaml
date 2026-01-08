@@ -172,7 +172,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: qa
+      on-profile: perftest
   data:
     redis:
       sentinel:

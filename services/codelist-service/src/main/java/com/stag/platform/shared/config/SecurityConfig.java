@@ -16,11 +16,11 @@ import org.springframework.security.web.SecurityFilterChain;
 /// **Production Security Configuration**
 ///
 /// Configures JWT-based authentication and role-based authorization for production environments.
-/// Disabled for `qa` profile.
+/// Disabled for `perftest` profile.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
-@Profile("!qa")
+@Profile("!perftest")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

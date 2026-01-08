@@ -22,7 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
-@Profile("!qa")
+@Profile("!perftest")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

@@ -17,11 +17,11 @@ import org.springframework.security.web.SecurityFilterChain;
 ///
 /// Production security configuration for the Student service.
 /// Configures OAuth2 JWT authentication with Keycloak and role-based authorization.
-/// Active for all profiles except 'qa'.
+/// Active for all profiles except 'perftest'.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
-@Profile("!qa")
+@Profile("!perftest")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

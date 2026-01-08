@@ -1,8 +1,8 @@
 # Helmfile for IS-STAG Infrastructure
 # Usage:
-#   helmfile -e qa sync        # Deploy to qa
+#   helmfile -e perftest sync        # Deploy to perftest
 #   helmfile -e prod sync      # Deploy to prod
-#   helmfile -e qa destroy     # Destroy qa
+#   helmfile -e perftest destroy     # Destroy perftest
 
 repositories:
   - name: metallb
@@ -19,9 +19,9 @@ repositories:
     url: https://codecentric.github.io/helm-charts
 
 environments:
-  qa:
+  perftest:
     values:
-      - namespace: is-stag-qa
+      - namespace: is-stag-perftest
   prod:
     values:
       - namespace: is-stag-prod
@@ -177,7 +177,7 @@ releases:
   # ========================================
   - name: grafana
     chart: grafana/grafana
-    version: 10.5.3
+    version: 10.5.4
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/grafana/values.yaml

@@ -17,11 +17,11 @@ import java.util.List;
 /// **Production Security Configuration**
 ///
 /// Configures comprehensive security for production environments with JWT-based authentication,
-/// CORS policies, and role-based access control. This configuration is **disabled** for the `qa` profile.
+/// CORS policies, and role-based access control. This configuration is **disabled** for the `perftest` profile.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
-@Profile("!qa")
+@Profile("!perftest")
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
