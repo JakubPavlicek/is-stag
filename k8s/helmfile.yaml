@@ -1,7 +1,7 @@
 # Helmfile for IS-STAG Infrastructure
 # Usage:
 #   helmfile -e perftest sync        # Deploy to perftest
-#   helmfile -e prod sync      # Deploy to prod
+#   helmfile -e prod sync            # Deploy to prod
 #   helmfile -e perftest destroy     # Destroy perftest
 
 repositories:
