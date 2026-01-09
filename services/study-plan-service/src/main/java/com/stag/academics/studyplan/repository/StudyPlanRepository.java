@@ -9,8 +9,8 @@ import java.util.Optional;
 
 /// **Study Plan Repository**
 ///
-/// Data access layer for study plan entities. Provides methods to retrieve
-/// field of study information associated with study plans.
+/// Data access layer for study plan entities.
+/// Provides methods to retrieve field of study information associated with study plans.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

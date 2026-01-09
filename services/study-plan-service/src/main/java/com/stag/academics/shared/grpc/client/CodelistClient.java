@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 /// **Codelist Client**
 ///
-/// gRPC client for communicating with the Codelist Service. Retrieves localized
-/// codelist meanings for study program data with circuit breaker and retry support.
+/// gRPC client for communicating with the Codelist Service.
+/// Retrieves localized codelist meanings for study program data with circuit breaker and retry support.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

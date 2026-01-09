@@ -11,7 +11,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /// **Performance Test Security Configuration**
 ///
-/// Provides permissive security for performance testing environments. **Only active** with `perftest` profile.
+/// Provides permissive security for performance testing environments.
+/// Only active with `perftest` profile.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

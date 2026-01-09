@@ -17,8 +17,8 @@ import static java.util.concurrent.StructuredTaskScope.Joiner.allSuccessfulOrThr
 
 /// **Study Plan gRPC Service**
 ///
-/// gRPC service implementation for study plan operations. Handles concurrent
-/// fetching of study program and field of study data using async service.
+/// gRPC service implementation for study plan operations.
+/// Handles concurrent fetching of study program and field of study data.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -60,9 +60,11 @@ public class StudyPlanGrpcService extends StudyPlanServiceGrpc.StudyPlanServiceI
             );
 
             completeResponse(responseObserver, response);
+        } catch (StructuredTaskScope.FailedException e) {
+            errorResponse(responseObserver, e.getCause());
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);
-            throw new RuntimeException(e);
         }
     }
 

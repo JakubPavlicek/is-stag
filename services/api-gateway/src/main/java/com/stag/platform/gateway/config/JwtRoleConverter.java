@@ -12,8 +12,7 @@ import java.util.Map;
 /// **JWT Role Converter for Keycloak Integration**
 ///
 /// Extracts user roles from Keycloak JWT tokens and converts them to Spring Security authorities.
-/// This converter reads roles from the `realm_access.roles` claim and prefixes them with `ROLE_`
-/// for compatibility with Spring Security's role-based authorization.
+/// This converter reads roles from the `realm_access.roles` claim and prefixes them with `ROLE_` for compatibility with Spring Security's role-based authorization.
 ///
 /// **JWT Structure Expected**
 ///

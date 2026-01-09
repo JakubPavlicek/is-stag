@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 /// **Performance Test Security Configuration**
 ///
 /// Performance testing environment security configuration with all security disabled.
-/// Permits all requests without authentication for simplified K6 load testing workflows.
+/// Permits all requests without authentication for simplified k6 load testing workflows.
 /// Activated only with "perftest" Spring profile.
 ///
 /// @author Jakub Pavlíček

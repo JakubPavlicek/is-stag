@@ -4,9 +4,8 @@ import lombok.Getter;
 
 /// **Invalid Account Number Exception**
 ///
-/// Thrown when Czech bank account number validation fails due to incorrect
-/// mod-11 checksum. Validates account prefix and suffix using weighted
-/// checksum algorithm specific to the Czech banking system.
+/// Thrown when Czech bank account number validation fails due to incorrect mod-11 checksum.
+/// Validates account prefix and suffix using weighted checksum algorithm specific to the Czech banking system.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

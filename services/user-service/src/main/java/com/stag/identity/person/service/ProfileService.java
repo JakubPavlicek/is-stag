@@ -2,6 +2,7 @@ package com.stag.identity.person.service;
 
 import com.stag.identity.person.entity.Person;
 import com.stag.identity.person.exception.PersonNotFoundException;
+import com.stag.identity.person.exception.PersonProfileFetchException;
 import com.stag.identity.person.mapper.ProfileMapper;
 import com.stag.identity.person.model.Profile;
 import com.stag.identity.person.model.SimpleProfile;
@@ -30,9 +31,8 @@ import static java.util.concurrent.StructuredTaskScope.Joiner.allSuccessfulOrThr
 
 /// **Profile Service**
 ///
-/// Business logic for person profile operations. Handles full and simple profile
-/// retrieval with localized codelist data, student ID lookups, and profile updates.
-/// Uses caching and async data fetching for optimal performance.
+/// Business logic for person profile operations.
+/// Handles full and simple profile retrieval with localized codelist data, student ID lookups, and profile updates.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -56,8 +56,8 @@ public class ProfileService {
     private final TransactionTemplate transactionTemplate;
 
     /// Retrieves a full person profile with enriched codelist data and student IDs.
-    /// Fetches profile projection, then asynchronously loads student IDs and
-    /// localized codelist meanings. Result is cached per person ID and language.
+    /// Fetches profile projection, then loads student IDs and localized codelist meanings.
+    /// Result is cached per person ID and language.
     ///
     /// @param personId the person identifier
     /// @param language the language code for codelist localization
@@ -71,7 +71,7 @@ public class ProfileService {
     public Profile getPersonProfile(Integer personId, String language) {
         log.info("Fetching person profile for personId: {} with language: {}", personId, language);
 
-        ProfileView profileView = transactionTemplate.execute(status ->
+        ProfileView profileView = transactionTemplate.execute(_ ->
             personRepository.findById(personId, ProfileView.class)
                             .orElseThrow(() -> new PersonNotFoundException(personId))
         );
@@ -93,14 +93,23 @@ public class ProfileService {
 
             log.info("Successfully fetched person profile for personId: {}", personId);
             return profile;
+        } catch (StructuredTaskScope.FailedException e) {
+            // Re-throw known exceptions untouched
+            if (e.getCause() instanceof RuntimeException re) {
+                throw re;
+            }
+
+            // Wrap unknown checked exceptions
+            throw new PersonProfileFetchException(personId, e.getCause());
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Thread.currentThread().interrupt();
+            throw new PersonProfileFetchException(personId, e);
         }
     }
 
     /// Retrieves simplified person profile with basic localized codelist data.
-    /// Lighter alternative to full profile for scenarios requiring only essential
-    /// personal information. Result is cached per person ID and language.
+    /// Lighter alternative to full profile for scenarios requiring only essential personal information.
+    /// Result is cached per person ID and language.
     ///
     /// @param personId the person identifier
     /// @param language the language code for codelist localization
@@ -110,7 +119,7 @@ public class ProfileService {
     public SimpleProfile getPersonSimpleProfile(Integer personId, String language) {
         log.info("Fetching person simple profile for personId: {} with language: {}", personId, language);
 
-        SimpleProfileView simpleProfileView = transactionTemplate.execute(status ->
+        SimpleProfileView simpleProfileView = transactionTemplate.execute(_ ->
             personRepository.findById(personId, SimpleProfileView.class)
                             .orElseThrow(() -> new PersonNotFoundException(personId))
         );
@@ -162,16 +171,12 @@ public class ProfileService {
             person.setBirthPlace(birthPlace.city());
         }
 
-        log.debug("Checking person profile update data for personId: {}", personId);
-
         // Check if provided data are valid by calling the codelist-service and get the birthCountryId
         ProfileUpdateLookupData profileUpdateLookupData = codelistClient.getPersonProfileUpdateData(
             command.maritalStatus(),
             birthPlace != null ? birthPlace.country() : null,
             command.titles()
         );
-
-        log.debug("Successfully checked person profile update data for personId: {}", personId);
 
         // Update the values that were validated by codelist-service
         if (profileUpdateLookupData != null) {
@@ -185,7 +190,8 @@ public class ProfileService {
     }
 
     /// Updates person contact information including email, phone, mobile, and data box.
-    /// Validates a data box ID format if provided. Skips update if contact is null.
+    /// Validates a data box ID format if provided.
+    /// Skips update if contact is null.
     ///
     /// @param person the person entity to update
     /// @param contact the new contact information

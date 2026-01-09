@@ -34,8 +34,11 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class ProxyOracleConnection implements Connection {
 
+    /// Physical Connection
     private final Connection physicalConnection;
+    /// Oracle Connection
     private final OracleConnection oracleConnection;
+    /// Marks if the connection is closed or not
     private boolean isClosed = false;
 
     /// Constructs a new ProxyOracleConnection wrapper.

@@ -11,9 +11,8 @@ import java.util.Optional;
 
 /// **Person Repository**
 ///
-/// Data access layer for person entities. Provides methods to retrieve
-/// person data with dynamic projection support and specialized queries
-/// for addresses, banking, and education information.
+/// Data access layer for person entities.
+/// Provides methods to retrieve person data with dynamic projection support and specialized queries for addresses, banking, and education information.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -27,8 +26,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     /// @return optional person data projected to specified type
     <T> Optional<T> findById(Integer id, Class<T> clazz);
 
-    /// Finds comprehensive address data for a person including domicile,
-    /// temporary, and foreign addresses.
+    /// Finds comprehensive address data for a person including domicile, temporary, and foreign addresses.
     ///
     /// @param personId the person identifier
     /// @return optional address view with all address types
@@ -65,8 +63,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     )
     Optional<AddressView> findAddressesByPersonId(Integer personId);
 
-    /// Finds banking information for a person including standard
-    /// and Euro accounts.
+    /// Finds banking information for a person including standard and Euro accounts.
     ///
     /// @param personId the person identifier
     /// @return optional bank view with account details
@@ -99,8 +96,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     )
     Optional<BankView> findBankingByPersonId(Integer personId);
 
-    /// Finds education information for a person including high school
-    /// details and field of study.
+    /// Finds education information for a person including high school details and field of study.
     ///
     /// @param personId the person identifier
     /// @return optional education view with school information

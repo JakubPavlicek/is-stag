@@ -9,8 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 /// **Study Plan Mapper**
 ///
-/// MapStruct mapper for converting between gRPC study plan service messages
-/// and internal data models.
+/// MapStruct mapper for converting between gRPC study plan service messages and internal data models.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

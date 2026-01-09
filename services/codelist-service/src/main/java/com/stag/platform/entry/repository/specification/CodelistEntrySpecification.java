@@ -26,8 +26,7 @@ public class CodelistEntrySpecification {
 
     /// Creates a specification for finding person profile codelist entries.
     ///
-    /// Searches for marital status, title prefix, and title suffix by matching
-    /// meanings against abbreviation or Czech/English meanings.
+    /// Searches for marital status, title prefix, and title suffix by matching meanings against abbreviation or Czech/English meanings.
     ///
     /// @param maritalStatus Marital status to search for
     /// @param titlePrefix Title prefix to search for

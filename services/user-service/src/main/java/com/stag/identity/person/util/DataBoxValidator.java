@@ -8,9 +8,9 @@ import java.util.Map;
 
 /// **Data Box ID Validator**
 ///
-/// Utility class for validating Czech data box identifiers. Data boxes use a 7-character
-/// base32-encoded format with Luhn mod-32 checksum validation. The validator ensures
-/// both format correctness and checksum integrity.
+/// Utility class for validating Czech data box identifiers.
+/// Data boxes use a 7-character base32-encoded format with Luhn mod-32 checksum validation.
+/// The validator ensures both format correctness and checksum integrity.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

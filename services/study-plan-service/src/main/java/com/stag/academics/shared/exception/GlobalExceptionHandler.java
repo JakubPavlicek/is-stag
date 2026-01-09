@@ -33,9 +33,9 @@ import java.util.stream.Collectors;
 
 /// **Global Exception Handler**
 ///
-/// Centralized REST exception handler for the application. Handles domain-specific
-/// exceptions, validation errors, gRPC exceptions, circuit breaker failures, and
-/// async wrapper exceptions. Returns RFC 7807 Problem Detail responses.
+/// Centralized REST exception handler for the application.
+/// Handles domain-specific exceptions, validation errors, gRPC exceptions, circuit breaker failures, and concurrent exceptions.
+/// Returns RFC 7807 Problem Detail responses.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -204,13 +204,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    /// Handles async wrapper exceptions by unwrapping and delegating to specific handlers.
+    /// Handles concurrent exceptions by unwrapping and delegating to specific handlers.
     ///
-    /// @param ex the async wrapper exception
+    /// @param ex the concurrent exception
     /// @param request the HTTP request
     /// @return problem detail based on underlying cause
-    @ExceptionHandler({ CompletionException.class, ExecutionException.class})
-    public ProblemDetail handleAsyncWrapperExceptions(Exception ex, HttpServletRequest request) {
+    @ExceptionHandler({ CompletionException.class, ExecutionException.class })
+    public ProblemDetail handleConcurrentExceptions(Exception ex, HttpServletRequest request) {
         // Special handling for gRPC exceptions
         if (ex.getCause() instanceof StatusRuntimeException sre) {
             return handleGrpcException(sre);

@@ -7,9 +7,8 @@ import org.springframework.stereotype.Service;
 
 /// **Authorization Service**
 ///
-/// Security authorization logic for person data access control. Validates
-/// that students can only access their own profile data by comparing
-/// student ID to person ID ownership.
+/// Security authorization logic for person data access control.
+/// Validates that students can only access their own profile data by comparing student ID to person ID ownership.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

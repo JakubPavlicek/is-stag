@@ -11,8 +11,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /// **Performance Test Security Configuration**
 ///
-/// Simplified security configuration for performance testing environments. Disables CSRF
-/// and permits all requests without authentication for K6 load testing.
+/// Simplified security configuration for performance testing environments.
+/// Disables CSRF and permits all requests without authentication for k6 load testing.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

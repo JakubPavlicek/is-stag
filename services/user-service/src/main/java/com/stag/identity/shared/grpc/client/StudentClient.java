@@ -13,9 +13,9 @@ import java.util.List;
 
 /// **Student gRPC Client**
 ///
-/// gRPC client for student-service communication. Provides bidirectional lookups
-/// between person IDs and student IDs with circuit breaker and retry patterns
-/// for resilience. Used for profile enrichment and authorization checks.
+/// gRPC client for student-service communication.
+/// Provides bidirectional lookups between person IDs and student IDs with circuit breaker and retry patterns for resilience.
+/// Used for profile enrichment and authorization checks.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

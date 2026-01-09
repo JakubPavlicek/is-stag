@@ -22,6 +22,7 @@ import java.util.Properties;
 @Slf4j
 public class OracleProxyDataSource extends DelegatingDataSource {
 
+    /// Target User that will be proxied
     private final String targetUser;
 
     /// Constructs a new OracleProxyDataSource.

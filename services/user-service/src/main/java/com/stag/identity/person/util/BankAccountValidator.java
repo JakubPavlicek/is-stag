@@ -5,8 +5,7 @@ import com.stag.identity.person.exception.InvalidAccountNumberException;
 /// **Bank Account Number Validator**
 ///
 /// Utility class for validating Czech bank account numbers using mod-11 checksum.
-/// The validator uses standard weights defined by Czech banking regulations
-/// to verify account number integrity.
+/// The validator uses standard weights defined by Czech banking regulations to verify account number integrity.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

@@ -15,8 +15,8 @@ import java.util.List;
 
 /// **Student gRPC Service**
 ///
-/// gRPC service implementation for student operations. Exposes methods for
-/// retrieving student IDs and person mappings via gRPC protocol.
+/// gRPC service implementation for student operations.
+/// Exposes methods for retrieving student IDs and person mappings via gRPC protocol.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

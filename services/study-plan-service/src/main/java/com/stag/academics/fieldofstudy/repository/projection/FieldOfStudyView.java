@@ -2,8 +2,8 @@ package com.stag.academics.fieldofstudy.repository.projection;
 
 /// **Field of Study View Projection**
 ///
-/// Lightweight view of a field of study containing basic identification
-/// and organizational fields. Used for efficient data transfer.
+/// Lightweight view of a field of study containing basic identification and organizational fields.
+/// Used for efficient data transfer.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

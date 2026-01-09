@@ -16,9 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 /// **Security Configuration**
 ///
 /// Production security configuration with OAuth2 resource server and JWT authentication.
-/// Extracts roles from Keycloak JWT tokens (realm_access.roles claim) and enforces
-/// method-level security via @PreAuthorize. Public endpoints include health checks,
-/// OpenAPI docs, and Swagger UI.
+/// Extracts roles from Keycloak JWT tokens (realm_access.roles claim) and enforces method-level security via @PreAuthorize.
+/// Public endpoints include health checks, OpenAPI docs, and Swagger UI.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

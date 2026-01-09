@@ -6,8 +6,7 @@ import java.io.Serializable;
 
 /// **Profile**
 ///
-/// Complete student profile model containing personal information,
-/// academic status, and study program details.
+/// Complete student profile model containing personal information, academic status, and study program details.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

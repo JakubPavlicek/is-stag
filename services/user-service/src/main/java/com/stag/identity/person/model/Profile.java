@@ -8,9 +8,8 @@ import java.util.List;
 
 /// **Profile Model**
 ///
-/// Complete person profile containing personal information, contact details,
-/// citizenship, and associated student IDs. Used for full profile retrieval
-/// with localized codelist meanings.
+/// Complete person profile containing personal information, contact details, citizenship, and associated student IDs.
+/// Used for full profile retrieval with localized codelist meanings.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

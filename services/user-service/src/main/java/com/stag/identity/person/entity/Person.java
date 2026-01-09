@@ -19,8 +19,8 @@ import java.time.LocalDate;
 ///
 /// Comprehensive entity representing a person with extensive personal information
 /// including identification, addresses (domicile, temporary, foreign), education,
-/// banking details, health specifics, and administrative data. Supports both
-/// Czech and foreign addresses and institutions.
+/// banking details, health specifics, and administrative data.
+/// Supports both Czech and foreign addresses and institutions.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

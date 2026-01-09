@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /// **Student Controller**
 ///
-/// REST API controller for student operations. Implements OpenAPI-generated
-/// interface for managing students.
+/// REST API controller for student operations.
+/// Implements OpenAPI-generated interface for managing students.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

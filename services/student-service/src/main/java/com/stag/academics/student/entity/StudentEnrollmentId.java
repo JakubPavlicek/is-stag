@@ -14,8 +14,7 @@ import java.util.Objects;
 
 /// **Student Enrollment ID**
 ///
-/// Composite primary key for student enrollment consisting of student ID,
-/// year of validity, and study plan ID.
+/// Composite primary key for student enrollment consisting of student ID, year of validity, and study plan ID.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

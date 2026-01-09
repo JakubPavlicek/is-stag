@@ -22,8 +22,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 /// **JWT Configuration with Enhanced Caching and Resilience**
 ///
-/// Configures an enhanced JWT decoder with advanced caching, refresh-ahead strategies,
-/// and outage tolerance for production environments. This configuration is **disabled** for the `perftest` profile.
+/// Configures an enhanced JWT decoder with advanced caching, refresh-ahead strategies, and outage tolerance for production environments.
+/// This configuration is **disabled** for the `perftest` profile.
 ///
 /// @see <a href="https://connect2id.com/products/nimbus-jose-jwt/examples/enhanced-jwk-retrieval">JWKs Retrieval</a>
 /// @see <a href="https://github.com/spring-projects/spring-security/pull/17046">JwkSource Pull Request</a>

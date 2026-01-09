@@ -4,8 +4,7 @@ import java.time.LocalDate;
 
 /// **Profile View Projection**
 ///
-/// Comprehensive view of a person's profile containing personal identification,
-/// contact information, birth details, citizenship, and document data.
+/// Comprehensive view of a person's profile containing personal identification, contact information, birth details, citizenship, and document data.
 /// Used for full profile retrieval.
 ///
 /// @author Jakub Pavlíček

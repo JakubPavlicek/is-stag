@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /// **Gateway Fallback Controller**
 ///
-/// Provides a fallback endpoint for Spring Cloud Gateway when backend services are
-/// unavailable or unreachable. This controller is invoked when circuit breakers trip
-/// or when routes fail to connect to downstream services.
+/// Provides a fallback endpoint for Spring Cloud Gateway when backend services are unavailable or unreachable.
+/// This controller is invoked when circuit breakers trip or when routes fail to connect to downstream services.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

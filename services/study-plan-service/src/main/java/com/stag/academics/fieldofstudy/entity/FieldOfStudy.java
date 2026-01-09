@@ -24,9 +24,9 @@ import java.time.LocalDate;
 
 /// **Field of Study Entity**
 ///
-/// Represents a field of study within a study program. Contains detailed
-/// information including multilingual names, descriptions, accreditation details,
-/// admission requirements, learning outcomes, and graduate profiles.
+/// Represents a field of study within a study program.
+/// Contains detailed information including multilingual names, descriptions,
+/// accreditation details, admission requirements, learning outcomes, and graduate profiles.
 /// Supports teaching qualifications, specializations, and micro-certifications.
 ///
 /// @author Jakub Pavlíček

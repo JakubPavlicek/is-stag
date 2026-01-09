@@ -20,21 +20,7 @@ import static io.netty.handler.codec.http2.HttpConversionUtil.ExtensionHeaderNam
 
 /// **HTTP Request/Response Logging Filter**
 ///
-/// A reactive web filter that logs incoming HTTP requests and outgoing responses
-/// for all API endpoints (paths starting with `/api`).
-///
-/// **Request Information**
-/// - HTTP method (GET, POST, etc.)
-/// - Request path and query parameters
-/// - HTTP version (1.1 or 2.0)
-/// - Content-Type header
-/// - Content-Length
-///
-/// **Response Information**
-/// - HTTP status code
-/// - Response duration in milliseconds
-/// - Content-Type
-/// - Content-Length
+/// A reactive web filter that logs incoming HTTP requests and outgoing responses for all API endpoints (paths starting with `/api`).
 ///
 /// Non-API requests are skipped to reduce log noise.
 ///
@@ -45,13 +31,6 @@ import static io.netty.handler.codec.http2.HttpConversionUtil.ExtensionHeaderNam
 public class LoggingFilter implements WebFilter {
 
     /// Filters and logs HTTP requests and responses for API endpoints.
-    ///
-    /// The filter:
-    /// 1. Checks if the request path starts with `/api`
-    /// 2. Logs request details (method, path, content type, etc.)
-    /// 3. Records the start time
-    /// 4. Proceeds with the filter chain
-    /// 5. Logs response details and duration on completion
     ///
     /// @param exchange The current server web exchange
     /// @param chain The filter chain to execute
@@ -86,12 +65,6 @@ public class LoggingFilter implements WebFilter {
 
     /// Logs detailed information about an incoming HTTP request.
     ///
-    /// Logged information includes:
-    /// - HTTP method and path with query parameters
-    /// - Remote client address
-    /// - HTTP version (1.1 or 2.0)
-    /// - Content-Type and Content-Length
-    ///
     /// @param request The server HTTP request to log
     private void logRequest(ServerHttpRequest request) {
         String method = request.getMethod().name();
@@ -122,14 +95,8 @@ public class LoggingFilter implements WebFilter {
 
     /// Logs detailed information about an outgoing HTTP response.
     ///
-    /// Logged information includes:
-    /// - HTTP status code with reason phrase
-    /// - Request method and path
-    /// - Request duration with performance indicator
-    /// - Content-Type and Content-Length
-    ///
     /// @param request The original server HTTP request
-    /// @param response The server HTTP response to log
+    /// @param response The server HTTP response to the log
     /// @param duration The time taken to process the request
     private void logResponse(ServerHttpRequest request, ServerHttpResponse response, Duration duration) {
         String method = request.getMethod().name();

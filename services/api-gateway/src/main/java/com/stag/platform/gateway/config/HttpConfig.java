@@ -14,8 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 /// **HTTP Client Configuration**
 ///
-/// Configures Apache HttpClient 5 with custom connection pooling and timeout settings
-/// for optimal performance in the API Gateway.
+/// Configures Apache HttpClient 5 with custom connection pooling and timeout settings for optimal performance in the API Gateway.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

@@ -28,7 +28,7 @@ import static java.util.concurrent.StructuredTaskScope.Joiner.allSuccessfulOrThr
 /// **Codelist gRPC Service**
 ///
 /// Synchronous gRPC service implementation for codelist data retrieval.
-/// Orchestrates async operations for fetching a person's profile, address, banking, and education data.
+/// Orchestrates operations for fetching a person's profile, address, banking, and education data.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -91,9 +91,11 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             );
 
             completeResponse(responseObserver, response);
+        } catch (StructuredTaskScope.FailedException e) {
+            errorResponse(responseObserver, e.getCause());
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);
-            throw new RuntimeException(e);
         }
     }
 
@@ -127,9 +129,11 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             );
 
             completeResponse(responseObserver, response);
+        } catch (StructuredTaskScope.FailedException e) {
+            errorResponse(responseObserver, e.getCause());
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);
-            throw new RuntimeException(e);
         }
     }
 
@@ -162,9 +166,11 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             );
 
             completeResponse(responseObserver, response);
+        } catch (StructuredTaskScope.FailedException e) {
+            errorResponse(responseObserver, e.getCause());
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);
-            throw new RuntimeException(e);
         }
     }
 
@@ -197,9 +203,11 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             );
 
             completeResponse(responseObserver, response);
+        } catch (StructuredTaskScope.FailedException e) {
+            errorResponse(responseObserver, e.getCause());
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);
-            throw new RuntimeException(e);
         }
     }
 
@@ -239,9 +247,11 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
             );
 
             completeResponse(responseObserver, response);
+        } catch (StructuredTaskScope.FailedException e) {
+            errorResponse(responseObserver, e.getCause());
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);
-            throw new RuntimeException(e);
         }
     }
 

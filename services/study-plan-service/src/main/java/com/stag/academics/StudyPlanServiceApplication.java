@@ -9,9 +9,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 /// **Study Plan Service Application**
 ///
-/// Main entry point for the Study Plan microservice. Manages study programs,
-/// study plans, and fields of study with gRPC integration to Codelist service.
-/// Enables async processing and caching for improved performance.
+/// Main entry point for the Study Plan microservice.
+/// Manages study programs, study plans, and fields of study with gRPC integration to Codelist service.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

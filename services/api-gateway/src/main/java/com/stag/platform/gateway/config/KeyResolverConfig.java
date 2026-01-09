@@ -9,16 +9,14 @@ import reactor.core.publisher.Mono;
 /// **Rate Limiting Key Resolver Configuration**
 ///
 /// Configures a custom key resolver for Spring Cloud Gateway's rate limiting feature.
-/// The resolver identifies users by their **email** from JWT tokens, with a fallback
-/// to the **IP address** for unauthenticated requests.
+/// The resolver identifies users by their **email** from JWT tokens, with a fallback to the **IP address** for unauthenticated requests.
 ///
 /// **Resolution Strategy**
 ///
 /// 1. **Authenticated Users**: Uses email from JWT token claim
 /// 2. **Anonymous Users**: Falls back to client IP address
 ///
-/// This ensures that rate limits are applied per-user for authenticated requests
-/// and per-IP for unauthenticated requests.
+/// This ensures that rate limits are applied per-user for authenticated requests and per-IP for unauthenticated requests.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

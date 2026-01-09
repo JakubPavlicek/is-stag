@@ -4,6 +4,7 @@ import com.stag.identity.person.exception.InvalidAccountNumberException;
 import com.stag.identity.person.exception.InvalidBankAccountException;
 import com.stag.identity.person.exception.InvalidDataBoxException;
 import com.stag.identity.person.exception.PersonNotFoundException;
+import com.stag.identity.person.exception.PersonProfileFetchException;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -36,9 +37,9 @@ import java.util.stream.Collectors;
 
 /// **Global REST Exception Handler**
 ///
-/// Centralized exception handling for REST API endpoints. Converts exceptions to
-/// RFC 7807 Problem Detail responses with appropriate HTTP status codes. Handles
-/// validation errors, security exceptions, gRPC errors, and circuit breaker failures.
+/// Centralized exception handling for REST API endpoints.
+/// Converts exceptions to RFC 7807 Problem Detail responses with appropriate HTTP status codes.
+/// Handles validation errors, security exceptions, gRPC errors, and circuit breaker failures.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -97,6 +98,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setTitle("Person Not Found");
+
+        return problemDetail;
+    }
+
+    /// Handles person profile fetch exceptions (HTTP 500).
+    ///
+    /// @param ex the fetch exception
+    /// @return problem detail with internal server error status
+    @ExceptionHandler(PersonProfileFetchException.class)
+    public ProblemDetail handlePersonProfileFetchException(PersonProfileFetchException ex) {
+        log.error("Profile fetch failed for personId: {}", ex.getPersonId(), ex);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        problemDetail.setTitle("Person Profile Fetch Error");
 
         return problemDetail;
     }
@@ -222,14 +237,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    /// Handles async operation wrapper exceptions (StructuredTaskScope.Exceptions).
-    /// Unwraps and delegates to specific handlers for gRPC and circuit breaker exceptions.
+    /// Handles concurrent exceptions by unwrapping and delegating to specific handlers.
     ///
-    /// @param ex the wrapper exception
+    /// @param ex the concurrent exception
     /// @param request the HTTP request
-    /// @return problem detail based on cause
+    /// @return problem detail based on underlying cause
     @ExceptionHandler({ CompletionException.class, ExecutionException.class })
-    public ProblemDetail handleAsyncWrapperExceptions(Exception ex, HttpServletRequest request) {
+    public ProblemDetail handleConcurrentExceptions(Exception ex, HttpServletRequest request) {
         // Special handling for gRPC exceptions
         if (ex.getCause() instanceof StatusRuntimeException sre) {
             return handleGrpcException(sre);

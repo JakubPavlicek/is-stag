@@ -11,8 +11,8 @@ import java.util.Optional;
 
 /// **Codelist Value Resolver**
 ///
-/// Helper class for MapStruct mappers to resolve codelist code values
-/// to their localized meanings. Used by StudyProgramMapper.
+/// Helper class for MapStruct mappers to resolve codelist code values to their localized meanings.
+/// Used by StudyProgramMapper.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

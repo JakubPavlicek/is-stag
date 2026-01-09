@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /// **Person gRPC Service**
 ///
-/// gRPC service implementation for person-related operations. Provides RPC endpoints
-/// for retrieving person profiles with localized data. Used for inter-service
-/// communication within the microservice architecture.
+/// gRPC service implementation for person-related operations.
+/// Provides RPC endpoints for retrieving person profiles with localized data.
+/// Used for inter-service communication within the microservice architecture.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -36,6 +36,8 @@ public class PersonGrpcService extends PersonServiceGrpc.PersonServiceImplBase {
         GetPersonSimpleProfileRequest request,
         StreamObserver<GetPersonSimpleProfileResponse> responseObserver
     ) {
+        log.info("Fetching person simple profile");
+
         SimpleProfile simpleProfile = profileService.getPersonSimpleProfile(
             request.getPersonId(), request.getLanguage()
         );

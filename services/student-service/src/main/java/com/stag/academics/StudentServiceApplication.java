@@ -10,7 +10,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 /// **Student Service Application**
 ///
-/// Main entry point for the Student microservice. Manages student data.
+/// Main entry point for the Student microservice.
+/// Manages student data.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

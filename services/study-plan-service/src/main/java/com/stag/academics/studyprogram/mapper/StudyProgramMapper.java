@@ -9,8 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 /// **Study Program Mapper**
 ///
-/// MapStruct mapper for transforming study program views by enriching
-/// raw data with localized codelist meanings for form and type fields.
+/// MapStruct mapper for transforming study program views by enriching raw data with localized codelist meanings for form and type fields.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

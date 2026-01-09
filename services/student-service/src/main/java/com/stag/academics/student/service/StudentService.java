@@ -3,6 +3,7 @@ package com.stag.academics.student.service;
 import com.stag.academics.shared.grpc.client.StudyPlanClient;
 import com.stag.academics.shared.grpc.client.UserClient;
 import com.stag.academics.student.exception.StudentNotFoundException;
+import com.stag.academics.student.exception.StudentProfileFetchException;
 import com.stag.academics.student.mapper.ProfileMapper;
 import com.stag.academics.student.model.Profile;
 import com.stag.academics.student.repository.StudentRepository;
@@ -22,8 +23,8 @@ import static java.util.concurrent.StructuredTaskScope.Joiner.allSuccessfulOrThr
 
 /// **Student Service**
 ///
-/// Core service for managing student data and profiles. Orchestrates data
-/// retrieval from repository and external services, with caching and security.
+/// Core service for managing student data and profiles.
+/// Orchestrates data retrieval from repository and external services, with caching and security.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -64,9 +65,8 @@ public class StudentService {
     }
 
     /// Retrieves complete student profile with enriched data from external services.
-    ///
-    /// Fetches profile data asynchronously from Person and Study Plan services,
-    /// then combines the results. Cached by student ID and language.
+    /// Fetches profile data from User and Study Plan services, then combines the results.
+    /// Cached by student ID and language.
     /// Access is restricted to authorized roles or the students themselves.
     ///
     /// @param studentId the student identifier
@@ -82,14 +82,11 @@ public class StudentService {
         log.info("Fetching student profile for studentId: {} with language: {}", studentId, language);
 
         // Fetch base profile within a transaction
-        ProfileView profileView = transactionTemplate.execute(status ->
+        ProfileView profileView = transactionTemplate.execute(_ ->
             studentRepository.findStudentProfileById(studentId)
                              .orElseThrow(() -> new StudentNotFoundException(studentId))
         );
 
-        log.debug("Student profile found, fetching additional data for studentId: {}", studentId);
-
-        // Fetch external data asynchronously in parallel
         try (var scope = StructuredTaskScope.open(allSuccessfulOrThrow())) {
             var simpleProfileTask = scope.fork(
                 () -> userClient.getPersonSimpleProfileData(profileView.personId(), language)
@@ -107,8 +104,17 @@ public class StudentService {
 
             log.info("Successfully fetched student profile for studentId: {}", studentId);
             return profile;
+        } catch (StructuredTaskScope.FailedException e) {
+            // Re-throw known exceptions untouched
+            if (e.getCause() instanceof RuntimeException re) {
+                throw re;
+            }
+
+            // Wrap unknown checked exceptions
+            throw new StudentProfileFetchException(studentId, e.getCause());
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Thread.currentThread().interrupt();
+            throw new StudentProfileFetchException(studentId, e);
         }
     }
 

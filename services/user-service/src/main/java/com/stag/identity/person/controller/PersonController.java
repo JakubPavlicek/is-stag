@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /// **Person REST Controller**
 ///
-/// REST API endpoints for person profile operations. Provides CRUD operations
-/// for profiles, addresses, banking, and education information with localization
-/// support. Implements OpenAPI-generated PersonsApi interface.
+/// REST API endpoints for person profile operations.
+/// Provides operations for profiles, addresses, banking, and education information with localization support.
+/// Implements OpenAPI-generated PersonsApi interface.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

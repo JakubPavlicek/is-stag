@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /// **Global gRPC Exception Handler**
 ///
-/// Centralized exception handling for gRPC endpoints. Maps Java exceptions to
-/// appropriate gRPC Status codes with descriptive messages. Handles domain-specific
-/// and runtime exceptions for gRPC service implementations.
+/// Centralized exception handling for gRPC endpoints.
+/// Maps Java exceptions to appropriate gRPC Status codes with descriptive messages.
+/// Handles domain-specific and runtime exceptions for gRPC service implementations.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

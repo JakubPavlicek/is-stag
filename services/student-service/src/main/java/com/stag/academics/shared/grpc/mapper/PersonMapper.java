@@ -9,8 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 /// **Person Mapper**
 ///
-/// MapStruct mapper for converting between gRPC person service messages
-/// and internal data models.
+/// MapStruct mapper for converting between gRPC person service messages and internal data models.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

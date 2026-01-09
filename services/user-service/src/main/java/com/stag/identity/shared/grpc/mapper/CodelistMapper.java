@@ -43,10 +43,10 @@ import java.util.stream.Collectors;
 
 /// **Codelist gRPC Mapper**
 ///
-/// MapStruct mapper for codelist-service gRPC communication. Transforms projections
-/// to gRPC request messages and response messages to lookup data. Handles codelist
-/// key building for batch lookups of localized values. Uses @AfterMapping hooks
-/// to dynamically construct codelist keys based on available data.
+/// MapStruct mapper for codelist-service gRPC communication.
+/// Transforms projections to gRPC request messages and response messages to lookup data.
+/// Handles codelist key building for batch lookups of localized values.
+/// Uses @AfterMapping hooks to dynamically construct codelist keys based on available data.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

@@ -16,8 +16,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 /// **Address Service**
 ///
-/// Business logic for person address operations. Retrieves permanent, temporary,
-/// and foreign addresses with localized country/state data from codelist service.
+/// Business logic for person address operations.
+/// Retrieves permanent, temporary, and foreign addresses with localized country/state data from codelist service.
 /// Results are cached per person ID and language for performance.
 ///
 /// @author Jakub Pavlíček
@@ -37,8 +37,7 @@ public class AddressService {
     private final TransactionTemplate transactionTemplate;
 
     /// Retrieves all person addresses with localized country and state names.
-    /// Fetches address projection then asynchronously loads codelist data
-    /// for all address types (permanent, temporary, foreign).
+    /// Fetches address projection then loads codelist data for all address types (permanent, temporary, foreign).
     ///
     /// @param personId the person identifier
     /// @param language the language code for codelist localization

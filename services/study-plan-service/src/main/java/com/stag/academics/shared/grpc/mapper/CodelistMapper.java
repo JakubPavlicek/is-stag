@@ -23,9 +23,8 @@ import java.util.stream.Collectors;
 
 /// **Codelist Mapper**
 ///
-/// MapStruct mapper for building gRPC requests to codelist service and
-/// transforming responses into lookup data. Handles extraction of codelist
-/// keys from study program data.
+/// MapStruct mapper for building gRPC requests to codelist service and transforming responses into lookup data.
+/// Handles extraction of codelist keys from study program data.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

@@ -9,8 +9,8 @@ import org.mapstruct.factory.Mappers;
 
 /// **Study Plan Mapper**
 ///
-/// MapStruct mapper for building gRPC responses combining study program
-/// and field of study views. Used by gRPC service layer.
+/// MapStruct mapper for building gRPC responses combining study program and field of study views.
+/// Used by gRPC service layer.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

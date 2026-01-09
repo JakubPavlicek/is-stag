@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 /// **Study Plan Client**
 ///
-/// gRPC client for communicating with the Study Plan service to fetch study program
-/// and field of study data. Includes circuit breaker, retry logic, and caching.
+/// gRPC client for communicating with the Study Plan service to fetch study program and field of study data.
+/// Includes circuit breaker, retry logic, and caching.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

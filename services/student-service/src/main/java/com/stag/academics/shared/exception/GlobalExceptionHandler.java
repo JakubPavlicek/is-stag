@@ -1,6 +1,7 @@
 package com.stag.academics.shared.exception;
 
 import com.stag.academics.student.exception.StudentNotFoundException;
+import com.stag.academics.student.exception.StudentProfileFetchException;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -65,6 +66,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setTitle("Student Not Found");
+
+        return problemDetail;
+    }
+
+    /// Handles student profile fetch exceptions (HTTP 500).
+    ///
+    /// @param ex the fetch exception
+    /// @return problem detail with internal server error status
+    @ExceptionHandler(StudentProfileFetchException.class)
+    public ProblemDetail handleStudentProfileFetchException(StudentProfileFetchException ex) {
+        log.error("Profile fetch failed for studentId: {}", ex.getStudentId(), ex);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        problemDetail.setTitle("Student Profile Fetch Error");
 
         return problemDetail;
     }
@@ -191,15 +206,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    /// Handles exceptions wrapped by async operations (StructuredTaskScope.Exceptions).
+    /// Handles concurrent exceptions by unwrapping and delegating to specific handlers.
     ///
-    /// Unwraps and handles the underlying exception appropriately.
-    ///
-    /// @param ex the wrapper exception
+    /// @param ex the concurrent exception
     /// @param request the HTTP request
     /// @return problem detail based on underlying cause
     @ExceptionHandler({ CompletionException.class, ExecutionException.class })
-    public ProblemDetail handleAsyncWrapperExceptions(Exception ex, HttpServletRequest request) {
+    public ProblemDetail handleConcurrentExceptions(Exception ex, HttpServletRequest request) {
         // Special handling for gRPC exceptions
         if (ex.getCause() instanceof StatusRuntimeException sre) {
             return handleGrpcException(sre);

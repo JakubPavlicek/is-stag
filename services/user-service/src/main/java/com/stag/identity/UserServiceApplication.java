@@ -10,9 +10,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 /// **User Service Application**
 ///
-/// Main entry point for the User/Identity microservice. Manages person entities,
-/// profiles, addresses, education, and banking information. Integrates with
-/// Student and Codelist services via gRPC. Enables async processing and caching.
+/// Main entry point for the User/Identity microservice.
+/// Manages person entities, profiles, addresses, education, and banking information.
+/// Integrates with Student and Codelist services via gRPC.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

@@ -21,8 +21,7 @@ import org.mapstruct.factory.Mappers;
 /// **Person API Mapper**
 ///
 /// MapStruct mapper for transforming domain models to API DTOs and vice versa.
-/// Bridges internal domain models with external REST API representations,
-/// handling field name mappings and structure transformations.
+/// Bridges internal domain models with external REST API representations, handling field name mappings and structure transformations.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

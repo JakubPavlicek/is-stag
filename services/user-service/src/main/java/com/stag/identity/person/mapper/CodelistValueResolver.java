@@ -14,8 +14,8 @@ import java.util.Optional;
 /// **Codelist Value Resolver**
 ///
 /// Helper class for MapStruct mappers to resolve localized codelist meanings.
-/// Provides named methods for looking up gender, marital status, titles, citizenship,
-/// and bank names from codelist lookup data. Used via @Named qualifiers in mappers.
+/// Provides named methods for looking up gender, marital status, titles, citizenship, and bank names from codelist lookup data.
+/// Used via @Named qualifiers in mappers.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

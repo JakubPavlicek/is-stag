@@ -22,9 +22,9 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 /// **Banking Service**
 ///
-/// Business logic for person banking operations. Handles retrieval of banking
-/// information with localized bank names, and updates to bank accounts with
-/// validation of Czech account numbers and automatic IBAN generation.
+/// Business logic for person banking operations.
+/// Handles retrieval of banking information with localized bank names,
+/// and updates to bank accounts with validation of Czech account numbers and automatic IBAN generation.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -43,8 +43,7 @@ public class BankingService {
     private final TransactionTemplate transactionTemplate;
 
     /// Retrieves person's banking information with localized bank names.
-    /// Fetches banking projection then asynchronously loads codelist data
-    /// for bank codes and account types.
+    /// Fetches banking projection then loads codelist data for bank codes and account types.
     ///
     /// @param personId the person identifier
     /// @param language the language code for codelist localization
@@ -72,8 +71,7 @@ public class BankingService {
     }
 
     /// Updates person bank account information with validation and IBAN generation.
-    /// Validates Czech account number checksums, enforces required field combinations,
-    /// and automatically generates IBAN for Czech accounts.
+    /// Validates Czech account number checksums, enforces required field combinations, and automatically generates IBAN for Czech accounts.
     /// Allows clearing an account by providing all null values.
     ///
     /// @param person the person entity to update

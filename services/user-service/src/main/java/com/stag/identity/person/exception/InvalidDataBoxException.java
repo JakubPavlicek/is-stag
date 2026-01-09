@@ -4,9 +4,8 @@ import lombok.Getter;
 
 /// **Invalid Data Box Exception**
 ///
-/// Thrown when Czech data box ID validation fails due to invalid format,
-/// incorrect checksum, or unsupported characters. Data box IDs use base32
-/// encoding with Luhn mod-32 checksum validation.
+/// Thrown when Czech data box ID validation fails due to invalid format, incorrect checksum, or unsupported characters.
+/// Data box IDs use base32 encoding with Luhn mod-32 checksum validation.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

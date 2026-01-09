@@ -2,8 +2,8 @@ package com.stag.identity.shared.grpc.model;
 
 /// **Codelist Domain Enum**
 ///
-/// Enumeration of all codelist domains used in the user service for looking up
-/// localized meanings. Maps to Oracle database CISA_DOMENY table entries.
+/// Enumeration of all codelist domains used in the user service for looking up localized meanings.
+/// Maps to Oracle database CISA_DOMENY table entries.
 /// Used for person titles, gender, marital status, citizenship, and banking.
 ///
 /// @author Jakub Pavlíček

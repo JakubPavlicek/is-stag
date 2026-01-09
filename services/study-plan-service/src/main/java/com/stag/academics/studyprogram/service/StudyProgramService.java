@@ -13,8 +13,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 /// **Study Program Service**
 ///
-/// Business logic layer for study program operations. Retrieves study program
-/// views enriched with codelist meanings from the codelist service.
+/// Business logic layer for study program operations.
+/// Retrieves study program views enriched with codelist meanings from the codelist service.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

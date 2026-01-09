@@ -7,7 +7,7 @@ import org.mapstruct.factory.Mappers;
 
 /// **Student API Mapper**
 ///
-/// MapStruct mapper for converting internal Profile model to REST API response DTOs.
+/// MapStruct mapper for converting an internal Profile model to REST API response DTOs.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

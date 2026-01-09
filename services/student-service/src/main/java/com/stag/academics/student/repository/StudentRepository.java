@@ -10,8 +10,7 @@ import java.util.Optional;
 
 /// **Student Repository**
 ///
-/// Data access layer for student entities with custom query methods for
-/// profile retrieval and student-person relationship queries.
+/// Data access layer for student entities with custom query methods for profile retrieval and student-person relationship queries.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -33,8 +32,7 @@ public interface StudentRepository extends JpaRepository<Student, String> {
 
     /// Finds the complete student profile including enrollment details.
     ///
-    /// Returns student profile with most recent enrollment data based on
-    /// the maximum year of validity.
+    /// Returns student profile with most recent enrollment data based on the maximum year of validity.
     ///
     /// @param studentId the student identifier
     /// @return optional containing profile view if found

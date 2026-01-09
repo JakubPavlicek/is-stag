@@ -14,9 +14,9 @@ import javax.sql.DataSource;
 
 /// **Oracle Proxy DataSource Configuration**
 ///
-/// Configures HikariCP connection pool with Oracle proxy session support. Creates a proxy
-/// user configuration allowing the application to connect through a proxy account then
-/// switch to target user context for proper audit trails and permissions.
+/// Configures HikariCP connection pool with Oracle proxy session support.
+/// Creates a proxy user configuration allowing the application to connect through a proxy account,
+/// then switch to target user context for proper audit trails and permissions.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
@@ -36,8 +36,7 @@ public class OracleProxyDataSourceConfig {
     private String targetUser;
 
     /// Creates and configures the primary datasource with Oracle proxy session support.
-    /// Wraps HikariCP pool with OracleProxyDataSource to automatically manage
-    ///  the proxy session lifecycle (open on getConnection, close on connection close).
+    /// Wraps HikariCP pool with OracleProxyDataSource to automatically manage the proxy session lifecycle.
     ///
     /// @return configured datasource with proxy support
     @Bean
@@ -53,8 +52,7 @@ public class OracleProxyDataSourceConfig {
     }
 
     /// Builds HikariCP configuration with Oracle-specific optimizations.
-    /// Configures connection pool size, timeouts, and Oracle driver properties
-    /// for optimal performance and connection validation.
+    /// Configures connection pool size, timeouts, and Oracle driver properties for optimal performance and connection validation.
     ///
     /// @return HikariCP configuration
     @NonNull

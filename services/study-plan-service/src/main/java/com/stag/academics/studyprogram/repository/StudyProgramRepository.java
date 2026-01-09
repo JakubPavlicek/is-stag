@@ -9,8 +9,8 @@ import java.util.Optional;
 
 /// **Study Program Repository**
 ///
-/// Data access layer for study program entities. Provides methods to retrieve
-/// localized study program views with basic information.
+/// Data access layer for study program entities.
+/// Provides methods to retrieve localized study program views with basic information.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

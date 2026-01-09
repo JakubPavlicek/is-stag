@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 /// **Study Plan Service**
 ///
-/// Business logic layer for study plan operations. Retrieves field of study
-/// information associated with study plans.
+/// Business logic layer for study plan operations.
+/// Retrieves field of study information associated with study plans.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

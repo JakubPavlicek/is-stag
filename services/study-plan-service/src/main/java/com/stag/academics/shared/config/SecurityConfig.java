@@ -15,9 +15,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /// **Security Configuration**
 ///
-/// Spring Security configuration for production environments. Configures OAuth2
-/// resource server with JWT authentication, role-based access control from
-/// Keycloak realm_access.roles, and endpoint authorization rules.
+/// Spring Security configuration for production environments.
+/// Configures OAuth2 resource server with JWT authentication,
+/// role-based access control from Keycloak realm_access.roles, and endpoint authorization rules.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0

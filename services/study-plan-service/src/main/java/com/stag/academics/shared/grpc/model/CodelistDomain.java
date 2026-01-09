@@ -2,8 +2,7 @@ package com.stag.academics.shared.grpc.model;
 
 /// **Codelist Domain Enum**
 ///
-/// Enumeration of codelist domains used for resolving study program
-/// form and type meanings from the codelist service.
+/// Enumeration of codelist domains used for resolving study program form and type meanings from the codelist service.
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
