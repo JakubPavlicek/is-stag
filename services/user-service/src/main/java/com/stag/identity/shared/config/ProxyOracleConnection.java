@@ -128,7 +128,9 @@ public class ProxyOracleConnection implements Connection {
     @Override
     public void rollback() throws SQLException {
         log.debug(">>>> ROLLING BACK transaction in proxy session <<<<");
-        physicalConnection.rollback();
+        if (!physicalConnection.getAutoCommit()) {
+            physicalConnection.rollback();
+        }
     }
 
     @Override

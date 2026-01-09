@@ -37,7 +37,7 @@ public class UserClient {
     /// @param personId the person identifier
     /// @param language the language code for localized data
     /// @return simple profile lookup data
-    @Cacheable(value = "person-simple-profile", key = "{#personId, #language}")
+    @Cacheable(value = "student-person-simple-profile", key = "{#personId, #language}")
     @CircuitBreaker(name = "user-service")
     @Retry(name = "user-service")
     public SimpleProfileLookupData getPersonSimpleProfileData(Integer personId, String language) {
