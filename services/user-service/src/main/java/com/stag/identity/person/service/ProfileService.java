@@ -9,10 +9,11 @@ import com.stag.identity.person.repository.PersonRepository;
 import com.stag.identity.person.repository.projection.ProfileView;
 import com.stag.identity.person.repository.projection.SimpleProfileView;
 import com.stag.identity.person.service.data.CodelistMeaningsLookupData;
-import com.stag.identity.person.service.data.ProfileLookupData;
 import com.stag.identity.person.service.data.ProfileUpdateLookupData;
 import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import com.stag.identity.person.util.DataBoxValidator;
+import com.stag.identity.shared.grpc.client.CodelistClient;
+import com.stag.identity.shared.grpc.client.StudentClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -23,8 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.StructuredTaskScope;
+
+import static java.util.concurrent.StructuredTaskScope.Joiner.allSuccessfulOrThrow;
 
 /// **Profile Service**
 ///
@@ -45,10 +47,10 @@ public class ProfileService {
     /// Banking Service
     private final BankingService bankingService;
 
-    /// Codelist Lookup Service
-    private final CodelistLookupService codelistLookupService;
-    /// Student Lookup Service
-    private final StudentLookupService studentLookupService;
+    /// gRPC Student Client
+    private final StudentClient studentClient;
+    /// gRPC Codelist Client
+    private final CodelistClient codelistClient;
 
     /// Transaction Template for transaction management
     private final TransactionTemplate transactionTemplate;
@@ -74,23 +76,26 @@ public class ProfileService {
                             .orElseThrow(() -> new PersonNotFoundException(personId))
         );
 
-        log.debug("Person profile found, fetching additional data for personId: {}", personId);
+        try (var scope = StructuredTaskScope.open(allSuccessfulOrThrow())) {
+            var studentIdsTask = scope.fork(
+                () -> studentClient.getStudentIds(personId)
+            );
 
-        CompletableFuture<List<String>> studentIdsFuture =
-            studentLookupService.getStudentIds(personId);
+            var personProfileTask = scope.fork(
+                () -> codelistClient.getPersonProfileData(profileView, language)
+            );
 
-        CompletableFuture<ProfileLookupData> profileDataFuture =
-            codelistLookupService.getPersonProfileData(profileView, language);
+            scope.join();
 
-        CompletableFuture.allOf(studentIdsFuture, profileDataFuture).join();
+            Profile profile = ProfileMapper.INSTANCE.toPersonProfile(
+                profileView, studentIdsTask.get(), personProfileTask.get()
+            );
 
-        log.debug("Additional data fetched, mapping to PersonProfile for personId: {}", personId);
-        Profile profile = ProfileMapper.INSTANCE.toPersonProfile(
-            profileView, studentIdsFuture.join(), profileDataFuture.join()
-        );
-
-        log.info("Successfully fetched person profile for personId: {}", personId);
-        return profile;
+            log.info("Successfully fetched person profile for personId: {}", personId);
+            return profile;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /// Retrieves simplified person profile with basic localized codelist data.
@@ -110,10 +115,8 @@ public class ProfileService {
                             .orElseThrow(() -> new PersonNotFoundException(personId))
         );
 
-        log.debug("Person simple profile found, fetching additional data for personId: {}", personId);
-
         CodelistMeaningsLookupData codelistMeaningsLookupData =
-            codelistLookupService.getSimpleProfileData(simpleProfileView, language);
+            codelistClient.getSimpleProfileData(simpleProfileView, language);
 
         SimpleProfile simpleProfile = ProfileMapper.INSTANCE.toSimplePersonProfile(
             simpleProfileView, codelistMeaningsLookupData
@@ -162,7 +165,7 @@ public class ProfileService {
         log.debug("Checking person profile update data for personId: {}", personId);
 
         // Check if provided data are valid by calling the codelist-service and get the birthCountryId
-        ProfileUpdateLookupData profileUpdateLookupData = codelistLookupService.getPersonProfileUpdateData(
+        ProfileUpdateLookupData profileUpdateLookupData = codelistClient.getPersonProfileUpdateData(
             command.maritalStatus(),
             birthPlace != null ? birthPlace.country() : null,
             command.titles()

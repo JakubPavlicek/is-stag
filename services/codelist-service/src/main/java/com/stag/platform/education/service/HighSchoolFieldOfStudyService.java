@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class HighSchoolFieldOfStudyService {
 
+    /// High School Field of Study Repository
     private final HighSchoolFieldOfStudyRepository fieldOfStudyRepository;
 
     /// Retrieves a field of study name by its number.
@@ -27,6 +28,8 @@ public class HighSchoolFieldOfStudyService {
     /// @throws HighSchoolFieldOfStudyNotFoundException if not found
     @Transactional(readOnly = true)
     public String findFieldOfStudyName(String fieldOfStudyNumber) {
+        log.info("Finding field of study name by number: {}", fieldOfStudyNumber);
+
         return fieldOfStudyRepository.findNameById(fieldOfStudyNumber)
                                      .orElseThrow(() -> new HighSchoolFieldOfStudyNotFoundException(fieldOfStudyNumber));
     }

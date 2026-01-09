@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 @Service
 public class CodelistEntryService {
 
+    /// Codelist Entry Repository
     private final CodelistEntryRepository codelistEntryRepository;
 
     /// Retrieves codelist entry meanings by their composite IDs.
@@ -41,10 +42,13 @@ public class CodelistEntryService {
     /// @throws CodelistEntriesNotFoundException if any IDs are missing
     @Transactional(readOnly = true)
     public List<CodelistEntryMeaningProjection> findMeaningsByIds(List<CodelistEntryId> entryIds, String language) {
+        log.info("Finding codelist entry meanings for {} IDs in language: {}", entryIds.size(), language);
+
         List<CodelistEntryMeaningProjection> foundEntries = codelistEntryRepository.findCodelistEntriesByIds(entryIds, language);
 
         ensureAllEntriesWereFound(entryIds, foundEntries);
 
+        log.debug("Successfully retrieved {} codelist entry meanings", foundEntries.size());
         return foundEntries;
     }
 
@@ -87,6 +91,8 @@ public class CodelistEntryService {
     /// @throws CodelistMeaningsNotFoundException if any meanings are not found
     @Transactional(readOnly = true)
     public PersonProfileLowValues findPersonProfileLowValues(String maritalStatus, String titlePrefix, String titleSuffix) {
+        log.info("Finding person profile low values for maritalStatus: {}, titlePrefix: {}, titleSuffix: {}", maritalStatus, titlePrefix, titleSuffix);
+        
         List<CodelistEntry> entries = codelistEntryRepository.findAll(
             CodelistEntrySpecification.byPersonProfileCriteria(maritalStatus, titlePrefix, titleSuffix)
         );
@@ -101,6 +107,7 @@ public class CodelistEntryService {
             throw new CodelistMeaningsNotFoundException(missingMeanings);
         }
 
+        log.debug("Successfully found person profile low values");
         return new PersonProfileLowValues(maritalStatusLowValue, titlePrefixLowValue, titleSuffixLowValue);
     }
 

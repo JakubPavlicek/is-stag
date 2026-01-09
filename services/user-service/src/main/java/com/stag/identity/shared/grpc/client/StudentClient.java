@@ -6,6 +6,7 @@ import com.stag.academics.student.v1.StudentServiceGrpc;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,10 +40,15 @@ public class StudentClient {
     @CircuitBreaker(name = "student-service")
     @Retry(name = "student-service")
     public List<String> getStudentIds(Integer personId) {
+        log.info("Fetching student ids");
+
         var request = GetStudentIdsRequest.newBuilder()
                                           .setPersonId(personId)
                                           .build();
         var response = studentServiceStub.getStudentIds(request);
+
+        log.debug("Completed fetching student ids");
+
         return response.getStudentIdsList();
     }
 
@@ -51,13 +57,19 @@ public class StudentClient {
     ///
     /// @param studentId the student identifier
     /// @return person identifier associated with the student
+    @Cacheable(value = "student-person-id", key = "#studentId")
     @CircuitBreaker(name = "student-service")
     @Retry(name = "student-service")
     public Integer getStudentPersonId(String studentId) {
+        log.info("Fetching student person id");
+
         var request = GetStudentPersonIdRequest.newBuilder()
                                                .setStudentId(studentId)
                                                .build();
         var response = studentServiceStub.getStudentPersonId(request);
+
+        log.debug("Completed fetching student person id");
+
         return response.getPersonId();
     }
 

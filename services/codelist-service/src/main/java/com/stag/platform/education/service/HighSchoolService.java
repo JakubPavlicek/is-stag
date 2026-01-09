@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class HighSchoolService {
 
+    /// High School Repository
     private final HighSchoolRepository highSchoolRepository;
 
     /// Retrieves high school address information by ID.
@@ -28,6 +29,8 @@ public class HighSchoolService {
     /// @throws HighSchoolNotFoundException if not found
     @Transactional(readOnly = true)
     public HighSchoolAddressProjection findHighSchoolAddressById(String highSchoolId) {
+        log.info("Finding high school address by ID: {}", highSchoolId);
+
         return highSchoolRepository.findHighSchoolAddressById(highSchoolId)
                                    .orElseThrow(() -> new HighSchoolNotFoundException(highSchoolId));
     }

@@ -37,6 +37,8 @@ public class StudentGrpcService extends StudentServiceGrpc.StudentServiceImplBas
         GetStudentIdsRequest request,
         StreamObserver<GetStudentIdsResponse> responseObserver
     ) {
+        log.info("Fetching student IDs for person ID: {}", request.getPersonId());
+
         // Fetch student IDs from service
         List<String> studentIds = studentService.findAllStudentIds(request.getPersonId());
 
@@ -45,8 +47,7 @@ public class StudentGrpcService extends StudentServiceGrpc.StudentServiceImplBas
                                             .addAllStudentIds(studentIds)
                                             .build();
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        completeResponse(responseObserver, response);
     }
 
     /// Retrieves person ID for a given student via gRPC.
@@ -58,6 +59,8 @@ public class StudentGrpcService extends StudentServiceGrpc.StudentServiceImplBas
         GetStudentPersonIdRequest request,
         StreamObserver<GetStudentPersonIdResponse> responseObserver
     ) {
+        log.info("Fetching person ID for student ID: {}", request.getStudentId());
+
         // Fetch person ID from service
         Integer personId = studentService.findPersonId(request.getStudentId());
 
@@ -66,6 +69,14 @@ public class StudentGrpcService extends StudentServiceGrpc.StudentServiceImplBas
                                                  .setPersonId(personId)
                                                  .build();
 
+        completeResponse(responseObserver, response);
+    }
+
+    /// Completes the gRPC response stream successfully.
+    ///
+    /// @param responseObserver the response stream observer
+    /// @param response the response to send
+    private <T> void completeResponse(StreamObserver<T> responseObserver, T response) {
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }

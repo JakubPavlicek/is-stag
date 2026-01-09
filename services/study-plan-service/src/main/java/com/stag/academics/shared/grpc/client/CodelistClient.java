@@ -38,8 +38,12 @@ public class CodelistClient {
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public CodelistMeaningsLookupData getStudyProgramData(StudyProgramView studyProgram, String language) {
+        log.info("Fetching codelist meanings for study program: {}", studyProgram.id());
+
         var request = CodelistMapper.INSTANCE.toCodelistValuesRequest(studyProgram, language);
         var response = codelistServiceStub.getCodelistValues(request);
+
+        log.debug("Completed fetching codelist meanings for study program: {}", studyProgram.id());
 
         return CodelistMapper.INSTANCE.toCodelistMeaningsData(response);
     }

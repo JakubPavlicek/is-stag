@@ -42,9 +42,8 @@ public class StudyPlanClient {
     @CircuitBreaker(name = "study-plan-service")
     @Retry(name = "study-plan-service")
     public StudyProgramAndFieldLookupData getStudyProgramAndField(Long studyProgramId, Long studyPlanId, String language) {
-        log.info("Fetching study program: {}, field of study with plan: {}", studyProgramId, studyPlanId);
+        log.info("Fetching study program: {} and field of study with plan: {}", studyProgramId, studyPlanId);
 
-        // Build gRPC request
         var request = StudyPlanMapper.INSTANCE.toStudyProgramAndFieldDataRequest(studyProgramId, studyPlanId, language);
         var response = studyPlanServiceStub.getStudyProgramAndField(request);
 

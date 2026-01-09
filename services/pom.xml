@@ -259,6 +259,7 @@
                             </path>
                         </annotationProcessorPaths>
                         <compilerArgs>
+                            <arg>--enable-preview</arg> <!-- Enable Structured Concurrency -->
                             <arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>
                             <arg>-Amapstruct.suppressGeneratorVersionInfoComment=true</arg>
                         </compilerArgs>

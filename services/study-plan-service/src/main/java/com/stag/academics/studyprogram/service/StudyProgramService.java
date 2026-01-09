@@ -39,6 +39,8 @@ public class StudyProgramService {
     /// @return enriched study program view with codelist meanings
     /// @throws StudyProgramNotFoundException if study program not found
     public StudyProgramView findStudyProgram(Long studyProgramId, String language) {
+        log.info("Fetching study program with ID: {} and language: {}", studyProgramId, language);
+
         StudyProgramView rawStudyProgramView = transactionTemplate.execute(status ->
             studyProgramRepository.findStudyProgramViewById(studyProgramId, language)
                                   .orElseThrow(() -> new StudyProgramNotFoundException(studyProgramId))

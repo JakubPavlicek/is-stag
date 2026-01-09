@@ -137,7 +137,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                  ));
     }
 
-    /// Handles errors when HTTP message body cannot be read or parsed.
+    /// Handles errors when the HTTP message body cannot be read or parsed.
     ///
     /// @param ex the not readable exception
     /// @param headers HTTP headers
@@ -191,14 +191,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    /// Handles exceptions wrapped by async operations (CompletableFuture).
+    /// Handles exceptions wrapped by async operations (StructuredTaskScope.Exceptions).
     ///
     /// Unwraps and handles the underlying exception appropriately.
     ///
     /// @param ex the wrapper exception
     /// @param request the HTTP request
     /// @return problem detail based on underlying cause
-    @ExceptionHandler({CompletionException.class, ExecutionException.class})
+    @ExceptionHandler({ CompletionException.class, ExecutionException.class })
     public ProblemDetail handleAsyncWrapperExceptions(Exception ex, HttpServletRequest request) {
         // Special handling for gRPC exceptions
         if (ex.getCause() instanceof StatusRuntimeException sre) {

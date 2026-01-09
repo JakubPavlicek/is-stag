@@ -22,7 +22,9 @@ import java.util.List;
 @Service
 public class DomainService {
 
+    /// Codelist Entry Repository
     private final CodelistEntryRepository codelistEntryRepository;
+    /// Domain Repository
     private final DomainRepository domainRepository;
 
     /// Retrieves all values for a specific domain in the given language.
@@ -33,6 +35,7 @@ public class DomainService {
     @Cacheable(value = "domain-values", key = "{#domain, #language}")
     @Transactional(readOnly = true)
     public List<DomainValueView> getDomainValues(String domain, String language) {
+        log.info("Fetching domain values for domain: {} in language: {}", domain, language);
         return codelistEntryRepository.findDomainValuesByDomain(domain, language);
     }
 
@@ -42,6 +45,7 @@ public class DomainService {
     @Cacheable(value = "domains")
     @Transactional(readOnly = true)
     public List<String> getDomains() {
+        log.info("Fetching all domain names");
         return domainRepository.findAllDomainNames();
     }
 

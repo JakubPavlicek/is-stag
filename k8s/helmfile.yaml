@@ -177,7 +177,7 @@ releases:
   # ========================================
   - name: grafana
     chart: grafana/grafana
-    version: 10.5.4
+    version: 10.5.5
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/grafana/values.yaml

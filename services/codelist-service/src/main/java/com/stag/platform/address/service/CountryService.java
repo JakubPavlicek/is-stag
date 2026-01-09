@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CountryService {
 
+    /// Country Repository
     private final CountryRepository countryRepository;
 
     /// Retrieves all valid countries in the specified language.
@@ -37,6 +38,7 @@ public class CountryService {
     @Transactional(readOnly = true)
     @Cacheable(value = "countries", key = "#language")
     public Set<CountryView> getCountries(String language) {
+        log.info("Fetching all countries for language: {}", language);
         return countryRepository.findAllValidCountries(language);
     }
 
@@ -49,9 +51,11 @@ public class CountryService {
     @Cacheable(value = "country-id", key = "#countryName", unless = "#result == null")
     public Integer findCountryIdByName(String countryName) {
         if (countryName == null || countryName.isBlank()) {
+            log.debug("Country name is null or blank, returning null");
             return null;
         }
 
+        log.info("Finding country ID by name: {}", countryName);
         return countryRepository.findCountryIdByName(countryName)
                                 .orElseThrow(() -> new CountryNotFoundException(countryName));
     }
@@ -64,10 +68,13 @@ public class CountryService {
     /// @throws CountriesNotFoundException if any IDs are missing
     @Transactional(readOnly = true)
     public Map<Integer, String> findNamesByIds(Collection<Integer> countryIds, String language) {
+        log.info("Finding country names for {} IDs in language: {}", countryIds.size(), language);
+
         List<CountryNameProjection> foundCountries = countryRepository.findNamesByIds(countryIds, language);
 
         ensureAllCountriesWereFound(countryIds, foundCountries);
 
+        log.debug("Successfully retrieved {} country names", foundCountries.size());
         return foundCountries.stream()
                              .collect(Collectors.toMap(
                                  CountryNameProjection::id,

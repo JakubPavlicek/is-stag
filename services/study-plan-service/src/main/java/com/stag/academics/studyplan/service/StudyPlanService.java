@@ -31,6 +31,8 @@ public class StudyPlanService {
     /// @throws FieldOfStudyNotFoundException if field of study not found
     @Transactional(readOnly = true)
     public FieldOfStudyView findFieldOfStudy(Long studyPlanId, String language) {
+        log.info("Fetching field of study for study plan with ID: {} and language: {}", studyPlanId, language);
+
         return studyPlanRepository.findFieldOfStudy(studyPlanId, language)
                                   .orElseThrow(() -> new FieldOfStudyNotFoundException(studyPlanId));
     }

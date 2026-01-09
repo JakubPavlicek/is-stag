@@ -43,7 +43,6 @@ public class UserClient {
     public SimpleProfileLookupData getPersonSimpleProfileData(Integer personId, String language) {
         log.info("Fetching student simple profile for personId: {}", personId);
 
-        // Build gRPC request
         var request = PersonMapper.INSTANCE.toSimpleProfileDataRequest(personId, language);
         var response = personServiceStub.getPersonSimpleProfile(request);
 

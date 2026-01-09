@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MunicipalityPartService {
 
+    /// Municipality Part Repository
     private final MunicipalityPartRepository municipalityPartRepository;
 
     /// Retrieves address place names by municipality part IDs.
@@ -34,10 +35,13 @@ public class MunicipalityPartService {
     /// @throws MunicipalityPartsNotFoundException if any IDs are missing
     @Transactional(readOnly = true)
     public Map<Long, AddressPlaceNameProjection> findAddressNamesByIds(Collection<Long> ids) {
+        log.info("Finding address place names for {} municipality part IDs", ids.size());
+
         List<AddressPlaceNameProjection> foundMunicipalityParts = municipalityPartRepository.findAddressNamesByIds(ids);
 
         ensureAllMunicipalityPartsWereFound(ids, foundMunicipalityParts);
 
+        log.debug("Successfully retrieved {} address place names", foundMunicipalityParts.size());
         return foundMunicipalityParts.stream()
                                      .collect(Collectors.toMap(
                                          AddressPlaceNameProjection::municipalityPartId,

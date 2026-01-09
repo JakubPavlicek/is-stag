@@ -6,14 +6,13 @@ import com.stag.identity.person.model.Education;
 import com.stag.identity.person.repository.PersonRepository;
 import com.stag.identity.person.repository.projection.EducationView;
 import com.stag.identity.person.service.data.EducationLookupData;
+import com.stag.identity.shared.grpc.client.CodelistClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import java.util.concurrent.CompletableFuture;
 
 /// **Education Service**
 ///
@@ -30,8 +29,9 @@ public class EducationService {
 
     /// Person Repository
     private final PersonRepository personRepository;
-    /// Codelist Lookup Service
-    private final CodelistLookupService codelistLookupService;
+
+    /// gRPC Codelist Client
+    private final CodelistClient codelistClient;
 
     /// Transaction Template for transaction management
     private final TransactionTemplate transactionTemplate;
@@ -57,17 +57,9 @@ public class EducationService {
                             .orElseThrow(() -> new PersonNotFoundException(personId))
         );
 
-        log.debug("Person education information found, fetching additional data for personId: {}", personId);
+        EducationLookupData educationData = codelistClient.getPersonEducationData(educationView, language);
 
-        CompletableFuture<EducationLookupData> educationDataFuture =
-            codelistLookupService.getPersonEducationData(educationView, language);
-
-        EducationLookupData educationData = educationDataFuture.join();
-
-        log.debug("Additional data fetched, mapping to PersonEducation for personId: {}", personId);
-        Education education = EducationMapper.INSTANCE.toPersonEducation(
-            educationView, educationData
-        );
+        Education education = EducationMapper.INSTANCE.toPersonEducation(educationView, educationData);
 
         log.info("Successfully fetched person education information for personId: {}", personId);
         return education;

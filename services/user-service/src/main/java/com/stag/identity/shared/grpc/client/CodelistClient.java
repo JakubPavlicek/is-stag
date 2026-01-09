@@ -54,8 +54,12 @@ public class CodelistClient {
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public CodelistMeaningsLookupData getSimpleProfileData(SimpleProfileView simpleProfile, String language) {
+        log.info("Fetching person simple profile data");
+
         var request = CodelistMapper.INSTANCE.toCodelistValuesRequest(simpleProfile, language);
         var response = codelistServiceStub.getCodelistValues(request);
+
+        log.debug("Completed fetching person simple profile data");
 
         return CodelistMapper.INSTANCE.toCodelistMeaningsData(response);
     }
@@ -69,6 +73,8 @@ public class CodelistClient {
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public ProfileLookupData getPersonProfileData(ProfileView personProfile, String language) {
+        log.info("Fetching person profile data");
+
         var request = CodelistMapper.INSTANCE.toPersonProfileDataRequest(personProfile, language);
 
         // Skip call if no meaningful data to fetch
@@ -78,6 +84,9 @@ public class CodelistClient {
         }
 
         var response = codelistServiceStub.getPersonProfileData(request);
+
+        log.debug("Completed fetching person profile data");
+
         return CodelistMapper.INSTANCE.toPersonProfileData(response);
     }
 
@@ -91,6 +100,8 @@ public class CodelistClient {
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public ProfileUpdateLookupData getPersonProfileUpdateData(String maritalStatus, String birthCountryName, Profile.Titles titles) {
+        log.info("Fetching person profile update data");
+
         var request = CodelistMapper.INSTANCE.toPersonProfileUpdateDataRequest(maritalStatus, birthCountryName, titles);
 
         // Skip call if no meaningful data to fetch
@@ -100,6 +111,9 @@ public class CodelistClient {
         }
 
         var response = codelistServiceStub.getPersonProfileUpdateData(request);
+
+        log.debug("Completed fetching person profile update data");
+
         return CodelistMapper.INSTANCE.toProfileUpdateLookupData(response);
     }
 
@@ -112,6 +126,8 @@ public class CodelistClient {
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public AddressLookupData getPersonAddressData(AddressView addressView, String language) {
+        log.info("Fetching person address data");
+
         var request = CodelistMapper.INSTANCE.toPersonAddressDataRequest(addressView, language);
 
         // Skip call if no meaningful data to fetch
@@ -121,6 +137,9 @@ public class CodelistClient {
         }
 
         var response = codelistServiceStub.getPersonAddressData(request);
+
+        log.debug("Completed fetching person address data");
+
         return CodelistMapper.INSTANCE.toPersonAddressData(response, addressView);
     }
 
@@ -133,6 +152,8 @@ public class CodelistClient {
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public BankingLookupData getPersonBankingData(BankView bankView, String language) {
+        log.info("Fetching person banking data");
+
         var request = CodelistMapper.INSTANCE.toPersonBankingDataRequest(bankView, language);
 
         // Skip call if no meaningful data to fetch
@@ -142,6 +163,9 @@ public class CodelistClient {
         }
 
         var response = codelistServiceStub.getPersonBankingData(request);
+
+        log.debug("Completed fetching person banking data");
+
         return CodelistMapper.INSTANCE.toPersonBankingData(response);
     }
 
@@ -154,6 +178,8 @@ public class CodelistClient {
     @CircuitBreaker(name = "codelist-service")
     @Retry(name = "codelist-service")
     public EducationLookupData getPersonEducationData(EducationView personEducation, String language) {
+        log.info("Fetching person education data");
+
         var request = CodelistMapper.INSTANCE.toPersonEducationDataRequest(personEducation, language);
 
         // Skip call if no meaningful data to fetch
@@ -163,6 +189,9 @@ public class CodelistClient {
         }
 
         var response = codelistServiceStub.getPersonEducationData(request);
+
+        log.debug("Completed fetching person education data");
+
         return CodelistMapper.INSTANCE.toPersonEducationData(response);
     }
 

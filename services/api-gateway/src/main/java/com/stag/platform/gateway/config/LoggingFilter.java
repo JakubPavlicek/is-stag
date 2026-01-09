@@ -76,63 +76,124 @@ public class LoggingFilter implements WebFilter {
         return chain.filter(exchange)
                     .doOnSuccess(_ -> {
                         Duration duration = Duration.between(start, Instant.now());
-                        logResponse(exchange.getResponse(), duration);
+                        logResponse(request, exchange.getResponse(), duration);
+                    })
+                    .doOnError(error -> {
+                        Duration duration = Duration.between(start, Instant.now());
+                        logError(request, error, duration);
                     });
     }
 
     /// Logs detailed information about an incoming HTTP request.
     ///
     /// Logged information includes:
-    /// - HTTP method and path
-    /// - Query parameters
+    /// - HTTP method and path with query parameters
+    /// - Remote client address
     /// - HTTP version (1.1 or 2.0)
-    /// - Content-Type header
-    /// - Content-Length
+    /// - Content-Type and Content-Length
     ///
     /// @param request The server HTTP request to log
     private void logRequest(ServerHttpRequest request) {
         String method = request.getMethod().name();
         String path = request.getPath().value();
         String query = request.getURI().getQuery();
+        String fullPath = query != null ? path + "?" + query : path;
+        
+        String remoteAddress = Optional.ofNullable(request.getRemoteAddress())
+                                      .map(addr -> addr.getAddress().getHostAddress())
+                                      .orElse("unknown");
+        
         String contentType = Optional.ofNullable(request.getHeaders().getContentType())
                                      .map(MediaType::toString)
-                                     .orElse("");
+                                     .orElse("none");
+        
         long contentLength = request.getHeaders().getContentLength();
+        String contentLengthStr = contentLength > 0 ? contentLength + " bytes" : "none";
         
         // Detect the HTTP version from headers
-        String httpVersion = "HTTP/1.1";
-        if (request.getHeaders().containsHeader(SCHEME.text().toString())) {
-            httpVersion = "HTTP/2.0";
-        }
+        String httpVersion = request.getHeaders().containsHeader(SCHEME.text().toString()) 
+            ? "HTTP/2.0" 
+            : "HTTP/1.1";
 
-        log.debug("REQUEST: {} {}{} {} contentType={} contentLength={}",
-            method, path, query, httpVersion, contentType, contentLength
+        log.info("--> {} {} [{}] from {} | Content-Type: {} | Content-Length: {}",
+            method, fullPath, httpVersion, remoteAddress, contentType, contentLengthStr
         );
     }
 
     /// Logs detailed information about an outgoing HTTP response.
     ///
     /// Logged information includes:
-    /// - HTTP status code
-    /// - Request duration in milliseconds
-    /// - Content-Type
-    /// - Content-Length
+    /// - HTTP status code with reason phrase
+    /// - Request method and path
+    /// - Request duration with performance indicator
+    /// - Content-Type and Content-Length
     ///
+    /// @param request The original server HTTP request
     /// @param response The server HTTP response to log
     /// @param duration The time taken to process the request
-    private void logResponse(ServerHttpResponse response, Duration duration) {
-        int status = Optional.ofNullable(response.getStatusCode())
-                             .map(HttpStatusCode::value)
-                             .orElse(-1);
+    private void logResponse(ServerHttpRequest request, ServerHttpResponse response, Duration duration) {
+        String method = request.getMethod().name();
+        String path = request.getPath().value();
+        
+        int statusCode = Optional.ofNullable(response.getStatusCode())
+                                 .map(HttpStatusCode::value)
+                                 .orElse(-1);
+        
+        String statusText = getStatusText(statusCode);
+        
         long millis = duration.toMillis();
+        String performanceIndicator = getPerformanceIndicator(millis);
+        
         String contentType = Optional.ofNullable(response.getHeaders().getContentType())
-                                     .map(MediaType::getType)
-                                     .orElse("");
+                                     .map(MediaType::toString)
+                                     .orElse("none");
+        
         long contentLength = response.getHeaders().getContentLength();
+        String contentLengthStr = contentLength > 0 ? contentLength + " bytes" : "none";
 
-        log.debug("RESPONSE: {} duration={}ms contentType={} contentLength={}",
-            status, millis, contentType, contentLength
+        log.info("<-- {} {} {} {} | {}ms {} | Content-Type: {} | Content-Length: {}",
+            statusCode, statusText, method, path, millis, performanceIndicator, contentType, contentLengthStr
         );
+    }
+
+    /// Logs error information when request processing fails.
+    ///
+    /// @param request The original server HTTP request
+    /// @param error The error that occurred
+    /// @param duration The time taken before the error
+    private void logError(ServerHttpRequest request, Throwable error, Duration duration) {
+        String method = request.getMethod().name();
+        String path = request.getPath().value();
+        long millis = duration.toMillis();
+
+        log.error("<-- ERROR {} {} | {}ms | Error: {}", 
+            method, path, millis, error.getMessage()
+        );
+    }
+
+    /// Returns a human-readable status text for HTTP status codes.
+    ///
+    /// @param statusCode The HTTP status code
+    /// @return Status text description
+    private String getStatusText(int statusCode) {
+        return switch (statusCode / 100) {
+            case 2 -> "OK";
+            case 3 -> "REDIRECT";
+            case 4 -> "CLIENT_ERROR";
+            case 5 -> "SERVER_ERROR";
+            default -> "UNKNOWN";
+        };
+    }
+
+    /// Returns a performance indicator emoji/symbol based on response time.
+    ///
+    /// @param millis Response time in milliseconds
+    /// @return Performance indicator
+    private String getPerformanceIndicator(long millis) {
+        if (millis < 100) return "[FAST]";
+        if (millis < 500) return "[OK]";
+        if (millis < 1000) return "[SLOW]";
+        return "[VERY_SLOW]";
     }
 
 }

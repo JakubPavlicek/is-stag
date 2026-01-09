@@ -36,6 +36,8 @@ public class DomainController implements DomainsApi {
     /// @return Response containing domain values
     @Override
     public ResponseEntity<DomainValueListResponse> getDomainValues(String domain, String acceptLanguage) {
+        log.info("Domain values requested for domain: {} in language: {}", domain, acceptLanguage);
+
         List<DomainValueView> domainValues = domainService.getDomainValues(domain, acceptLanguage);
         DomainValueListResponse domainValuesResponse = DomainApiMapper.INSTANCE.toDomainValueListResponse(domainValues);
 
@@ -44,9 +46,11 @@ public class DomainController implements DomainsApi {
 
     /// Retrieves all available domain names.
     ///
-    /// @return Response containing list of domain names
+    /// @return Response containing a list of domain names
     @Override
     public ResponseEntity<DomainListResponse> getDomains() {
+        log.info("Domains requested");
+
         List<String> domains = domainService.getDomains();
         DomainListResponse domainsResponse = DomainApiMapper.INSTANCE.toDomainListResponse(domains);
 

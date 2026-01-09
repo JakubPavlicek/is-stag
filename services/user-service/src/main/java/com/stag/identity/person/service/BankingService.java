@@ -10,6 +10,7 @@ import com.stag.identity.person.repository.projection.BankView;
 import com.stag.identity.person.service.data.BankingLookupData;
 import com.stag.identity.person.service.dto.PersonUpdateCommand;
 import com.stag.identity.person.util.BankAccountValidator;
+import com.stag.identity.shared.grpc.client.CodelistClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.iban4j.CountryCode;
@@ -18,8 +19,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import java.util.concurrent.CompletableFuture;
 
 /// **Banking Service**
 ///
@@ -36,8 +35,9 @@ public class BankingService {
 
     /// Person Repository
     private final PersonRepository personRepository;
-    /// Codelist Lookup Service
-    private final CodelistLookupService codelistLookupService;
+
+    /// gRPC Codelist Client
+    private final CodelistClient codelistClient;
 
     /// Transaction Template for transaction management
     private final TransactionTemplate transactionTemplate;
@@ -63,17 +63,9 @@ public class BankingService {
                             .orElseThrow(() -> new PersonNotFoundException(personId))
         );
 
-        log.debug("Person banking information found, fetching additional data for personId: {}", personId);
+        BankingLookupData bankingData = codelistClient.getPersonBankingData(bankView, language);
 
-        CompletableFuture<BankingLookupData> bankingDataFuture =
-            codelistLookupService.getPersonBankingData(bankView, language);
-
-        BankingLookupData bankingData = bankingDataFuture.join();
-
-        log.debug("Additional data fetched, mapping to PersonBanking for personId: {}", personId);
-        Banking banking = BankingMapper.INSTANCE.toPersonBanking(
-            bankView, bankingData
-        );
+        Banking banking = BankingMapper.INSTANCE.toPersonBanking(bankView, bankingData);
 
         log.info("Successfully fetched person banking information for personId: {}", personId);
         return banking;
@@ -81,17 +73,19 @@ public class BankingService {
 
     /// Updates person bank account information with validation and IBAN generation.
     /// Validates Czech account number checksums, enforces required field combinations,
-    /// and automatically generates IBAN for Czech accounts. Allows clearing account
-    /// by providing all null values.
+    /// and automatically generates IBAN for Czech accounts.
+    /// Allows clearing an account by providing all null values.
     ///
     /// @param person the person entity to update
     /// @param bankAccount the new bank account data
-    /// @throws InvalidBankAccountException if account combination is invalid
+    /// @throws InvalidBankAccountException if an account combination is invalid
     public void updatePersonBankAccount(Person person, PersonUpdateCommand.BankAccount bankAccount) {
         if (bankAccount == null) {
             log.debug("Bank account is null, no updates to perform for personId: {}", person.getId());
             return;
         }
+
+        log.info("Updating bank account for personId: {}", person.getId());
 
         // Update account holder and address
         person.setAccountHolder(bankAccount.holderName());
@@ -132,8 +126,10 @@ public class BankingService {
     /// @param prefix the account prefix (optional)
     /// @param suffix the account number (required if bank code present)
     /// @param bankCode the bank code (required if suffix present)
-    /// @throws InvalidBankAccountException if combination is invalid
+    /// @throws InvalidBankAccountException if a combination is invalid
     private void validateBankAccountCombination(String prefix, String suffix, String bankCode) {
+        log.info("Validating bank account combination");
+
         // If the suffix (account number) is present, bank code must be present
         if (suffix != null && bankCode == null) {
             throw new InvalidBankAccountException("Bank code is mandatory when an account number (suffix) is present.");
@@ -146,16 +142,20 @@ public class BankingService {
         if (prefix != null && suffix == null) {
             throw new InvalidBankAccountException("Account number (suffix) is mandatory when a prefix is present.");
         }
+
+        log.debug("Bank account combination validated successfully");
     }
 
     /// Updates account numbers with checksum validation.
     /// Validates prefix and suffix using Czech bank account checksum algorithm.
-    /// Prefix can be cleared by providing null value.
+    /// Prefix can be cleared by providing a null value.
     ///
     /// @param person the person entity to update
     /// @param bankAccount the new bank account data
     /// @throws InvalidBankAccountException if checksum validation fails
     private static void updateAccountNumbers(Person person, PersonUpdateCommand.BankAccount bankAccount) {
+        log.info("Updating account numbers with checksum validation");
+
         person.setBankCode(bankAccount.bankCode());
 
         // User can remove the prefix
@@ -165,10 +165,12 @@ public class BankingService {
 
         // Validate and update prefix
         if (BankAccountValidator.isValidChecksum(bankAccount.prefix())) {
+            log.debug("Prefix checksum validation passed");
             person.setAccountPrefix(bankAccount.prefix());
         }
         // Validate and update suffix
         if (BankAccountValidator.isValidChecksum(bankAccount.suffix())) {
+            log.debug("Suffix checksum validation passed");
             person.setAccountSuffix(bankAccount.suffix());
         }
     }
@@ -180,6 +182,8 @@ public class BankingService {
     /// @param person the person entity to update
     /// @param bankAccount the new bank account data
     private void updateIban(Person person, PersonUpdateCommand.BankAccount bankAccount) {
+        log.info("Updating IBAN for personId: {}", person.getId());
+
         String prefix = bankAccount.prefix() != null ? bankAccount.prefix() : person.getAccountPrefix();
         String suffix = bankAccount.suffix() != null ? bankAccount.suffix() : person.getAccountSuffix();
         String bankCode = bankAccount.bankCode() != null ? bankAccount.bankCode() : person.getBankCode();
@@ -187,10 +191,12 @@ public class BankingService {
         Iban iban = generateIban(prefix, suffix, bankCode);
 
         if (iban == null) {
+            log.debug("Clearing IBAN for personId: {}", person.getId());
             person.setAccountIban(null);
             return;
         }
 
+        log.debug("IBAN generated successfully for personId: {}", person.getId());
         person.setAccountIban(iban.toString());
     }
 
@@ -203,8 +209,11 @@ public class BankingService {
     /// @return generated IBAN or null if bank code is null
     private Iban generateIban(String prefix, String suffix, String bankCode) {
         if (bankCode == null) {
+            log.debug("Bank code is null, cannot generate IBAN");
             return null;
         }
+
+        log.info("Generating IBAN");
 
         long prefixNum = prefix == null ? 0 : Long.parseLong(prefix);
         long mainNum = suffix == null ? 0 : Long.parseLong(suffix);

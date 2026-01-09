@@ -222,7 +222,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    /// Handles async operation wrapper exceptions (CompletableFuture).
+    /// Handles async operation wrapper exceptions (StructuredTaskScope.Exceptions).
     /// Unwraps and delegates to specific handlers for gRPC and circuit breaker exceptions.
     ///
     /// @param ex the wrapper exception

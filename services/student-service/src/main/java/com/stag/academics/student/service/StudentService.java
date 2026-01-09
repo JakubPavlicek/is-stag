@@ -1,12 +1,12 @@
 package com.stag.academics.student.service;
 
+import com.stag.academics.shared.grpc.client.StudyPlanClient;
+import com.stag.academics.shared.grpc.client.UserClient;
 import com.stag.academics.student.exception.StudentNotFoundException;
 import com.stag.academics.student.mapper.ProfileMapper;
 import com.stag.academics.student.model.Profile;
 import com.stag.academics.student.repository.StudentRepository;
 import com.stag.academics.student.repository.projection.ProfileView;
-import com.stag.academics.student.service.data.SimpleProfileLookupData;
-import com.stag.academics.student.service.data.StudyProgramAndFieldLookupData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.StructuredTaskScope;
+
+import static java.util.concurrent.StructuredTaskScope.Joiner.allSuccessfulOrThrow;
 
 /// **Student Service**
 ///
@@ -32,8 +34,11 @@ public class StudentService {
 
     /// Student Repository
     private final StudentRepository studentRepository;
-    /// Student Async Service for asynchronous external data fetching.
-    private final StudentAsyncService studentAsyncService;
+
+    /// gRPC User Client
+    private final UserClient userClient;
+    /// gRPC Study Plan Client
+    private final StudyPlanClient studyPlanClient;
 
     /// Transaction Template for transaction management.
     private final TransactionTemplate transactionTemplate;
@@ -51,7 +56,7 @@ public class StudentService {
     ///
     /// @param studentId the student identifier
     /// @return the person ID
-    /// @throws StudentNotFoundException if student not found
+    /// @throws StudentNotFoundException if a student not found
     @Transactional(readOnly = true)
     public Integer findPersonId(String studentId) {
         return studentRepository.findPersonId(studentId)
@@ -85,22 +90,26 @@ public class StudentService {
         log.debug("Student profile found, fetching additional data for studentId: {}", studentId);
 
         // Fetch external data asynchronously in parallel
-        CompletableFuture<SimpleProfileLookupData> personSimpleProfileDataFuture =
-            studentAsyncService.getPersonSimpleProfileData(profileView.personId(), language);
+        try (var scope = StructuredTaskScope.open(allSuccessfulOrThrow())) {
+            var simpleProfileTask = scope.fork(
+                () -> userClient.getPersonSimpleProfileData(profileView.personId(), language)
+            );
 
-        CompletableFuture<StudyProgramAndFieldLookupData> studyProgramAndFieldFuture =
-            studentAsyncService.getStudyProgramAndField(profileView.studyProgramId(), profileView.studyPlanId(), language);
+            var studyProgramAndFieldTask = scope.fork(
+                () -> studyPlanClient.getStudyProgramAndField(profileView.studyProgramId(), profileView.studyPlanId(), language)
+            );
 
-        // Wait for both async operations to complete
-        CompletableFuture.allOf(personSimpleProfileDataFuture, studyProgramAndFieldFuture).join();
+            scope.join();
 
-        log.debug("Additional data fetched, mapping to StudentProfile for studentId: {}", studentId);
-        Profile profile = ProfileMapper.INSTANCE.toStudentProfile(
-            profileView, personSimpleProfileDataFuture.join(), studyProgramAndFieldFuture.join()
-        );
+            Profile profile = ProfileMapper.INSTANCE.toStudentProfile(
+                profileView, simpleProfileTask.get(), studyProgramAndFieldTask.get()
+            );
 
-        log.info("Successfully fetched student profile for studentId: {}", studentId);
-        return profile;
+            log.info("Successfully fetched student profile for studentId: {}", studentId);
+            return profile;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

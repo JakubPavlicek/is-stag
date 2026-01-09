@@ -6,14 +6,13 @@ import com.stag.identity.person.model.Addresses;
 import com.stag.identity.person.repository.PersonRepository;
 import com.stag.identity.person.repository.projection.AddressView;
 import com.stag.identity.person.service.data.AddressLookupData;
+import com.stag.identity.shared.grpc.client.CodelistClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import java.util.concurrent.CompletableFuture;
 
 /// **Address Service**
 ///
@@ -30,8 +29,9 @@ public class AddressService {
 
     /// Person repository
     private final PersonRepository personRepository;
-    /// Codelist Lookup service
-    private final CodelistLookupService codelistLookupService;
+
+    /// gRPC Codelist Client
+    private final CodelistClient codelistClient;
 
     /// Transaction Template for transaction management
     private final TransactionTemplate transactionTemplate;
@@ -57,17 +57,9 @@ public class AddressService {
                             .orElseThrow(() -> new PersonNotFoundException(personId))
         );
 
-        log.debug("Person addresses found, fetching additional data for personId: {}", personId);
+        AddressLookupData addressData = codelistClient.getPersonAddressData(addressView, language);
 
-        CompletableFuture<AddressLookupData> addressDataFuture =
-            codelistLookupService.getPersonAddressData(addressView, language);
-
-        AddressLookupData addressData = addressDataFuture.join();
-
-        log.debug("Additional data fetched, mapping to PersonAddresses for personId: {}", personId);
-        Addresses addresses = AddressMapper.INSTANCE.toPersonAddresses(
-            addressView, addressData
-        );
+        Addresses addresses = AddressMapper.INSTANCE.toPersonAddresses(addressView, addressData);
 
         log.info("Successfully fetched person addresses for personId: {}", personId);
         return addresses;
