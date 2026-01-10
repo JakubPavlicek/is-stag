@@ -138,7 +138,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setProperty("errors", getErrors(ex));
 
         return ResponseEntity.of(problemDetail)
-                              .build();
+                             .build();
 
     }
 

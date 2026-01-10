@@ -64,7 +64,12 @@ paths:
       tags:
         - persons
       summary: Update person
-      description: Update a person by their unique identifier.
+      description: |
+        Update a person by their unique identifier.
+        
+        **Required Roles:**
+        * `AD`
+        * `ST` (only if accessing their own data)
       operationId: updatePersonProfile
       parameters:
         - $ref: '#/components/parameters/PersonId'

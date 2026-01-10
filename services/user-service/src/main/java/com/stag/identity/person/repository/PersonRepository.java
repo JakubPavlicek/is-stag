@@ -23,7 +23,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     /// @param id the person identifier
     /// @param clazz the projection class type
     /// @param <T> the projection type
-    /// @return optional person data projected to specified type
+    /// @return optional person data projected to a specified type
     <T> Optional<T> findById(Integer id, Class<T> clazz);
 
     /// Finds comprehensive address data for a person including domicile, temporary, and foreign addresses.

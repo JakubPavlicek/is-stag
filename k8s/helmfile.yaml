@@ -197,7 +197,7 @@ releases:
 
   - name: prometheus
     chart: prometheus-community/prometheus
-    version: 28.2.1
+    version: 28.3.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/prometheus/values.yaml

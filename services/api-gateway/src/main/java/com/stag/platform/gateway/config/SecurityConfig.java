@@ -41,11 +41,8 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain filterChain(ServerHttpSecurity http) {
         return http
-            // Disable CSRF for REST API (using JWT tokens)
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
-            // Configure CORS with custom settings
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            // Define authorization rules
             .authorizeExchange(ex -> ex
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers("/actuator/health/**").permitAll()
@@ -55,7 +52,6 @@ public class SecurityConfig {
                 .pathMatchers("/actuator/**").hasRole("AD")
                 .anyExchange().authenticated()
             )
-            // Configure OAuth2 Resource Server with JWT
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                 jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
             ))
@@ -63,13 +59,6 @@ public class SecurityConfig {
     }
 
     /// Configures CORS (Cross-Origin Resource Sharing) settings.
-    ///
-    /// **CORS Configuration**
-    ///
-    /// - **Allowed Origins**: Production (`https://is-stag.cz`) and development (`http://localhost:5173`)
-    /// - **Allowed Methods**: GET, POST, PUT, PATCH, DELETE, OPTIONS
-    /// - **Allowed Headers**: All headers (`*`)
-    /// - **Credentials**: Enabled (allows cookies and authorization headers)
     ///
     /// @return CorsConfigurationSource with production-ready CORS settings
     @Bean
