@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -24,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({ TestOracleContainerConfig.class, TestCacheConfig.class })
-@DisplayName("PersonRepository")
+@ActiveProfiles("test")
 class PersonRepositoryTest {
 
     @Autowired
@@ -64,17 +65,17 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should return ProfileView when person exists")
         void shouldReturnProfileViewWhenPersonExists() {
-            Person person = createTestPerson(2);
+            Person person = createTestPerson(1);
             personRepository.saveAndFlush(person);
 
-            Optional<ProfileView> result = personRepository.findById(2, ProfileView.class);
+            Optional<ProfileView> result = personRepository.findById(1, ProfileView.class);
 
             assertThat(result).isPresent();
             ProfileView profile = result.get();
-            assertThat(profile.id()).isEqualTo(2);
+            assertThat(profile.id()).isEqualTo(1);
             assertThat(profile.firstName()).isEqualTo("Jan");
             assertThat(profile.lastName()).isEqualTo("Novák");
-            assertThat(profile.birthNumber()).isEqualTo("9001010002");
+            assertThat(profile.birthNumber()).isEqualTo("9001010001");
             assertThat(profile.birthDate()).isEqualTo(LocalDate.of(1990, 1, 1));
             assertThat(profile.gender()).isEqualTo("M");
             assertThat(profile.email()).isEqualTo("jan.novak@example.com");
@@ -85,10 +86,10 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should return SimpleProfileView when person exists")
         void shouldReturnSimpleProfileViewWhenPersonExists() {
-            Person person = createTestPerson(3);
+            Person person = createTestPerson(1);
             personRepository.saveAndFlush(person);
 
-            Optional<SimpleProfileView> result = personRepository.findById(3, SimpleProfileView.class);
+            Optional<SimpleProfileView> result = personRepository.findById(1, SimpleProfileView.class);
 
             assertThat(result).isPresent();
             SimpleProfileView profile = result.get();
@@ -115,7 +116,7 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should return address view with all address types")
         void shouldReturnAddressViewWithAllAddressTypes() {
-            Person person = createTestPerson(4);
+            Person person = createTestPerson(1);
             person.setStreet("Hlavní");
             person.setStreetNumber("123");
             person.setDomicileZipCode("30100");
@@ -132,7 +133,7 @@ class PersonRepositoryTest {
             person.setPostOfficeForeign("Berlin Mitte");
             personRepository.saveAndFlush(person);
 
-            Optional<AddressView> result = personRepository.findAddressesByPersonId(4);
+            Optional<AddressView> result = personRepository.findAddressesByPersonId(1);
 
             assertThat(result).isPresent();
             AddressView address = result.get();
@@ -155,10 +156,10 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should return address view with minimal data")
         void shouldReturnAddressViewWithMinimalData() {
-            Person person = createTestPerson(5);
+            Person person = createTestPerson(1);
             personRepository.saveAndFlush(person);
 
-            Optional<AddressView> result = personRepository.findAddressesByPersonId(5);
+            Optional<AddressView> result = personRepository.findAddressesByPersonId(1);
 
             assertThat(result).isPresent();
             AddressView address = result.get();
@@ -184,7 +185,7 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should return banking view with standard account")
         void shouldReturnBankingViewWithStandardAccount() {
-            Person person = createTestPerson(6);
+            Person person = createTestPerson(1);
             person.setAccountHolder("Jan Novák");
             person.setAccountAddress("Hlavní 123, Plzeň");
             person.setAccountPrefix("123456");
@@ -194,7 +195,7 @@ class PersonRepositoryTest {
             person.setAccountCurrency("CZK");
             personRepository.saveAndFlush(person);
 
-            Optional<BankView> result = personRepository.findBankingByPersonId(6);
+            Optional<BankView> result = personRepository.findBankingByPersonId(1);
 
             assertThat(result).isPresent();
             BankView banking = result.get();
@@ -210,7 +211,7 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should return banking view with euro account")
         void shouldReturnBankingViewWithEuroAccount() {
-            Person person = createTestPerson(7);
+            Person person = createTestPerson(1);
             person.setEuroAccountHolder("Jan Novák");
             person.setEuroAccountAddress("Hauptstraße 1, München");
             person.setEuroAccountPrefix("654321");
@@ -222,7 +223,7 @@ class PersonRepositoryTest {
             person.setEuroAccountSwiftCode("DEUTDEFFXXX");
             personRepository.saveAndFlush(person);
 
-            Optional<BankView> result = personRepository.findBankingByPersonId(7);
+            Optional<BankView> result = personRepository.findBankingByPersonId(1);
 
             assertThat(result).isPresent();
             BankView banking = result.get();
@@ -240,7 +241,7 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should return banking view with both accounts")
         void shouldReturnBankingViewWithBothAccounts() {
-            Person person = createTestPerson(8);
+            Person person = createTestPerson(1);
             person.setAccountPrefix("123456");
             person.setAccountSuffix("1234567890");
             person.setBankCode("0100");
@@ -251,7 +252,7 @@ class PersonRepositoryTest {
             person.setEuroAccountIban("DE89370400440532013000");
             personRepository.saveAndFlush(person);
 
-            Optional<BankView> result = personRepository.findBankingByPersonId(8);
+            Optional<BankView> result = personRepository.findBankingByPersonId(1);
 
             assertThat(result).isPresent();
             BankView banking = result.get();
@@ -275,14 +276,14 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should return education view with Czech high school")
         void shouldReturnEducationViewWithCzechHighSchool() {
-            Person person = createTestPerson(9);
+            Person person = createTestPerson(1);
             person.setHighSchoolId("600012345");
             person.setHighSchoolFieldOfStudyNumber("7941K");
             person.setHighSchoolCountryId(203);
             person.setGraduationDate(LocalDate.of(2008, 6, 15));
             personRepository.saveAndFlush(person);
 
-            Optional<EducationView> result = personRepository.findEducationByPersonId(9);
+            Optional<EducationView> result = personRepository.findEducationByPersonId(1);
 
             assertThat(result).isPresent();
             EducationView education = result.get();
@@ -295,7 +296,7 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should return education view with foreign high school")
         void shouldReturnEducationViewWithForeignHighSchool() {
-            Person person = createTestPerson(10);
+            Person person = createTestPerson(1);
             person.setHighSchoolForeign("Gymnasium München");
             person.setHighSchoolForeignPlace("München");
             person.setHighSchoolForeignFieldOfStudy("Mathematics and Physics");
@@ -303,7 +304,7 @@ class PersonRepositoryTest {
             person.setGraduationDate(LocalDate.of(2009, 7, 20));
             personRepository.saveAndFlush(person);
 
-            Optional<EducationView> result = personRepository.findEducationByPersonId(10);
+            Optional<EducationView> result = personRepository.findEducationByPersonId(1);
 
             assertThat(result).isPresent();
             EducationView education = result.get();
@@ -330,18 +331,18 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should persist person with all required fields")
         void shouldPersistPersonWithAllRequiredFields() {
-            Person person = createTestPerson(11);
+            Person person = createTestPerson(1);
 
             Person saved = personRepository.save(person);
 
-            assertThat(saved.getId()).isEqualTo(11);
-            assertThat(personRepository.findById(11)).isPresent();
+            assertThat(saved.getId()).isEqualTo(1);
+            assertThat(personRepository.findById(1)).isPresent();
         }
 
         @Test
         @DisplayName("should update existing person")
         void shouldUpdateExistingPerson() {
-            Person person = createTestPerson(12);
+            Person person = createTestPerson(1);
             personRepository.saveAndFlush(person);
 
             person.setFirstName("Petr");
@@ -360,13 +361,13 @@ class PersonRepositoryTest {
         @Test
         @DisplayName("should delete person when person exists")
         void shouldDeletePersonWhenPersonExists() {
-            Person person = createTestPerson(13);
+            Person person = createTestPerson(1);
             personRepository.saveAndFlush(person);
 
             personRepository.delete(person);
             personRepository.flush();
 
-            assertThat(personRepository.findById(13)).isEmpty();
+            assertThat(personRepository.findById(1)).isEmpty();
         }
     }
 

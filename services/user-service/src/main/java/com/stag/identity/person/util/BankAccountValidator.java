@@ -24,7 +24,7 @@ public class BankAccountValidator {
     /// @return true if the checksum is valid
     /// @throws InvalidAccountNumberException if the checksum is invalid
     public static boolean isValidChecksum(String number) {
-        if (number == null) {
+        if (number == null || number.isBlank()) {
             return false;
         }
 

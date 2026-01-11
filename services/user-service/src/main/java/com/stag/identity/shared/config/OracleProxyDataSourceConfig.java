@@ -4,11 +4,11 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import oracle.jdbc.OracleConnection;
 import oracle.jdbc.SwitchableBugFix;
-import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 
@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 ///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
+@Profile("!test")
 @Configuration
 public class OracleProxyDataSourceConfig {
 
@@ -55,7 +56,6 @@ public class OracleProxyDataSourceConfig {
     /// Configures connection pool size, timeouts, and Oracle driver properties for optimal performance and connection validation.
     ///
     /// @return HikariCP configuration
-    @NonNull
     private HikariConfig getHikariConfig() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);

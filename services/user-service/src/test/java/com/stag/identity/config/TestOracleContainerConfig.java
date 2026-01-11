@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.DockerImageName;
-import org.testcontainers.utility.MountableFile;
 
 @TestConfiguration(proxyBeanMethods = false)
 public class TestOracleContainerConfig {
@@ -17,8 +16,7 @@ public class TestOracleContainerConfig {
     private static final OracleContainer oracleContainer =
         new OracleContainer(DockerImageName.parse("gvenzl/oracle-free:23-slim-faststart"))
             .withUsername("INSTALL2")
-            .withPassword("install2")
-            .withCopyFileToContainer(MountableFile.forClasspathResource("init.sql"), "container-entrypoint-initdb.d/init.sql");
+            .withPassword("install2");
 
     @Bean
     @ServiceConnection

@@ -151,7 +151,7 @@ public class BankingService {
     /// @param person the person entity to update
     /// @param bankAccount the new bank account data
     /// @throws InvalidBankAccountException if checksum validation fails
-    private static void updateAccountNumbers(Person person, PersonUpdateCommand.BankAccount bankAccount) {
+    private void updateAccountNumbers(Person person, PersonUpdateCommand.BankAccount bankAccount) {
         log.info("Updating account numbers with checksum validation");
 
         person.setBankCode(bankAccount.bankCode());
@@ -188,13 +188,8 @@ public class BankingService {
 
         Iban iban = generateIban(prefix, suffix, bankCode);
 
-        if (iban == null) {
-            log.debug("Clearing IBAN for personId: {}", person.getId());
-            person.setAccountIban(null);
-            return;
-        }
-
         log.debug("IBAN generated successfully for personId: {}", person.getId());
+
         person.setAccountIban(iban.toString());
     }
 
@@ -206,11 +201,6 @@ public class BankingService {
     /// @param bankCode the bank code (required for IBAN generation)
     /// @return generated IBAN or null if bank code is null
     private Iban generateIban(String prefix, String suffix, String bankCode) {
-        if (bankCode == null) {
-            log.debug("Bank code is null, cannot generate IBAN");
-            return null;
-        }
-
         log.info("Generating IBAN");
 
         long prefixNum = prefix == null ? 0 : Long.parseLong(prefix);

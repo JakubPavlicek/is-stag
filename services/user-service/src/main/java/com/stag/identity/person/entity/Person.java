@@ -117,10 +117,6 @@ import java.time.LocalDate;
         @UniqueConstraint(
             name = "OSOB3_UK",
             columnNames = { "EXTERNI_IDENTITA" }
-        ),
-        @UniqueConstraint(
-            name = "SYS_C0098979",
-            columnNames = { "ZDR_SPECIFIKAT" }
         )
     }
 )

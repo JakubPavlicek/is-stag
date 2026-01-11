@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
@@ -48,6 +49,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 @WebMvcTest(PersonController.class)
 @Import({ TestCacheConfig.class, TestSecurityConfig.class, SecurityConfig.class })
+@ActiveProfiles("test")
 class PersonControllerTest {
 
     @Autowired
