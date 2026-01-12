@@ -268,7 +268,6 @@ public class FieldOfStudy {
         fetch = FetchType.LAZY,
         optional = false
     )
-    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(
         name = "STPRIDNO",
         nullable = false
@@ -276,7 +275,6 @@ public class FieldOfStudy {
     private StudyProgram studyProgram;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "OBORIDNO_PODM")
     private FieldOfStudy prerequisiteFieldOfStudy;
 

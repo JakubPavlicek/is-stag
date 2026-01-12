@@ -133,7 +133,6 @@ public class StudyPlan {
         fetch = FetchType.LAZY,
         optional = false
     )
-    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(
         name = "OBORIDNO",
         nullable = false
@@ -254,7 +253,6 @@ public class StudyPlan {
     private String enrollmentLimitation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "STPLIDNO_ZKOPIROVANO")
     @ToString.Exclude
     private StudyPlan copiedFromStudyPlan;

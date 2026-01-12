@@ -41,7 +41,7 @@ public class StudyProgramService {
     public StudyProgramView findStudyProgram(Long studyProgramId, String language) {
         log.info("Fetching study program with ID: {} and language: {}", studyProgramId, language);
 
-        StudyProgramView rawStudyProgramView = transactionTemplate.execute(status ->
+        StudyProgramView rawStudyProgramView = transactionTemplate.execute(_ ->
             studyProgramRepository.findStudyProgramViewById(studyProgramId, language)
                                   .orElseThrow(() -> new StudyProgramNotFoundException(studyProgramId))
         );

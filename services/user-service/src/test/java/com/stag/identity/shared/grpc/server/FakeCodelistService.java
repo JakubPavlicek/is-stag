@@ -16,6 +16,7 @@ import com.stag.platform.codelist.v1.GetPersonProfileUpdateDataResponse;
 import grpcstarter.server.GrpcService;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import lombok.Setter;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,11 +28,17 @@ public class FakeCodelistService extends CodelistServiceGrpc.CodelistServiceImpl
     private Status failStatus = Status.UNAVAILABLE;
 
     // Mock responses
+    @Setter
     private GetCodelistValuesResponse nextCodelistValuesResponse;
+    @Setter
     private GetPersonProfileDataResponse nextPersonProfileDataResponse;
+    @Setter
     private GetPersonProfileUpdateDataResponse nextPersonProfileUpdateDataResponse;
+    @Setter
     private GetPersonAddressDataResponse nextPersonAddressDataResponse;
+    @Setter
     private GetPersonBankingDataResponse nextPersonBankingDataResponse;
+    @Setter
     private GetPersonEducationDataResponse nextPersonEducationDataResponse;
 
     public void resetStats() {
@@ -55,30 +62,6 @@ public class FakeCodelistService extends CodelistServiceGrpc.CodelistServiceImpl
         return callCount.get();
     }
 
-    public void setNextCodelistValuesResponse(GetCodelistValuesResponse response) {
-        this.nextCodelistValuesResponse = response;
-    }
-
-    public void setNextPersonProfileDataResponse(GetPersonProfileDataResponse response) {
-        this.nextPersonProfileDataResponse = response;
-    }
-
-    public void setNextPersonProfileUpdateDataResponse(GetPersonProfileUpdateDataResponse response) {
-        this.nextPersonProfileUpdateDataResponse = response;
-    }
-
-    public void setNextPersonAddressDataResponse(GetPersonAddressDataResponse response) {
-        this.nextPersonAddressDataResponse = response;
-    }
-
-    public void setNextPersonBankingDataResponse(GetPersonBankingDataResponse response) {
-        this.nextPersonBankingDataResponse = response;
-    }
-
-    public void setNextPersonEducationDataResponse(GetPersonEducationDataResponse response) {
-        this.nextPersonEducationDataResponse = response;
-    }
-
     private boolean shouldFail(StreamObserver<?> responseObserver) {
         callCount.incrementAndGet();
         if (failNextCalls > 0) {
@@ -91,43 +74,56 @@ public class FakeCodelistService extends CodelistServiceGrpc.CodelistServiceImpl
 
     @Override
     public void getCodelistValues(GetCodelistValuesRequest request, StreamObserver<GetCodelistValuesResponse> responseObserver) {
-        if (shouldFail(responseObserver)) return;
+        if (shouldFail(responseObserver)) {
+            return;
+        }
         responseObserver.onNext(nextCodelistValuesResponse != null ? nextCodelistValuesResponse : GetCodelistValuesResponse.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
     public void getPersonProfileData(GetPersonProfileDataRequest request, StreamObserver<GetPersonProfileDataResponse> responseObserver) {
-        if (shouldFail(responseObserver)) return;
+        if (shouldFail(responseObserver)) {
+            return;
+        }
         responseObserver.onNext(nextPersonProfileDataResponse != null ? nextPersonProfileDataResponse : GetPersonProfileDataResponse.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
     public void getPersonProfileUpdateData(GetPersonProfileUpdateDataRequest request, StreamObserver<GetPersonProfileUpdateDataResponse> responseObserver) {
-        if (shouldFail(responseObserver)) return;
+        if (shouldFail(responseObserver)) {
+            return;
+        }
         responseObserver.onNext(nextPersonProfileUpdateDataResponse != null ? nextPersonProfileUpdateDataResponse : GetPersonProfileUpdateDataResponse.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
     public void getPersonAddressData(GetPersonAddressDataRequest request, StreamObserver<GetPersonAddressDataResponse> responseObserver) {
-        if (shouldFail(responseObserver)) return;
+        if (shouldFail(responseObserver)) {
+            return;
+        }
         responseObserver.onNext(nextPersonAddressDataResponse != null ? nextPersonAddressDataResponse : GetPersonAddressDataResponse.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
     public void getPersonBankingData(GetPersonBankingDataRequest request, StreamObserver<GetPersonBankingDataResponse> responseObserver) {
-        if (shouldFail(responseObserver)) return;
+        if (shouldFail(responseObserver)) {
+            return;
+        }
         responseObserver.onNext(nextPersonBankingDataResponse != null ? nextPersonBankingDataResponse : GetPersonBankingDataResponse.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
     public void getPersonEducationData(GetPersonEducationDataRequest request, StreamObserver<GetPersonEducationDataResponse> responseObserver) {
-        if (shouldFail(responseObserver)) return;
+        if (shouldFail(responseObserver)) {
+            return;
+        }
         responseObserver.onNext(nextPersonEducationDataResponse != null ? nextPersonEducationDataResponse : GetPersonEducationDataResponse.getDefaultInstance());
         responseObserver.onCompleted();
     }
+
 }

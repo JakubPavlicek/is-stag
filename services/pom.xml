@@ -42,7 +42,7 @@
 
         <!-- gRPC -->
         <grpc.version>1.78.0</grpc.version>
-        <protobuf-java.version>4.33.2</protobuf-java.version>
+        <protobuf-java.version>4.33.3</protobuf-java.version>
         <grpc-starter.version>4.0.1</grpc-starter.version>
         <protovalidate.version>1.1.0</protovalidate.version>
         <protobuf-maven-plugin.version>4.1.2</protobuf-maven-plugin.version>

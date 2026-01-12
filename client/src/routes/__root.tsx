@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { QueryClient } from '@tanstack/react-query'
 import { Outlet, createRootRouteWithContext, useRouter } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import { Header } from '@/components/layout/Header'
 import { Sidebar } from '@/components/layout/Sidebar'
@@ -42,7 +41,6 @@ function RootComponent() {
           <Outlet />
         </main>
       </div>
-      <TanStackRouterDevtools />
     </div>
   )
 }
