@@ -41,10 +41,6 @@ import java.time.LocalDate;
             columnList = "STPLIDNO"
         ),
         @Index(
-            name = "STNO_POMK_FK_I",
-            columnList = "OBORIDNO_KOMB, KOMBIDNO_KOMB"
-        ),
-        @Index(
             name = "STNO_UCHAZEC_IDNO_I",
             columnList = "UCHAZEC_IDNO"
         )

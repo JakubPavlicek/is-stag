@@ -1,0 +1,47 @@
+logging:
+  level:
+    org.springframework.security: TRACE
+    org.hibernate.tool.schema: DEBUG
+
+grpc:
+  server:
+    in-process:
+      name: test
+    port: -1
+
+spring:
+  cache:
+    type: none
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        default_schema: install2
+        dialect: org.hibernate.dialect.OracleDialect
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://test-issuer.example.com
+          jwk-set-uri: https://test-issuer.example.com/.well-known/jwks.json
+
+resilience4j:
+  retry:
+    instances:
+      study-plan-service:
+        max-attempts: 3
+        wait-duration: 10ms
+      user-service:
+        max-attempts: 3
+        wait-duration: 10ms
+  circuitbreaker:
+    instances:
+      study-plan-service:
+        sliding-window-size: 5
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+      user-service:
+        sliding-window-size: 5
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50

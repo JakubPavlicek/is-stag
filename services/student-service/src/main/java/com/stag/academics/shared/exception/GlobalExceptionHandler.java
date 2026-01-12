@@ -10,19 +10,11 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.jspecify.annotations.NonNull;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.ServletWebRequest;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
@@ -47,13 +39,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String SERVICE_UNAVAILABLE = "Service is currently unavailable. Please try again later.";
     private static final String REQUEST_RAISED = "Request {} raised";
 
-    /// Extracts the request URI from a web request.
+    /// Handles Spring Security access denied exceptions (HTTP 403).
     ///
-    /// @param request the web request
-    /// @return the request URI
-    private String getRequestURI(WebRequest request) {
-        ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-        return servletWebRequest.getRequest().getRequestURI();
+    /// @param ex the access denied exception
+    /// @return problem detail with forbidden status
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDeniedException(AccessDeniedException ex) {
+        log.warn(ex.getMessage());
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        problemDetail.setTitle("Access Denied");
+
+        return problemDetail;
     }
 
     /// Handles a student not found exceptions.
@@ -84,45 +81,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    /// Handles validation errors for method arguments.
-    ///
-    /// @param ex the validation exception
-    /// @param headers HTTP headers
-    /// @param status HTTP status code
-    /// @param request the web request
-    /// @return response entity with validation errors
-    @Override
-    protected ResponseEntity<@NonNull Object> handleMethodArgumentNotValid(
-        @NonNull MethodArgumentNotValidException ex,
-        @NonNull HttpHeaders headers,
-        @NonNull HttpStatusCode status,
-        @NonNull WebRequest request
-    ) {
-        log.error(REQUEST_RAISED, getRequestURI(request), ex);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
-        problemDetail.setTitle(INVALID_VALUE);
-        problemDetail.setProperty("errors", getErrors(ex));
-
-        return ResponseEntity.of(problemDetail)
-                             .build();
-
-    }
-
-    /// Extracts field validation errors from exception.
-    ///
-    /// @param ex the validation exception
-    /// @return map of field names to error messages
-    private Map<String, List<String>> getErrors(MethodArgumentNotValidException ex) {
-        return ex.getBindingResult()
-                 .getFieldErrors()
-                 .stream()
-                 .collect(Collectors.groupingBy(
-                     FieldError::getField,
-                     Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())
-                 ));
-    }
-
     /// Handles constraint violation exceptions.
     ///
     /// @param e the constraint violation exception
@@ -150,28 +108,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                      violation -> ((PathImpl) violation.getPropertyPath()).getLeafNode().toString(),
                      Collectors.mapping(ConstraintViolation::getMessage, Collectors.toList())
                  ));
-    }
-
-    /// Handles errors when the HTTP message body cannot be read or parsed.
-    ///
-    /// @param ex the not readable exception
-    /// @param headers HTTP headers
-    /// @param status HTTP status code
-    /// @param request the web request
-    /// @return response entity with error details
-    @Override
-    protected ResponseEntity<@NonNull Object> handleHttpMessageNotReadable(
-        @NonNull HttpMessageNotReadableException ex,
-        @NonNull HttpHeaders headers,
-        @NonNull HttpStatusCode status,
-        @NonNull WebRequest request
-    ) {
-        log.error(REQUEST_RAISED, getRequestURI(request), ex);
-
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, ex.getMostSpecificCause().getMessage());
-        problemDetail.setTitle(INVALID_VALUE);
-
-        return ResponseEntity.of(problemDetail).build();
     }
 
     /// Handles circuit breaker open state exceptions.
