@@ -24,8 +24,8 @@ public interface MunicipalityPartRepository extends JpaRepository<MunicipalityPa
         """
         SELECT new com.stag.platform.address.repository.projection.AddressPlaceNameProjection(
             CAST(mp.id AS Long),
-            mp.name,
             m.name,
+            mp.name,
             d.name
         )
         FROM

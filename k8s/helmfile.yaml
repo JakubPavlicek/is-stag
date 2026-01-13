@@ -212,7 +212,7 @@ releases:
 
   - name: tempo
     chart: grafana/tempo
-    version: 1.24.1
+    version: 1.24.3
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - infrastructure/observability/tempo/values.yaml
@@ -251,7 +251,7 @@ releases:
   # ========================================
   - name: keycloak
     chart: codecentric/keycloakx
-    version: 7.1.5
+    version: 7.1.6
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - opentelemetry-operator

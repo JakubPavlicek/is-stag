@@ -92,7 +92,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
             completeResponse(responseObserver, response);
         } catch (StructuredTaskScope.FailedException e) {
-            errorResponse(responseObserver, e.getCause());
+            errorResponse(responseObserver, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);
@@ -130,7 +130,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
             completeResponse(responseObserver, response);
         } catch (StructuredTaskScope.FailedException e) {
-            errorResponse(responseObserver, e.getCause());
+            errorResponse(responseObserver, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);
@@ -167,7 +167,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
             completeResponse(responseObserver, response);
         } catch (StructuredTaskScope.FailedException e) {
-            errorResponse(responseObserver, e.getCause());
+            errorResponse(responseObserver, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);
@@ -204,7 +204,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
             completeResponse(responseObserver, response);
         } catch (StructuredTaskScope.FailedException e) {
-            errorResponse(responseObserver, e.getCause());
+            errorResponse(responseObserver, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);
@@ -248,7 +248,7 @@ public class CodelistGrpcService extends CodelistServiceGrpc.CodelistServiceImpl
 
             completeResponse(responseObserver, response);
         } catch (StructuredTaskScope.FailedException e) {
-            errorResponse(responseObserver, e.getCause());
+            errorResponse(responseObserver, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             errorResponse(responseObserver, e);

@@ -24,6 +24,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -1493,6 +1494,40 @@ class PersonControllerTest {
                 json.assertThat().extractingPath("$.status").isEqualTo(404);
                 json.assertThat().extractingPath("$.title").isEqualTo("Resource Not Found");
             });
+
+        verify(profileService).getPersonProfile(personId, language);
+    }
+
+    @ParameterizedTest(name = "should return mapped status for gRPC status {0}")
+    @EnumSource(value = Status.Code.class, names = {
+        "PERMISSION_DENIED", "UNAUTHENTICATED", "ALREADY_EXISTS",
+        "FAILED_PRECONDITION", "UNIMPLEMENTED"
+    })
+    @DisplayName("should return mapped status for other gRPC statuses")
+    void getStudentProfile_OtherGrpcStatuses_ReturnsMappedStatus(Status.Code code) {
+        Integer personId = 12345;
+        String language = "en";
+
+        when(profileService.getPersonProfile(personId, language))
+            .thenThrow(new StatusRuntimeException(Status.fromCode(code)));
+
+        int expectedStatus = switch (code) {
+            case PERMISSION_DENIED -> 403;
+            case UNAUTHENTICATED -> 401;
+            case ALREADY_EXISTS -> 409;
+            case FAILED_PRECONDITION -> 412;
+            case UNIMPLEMENTED -> 501;
+            default -> 500;
+        };
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .accept(MediaType.APPLICATION_JSON)
+                      .with(jwt()))
+            .hasStatus(expectedStatus)
+            .bodyJson()
+            .satisfies(json -> json.assertThat().extractingPath("$.status").isEqualTo(expectedStatus));
 
         verify(profileService).getPersonProfile(personId, language);
     }

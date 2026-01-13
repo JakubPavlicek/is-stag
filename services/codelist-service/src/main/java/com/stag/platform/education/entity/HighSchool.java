@@ -14,8 +14,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -141,7 +139,6 @@ public class HighSchool {
     private LocalDate dateOfUpdate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "OBEC_IDNO")
     private Municipality municipality;
 

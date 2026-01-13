@@ -13,8 +13,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -105,7 +103,6 @@ public class Municipality {
         fetch = FetchType.LAZY,
         optional = false
     )
-    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(
         name = "OKRESIDNO",
         nullable = false

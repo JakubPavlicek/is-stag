@@ -16,8 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -65,7 +63,6 @@ public class MunicipalityPart {
         fetch = FetchType.LAZY,
         optional = false
     )
-    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(
         name = "OBEC_IDNO",
         nullable = false

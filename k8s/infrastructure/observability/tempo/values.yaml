@@ -24,11 +24,6 @@ tempo:
   metricsGenerator:
     enabled: true
     remoteWriteUrl: http://prometheus:9090/api/v1/write
-
-  metrics_generator:
-    ring:
-      kvstore:
-        store: inmemory
     processor:
       local_blocks:
         filter_server_spans: false

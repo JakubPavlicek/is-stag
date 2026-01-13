@@ -1,0 +1,11 @@
+logging:
+  level:
+    org.springframework.security: TRACE
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://test-issuer.example.com
+          jwk-set-uri: https://test-issuer.example.com/.well-known/jwks.json

@@ -12,6 +12,8 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -193,7 +195,7 @@ class StudentControllerTest {
     }
 
     @Test
-    @DisplayName("should return 404 Not Found when StatusRuntimeException with NOT_FOUND is thrown")
+    @DisplayName("should return 404 Not Found when StatusRuntimeException with NOT_FOUND is thrown (e.g. CodelistNotFound)")
     void getStudentProfile_GrpcNotFound_Returns404() {
         String studentId = "S123";
         String language = "en";
@@ -284,6 +286,40 @@ class StudentControllerTest {
                 json.assertThat().extractingPath("$.status").isEqualTo(504);
                 json.assertThat().extractingPath("$.title").isEqualTo("Gateway Timeout");
             });
+
+        verify(studentService).getStudentProfile(studentId, language);
+    }
+
+    @ParameterizedTest(name = "should return mapped status for gRPC status {0}")
+    @EnumSource(value = Status.Code.class, names = {
+        "PERMISSION_DENIED", "UNAUTHENTICATED", "ALREADY_EXISTS", 
+        "FAILED_PRECONDITION", "UNIMPLEMENTED"
+    })
+    @DisplayName("should return mapped status for other gRPC statuses")
+    void getStudentProfile_OtherGrpcStatuses_ReturnsMappedStatus(Status.Code code) {
+        String studentId = "S123";
+        String language = "en";
+
+        when(studentService.getStudentProfile(studentId, language))
+            .thenThrow(new StatusRuntimeException(Status.fromCode(code)));
+
+        int expectedStatus = switch (code) {
+            case PERMISSION_DENIED -> 403;
+            case UNAUTHENTICATED -> 401;
+            case ALREADY_EXISTS -> 409;
+            case FAILED_PRECONDITION -> 412;
+            case UNIMPLEMENTED -> 501;
+            default -> 500;
+        };
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/students/{studentId}", studentId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .accept(MediaType.APPLICATION_JSON)
+                      .with(jwt()))
+            .hasStatus(expectedStatus)
+            .bodyJson()
+            .satisfies(json -> json.assertThat().extractingPath("$.status").isEqualTo(expectedStatus));
 
         verify(studentService).getStudentProfile(studentId, language);
     }

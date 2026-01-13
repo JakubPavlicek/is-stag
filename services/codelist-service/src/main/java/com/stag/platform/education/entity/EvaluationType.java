@@ -14,8 +14,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -161,7 +159,6 @@ public class EvaluationType {
     private BigDecimal unfilledValueForAverage;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(
         name = "HODNIDNO_NEVYPLNENO",
         referencedColumnName = "HODNIDNO"
