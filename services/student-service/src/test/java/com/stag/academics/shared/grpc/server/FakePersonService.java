@@ -59,8 +59,10 @@ public class FakePersonService extends PersonServiceGrpc.PersonServiceImplBase {
         if (response != null) {
             responseObserver.onNext(response);
             responseObserver.onCompleted();
-        } else {
+        }
+        else {
             responseObserver.onError(Status.NOT_FOUND.asRuntimeException());
         }
     }
+
 }

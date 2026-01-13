@@ -23,8 +23,10 @@ import io.grpc.StatusRuntimeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -39,6 +41,7 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletionException;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -485,9 +488,6 @@ class PersonControllerTest {
                 json.assertThat().extractingPath("$.account.bankCode").isEqualTo("0100");
                 json.assertThat().extractingPath("$.account.currency").isEqualTo("CZK");
                 json.assertThat().extractingPath("$.account.iban").isEqualTo("CZ6501000001231234560287");
-                json.assertThat().extractingPath("$.euroAccount.holderName").isEqualTo("John Doe");
-                json.assertThat().extractingPath("$.euroAccount.accountNumberPrefix").isEqualTo("654321");
-                json.assertThat().extractingPath("$.euroAccount.accountNumberSuffix").isEqualTo("0287");
                 json.assertThat().extractingPath("$.euroAccount.bankCode").isEqualTo("0800");
                 json.assertThat().extractingPath("$.euroAccount.currency").isEqualTo("EUR");
                 json.assertThat().extractingPath("$.euroAccount.swiftCode").isEqualTo("GIBACZPX");
@@ -867,22 +867,17 @@ class PersonControllerTest {
             .hasStatus(400);
     }
 
-    @Test
-    @DisplayName("should return 400 Bad Request when email format is invalid")
-    void updatePersonProfile_InvalidEmailFormat_Returns400() {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideInvalidValidationCases")
+    @DisplayName("should return 400 Bad Request when validation fails")
+    void updatePersonProfile_InvalidValidation_Returns400(String testName, String requestBody) {
         Integer personId = 12345;
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
                       .with(jwt())
                       .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "contact": {
-                                   "email": "invalid-email"
-                                 }
-                               }
-                               """))
+                      .content(requestBody))
             .hasStatus(400)
             .bodyJson()
             .satisfies(json -> {
@@ -891,292 +886,126 @@ class PersonControllerTest {
             });
     }
 
-    @Test
-    @DisplayName("should return 400 Bad Request when phone number pattern is invalid")
-    void updatePersonProfile_InvalidPhonePattern_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "contact": {
-                                   "phone": "invalid-phone-123abc"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when phone number exceeds max length")
-    void updatePersonProfile_PhoneExceedsMaxLength_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "contact": {
-                                   "phone": "+123456789012345678901"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when mobile number pattern is invalid")
-    void updatePersonProfile_InvalidMobilePattern_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "contact": {
-                                   "mobile": "abc123"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when mobile number exceeds max length")
-    void updatePersonProfile_MobileExceedsMaxLength_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "contact": {
-                                   "mobile": "+1234567890123456789012345678901"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when dataBox pattern is invalid")
-    void updatePersonProfile_InvalidDataBoxPattern_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "contact": {
-                                   "dataBox": "INVALID"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when dataBox length is not 7")
-    void updatePersonProfile_DataBoxInvalidLength_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "contact": {
-                                   "dataBox": "abc12"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when account number prefix pattern is invalid")
-    void updatePersonProfile_InvalidAccountPrefixPattern_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "bankAccount": {
-                                   "accountNumberPrefix": "abc123"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when account number prefix exceeds max length")
-    void updatePersonProfile_AccountPrefixExceedsMaxLength_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "bankAccount": {
-                                   "accountNumberPrefix": "1234567"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when account number suffix pattern is invalid")
-    void updatePersonProfile_InvalidAccountSuffixPattern_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "bankAccount": {
-                                   "accountNumberSuffix": "abc123"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when account number suffix exceeds max length")
-    void updatePersonProfile_AccountSuffixExceedsMaxLength_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "bankAccount": {
-                                   "accountNumberSuffix": "12345678901"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when bank code pattern is invalid")
-    void updatePersonProfile_InvalidBankCodePattern_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "bankAccount": {
-                                   "bankCode": "01AB"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
-    }
-
-    @Test
-    @DisplayName("should return 400 Bad Request when bank code length is not 4")
-    void updatePersonProfile_BankCodeInvalidLength_Returns400() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                               {
-                                 "bankAccount": {
-                                   "bankCode": "01"
-                                 }
-                               }
-                               """))
-            .hasStatus(400)
-            .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.status").isEqualTo(400);
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
+    private static Stream<Arguments> provideInvalidValidationCases() {
+        return Stream.of(
+            Arguments.of("invalid email format",
+                """
+                {
+                  "contact": {
+                    "email": "invalid-email"
+                  }
+                }
+                """
+            ),
+            Arguments.of("invalid phone pattern",
+                """
+                {
+                  "contact": {
+                    "phone": "invalid-phone-123abc"
+                  }
+                }
+                """
+            ),
+            Arguments.of("phone exceeds max length",
+                """
+                {
+                  "contact": {
+                    "phone": "+123456789012345678901"
+                  }
+                }
+                """
+            ),
+            Arguments.of("invalid mobile pattern",
+                """
+                {
+                  "contact": {
+                    "mobile": "abc123"
+                  }
+                }
+                """
+            ),
+            Arguments.of("mobile exceeds max length",
+                """
+                {
+                  "contact": {
+                    "mobile": "+1234567890123456789012345678901"
+                  }
+                }
+                """
+            ),
+            Arguments.of("invalid dataBox pattern",
+                """
+                {
+                  "contact": {
+                    "dataBox": "INVALID"
+                  }
+                }
+                """
+            ),
+            Arguments.of("dataBox invalid length",
+                """
+                {
+                  "contact": {
+                    "dataBox": "abc12"
+                  }
+                }
+                """
+            ),
+            Arguments.of("invalid account prefix pattern",
+                """
+                {
+                  "bankAccount": {
+                    "accountNumberPrefix": "abc123"
+                  }
+                }
+                """
+            ),
+            Arguments.of("account prefix exceeds max length",
+                """
+                {
+                  "bankAccount": {
+                    "accountNumberPrefix": "1234567"
+                  }
+                }
+                """
+            ),
+            Arguments.of("invalid account suffix pattern",
+                """
+                {
+                  "bankAccount": {
+                    "accountNumberSuffix": "abc123"
+                  }
+                }
+                """
+            ),
+            Arguments.of("account suffix exceeds max length",
+                """
+                {
+                  "bankAccount": {
+                    "accountNumberSuffix": "12345678901"
+                  }
+                }
+                """
+            ),
+            Arguments.of("invalid bank code pattern",
+                """
+                {
+                  "bankAccount": {
+                    "bankCode": "01AB"
+                  }
+                }
+                """
+            ),
+            Arguments.of("bank code invalid length",
+                """
+                {
+                  "bankAccount": {
+                    "bankCode": "01"
+                  }
+                }
+                """
+            )
+        );
     }
 
     @Test

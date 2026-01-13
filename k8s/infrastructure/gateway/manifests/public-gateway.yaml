@@ -19,5 +19,3 @@ spec:
       allowedRoutes:
         namespaces:
           from: Same
-
-# TODO: Add Grafana dashboards

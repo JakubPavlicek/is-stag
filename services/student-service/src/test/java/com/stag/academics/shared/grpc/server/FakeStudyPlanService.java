@@ -6,15 +6,11 @@ import com.stag.academics.studyplan.v1.StudyPlanServiceGrpc;
 import grpcstarter.server.GrpcService;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Fake implementation of StudyPlanService for integration testing.
- */
 @GrpcService
 public class FakeStudyPlanService extends StudyPlanServiceGrpc.StudyPlanServiceImplBase {
 
@@ -65,7 +61,8 @@ public class FakeStudyPlanService extends StudyPlanServiceGrpc.StudyPlanServiceI
         if (response != null) {
             responseObserver.onNext(response);
             responseObserver.onCompleted();
-        } else {
+        }
+        else {
             responseObserver.onError(Status.NOT_FOUND.asRuntimeException());
         }
     }
@@ -73,4 +70,5 @@ public class FakeStudyPlanService extends StudyPlanServiceGrpc.StudyPlanServiceI
     private String makeKey(Long studyProgramId, Long studyPlanId, String language) {
         return studyProgramId + "-" + studyPlanId + "-" + language;
     }
+
 }
