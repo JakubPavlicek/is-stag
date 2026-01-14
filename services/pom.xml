@@ -31,7 +31,9 @@
         <!-- SonarQube -->
         <sonar.organization>jakubpavlicek</sonar.organization>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>
+            api-gateway/target/site/jacoco/jacoco.xml,student-service/target/site/jacoco/jacoco.xml,study-plan-service/target/site/jacoco/jacoco.xml,codelist-service/target/site/jacoco/jacoco.xml,user-service/target/site/jacoco/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
 
         <!-- Maven -->
         <maven-enforcer.version>3.6.2</maven-enforcer.version>

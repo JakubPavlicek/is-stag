@@ -118,10 +118,6 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Compile sources
-        working-directory: services
-        run: mvn -B -DskipTests compile
-
       - name: Download JaCoCo coverage reports
         uses: actions/download-artifact@v7.0.0
         with:
@@ -147,7 +143,7 @@ jobs:
           echo "=== Maven execution directory ==="
           pwd
           echo "=== Running SonarQube analysis ==="
-          mvn -B -DskipTests org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JakubPavlicek_is-stag
+          mvn -B -DskipTests verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JakubPavlicek_is-stag
 
 #  publish-javadoc:
 #    name: Publish JavaDoc
