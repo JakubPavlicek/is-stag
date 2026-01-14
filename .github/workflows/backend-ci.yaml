@@ -79,11 +79,11 @@ jobs:
         with:
           name: jacoco-reports
           path: |
-            services/api-gateway/target/site/jacoco/jacoco.xml
-            services/student-service/target/site/jacoco/jacoco.xml
-            services/study-plan-service/target/site/jacoco/jacoco.xml
-            services/codelist-service/target/site/jacoco/jacoco.xml
-            services/user-service/target/site/jacoco/jacoco.xml
+            api-gateway/target/site/jacoco/jacoco.xml
+            student-service/target/site/jacoco/jacoco.xml
+            study-plan-service/target/site/jacoco/jacoco.xml
+            codelist-service/target/site/jacoco/jacoco.xml
+            user-service/target/site/jacoco/jacoco.xml
           retention-days: 30
 
       - name: Generate test report
@@ -171,7 +171,7 @@ jobs:
           java-version: 25
           target-folder: javadoc # URL will be https://jakubpavlicek.github.io/is-stag/javadoc
           project: maven
-          custom-command: cd services && mvn javadoc:aggregate
+          custom-command: cd services && mvn compile javadoc:javadoc
 
 #  publish-jars:
 #    name: Publish Service JARs
