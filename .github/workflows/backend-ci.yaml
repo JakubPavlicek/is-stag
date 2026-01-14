@@ -78,12 +78,7 @@ jobs:
         uses: actions/upload-artifact@v6.0.0
         with:
           name: jacoco-reports
-          path: |
-            services/api-gateway/target/site/jacoco/jacoco.xml
-            services/student-service/target/site/jacoco/jacoco.xml
-            services/study-plan-service/target/site/jacoco/jacoco.xml
-            services/codelist-service/target/site/jacoco/jacoco.xml
-            services/user-service/target/site/jacoco/jacoco.xml
+          path: services/**/target/site/jacoco/jacoco.xml
           retention-days: 30
 
       - name: Generate test report
@@ -137,16 +132,12 @@ jobs:
         run: |
           echo "=== Current directory ==="
           pwd
-          echo "=== Full directory tree ==="
-          ls -R
+          echo "=== Full directory tree (target only) ==="
+          find . -name "target" -type d -exec ls -R {} + || echo "No target directories found"
           echo "=== Looking for jacoco.xml files ==="
           find . -name "jacoco.xml" -type f
-          echo "=== Checking if files exist at expected paths ==="
-          ls -la services/api-gateway/target/site/jacoco/jacoco.xml || echo "api-gateway jacoco.xml NOT FOUND"
-          ls -la services/student-service/target/site/jacoco/jacoco.xml || echo "student-service jacoco.xml NOT FOUND"
-          ls -la services/study-plan-service/target/site/jacoco/jacoco.xml || echo "study-plan-service jacoco.xml NOT FOUND"
-          ls -la services/codelist-service/target/site/jacoco/jacoco.xml || echo "codelist-service jacoco.xml NOT FOUND"
-          ls -la services/user-service/target/site/jacoco/jacoco.xml || echo "user-service jacoco.xml NOT FOUND"
+          echo "=== Verifying paths relative to services/ ==="
+          ls -la services/api-gateway/target/site/jacoco/jacoco.xml || echo "api-gateway report NOT FOUND"
 
       - name: Run SonarQube analysis
         working-directory: services
@@ -155,9 +146,6 @@ jobs:
         run: |
           echo "=== Maven execution directory ==="
           pwd
-          echo "=== Verifying files from Maven context ==="
-          ls -la api-gateway/target/site/jacoco/jacoco.xml || echo "CANNOT SEE api-gateway/target/site/jacoco/jacoco.xml"
-          ls -la student-service/target/site/jacoco/jacoco.xml || echo "CANNOT SEE student-service/target/site/jacoco/jacoco.xml"
           echo "=== Running SonarQube analysis ==="
           mvn -B -DskipTests org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JakubPavlicek_is-stag
 
