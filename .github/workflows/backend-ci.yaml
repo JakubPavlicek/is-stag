@@ -142,12 +142,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    defaults:
+      run:
+        working-directory: services
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.1
-
-      - name: Change directory to services
-        run: cd services
 
       - name: Deploy JavaDoc
         uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
