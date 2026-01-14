@@ -171,6 +171,7 @@ jobs:
           java-version: 25
           target-folder: javadoc # URL will be https://jakubpavlicek.github.io/is-stag/javadoc
           project: maven
+          javadoc-source-folder: services/target/reports/apidocs
           custom-command: cd services && mvn javadoc:aggregate
 
 #  publish-jars:
