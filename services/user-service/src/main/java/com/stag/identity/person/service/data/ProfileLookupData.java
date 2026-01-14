@@ -10,6 +10,10 @@ import java.util.Map;
 /// Enriched data from codelist service for profile mappings.
 /// Contains localized codelist meanings (nationality, marital status, titles, gender) and resolved country names for birthplace and citizenship.
 ///
+/// @param codelistMeanings the codelist meanings
+/// @param birthCountryName the birth country name
+/// @param citizenshipCountryName the citizenship country name
+///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
 @Builder

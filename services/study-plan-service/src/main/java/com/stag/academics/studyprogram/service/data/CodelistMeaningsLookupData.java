@@ -10,6 +10,8 @@ import java.util.Map;
 /// Container for codelist meanings retrieved from the codelist service.
 /// Maps entry IDs to their localized meanings for study program enrichment.
 ///
+/// @param codelistMeanings map of codelist entry IDs to their localized meanings
+///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
 @Builder

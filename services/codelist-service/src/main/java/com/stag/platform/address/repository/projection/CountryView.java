@@ -6,6 +6,11 @@ import java.io.Serializable;
 ///
 /// Projection for country data with language-specific names.
 ///
+/// @param id Country ID
+/// @param name Country name
+/// @param commonName Country common name
+/// @param abbreviation Country abbreviation
+///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
 public record CountryView(

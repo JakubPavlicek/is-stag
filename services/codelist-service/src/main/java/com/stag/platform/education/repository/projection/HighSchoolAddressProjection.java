@@ -4,6 +4,12 @@ package com.stag.platform.education.repository.projection;
 ///
 /// Projection for high school address information.
 ///
+/// @param name High school name
+/// @param street Street address
+/// @param zipCode Zip code
+/// @param municipality Municipality name
+/// @param district District name
+///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
 public record HighSchoolAddressProjection(

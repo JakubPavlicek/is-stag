@@ -10,6 +10,8 @@ import java.util.Map;
 /// Generic codelist meanings lookup data for simple profile enrichment.
 /// Contains localized codelist values keyed by codelist entry identifiers.
 ///
+/// @param codelistMeanings map of codelist entry IDs to their localized meanings
+///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
 @Builder
