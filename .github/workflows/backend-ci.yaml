@@ -171,7 +171,7 @@ jobs:
           java-version: 25
           target-folder: javadoc # URL will be https://jakubpavlicek.github.io/is-stag/javadoc
           project: maven
-          custom-command: cd services && mvn compile javadoc:javadoc
+          custom-command: cd services && mvn javadoc:javadoc
 
 #  publish-jars:
 #    name: Publish Service JARs
