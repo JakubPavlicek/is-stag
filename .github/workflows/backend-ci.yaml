@@ -79,11 +79,11 @@ jobs:
         with:
           name: jacoco-reports
           path: |
-            api-gateway/target/site/jacoco/jacoco.xml
-            student-service/target/site/jacoco/jacoco.xml
-            study-plan-service/target/site/jacoco/jacoco.xml
-            codelist-service/target/site/jacoco/jacoco.xml
-            user-service/target/site/jacoco/jacoco.xml
+            services/api-gateway/target/site/jacoco/jacoco.xml
+            services/student-service/target/site/jacoco/jacoco.xml
+            services/study-plan-service/target/site/jacoco/jacoco.xml
+            services/codelist-service/target/site/jacoco/jacoco.xml
+            services/user-service/target/site/jacoco/jacoco.xml
           retention-days: 30
 
       - name: Generate test report
@@ -123,8 +123,12 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
+      - name: Compile sources
+        working-directory: services
+        run: mvn -B -DskipTests compile
+
       - name: Download JaCoCo coverage reports
-        uses: actions/download-artifact@v7.0.0
+        uses: actions/download-artifact@v6.0.0
         with:
           name: jacoco-reports
           path: .
@@ -144,7 +148,7 @@ jobs:
           ls -la services/codelist-service/target/site/jacoco/jacoco.xml || echo "codelist-service jacoco.xml NOT FOUND"
           ls -la services/user-service/target/site/jacoco/jacoco.xml || echo "user-service jacoco.xml NOT FOUND"
 
-      - name: Build and analyze
+      - name: Run SonarQube analysis
         working-directory: services
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -155,7 +159,7 @@ jobs:
           ls -la api-gateway/target/site/jacoco/jacoco.xml || echo "CANNOT SEE api-gateway/target/site/jacoco/jacoco.xml"
           ls -la student-service/target/site/jacoco/jacoco.xml || echo "CANNOT SEE student-service/target/site/jacoco/jacoco.xml"
           echo "=== Running SonarQube analysis ==="
-          mvn -B -DskipTests verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JakubPavlicek_is-stag
+          mvn -B -DskipTests org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JakubPavlicek_is-stag
 
   publish-javadoc:
     name: Publish JavaDoc
