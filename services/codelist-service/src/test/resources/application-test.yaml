@@ -1,8 +1,3 @@
-logging:
-  level:
-    org.springframework.security: TRACE
-    org.hibernate.tool.schema: DEBUG
-
 spring:
   cache:
     type: none

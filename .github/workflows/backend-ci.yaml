@@ -77,10 +77,8 @@ jobs:
       - name: Upload JaCoCo coverage data
         uses: actions/upload-artifact@v6.0.0
         with:
-          name: jacoco-data
-          path: |
-            services/**/target/jacoco.exec
-            services/**/target/classes/
+          name: jacoco-reports
+          path: services/**/target/site/jacoco/jacoco.xml
           retention-days: 30
 
       - name: Generate test report
@@ -120,11 +118,16 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Download JaCoCo coverage data
+      - name: Download JaCoCo coverage reports
         uses: actions/download-artifact@v7.0.0
         with:
-          name: jacoco-data
+          name: jacoco-reports
           path: services/
+
+      - name: List coverage files
+        run: |
+          echo "=== JaCoCo XML Reports ==="
+          find services -name "jacoco.xml"
 
       - name: Build and analyze
         working-directory: services
@@ -132,42 +135,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B -DskipTests verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JakubPavlicek_is-stag
 
-  publish-jars:
-    name: Publish Service JARs
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    needs:
-      - protolint-lint-proto
-      - vacuum-lint-openapi
-      - test
-      - sonar-analyze
-    defaults:
-      run:
-        working-directory: services
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6.0.1
-
-      - name: Setup JDK 25
-        uses: actions/setup-java@v5.1.0
-        with:
-          distribution: liberica
-          java-version: 25
-          cache: maven
-
-      - name: Publish packages
-        run: mvn -T 1C -DskipTests -B deploy
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   publish-javadoc:
     name: Publish JavaDoc
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    needs: publish-jars
     steps:
       - name: Deploy JavaDoc
         uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
@@ -178,41 +150,71 @@ jobs:
           target-folder: javadoc # URL will be https://jakubpavlicek.github.io/is-stag/javadoc
           project: maven
 
-  publish-docker-images:
-    name: Publish Service Docker Images
-    runs-on: ubuntu-24.04-arm
-    permissions:
-      contents: read
-      packages: write
-    needs:
-      - protolint-lint-proto
-      - vacuum-lint-openapi
-      - test
-      - sonar-analyze
-    defaults:
-      run:
-        working-directory: services
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6.0.1
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3.6.0
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup JDK 25
-        uses: actions/setup-java@v5.1.0
-        with:
-          distribution: liberica
-          java-version: 25
-          cache: maven
-
-      - name: Build and Push Spring Boot Docker Images
-        run: |
-          mvn -B -T 1C -DskipTests spring-boot:build-image \
-            -Dspring-boot.build-image.publish=true \
-            -Dgithub.username=${{ secrets.GHCR_USERNAME }} \
-            -Dgithub.password=${{ secrets.GITHUB_TOKEN }}
+#  publish-jars:
+#    name: Publish Service JARs
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: read
+#      packages: write
+#    needs:
+#      - protolint-lint-proto
+#      - vacuum-lint-openapi
+#      - test
+#      - sonar-analyze
+#    defaults:
+#      run:
+#        working-directory: services
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v6.0.1
+#
+#      - name: Setup JDK 25
+#        uses: actions/setup-java@v5.1.0
+#        with:
+#          distribution: liberica
+#          java-version: 25
+#          cache: maven
+#
+#      - name: Publish packages
+#        run: mvn -T 1C -DskipTests -B deploy
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#  publish-docker-images:
+#    name: Publish Service Docker Images
+#    runs-on: ubuntu-24.04-arm
+#    permissions:
+#      contents: read
+#      packages: write
+#    needs:
+#      - protolint-lint-proto
+#      - vacuum-lint-openapi
+#      - test
+#      - sonar-analyze
+#    defaults:
+#      run:
+#        working-directory: services
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v6.0.1
+#
+#      - name: Login to GitHub Container Registry
+#        uses: docker/login-action@v3.6.0
+#        with:
+#          registry: ghcr.io
+#          username: ${{ secrets.GHCR_USERNAME }}
+#          password: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Setup JDK 25
+#        uses: actions/setup-java@v5.1.0
+#        with:
+#          distribution: liberica
+#          java-version: 25
+#          cache: maven
+#
+#      - name: Build and Push Spring Boot Docker Images
+#        run: |
+#          mvn -B -T 1C -DskipTests spring-boot:build-image \
+#            -Dspring-boot.build-image.publish=true \
+#            -Dgithub.username=${{ secrets.GHCR_USERNAME }} \
+#            -Dgithub.password=${{ secrets.GITHUB_TOKEN }}
