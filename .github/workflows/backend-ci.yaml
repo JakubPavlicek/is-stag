@@ -122,12 +122,14 @@ jobs:
         uses: actions/download-artifact@v7.0.0
         with:
           name: jacoco-reports
-          path: services/
+          path: .
 
       - name: List coverage files
         run: |
-          echo "=== JaCoCo XML Reports ==="
-          find services -name "jacoco.xml"
+          echo "=== Current directory ==="
+          pwd
+          echo "=== Looking for jacoco.xml files ==="
+          find . -name "jacoco.xml" -type f
 
       - name: Build and analyze
         working-directory: services
@@ -143,6 +145,7 @@ jobs:
     steps:
       - name: Deploy JavaDoc
         uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
+        working-directory: services
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           javadoc-branch: master

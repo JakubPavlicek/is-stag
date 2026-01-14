@@ -31,11 +31,7 @@
         <!-- SonarQube -->
         <sonar.organization>jakubpavlicek</sonar.organization>
         <sonar.coverage.jacoco.xmlReportPaths>
-            ${project.basedir}/api-gateway/target/site/jacoco/jacoco.xml,
-            ${project.basedir}/student-service/target/site/jacoco/jacoco.xml,
-            ${project.basedir}/study-plan-service/target/site/jacoco/jacoco.xml,
-            ${project.basedir}/codelist-service/target/site/jacoco/jacoco.xml,
-            ${project.basedir}/user-service/target/site/jacoco/jacoco.xml
+            ${maven.multiModuleProjectDirectory}/services/**/target/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
 
         <!-- Maven -->
