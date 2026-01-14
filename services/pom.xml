@@ -31,7 +31,11 @@
         <!-- SonarQube -->
         <sonar.organization>jakubpavlicek</sonar.organization>
         <sonar.coverage.jacoco.xmlReportPaths>
-            ${maven.multiModuleProjectDirectory}/services/**/target/site/jacoco/jacoco.xml
+            api-gateway/target/site/jacoco/jacoco.xml,
+            student-service/target/site/jacoco/jacoco.xml,
+            study-plan-service/target/site/jacoco/jacoco.xml,
+            codelist-service/target/site/jacoco/jacoco.xml,
+            user-service/target/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
 
         <!-- Maven -->

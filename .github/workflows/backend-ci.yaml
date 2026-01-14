@@ -130,12 +130,25 @@ jobs:
           pwd
           echo "=== Looking for jacoco.xml files ==="
           find . -name "jacoco.xml" -type f
+          echo "=== Checking if files exist at expected paths ==="
+          ls -la services/api-gateway/target/site/jacoco/jacoco.xml || echo "api-gateway jacoco.xml NOT FOUND"
+          ls -la services/student-service/target/site/jacoco/jacoco.xml || echo "student-service jacoco.xml NOT FOUND"
+          ls -la services/study-plan-service/target/site/jacoco/jacoco.xml || echo "study-plan-service jacoco.xml NOT FOUND"
+          ls -la services/codelist-service/target/site/jacoco/jacoco.xml || echo "codelist-service jacoco.xml NOT FOUND"
+          ls -la services/user-service/target/site/jacoco/jacoco.xml || echo "user-service jacoco.xml NOT FOUND"
 
       - name: Build and analyze
         working-directory: services
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B -DskipTests verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JakubPavlicek_is-stag
+        run: |
+          echo "=== Maven execution directory ==="
+          pwd
+          echo "=== Verifying files from Maven context ==="
+          ls -la api-gateway/target/site/jacoco/jacoco.xml || echo "CANNOT SEE api-gateway/target/site/jacoco/jacoco.xml"
+          ls -la student-service/target/site/jacoco/jacoco.xml || echo "CANNOT SEE student-service/target/site/jacoco/jacoco.xml"
+          echo "=== Running SonarQube analysis ==="
+          mvn -B -DskipTests verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JakubPavlicek_is-stag
 
   publish-javadoc:
     name: Publish JavaDoc
@@ -149,6 +162,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6.0.1
 
+      - name: Setup JDK 25
+        uses: actions/setup-java@v5.1.0
+        with:
+          distribution: liberica
+          java-version: 25
+          cache: maven
+
       - name: Deploy JavaDoc
         uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
         with:
@@ -157,6 +177,7 @@ jobs:
           java-version: 25
           target-folder: javadoc # URL will be https://jakubpavlicek.github.io/is-stag/javadoc
           project: maven
+          without-checkout: true
 
 #  publish-jars:
 #    name: Publish Service JARs
