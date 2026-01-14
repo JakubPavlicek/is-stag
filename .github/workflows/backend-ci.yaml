@@ -56,20 +56,26 @@ jobs:
           java-version: 25
           cache: maven
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.12.0
+
+      - name: Verify Docker is running
+        run: docker version
+
       - name: Run tests with coverage
         working-directory: services
         run: mvn -B clean test
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: test-results
           path: services/**/target/surefire-reports/
           retention-days: 30
 
       - name: Upload JaCoCo coverage data
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: jacoco-data
           path: |
@@ -84,7 +90,7 @@ jobs:
 
       - name: Upload test report
         if: always()
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: test-report
           path: services/target/reports/
