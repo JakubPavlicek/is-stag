@@ -10,6 +10,9 @@ import java.util.Map;
 /// Enriched banking data from codelist service with localized bank names and account types.
 /// Contains codelist meanings for bank codes and resolved Euro account country name.
 ///
+/// @param codelistMeanings the codelist meanings
+/// @param euroAccountCountryName the Euro account country name
+///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
 @Builder

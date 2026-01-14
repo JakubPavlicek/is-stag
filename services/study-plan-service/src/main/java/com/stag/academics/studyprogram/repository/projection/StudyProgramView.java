@@ -5,6 +5,13 @@ package com.stag.academics.studyprogram.repository.projection;
 /// Lightweight view of the study program containing basic identification and classification fields.
 /// Used for efficient data transfer.
 ///
+/// @param id Study program ID
+/// @param name Study program name
+/// @param faculty Faculty name
+/// @param code Study program code
+/// @param form Study program form
+/// @param type Study program type
+///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
 public record StudyProgramView(

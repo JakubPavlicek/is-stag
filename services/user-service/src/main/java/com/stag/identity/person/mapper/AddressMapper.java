@@ -96,6 +96,10 @@ public interface AddressMapper {
     Addresses.ForeignAddress toForeignTemporaryAddress(AddressView personAddress);
 
     /// Resolves permanent municipality name from lookup data.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data containing localized municipality names
+    /// @return the permanent municipality name
     @Named("permanentMunicipalityName")
     default String permanentMunicipalityName(
         AddressView personAddress,
@@ -105,6 +109,10 @@ public interface AddressMapper {
     }
 
     /// Resolves permanent municipality part name from lookup data.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data containing localized municipality part names
+    /// @return the permanent municipality part name
     @Named("permanentMunicipalityPartName")
     default String permanentMunicipalityPartName(
         AddressView personAddress,
@@ -114,6 +122,10 @@ public interface AddressMapper {
     }
 
     /// Resolves permanent district name from lookup data.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data containing localized district names
+    /// @return the permanent district name
     @Named("permanentDistrictName")
     default String permanentDistrictName(
         AddressView personAddress,
@@ -123,6 +135,10 @@ public interface AddressMapper {
     }
 
     /// Resolves permanent country name from lookup data.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data containing localized country names
+    /// @return the permanent country name
     @Named("permanentCountryName")
     default String permanentCountryName(
         AddressView personAddress,
@@ -132,6 +148,10 @@ public interface AddressMapper {
     }
 
     /// Resolves temporary municipality name from lookup data.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data containing localized municipality names
+    /// @return the temporary municipality name
     @Named("temporaryMunicipalityName")
     default String temporaryMunicipalityName(
         AddressView personAddress,
@@ -141,6 +161,10 @@ public interface AddressMapper {
     }
 
     /// Resolves temporary municipality part name from lookup data.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data containing localized municipality part names
+    /// @return the temporary municipality part name
     @Named("temporaryMunicipalityPartName")
     default String temporaryMunicipalityPartName(
         AddressView personAddress,
@@ -150,6 +174,10 @@ public interface AddressMapper {
     }
 
     /// Resolves temporary district name from lookup data.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data containing localized district names
+    /// @return the temporary district name
     @Named("temporaryDistrictName")
     default String temporaryDistrictName(
         AddressView personAddress,
@@ -159,6 +187,10 @@ public interface AddressMapper {
     }
 
     /// Resolves temporary country name from lookup data.
+    ///
+    /// @param personAddress the address projection
+    /// @param data the address lookup data containing localized country names
+    /// @return the temporary country name
     @Named("temporaryCountryName")
     default String temporaryCountryName(
         AddressView personAddress,

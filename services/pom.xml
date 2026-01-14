@@ -61,6 +61,7 @@
 
         <!-- Testing -->
         <instancio-junit.version>5.5.1</instancio-junit.version>
+        <jacoco.version>0.8.14</jacoco.version>
 
         <!-- Cloud Native Buildpacks -->
         <image.builder.version>0.0.90</image.builder.version>
@@ -198,18 +199,65 @@
                 </executions>
             </plugin>
 
+            <!-- JavaDoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <sourcepath>${project.basedir}/src/main/java:${project.build.directory}/generated-sources</sourcepath>
+                    <additionalOptions>--enable-preview</additionalOptions>
+                    <doclint>none</doclint>
+                    <quiet>true</quiet>
+                </configuration>
+            </plugin>
+
+            <!-- JaCoCo for code coverage instrumentation -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Enable preview features during tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>--enable-preview</argLine>
+                    <argLine>@{argLine} --enable-preview</argLine>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <argLine>--enable-preview</argLine>
+                    <argLine>@{argLine} --enable-preview</argLine>
+                </configuration>
+            </plugin>
+
+            <!-- Surefire Report Plugin for multi-module test aggregation -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <aggregate>true</aggregate>
+                    <linkXRef>false</linkXRef>
                 </configuration>
             </plugin>
         </plugins>
@@ -362,5 +410,24 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <!-- Reporting for aggregated test results -->
+    <reporting>
+        <plugins>
+            <!-- JaCoCo Report Plugin for aggregated coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

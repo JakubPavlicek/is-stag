@@ -9,6 +9,11 @@ import java.io.Serializable;
 /// Lightweight person profile containing only essential personal information.
 /// Used for basic profile retrieval without full contact or citizenship details.
 ///
+/// @param firstName the first name
+/// @param lastName the last name
+/// @param titles academic and professional titles
+/// @param gender the gender
+///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
 @Builder

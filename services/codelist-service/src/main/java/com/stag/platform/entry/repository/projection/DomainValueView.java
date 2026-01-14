@@ -6,6 +6,10 @@ import java.io.Serializable;
 ///
 /// Projection for domain value data including key, name, and abbreviation.
 ///
+/// @param key Domain value key
+/// @param name Domain value name
+/// @param abbreviation Domain value abbreviation
+///
 /// @author Jakub Pavlíček
 /// @version 1.0.0
 public record DomainValueView(
