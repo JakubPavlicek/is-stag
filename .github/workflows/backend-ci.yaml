@@ -78,7 +78,12 @@ jobs:
         uses: actions/upload-artifact@v6.0.0
         with:
           name: jacoco-reports
-          path: services/**/target/site/jacoco/jacoco.xml
+          path: |
+            services/api-gateway/target/site/jacoco/jacoco.xml
+            services/student-service/target/site/jacoco/jacoco.xml
+            services/study-plan-service/target/site/jacoco/jacoco.xml
+            services/codelist-service/target/site/jacoco/jacoco.xml
+            services/user-service/target/site/jacoco/jacoco.xml
           retention-days: 30
 
       - name: Generate test report
@@ -128,6 +133,8 @@ jobs:
         run: |
           echo "=== Current directory ==="
           pwd
+          echo "=== Full directory tree ==="
+          ls -R
           echo "=== Looking for jacoco.xml files ==="
           find . -name "jacoco.xml" -type f
           echo "=== Checking if files exist at expected paths ==="
@@ -155,20 +162,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    defaults:
-      run:
-        working-directory: services
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6.0.1
-
-      - name: Setup JDK 25
-        uses: actions/setup-java@v5.1.0
-        with:
-          distribution: liberica
-          java-version: 25
-          cache: maven
-
       - name: Deploy JavaDoc
         uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
         with:
@@ -177,7 +171,7 @@ jobs:
           java-version: 25
           target-folder: javadoc # URL will be https://jakubpavlicek.github.io/is-stag/javadoc
           project: maven
-          without-checkout: true
+          custom-command: cd services && mvn javadoc:aggregate
 
 #  publish-jars:
 #    name: Publish Service JARs
