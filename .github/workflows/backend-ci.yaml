@@ -126,7 +126,7 @@ jobs:
         uses: actions/download-artifact@v7.0.0
         with:
           name: jacoco-reports
-          path: .
+          path: services
 
       - name: List coverage files
         run: |
