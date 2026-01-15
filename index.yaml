@@ -14,6 +14,20 @@ entries:
     urls:
     - https://github.com/JakubPavlicek/is-stag/releases/download/backend-service-0.0.1/backend-service-0.0.1.tgz
     version: 0.0.1
+  cert-manager-config:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-15T20:48:49.007466421Z"
+    description: Configuration chart for certificates managed by cert-manager
+    digest: e4bfd3841081bd0d9890aa6c4c5464f7466c2ecb6a8d7eee2b44bed2f25300d5
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: cert-manager-config
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/cert-manager-config-0.0.1/cert-manager-config-0.0.1.tgz
+    version: 0.0.1
   client:
   - apiVersion: v2
     appVersion: 0.0.1
@@ -28,4 +42,60 @@ entries:
     urls:
     - https://github.com/JakubPavlicek/is-stag/releases/download/client-0.0.1/client-0.0.1.tgz
     version: 0.0.1
-generated: "2026-01-15T13:19:38.220469196Z"
+  gateway-config:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-15T20:48:49.157621077Z"
+    description: Configuration chart for Gateway API resources
+    digest: 1ccd2b4428466bec458071d7220bdd9ebb18e5794a6b77856042cbb5988f0641
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: gateway-config
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/gateway-config-0.0.1/gateway-config-0.0.1.tgz
+    version: 0.0.1
+  metallb-config:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-15T20:48:49.302496051Z"
+    description: Configuration chart for MetalLB
+    digest: 16855ff1f6ab204f5244eaeb66dd301620c2fc65a6ff7e15e00e8ed9d68ab918
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: metallb-config
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/metallb-config-0.0.1/metallb-config-0.0.1.tgz
+    version: 0.0.1
+  otel-config:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-15T20:48:49.454708463Z"
+    description: Configuration chart for OpenTelemetry Collector and Instrumentation
+    digest: 4d76f4260d6bb4e523ff78653bcf0b281bb7fa56aea4160fbce65a6eefd6b71a
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: otel-config
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/otel-config-0.0.1/otel-config-0.0.1.tgz
+    version: 0.0.1
+  secrets:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-15T20:48:49.630988788Z"
+    description: Configuration chart for secrets
+    digest: f471990224f8cc111088548534adcecebf1268e745d176d4ee6d86937d1e067e
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: secrets
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/secrets-0.0.1/secrets-0.0.1.tgz
+    version: 0.0.1
+generated: "2026-01-15T20:48:49.630998957Z"
