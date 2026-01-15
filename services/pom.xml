@@ -31,6 +31,11 @@
         <!-- SonarQube -->
         <sonar.organization>jakubpavlicek</sonar.organization>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.cpd.exclusions>
+            **/config/**,
+            **/entity/**,
+            **/shared/exception/**
+        </sonar.cpd.exclusions>
 
         <!-- Maven -->
         <maven-enforcer.version>3.6.2</maven-enforcer.version>
@@ -61,7 +66,8 @@
         <lombok.version>1.18.42</lombok.version>
 
         <!-- Testing -->
-        <instancio-junit.version>5.5.1</instancio-junit.version>
+        <instancio-junit.version>6.0.0-RC1</instancio-junit.version>
+        <surefire-report.version>3.5.4</surefire-report.version>
         <jacoco.version>0.8.14</jacoco.version>
 
         <!-- Cloud Native Buildpacks -->
@@ -239,7 +245,18 @@
                 </executions>
             </plugin>
 
-            <!-- Enable preview features during tests -->
+            <!-- Surefire Report Plugin for multi-module test aggregation -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${surefire-report.version}</version>
+                <configuration>
+                    <aggregate>true</aggregate>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+            </plugin>
+
+            <!-- Enable Java preview features during tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -252,17 +269,6 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <argLine>@{argLine} --enable-preview</argLine>
-                </configuration>
-            </plugin>
-
-            <!-- Surefire Report Plugin for multi-module test aggregation -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.5.2</version>
-                <configuration>
-                    <aggregate>true</aggregate>
-                    <linkXRef>false</linkXRef>
                 </configuration>
             </plugin>
         </plugins>
@@ -415,24 +421,5 @@
             </plugins>
         </pluginManagement>
     </build>
-
-    <!-- Reporting for aggregated test results -->
-    <reporting>
-        <plugins>
-            <!-- JaCoCo Report Plugin for aggregated coverage -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting>
 
 </project>

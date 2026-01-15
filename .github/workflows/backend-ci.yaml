@@ -145,23 +145,23 @@ jobs:
           echo "=== Running SonarQube analysis ==="
           mvn -B -DskipTests verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JakubPavlicek_is-stag
 
-#  publish-javadoc:
-#    name: Publish JavaDoc
-#    runs-on: ubuntu-latest
-#    permissions:
-#      contents: write
-#    steps:
-#      - name: Deploy JavaDoc
-#        uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
-#        with:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          javadoc-branch: master
-#          java-version: 25
-#          target-folder: javadoc # URL will be https://jakubpavlicek.github.io/is-stag/javadoc
-#          project: maven
-#          javadoc-source-folder: services/target/reports/apidocs
-#          custom-command: cd services && mvn javadoc:aggregate
-#
+  publish-javadoc:
+    name: Publish JavaDoc
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Deploy JavaDoc
+        uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          javadoc-branch: gh-pages
+          java-version: 25
+          target-folder: javadoc # URL will be https://jakubpavlicek.github.io/is-stag/javadoc
+          project: maven
+          javadoc-source-folder: services/target/reports/apidocs
+          custom-command: cd services && mvn javadoc:aggregate
+
 #  publish-jars:
 #    name: Publish Service JARs
 #    runs-on: ubuntu-latest
