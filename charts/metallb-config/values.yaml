@@ -1,9 +1,10 @@
 metallb:
-  enabled: false
+  enabled: true
 
   ipAddressPool:
     name: ip-address-pool
-    addresses: 10.211.55.100-100.211.55.109
+    addresses:
+      - 10.211.55.100-10.211.55.109
 
   l2Advertisement:
     name: l2-advertisement
