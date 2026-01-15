@@ -1,0 +1,31 @@
+apiVersion: v1
+entries:
+  backend-service:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-15T13:19:37.825268744Z"
+    description: A generic Helm chart for deploying an IS/STAG backend service
+    digest: 212d66144a170be51ce72f5eea1eebfa351350cebf0eb19f52a3445eb2d20ea6
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: backend-service
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/backend-service-0.0.1/backend-service-0.0.1.tgz
+    version: 0.0.1
+  client:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-15T13:19:38.220457714Z"
+    description: A Helm chart for deploying an IS/STAG frontend client
+    digest: 0902660a3cde0d5a820cdb62202d69c2fd2b0dea75731773e8fa9c3f64b98db0
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: client
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/client-0.0.1/client-0.0.1.tgz
+    version: 0.0.1
+generated: "2026-01-15T13:19:38.220469196Z"
