@@ -1,3 +1,0 @@
-# Control Plane in Minikube contains "node.kubernetes.io/exclude-from-external-load-balancers" label -> ignore it
-speaker:
-  ignoreExcludeLB: true

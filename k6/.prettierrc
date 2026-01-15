@@ -1,8 +1,0 @@
-{
-  "semi": true,
-  "singleQuote": true,
-  "trailingComma": "all",
-  "importOrderSeparation": true,
-  "rangeEnd": 135,
-  "printWidth": 135
-}
