@@ -1,0 +1,7 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Values.certificates.issuerName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selfSigned: {}

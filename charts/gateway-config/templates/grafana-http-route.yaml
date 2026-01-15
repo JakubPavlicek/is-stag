@@ -1,0 +1,25 @@
+{{- if .Values.gateways.grafana.enabled }}
+{{- range .Values.gateways.grafana.routes }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  parentRefs:
+    - name: {{ $.Values.gateways.grafana.name }}
+      sectionName: https
+      kind: Gateway
+  hostnames:
+    - {{ $.Values.gateways.grafana.hostname }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ .backendService }}
+          port: {{ .backendPort }}
+{{- end }}
+{{- end }}

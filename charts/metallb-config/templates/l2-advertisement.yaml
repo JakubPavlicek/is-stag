@@ -1,0 +1,10 @@
+{{- if .Values.metallb.enabled }}
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: {{ .Values.metallb.l2Advertisement.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  ipAddressPools:
+    - {{ .Values.metallb.ipAddressPool.name }}
+{{- end }}

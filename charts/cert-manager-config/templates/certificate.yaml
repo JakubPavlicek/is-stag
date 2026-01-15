@@ -1,0 +1,17 @@
+{{- range .Values.certificates.certs }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  issuerRef:
+    name: {{ $.Values.certificates.issuerName }}
+    kind: {{ $.Values.certificates.issuerKind }}
+  dnsNames:
+    {{- range .dnsNames }}
+    - {{ . }}
+    {{- end }}
+  secretName: {{ .secretName }}
+{{- end }}

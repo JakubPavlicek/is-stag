@@ -1,0 +1,9 @@
+apiVersion: v2
+name: gateway-config
+description: Configuration chart for Gateway API resources
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+maintainers:
+  - name: Jakub Pavlíček
+    email: jpvlck@students.zcu.cz

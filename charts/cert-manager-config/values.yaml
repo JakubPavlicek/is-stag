@@ -1,0 +1,21 @@
+# Certificate configuration
+certificates:
+  issuerName: selfsigned-issuer
+  issuerKind: Issuer
+  
+  # List of certificates to create
+  certs:
+    - name: selfsigned-cert
+      secretName: selfsigned-cert-tls
+      dnsNames:
+        - is-stag.cz
+
+    - name: selfsigned-grafana-cert
+      secretName: selfsigned-grafana-cert-tls
+      dnsNames:
+        - grafana.is-stag.internal
+
+    - name: selfsigned-prometheus-cert
+      secretName: selfsigned-prometheus-cert-tls
+      dnsNames:
+        - prometheus.is-stag.internal

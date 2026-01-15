@@ -1,0 +1,16 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: {{ .Values.instrumentation.name | default "otel-instrumentation" }}
+spec:
+  exporter:
+    endpoint: {{ .Values.instrumentation.collectorEndpoint }}
+  propagators:
+    {{ toYaml .Values.instrumentation.propagators | nindent 4 }}
+  sampler:
+    type: {{ .Values.instrumentation.sampler.type }}
+    argument: {{ .Values.instrumentation.sampler.argument | quote }}
+  java:
+    image: {{ .Values.instrumentation.java.image }}
+    env:
+      {{ toYaml .Values.instrumentation.java.env | nindent 6 }}

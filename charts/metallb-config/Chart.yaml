@@ -1,0 +1,9 @@
+apiVersion: v2
+name: metallb-config
+description: Configuration chart for MetalLB
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+maintainers:
+  - name: Jakub Pavlíček
+    email: jpvlck@students.zcu.cz

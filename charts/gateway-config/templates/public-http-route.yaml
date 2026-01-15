@@ -1,0 +1,27 @@
+{{- if .Values.gateways.public.enabled }}
+{{- range .Values.gateways.public.routes }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  parentRefs:
+    - name: {{ $.Values.gateways.public.name }}
+      sectionName: https
+      kind: Gateway
+  hostnames:
+    - {{ $.Values.gateways.public.hostname }}
+  rules:
+    {{- range .rules }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: {{ .pathPrefix }}
+      backendRefs:
+        - name: {{ .backendService }}
+          port: {{ .backendPort }}
+    {{- end }}
+{{- end }}
+{{- end }}

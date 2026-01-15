@@ -17,6 +17,8 @@ repositories:
     url: https://open-telemetry.github.io/opentelemetry-helm-charts
   - name: codecentric
     url: https://codecentric.github.io/helm-charts
+  - name: is-stag
+    url: https://jakubpavlicek.github.io/is-stag/
 
 environments:
   perftest:
@@ -26,6 +28,7 @@ environments:
     values:
       - namespace: is-stag-prod
 
+# Global Namespace Management
 hooks:
   # Install Gateway API CRDs
   - events: [ "prepare" ]
@@ -36,6 +39,7 @@ hooks:
       - "--server-side"
       - "-f"
       - "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml"
+
   # Create a namespace before deploying to it
   - events: [ "prepare" ]
     showlogs: true
@@ -54,12 +58,14 @@ hooks:
 
 templates:
   .backend-service-common: &backend-service-common
-    chart: ./charts/backend-service
+    chart: is-stag/backend-service
+    version: 0.0.1
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
     needs:
-      - opentelemetry-operator
+      - secrets
+      - otel-config
       - redis-cache
       - keycloak
     values:
@@ -74,6 +80,16 @@ helmDefaults:
 
 releases:
   # ========================================
+  # Secrets
+  # ========================================
+  - name: secrets
+    chart: is-stag/secrets
+    version: 0.0.1
+    namespace: "{{ .Environment.Values.namespace }}"
+    secrets:
+      - secrets/secrets.yaml
+
+  # ========================================
   # MetalLB
   # ========================================
   - name: metallb
@@ -82,23 +98,12 @@ releases:
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - metallb/values.yaml
-    hooks:
-      - events: [ "postsync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "metallb/ip-address-pool.yaml"
-          - "--namespace={{ .Environment.Values.namespace }}"
-      - events: [ "postsync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "metallb/l2-advertisement.yaml"
-          - "--namespace={{ .Environment.Values.namespace }}"
+
+  - name: metallb-config
+    chart: is-stag/metallb-config
+    namespace: "{{ .Environment.Values.namespace }}"
+    needs:
+      - metallb
 
   # ========================================
   # Cert-Manager
@@ -109,15 +114,12 @@ releases:
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - cert-manager/values.yaml
-    hooks:
-      - events: [ "postsync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "cert-manager/manifests"
-          - "--namespace={{ .Environment.Values.namespace }}"
+
+  - name: cert-manager-config
+    chart: is-stag/cert-manager-config
+    namespace: "{{ .Environment.Values.namespace }}"
+    needs:
+      - cert-manager
 
   # ========================================
   # Databases
@@ -128,15 +130,8 @@ releases:
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - database/keycloak-postgresql/values.yaml
-    hooks:
-      - events: [ "presync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "database/keycloak-postgresql/secret.yaml"
-          - "--namespace={{ .Environment.Values.namespace }}"
+    needs:
+      - secrets
 
   - name: redis-cache
     chart: oci://registry-1.docker.io/bitnamicharts/redis
@@ -145,15 +140,8 @@ releases:
     timeout: 600
     values:
       - database/redis/cache-values.yaml
-    hooks:
-      - events: [ "presync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "database/redis/cache-secret.yaml"
-          - "--namespace={{ .Environment.Values.namespace }}"
+    needs:
+      - secrets
 
   - name: redis-rate-limiter
     chart: oci://registry-1.docker.io/bitnamicharts/redis
@@ -162,39 +150,12 @@ releases:
     timeout: 600
     values:
       - database/redis/rate-limiter-values.yaml
-    hooks:
-      - events: [ "presync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "database/redis/rate-limiter-secret.yaml"
-          - "--namespace={{ .Environment.Values.namespace }}"
+    needs:
+      - secrets
 
   # ========================================
   # Observability Stack
   # ========================================
-  - name: grafana
-    chart: grafana/grafana
-    version: 10.5.7
-    namespace: "{{ .Environment.Values.namespace }}"
-    values:
-      - observability/grafana/values.yaml
-      - observability/grafana/values-{{ .Environment.Name }}.yaml
-    needs:
-      - redis-cache
-      - redis-rate-limiter
-    hooks:
-      - events: [ "presync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "observability/grafana/secret.yaml"
-          - "--namespace={{ .Environment.Values.namespace }}"
-
   - name: prometheus
     chart: prometheus-community/prometheus
     version: 28.4.0
@@ -217,6 +178,18 @@ releases:
     values:
       - observability/tempo/values.yaml
 
+  - name: grafana
+    chart: grafana/grafana
+    version: 10.5.7
+    namespace: "{{ .Environment.Values.namespace }}"
+    values:
+      - observability/grafana/values.yaml
+      - observability/grafana/values-{{ .Environment.Name }}.yaml
+    needs:
+      - redis-cache
+      - redis-rate-limiter
+      - secrets
+
   # ========================================
   # OpenTelemetry
   # ========================================
@@ -225,26 +198,18 @@ releases:
     version: 0.102.0
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
-      - cert-manager
+      - cert-manager-config
       - prometheus
       - loki
       - tempo
     values:
       - observability/opentelemetry/values.yaml
-    hooks:
-      - events: [ "postsync" ]
-        showlogs: true
-        command: "bash"
-        args:
-          - "-c"
-          - |
-            kubectl wait --for=condition=available --timeout=300s deployment/opentelemetry-operator -n {{ .Environment.Values.namespace }}
-            sleep 5
-            until kubectl get endpoints opentelemetry-operator-webhook -n {{ .Environment.Values.namespace }} -o jsonpath='{.subsets}' | grep -q "addresses"; do
-              sleep 5
-            done
-            kubectl apply -f 'observability/opentelemetry/otel-*.yaml' -n {{ .Environment.Values.namespace }}
-            kubectl wait --for=condition=available --timeout=300s deployment/otel-collector -n {{ .Environment.Values.namespace }}
+
+  - name: otel-config
+    chart: is-stag/otel-config
+    namespace: "{{ .Environment.Values.namespace }}"
+    needs:
+      - opentelemetry-operator
 
   # ========================================
   # Keycloak
@@ -254,8 +219,9 @@ releases:
     version: 7.1.6
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
-      - opentelemetry-operator
+      - otel-config
       - keycloak-postgresql
+      - secrets
     values:
       - keycloak/values.yaml
 
@@ -267,25 +233,23 @@ releases:
     version: 2.3.0
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
-    needs:
-      - cert-manager
     values:
       - gateway/values.yaml
-    hooks:
-      - events: [ "presync" ]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "gateway/manifests"
-          - "--namespace={{ .Environment.Values.namespace }}"
+    needs:
+      - cert-manager-config
+
+  - name: gateway-config
+    chart: is-stag/gateway-config
+    namespace: "{{ .Environment.Values.namespace }}"
+    needs:
+      - nginx-gateway-fabric
 
   # ========================================
   # IS/STAG Applications
   # ========================================
   - name: react-client
-    chart: ./charts/client
+    chart: is-stag/client
+    version: 0.0.1
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -293,13 +257,15 @@ releases:
       - is-stag/react-client/values.yaml
       - is-stag/react-client/values-{{ .Environment.Name }}.yaml
     needs:
+      - gateway-config
       - keycloak
 
   - name: api-gateway
     <<: *backend-service-common
     needs:
-      - opentelemetry-operator
-      - redis-rate-limiter
+      - secrets
+      - otel-config
+      - gateway-config
       - keycloak
 
   - name: codelist-service

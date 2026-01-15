@@ -1,0 +1,24 @@
+{{- if .Values.gateways.public.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateways.public.name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    cert-manager.io/issuer: {{ .Values.certificates.issuerName }}
+spec:
+  gatewayClassName: {{ .Values.gateways.className }}
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: {{ .Values.gateways.public.hostname }}
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: {{ .Values.gateways.public.certificateSecretName }}
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Same
+{{- end }}

@@ -10,7 +10,7 @@ spec:
     - baggage
   sampler:
     type: parentbased_traceidratio
-    argument: "0.01"
+    argument: "1.0"
   java:
     image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:2.23.0
     env:
