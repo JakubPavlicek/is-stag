@@ -213,6 +213,30 @@ releases:
       - tempo
     values:
       - observability/opentelemetry/values.yaml
+    hooks:
+      - events: [ "postsync" ]
+        showlogs: true
+        command: "bash"
+        args:
+          - "-c"
+          - |
+            echo "Waiting for OpenTelemetry operator webhook to be ready..."
+            kubectl wait --for=condition=available --timeout=300s \
+              deployment/opentelemetry-operator-controller-manager \
+              -n {{ .Environment.Values.namespace }}
+            
+            echo "Waiting for webhook service endpoint to be ready..."
+            for i in {1..60}; do
+              if kubectl get endpoints opentelemetry-operator-webhook -n {{ .Environment.Values.namespace }} -o jsonpath='{.subsets[*].addresses[*].ip}' | grep -q .; then
+                echo "Webhook endpoint is ready"
+                sleep 5
+                exit 0
+              fi
+              echo "Waiting for webhook endpoint... ($i/60)"
+              sleep 5
+            done
+            echo "Timeout waiting for webhook endpoint"
+            exit 1
 
   - name: otel-config
     chart: is-stag/otel-config
@@ -258,6 +282,12 @@ releases:
       - nginx-gateway-fabric
     values:
       - gateway-config/values.yaml
+    hooks:
+      - events: [ "postuninstall" ]
+        showlogs: true
+        command: "sleep"
+        args:
+          - "30"
 
   # ========================================
   # IS/STAG Applications

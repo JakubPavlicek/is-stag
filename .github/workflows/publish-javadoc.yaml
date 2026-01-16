@@ -1,0 +1,27 @@
+name: Publish JavaDoc
+
+on:
+  workflow_run:
+    workflows:
+      - Backend CI
+    types:
+      - completed
+
+jobs:
+  publish-javadoc:
+    name: Publish JavaDoc
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
+    steps:
+      - name: Deploy JavaDoc
+        uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          javadoc-branch: gh-pages
+          java-version: 25
+          target-folder: javadoc # URL will be https://jakubpavlicek.github.io/is-stag/javadoc
+          project: maven
+          javadoc-source-folder: services/target/reports/apidocs
+          custom-command: cd services && mvn javadoc:aggregate

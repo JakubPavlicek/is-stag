@@ -30,7 +30,14 @@
 
         <!-- SonarQube -->
         <sonar.organization>jakubpavlicek</sonar.organization>
+        <sonar.links.homepage>https://github.com/JakubPavlicek/is-stag</sonar.links.homepage>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.coverage.exclusions>
+            **/entity/**/*,
+            **/shared/config/OracleProxyDataSource.java,
+            **/shared/config/OracleProxyDataSourceConfig.java,
+            **/shared/config/ProxyOracleConnection.java
+        </sonar.coverage.exclusions>
         <sonar.cpd.exclusions>
             **/config/**,
             **/entity/**,
@@ -223,6 +230,14 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/entity/**/*</exclude>
+                        <exclude>**/shared/config/OracleProxyDataSource.java</exclude>
+                        <exclude>**/shared/config/OracleProxyDataSourceConfig.java</exclude>
+                        <exclude>**/shared/config/ProxyOracleConnection.java</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
