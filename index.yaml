@@ -3,6 +3,27 @@ entries:
   backend-service:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-01-16T10:58:52.035329236Z"
+    description: A generic Helm chart for deploying an IS/STAG backend service
+    digest: 6536dcf015fca659ee914e5fa3026076cf9075dffc6268b06a6213688e8fd6d9
+    home: https://github.com/JakubPavlicek/is-stag
+    keywords:
+    - is-stag
+    - backend
+    - spring-boot
+    - java
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: backend-service
+    sources:
+    - https://github.com/JakubPavlicek/is-stag
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/backend-service-0.0.2/backend-service-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-01-15T13:19:37.825268744Z"
     description: A generic Helm chart for deploying an IS/STAG backend service
     digest: 212d66144a170be51ce72f5eea1eebfa351350cebf0eb19f52a3445eb2d20ea6
@@ -15,6 +36,26 @@ entries:
     - https://github.com/JakubPavlicek/is-stag/releases/download/backend-service-0.0.1/backend-service-0.0.1.tgz
     version: 0.0.1
   cert-manager-config:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-16T10:58:52.185190595Z"
+    description: Configuration chart for certificates managed by cert-manager
+    digest: f670cddb186800faffe5496d384b0caf88bf7c4f9559772a071a41c1e93d4235
+    home: https://github.com/JakubPavlicek/is-stag
+    keywords:
+    - cert-manager
+    - certificates
+    - issuer
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: cert-manager-config
+    sources:
+    - https://github.com/JakubPavlicek/is-stag
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/cert-manager-config-0.0.2/cert-manager-config-0.0.2.tgz
+    version: 0.0.2
   - apiVersion: v2
     appVersion: 0.0.1
     created: "2026-01-15T20:48:49.007466421Z"
@@ -31,6 +72,28 @@ entries:
   client:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-01-16T10:58:52.30686128Z"
+    description: A Helm chart for deploying an IS/STAG frontend client
+    digest: 0cefc39b1bc557e7dde66860236862faa56cd7b570dabcc3f3041278cd8efb14
+    home: https://github.com/JakubPavlicek/is-stag
+    keywords:
+    - is-stag
+    - frontend
+    - client
+    - typescript
+    - react
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: client
+    sources:
+    - https://github.com/JakubPavlicek/is-stag
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/client-0.0.2/client-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-01-15T13:19:38.220457714Z"
     description: A Helm chart for deploying an IS/STAG frontend client
     digest: 0902660a3cde0d5a820cdb62202d69c2fd2b0dea75731773e8fa9c3f64b98db0
@@ -43,6 +106,26 @@ entries:
     - https://github.com/JakubPavlicek/is-stag/releases/download/client-0.0.1/client-0.0.1.tgz
     version: 0.0.1
   gateway-config:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-16T10:58:52.459595142Z"
+    description: Configuration chart for Gateway API resources
+    digest: 81f79c91ac18cd3b0c10ff86c92f3b7e09badf7d25810f120835efd6fee6858a
+    home: https://github.com/JakubPavlicek/is-stag
+    keywords:
+    - gateway
+    - gateway-api
+    - routing
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: gateway-config
+    sources:
+    - https://github.com/JakubPavlicek/is-stag
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/gateway-config-0.0.2/gateway-config-0.0.2.tgz
+    version: 0.0.2
   - apiVersion: v2
     appVersion: 0.0.1
     created: "2026-01-15T20:48:49.157621077Z"
@@ -59,6 +142,26 @@ entries:
   metallb-config:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-01-16T10:58:52.602816984Z"
+    description: Configuration chart for MetalLB
+    digest: ee46423d56742b5f6c3a6daf128bc8ae9864c5726c28451ae2812c61af8679dd
+    home: https://github.com/JakubPavlicek/is-stag
+    keywords:
+    - metallb
+    - ip-address-pool
+    - l2-advertisement
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: metallb-config
+    sources:
+    - https://github.com/JakubPavlicek/is-stag
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/metallb-config-0.0.2/metallb-config-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-01-15T20:48:49.302496051Z"
     description: Configuration chart for MetalLB
     digest: 16855ff1f6ab204f5244eaeb66dd301620c2fc65a6ff7e15e00e8ed9d68ab918
@@ -71,6 +174,27 @@ entries:
     - https://github.com/JakubPavlicek/is-stag/releases/download/metallb-config-0.0.1/metallb-config-0.0.1.tgz
     version: 0.0.1
   otel-config:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-16T10:58:52.756676533Z"
+    description: Configuration chart for OpenTelemetry Collector and Instrumentation
+    digest: 56f5e13560c4418ed00e93d9a52757937bc01a465559324a08e0418442f29c77
+    home: https://github.com/JakubPavlicek/is-stag
+    keywords:
+    - opentelemetry
+    - collector
+    - opentelemetry-collector
+    - instrumentation
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: otel-config
+    sources:
+    - https://github.com/JakubPavlicek/is-stag
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/otel-config-0.0.2/otel-config-0.0.2.tgz
+    version: 0.0.2
   - apiVersion: v2
     appVersion: 0.0.1
     created: "2026-01-15T20:48:49.454708463Z"
@@ -87,6 +211,25 @@ entries:
   secrets:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-01-16T10:58:52.907026534Z"
+    description: Configuration chart for secrets
+    digest: 9cd2f1b14246c9737628e343e1610a999aa71a946f0041deae4ba0e024c3cadb
+    home: https://github.com/JakubPavlicek/is-stag
+    keywords:
+    - secrets
+    - opaque
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: secrets
+    sources:
+    - https://github.com/JakubPavlicek/is-stag
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/secrets-0.0.2/secrets-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-01-15T20:48:49.630988788Z"
     description: Configuration chart for secrets
     digest: f471990224f8cc111088548534adcecebf1268e745d176d4ee6d86937d1e067e
@@ -98,4 +241,4 @@ entries:
     urls:
     - https://github.com/JakubPavlicek/is-stag/releases/download/secrets-0.0.1/secrets-0.0.1.tgz
     version: 0.0.1
-generated: "2026-01-15T20:48:49.630998957Z"
+generated: "2026-01-16T10:58:52.907054236Z"
