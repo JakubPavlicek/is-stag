@@ -2,8 +2,16 @@ apiVersion: v2
 name: backend-service
 description: A generic Helm chart for deploying an IS/STAG backend service
 type: application
-version: 0.0.1
+version: 0.0.2
 appVersion: "0.0.1"
+keywords:
+  - is-stag
+  - backend
+  - spring-boot
+  - java
+home: https://github.com/JakubPavlicek/is-stag
+sources:
+  - https://github.com/JakubPavlicek/is-stag
 maintainers:
   - name: Jakub Pavlíček
     email: jpvlck@students.zcu.cz

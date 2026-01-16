@@ -1,48 +1,60 @@
+# Name of the React client application
 name: react-client
 
+# Number of replicas for the deployment
 replicaCount: 1
 
+# Deployment configuration
 deployment:
+  # Annotations to add to the deployment
   annotations: {}
 
+# Container image configuration
 image:
+  # Container registry to pull images from
   registry: ghcr.io
-  repository: ""
+  # Image repository (without registry prefix)
+  repository: myorg/react-client
+  # Image tag to use (defaults to chart appVersion if not set)
   tag: ""
+  # Image pull policy
   pullPolicy: IfNotPresent
 
+# Service configuration
 service:
+  # Kubernetes service type
   type: ClusterIP
   ports:
+    # HTTP port for the service
     http: 5173
+    # NodePort for HTTP (only used when service.type is NodePort)
     httpNodePort: null
 
+# Keycloak integration configuration
 keycloak:
-  url: https://is-stag.cz/auth
-  realm: is-stag
+  # Keycloak server URL
+  url: https://example.com/auth
+  # Keycloak realm name
+  realm: my-realm
 
+# API configuration
 api:
-  url: https://is-stag.cz/api/v1
+  # Backend API base URL
+  url: https://example.com/api/v1
 
+# Health check probe configuration
 probes:
   readiness:
+    # Path for readiness probe
     path: /
+    # Initial delay before readiness probe starts (seconds)
     initialDelaySeconds: 10
+    # How often to perform the readiness probe (seconds)
     periodSeconds: 5
   liveness:
+    # Path for liveness probe
     path: /
+    # Initial delay before liveness probe starts (seconds)
     initialDelaySeconds: 15
+    # How often to perform the liveness probe (seconds)
     periodSeconds: 10
-
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
-
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true

@@ -2,8 +2,16 @@ apiVersion: v2
 name: otel-config
 description: Configuration chart for OpenTelemetry Collector and Instrumentation
 type: application
-version: 0.0.1
+version: 0.0.2
 appVersion: "0.0.1"
+keywords:
+  - opentelemetry
+  - collector
+  - opentelemetry-collector
+  - instrumentation
+home: https://github.com/JakubPavlicek/is-stag
+sources:
+  - https://github.com/JakubPavlicek/is-stag
 maintainers:
   - name: Jakub Pavlíček
     email: jpvlck@students.zcu.cz

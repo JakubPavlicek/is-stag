@@ -2,8 +2,15 @@ apiVersion: v2
 name: cert-manager-config
 description: Configuration chart for certificates managed by cert-manager
 type: application
-version: 0.0.1
+version: 0.0.2
 appVersion: "0.0.1"
+keywords:
+  - cert-manager
+  - certificates
+  - issuer
+home: https://github.com/JakubPavlicek/is-stag
+sources:
+  - https://github.com/JakubPavlicek/is-stag
 maintainers:
   - name: Jakub Pavlíček
     email: jpvlck@students.zcu.cz

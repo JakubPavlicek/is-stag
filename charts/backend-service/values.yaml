@@ -1,55 +1,89 @@
+# Name of the backend service
 name: backend-service
 
+# Number of replicas for the deployment
 replicaCount: 1
 
+# Deployment configuration
 deployment:
+  # Annotations to add to the deployment
   annotations: {}
 
+# Container image configuration
 image:
+  # Container registry to pull images from
   registry: ghcr.io
-  repository: ""
+  # Image repository (without registry prefix)
+  repository: myorg/backend-service
+  # Image tag to use (defaults to chart appVersion if not set)
   tag: ""
+  # Image pull policy
   pullPolicy: IfNotPresent
 
+# Resource limits and requests for the container
+resources:
+  # Resource limits
+  limits: {}
+  #   cpu: 100m
+  #   memory: 128Mi
+  # Resource requests
+  requests: {}
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# Service configuration
 service:
+  # Kubernetes service type
   type: ClusterIP
   ports:
+    # HTTP port for the service
     http: 8080
+    # gRPC port for the service (null to disable)
     grpc: null
+    # NodePort for HTTP (only used when service.type is NodePort)
     httpNodePort: null
+    # NodePort for gRPC (only used when service.type is NodePort)
     grpcNodePort: null
 
+# Spring Boot configuration
 spring:
-  profile: ""
+  # Spring profile to activate (e.g., perftest, prod)
+  profile: default
 
+# Database configuration
 database:
-  url: "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=atreus.zcu.cz)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=pelops.zcu.cz)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=DEMO_SERVICE)(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"
-  username: "install"
-  password: "demo"
-  proxy:
-    username: ""
-    password: ""
-    target_username: "install2"
+  # Database connection URL (JDBC format)
+  url: jdbc:oracle:thin:@//localhost:1521/XEPDB1
+  # Database credentials should be provided via an encrypted secrets file
+  credentials: null
+  # credentials:
+  #   username: ""
+  #   password: ""
+  #   proxy:
+  #     username: ""
+  #     password: ""
+  #     targetUsername: ""
 
+# Additional environment variables (non-sensitive)
+# Will be added to the ConfigMap
+env: {}
+# env:
+#   JAVA_OPTS: "-Xmx512m -Xms256m"
+#   SPRING_CUSTOM_VAR: "value"
+
+# Health check probe configuration
 probes:
   readiness:
+    # Path for readiness probe
     path: /actuator/health/readiness
-    initialDelaySeconds: 10
-    periodSeconds: 5
-  liveness:
-    path: /actuator/health/liveness
-    initialDelaySeconds: 15
+    # Initial delay before readiness probe starts (seconds)
+    initialDelaySeconds: 30
+    # How often to perform the readiness probe (seconds)
     periodSeconds: 10
-
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
-
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+  liveness:
+    # Path for liveness probe
+    path: /actuator/health/liveness
+    # Initial delay before liveness probe starts (seconds)
+    initialDelaySeconds: 45
+    # How often to perform the liveness probe (seconds)
+    periodSeconds: 15

@@ -1,0 +1,38 @@
+collector:
+  name: otel
+  endpoints:
+    tempo: http://tempo:4318
+    prometheus: http://prometheus:9090/api/v1/otlp
+    loki: http://loki:3100/otlp
+  scrape:
+    keycloak:
+      enabled: true
+      target: keycloak-http:9000
+      metricsPath: /auth/metrics
+  memoryLimit:
+    limitPercentage: 80
+    spikeLimitPercentage: 25
+  sampling:
+    excludePaths:
+      - /actuator.*
+      - /swagger-ui.*
+      - /v3/api-docs.*
+
+instrumentation:
+  name: otel-instrumentation
+  collectorEndpoint: http://otel-collector:4317
+  propagators:
+    - tracecontext
+    - baggage
+  sampler:
+    type: parentbased_traceidratio
+    argument: "1.0"
+  java:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:2.23.0
+    env:
+      - name: OTEL_EXPORTER_OTLP_PROTOCOL
+        value: grpc
+      - name: OTEL_EXPORTER_OTLP_COMPRESSION
+        value: gzip
+      - name: OTEL_METRICS_EXPORTER
+        value: otlp

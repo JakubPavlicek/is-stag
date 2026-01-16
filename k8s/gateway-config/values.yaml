@@ -1,0 +1,52 @@
+gateways:
+  className: nginx
+
+  # Public gateway
+  public:
+    enabled: true
+    name: public-gateway
+    hostname: is-stag.cz
+    certificateSecretName: selfsigned-cert-tls
+    routes:
+      - name: public-route
+        rules:
+          # Keycloak route
+          - pathPrefix: /auth
+            backendService: keycloak-http
+            backendPort: 8080
+
+          # API route
+          - pathPrefix: /api
+            backendService: api-gateway
+            backendPort: 8100
+
+          # Client route
+          - pathPrefix: /
+            backendService: react-client
+            backendPort: 5173
+
+  # Grafana gateway (internal)
+  grafana:
+    enabled: true
+    name: grafana-gateway
+    hostname: grafana.is-stag.internal
+    certificateSecretName: selfsigned-grafana-cert-tls
+    routes:
+      - name: grafana-route
+        backendService: grafana
+        backendPort: 3000
+
+  # Prometheus gateway (internal)
+  prometheus:
+    enabled: true
+    name: prometheus-gateway
+    hostname: prometheus.is-stag.internal
+    certificateSecretName: selfsigned-prometheus-cert-tls
+    routes:
+      - name: prometheus-route
+        backendService: prometheus
+        backendPort: 9090
+
+# Certificate configuration
+certificates:
+  issuerName: selfsigned-issuer

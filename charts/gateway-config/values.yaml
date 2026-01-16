@@ -1,48 +1,64 @@
 # Gateway configuration
 gateways:
+  # Gateway class name (e.g., nginx, istio)
   className: nginx
 
-  # Public gateway
+  # Public gateway configuration
   public:
+    # Enable the public gateway
     enabled: true
+    # Name of the public gateway resource
     name: public-gateway
-    hostname: is-stag.cz
-    certificateSecretName: selfsigned-cert-tls
+    # Hostname for the public gateway
+    hostname: example.com
+    # Secret name containing TLS certificate for the hostname
+    certificateSecretName: public-tls-cert
+    # List of HTTP routes for the public gateway
     routes:
       - name: public-route
         rules:
-          - pathPrefix: /auth
-            backendService: keycloak-http
-            backendPort: 8080
+          # API route
           - pathPrefix: /api
-            backendService: api-gateway
-            backendPort: 8100
+            backendService: api-service
+            backendPort: 8080
+          # Frontend route (default/catch-all)
           - pathPrefix: /
-            backendService: react-client
-            backendPort: 5173
+            backendService: frontend-service
+            backendPort: 80
 
-  # Grafana gateway (internal)
+  # Grafana gateway (internal) configuration
   grafana:
-    enabled: true
+    # Enable the Grafana gateway
+    enabled: false
+    # Name of the Grafana gateway resource
     name: grafana-gateway
-    hostname: grafana.is-stag.internal
-    certificateSecretName: selfsigned-grafana-cert-tls
+    # Hostname for Grafana access
+    hostname: grafana.example.internal
+    # Secret name containing TLS certificate for Grafana
+    certificateSecretName: grafana-tls-cert
+    # List of HTTP routes for Grafana
     routes:
       - name: grafana-route
         backendService: grafana
         backendPort: 3000
 
-  # Prometheus gateway (internal)
+  # Prometheus gateway (internal) configuration
   prometheus:
-    enabled: true
+    # Enable the Prometheus gateway
+    enabled: false
+    # Name of the Prometheus gateway resource
     name: prometheus-gateway
-    hostname: prometheus.is-stag.internal
-    certificateSecretName: selfsigned-prometheus-cert-tls
+    # Hostname for Prometheus access
+    hostname: prometheus.example.internal
+    # Secret name containing TLS certificate for Prometheus
+    certificateSecretName: prometheus-tls-cert
+    # List of HTTP routes for Prometheus
     routes:
       - name: prometheus-route
         backendService: prometheus
         backendPort: 9090
 
-# Existing certificate issuer
+# Certificate configuration
 certificates:
+  # Name of the existing certificate issuer to use
   issuerName: selfsigned-issuer

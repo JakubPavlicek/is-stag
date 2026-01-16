@@ -1,21 +1,17 @@
 # Certificate configuration
 certificates:
+  # Name of the certificate issuer to use
   issuerName: selfsigned-issuer
+  # Kind of issuer (Issuer or ClusterIssuer)
   issuerKind: Issuer
   
   # List of certificates to create
   certs:
-    - name: selfsigned-cert
-      secretName: selfsigned-cert-tls
+    # Main application certificate
+    - name: app-cert
+      # Secret name where the certificate will be stored
+      secretName: app-tls-cert
+      # DNS names covered by this certificate
       dnsNames:
-        - is-stag.cz
-
-    - name: selfsigned-grafana-cert
-      secretName: selfsigned-grafana-cert-tls
-      dnsNames:
-        - grafana.is-stag.internal
-
-    - name: selfsigned-prometheus-cert
-      secretName: selfsigned-prometheus-cert-tls
-      dnsNames:
-        - prometheus.is-stag.internal
+        - example.com
+        - www.example.com

@@ -1,34 +1,58 @@
+# OpenTelemetry collector configuration
 collector:
-  name: otel
+  # Name of the collector deployment
+  name: otel-collector
+  # Export endpoints for telemetry data
   endpoints:
+    # Tempo endpoint for traces
     tempo: http://tempo:4318
+    # Prometheus endpoint for metrics
     prometheus: http://prometheus:9090/api/v1/otlp
+    # Loki endpoint for logs
     loki: http://loki:3100/otlp
+  # Prometheus scrape configuration
   scrape:
     keycloak:
-      enabled: true
+      # Enable Keycloak metrics scraping
+      enabled: false
+      # Keycloak service target for scraping
       target: keycloak-http:9000
-      metricsPath: /auth/metrics
+      # Metrics path on Keycloak service
+      metricsPath: /metrics
+  # Memory limiter configuration
   memoryLimit:
-    limitPercentage: 80
-    spikeLimitPercentage: 25
+    # Memory usage limit as percentage of total available
+    limitPercentage: 75
+    # Spike limit as percentage above the limit
+    spikeLimitPercentage: 20
+  # Sampling configuration
   sampling:
+    # List of path patterns to exclude from tracing (regex)
     excludePaths:
-      - /actuator.*
-      - /swagger-ui.*
-      - /v3/api-docs.*
+      - /health.*
+      - /metrics.*
 
+# OpenTelemetry auto-instrumentation configuration
 instrumentation:
+  # Name of the instrumentation resource
   name: otel-instrumentation
+  # Collector endpoint for instrumented applications to send telemetry
   collectorEndpoint: http://otel-collector:4317
+  # Context propagation formats to use
   propagators:
     - tracecontext
     - baggage
+  # Sampling configuration for traces
   sampler:
+    # Sampler type (e.g., always_on, parentbased_traceidratio)
     type: parentbased_traceidratio
-    argument: "1.0"
+    # Sampler argument (1.0 = 100% sampling)
+    argument: "0.1"
+  # Java-specific instrumentation configuration
   java:
+    # Auto-instrumentation Java agent image
     image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:2.23.0
+    # Environment variables for Java instrumentation
     env:
       - name: OTEL_EXPORTER_OTLP_PROTOCOL
         value: grpc

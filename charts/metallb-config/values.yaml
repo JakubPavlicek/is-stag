@@ -1,10 +1,17 @@
+# MetalLB configuration for bare-metal load balancing
 metallb:
+  # Enable or disable MetalLB configuration
   enabled: true
 
+  # IP address pool configuration
   ipAddressPool:
-    name: ip-address-pool
+    # Name of the IP address pool
+    name: default-pool
+    # List of IP address ranges to allocate for LoadBalancer services
     addresses:
-      - 10.211.55.100-10.211.55.109
+      - 192.168.1.240-192.168.1.250
 
+  # Layer 2 advertisement configuration
   l2Advertisement:
-    name: l2-advertisement
+    # Name of the L2 advertisement resource
+    name: default-l2-advertisement

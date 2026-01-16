@@ -17,7 +17,7 @@ spec:
       labels:
         app: {{ .Values.name }}
       annotations:
-        {{ toYaml .Values.deployment.annotations | indent 8 }}
+        {{ toYaml .Values.deployment.annotations | nindent 8 }}
     spec:
       containers:
         - name: {{ .Values.name }}
@@ -32,9 +32,11 @@ spec:
             {{ end }}
           envFrom:
             - configMapRef:
-                name: {{ .Values.name }}-database-config
+                name: {{ .Values.name }}-config
+            {{- if .Values.database.credentials }}
             - secretRef:
                 name: {{ .Values.name }}-database-secret
+            {{- end }}
           {{ with .Values.probes }}
           readinessProbe:
             httpGet:
@@ -48,4 +50,8 @@ spec:
               port: http
             initialDelaySeconds: {{ .liveness.initialDelaySeconds }}
             periodSeconds: {{ .liveness.periodSeconds }}
+          {{ end }}
+          {{ with .Values.resources }}
+          resources:
+            {{ toYaml . | nindent 12 }}
           {{ end }}

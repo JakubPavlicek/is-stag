@@ -59,7 +59,7 @@ hooks:
 templates:
   .backend-service-common: &backend-service-common
     chart: is-stag/backend-service
-    version: 0.0.1
+    version: 0.0.2
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -68,6 +68,8 @@ templates:
       - otel-config
       - redis-cache
       - keycloak
+    secrets:
+      - secrets/oracle-secrets.yaml
     values:
       - "is-stag/{{ .Release.Name }}/values.yaml"
       - "is-stag/{{ .Release.Name }}/values-{{ .Environment.Name }}.yaml"
@@ -84,7 +86,7 @@ releases:
   # ========================================
   - name: secrets
     chart: is-stag/secrets
-    version: 0.0.1
+    version: 0.0.2
     namespace: "{{ .Environment.Values.namespace }}"
     secrets:
       - secrets/secrets.yaml
@@ -101,10 +103,12 @@ releases:
 
   - name: metallb-config
     chart: is-stag/metallb-config
-    version: 0.0.1
+    version: 0.0.2
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - metallb
+    values:
+      - metallb-config/values.yaml
 
   # ========================================
   # Cert-Manager
@@ -118,10 +122,12 @@ releases:
 
   - name: cert-manager-config
     chart: is-stag/cert-manager-config
-    version: 0.0.1
+    version: 0.0.2
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - cert-manager
+    values:
+      - cert-manager-config/values.yaml
 
   # ========================================
   # Databases
@@ -182,7 +188,7 @@ releases:
 
   - name: grafana
     chart: grafana/grafana
-    version: 10.5.7
+    version: 10.5.8
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     values:
@@ -210,10 +216,12 @@ releases:
 
   - name: otel-config
     chart: is-stag/otel-config
-    version: 0.0.1
+    version: 0.0.2
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - opentelemetry-operator
+    values:
+      - otel-config/values.yaml
 
   # ========================================
   # Keycloak
@@ -244,17 +252,19 @@ releases:
 
   - name: gateway-config
     chart: is-stag/gateway-config
-    version: 0.0.1
+    version: 0.0.2
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - nginx-gateway-fabric
+    values:
+      - gateway-config/values.yaml
 
   # ========================================
   # IS/STAG Applications
   # ========================================
   - name: react-client
     chart: is-stag/client
-    version: 0.0.1
+    version: 0.0.2
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
