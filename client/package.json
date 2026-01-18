@@ -6,20 +6,22 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build && tsc -b",
     "start": "vite --port 5173 --host",
     "lint": "eslint .",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
     "format": "prettier --write \"**/*.{ts,tsx,md}\" --check-ignore-pragma",
     "preview": "vite preview",
     "gen:api": "npm run gen:student && npm run gen:user && npm run gen:codelist",
     "gen:student": "openapi-typescript ../services/student-service/src/main/resources/static/openapi.yaml -o src/api/student/schema.d.ts",
     "gen:user": "openapi-typescript ../services/user-service/src/main/resources/static/openapi.yaml -o src/api/user/schema.d.ts",
     "gen:codelist": "openapi-typescript ../services/codelist-service/src/main/resources/static/openapi.yaml -o src/api/codelist/schema.d.ts",
-    "pack": "pack build ghcr.io/$(npm pkg get author | tr -d '\"')/$(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --platform linux/arm64 --builder heroku/builder:24 --env NODE_ENV=dev --env BP_OCI_SOURCE=https://github.com/JakubPavlicek/is-stag"
+    "pack": "pack build ghcr.io/$(npm pkg get author | tr -d '\"')/$(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --platform linux/arm64 --builder heroku/builder:24 --env NODE_ENV=prod --env BP_OCI_SOURCE=https://github.com/JakubPavlicek/is-stag"
   },
   "engines": {
-    "node": ">=25.2.1",
-    "npm": ">=11.6.3"
+    "node": ">=25.3.0",
+    "npm": ">=11.7.0"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
@@ -30,8 +32,8 @@
     "@radix-ui/react-slot": "^1.2.4",
     "@react-keycloak/web": "^3.4.0",
     "@tanstack/react-form": "^1.27.7",
-    "@tanstack/react-query": "^5.90.18",
-    "@tanstack/react-router": "^1.150.0",
+    "@tanstack/react-query": "^5.90.19",
+    "@tanstack/react-router": "^1.151.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -54,19 +56,27 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@tailwindcss/vite": "^4.1.18",
-    "@tanstack/router-plugin": "^1.150.0",
+    "@tanstack/router-plugin": "^1.151.5",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^14.6.1",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "@types/jest": "^30.0.0",
     "@types/node": "^25.0.9",
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
+    "@vitest/coverage-v8": "^4.0.17",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.26",
+    "eslint-plugin-testing-library": "^7.15.4",
+    "eslint-plugin-vitest": "^0.5.4",
     "globals": "^17.0.0",
+    "jsdom": "^27.4.0",
     "openapi-typescript": "^7.10.1",
     "prettier": "^3.8.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
@@ -74,6 +84,7 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.53.0",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^4.0.17"
   }
 }

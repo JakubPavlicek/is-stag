@@ -20,8 +20,7 @@ services:
       KC_TRACING_ENDPOINT: http://otel:4317
       KC_TRACING_PROTOCOL: grpc
       KC_TRACING_COMPRESSION: gzip
-      KC_TRACING_SAMPLER_TYPE: parentbased_traceidratio
-      KC_TRACING_SAMPLER_RATIO: 1.0
+      KC_TRACING_SAMPLER_TYPE: parentbased_always_on
 
       # OpenTelemetry Logs
       KC_TELEMETRY_LOGS_ENABLED: true
@@ -41,7 +40,7 @@ services:
           exec 3<&-; exec 3>&-; exit 1; \
         fi"
       ]
-      start_period: 20s
+      start_period: 30s
       interval: 10s
       timeout: 5s
       retries: 5
@@ -133,8 +132,7 @@ services:
       OTEL_SERVICE_NAME: api-gateway
       OTEL_RESOURCE_ATTRIBUTES: service.name=api-gateway,service.namespace=dev,service.version=0.0.1,environment=dev
       OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_traceidratio
-      OTEL_TRACES_SAMPLER_ARG: 1.0
+      OTEL_TRACES_SAMPLER: parentbased_always_on
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     healthcheck:
@@ -177,8 +175,7 @@ services:
       OTEL_SERVICE_NAME: student-service
       OTEL_RESOURCE_ATTRIBUTES: service.name=student-service,service.namespace=dev,service.version=0.0.1,environment=dev
       OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_traceidratio
-      OTEL_TRACES_SAMPLER_ARG: 1.0
+      OTEL_TRACES_SAMPLER: parentbased_always_on
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     healthcheck:
@@ -216,8 +213,7 @@ services:
       OTEL_SERVICE_NAME: study-plan-service
       OTEL_RESOURCE_ATTRIBUTES: service.name=study-plan-service,service.namespace=dev,service.version=0.0.1,environment=dev
       OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_traceidratio
-      OTEL_TRACES_SAMPLER_ARG: 1.0
+      OTEL_TRACES_SAMPLER: parentbased_always_on
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     healthcheck:
@@ -255,8 +251,7 @@ services:
       OTEL_SERVICE_NAME: user-service
       OTEL_RESOURCE_ATTRIBUTES: service.name=user-service,service.namespace=dev,service.version=0.0.1,environment=dev
       OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_traceidratio
-      OTEL_TRACES_SAMPLER_ARG: 1.0
+      OTEL_TRACES_SAMPLER: parentbased_always_on
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     healthcheck:
@@ -294,8 +289,7 @@ services:
       OTEL_SERVICE_NAME: codelist-service
       OTEL_RESOURCE_ATTRIBUTES: service.name=codelist-service,service.namespace=dev,service.version=0.0.1,environment=dev
       OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_traceidratio
-      OTEL_TRACES_SAMPLER_ARG: 1.0
+      OTEL_TRACES_SAMPLER: parentbased_always_on
     volumes:
       - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
     healthcheck:

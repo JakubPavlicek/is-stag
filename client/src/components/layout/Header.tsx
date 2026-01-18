@@ -5,6 +5,7 @@ import { useKeycloak } from '@react-keycloak/web'
 import { CZ, GB } from 'country-flag-icons/react/3x2'
 import { Globe, LogOut, Menu } from 'lucide-react'
 
+import { ModeToggle } from '@/components/theme/mode-toggle'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,7 +18,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
-import { ModeToggle } from '../mode-toggle'
 import { Sidebar } from './Sidebar'
 
 /**
@@ -67,6 +67,7 @@ export function Header() {
               variant="ghost"
               size="icon"
               className="hover:bg-accent hover:text-accent-foreground transition-all duration-200 hover:scale-105 active:scale-95"
+              aria-label="Switch language"
             >
               <Globe className="h-5 w-5" />
             </Button>

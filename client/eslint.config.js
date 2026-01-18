@@ -1,13 +1,15 @@
 import js from '@eslint/js'
-import globals from 'globals'
+import eslintConfigPrettier from 'eslint-config-prettier'
+import reactCompiler from 'eslint-plugin-react-compiler'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
-import reactCompiler from 'eslint-plugin-react-compiler'
+import vitest from 'eslint-plugin-vitest'
+import testingLibrary from 'eslint-plugin-testing-library'
+import globals from 'globals'
 import tseslint from 'typescript-eslint'
-import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'node_modules', 'coverage', 'src/api'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -23,10 +25,24 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-compiler/react-compiler': 'error',
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    },
+  },
+  {
+    files: ['**/*.test.{ts,tsx}', '**/__tests__/**/*.{ts,tsx}'],
+    plugins: {
+      vitest,
+      'testing-library': testingLibrary,
+    },
+    languageOptions: {
+      globals: {
+        ...vitest.environments.env.globals,
+      },
+    },
+    rules: {
+      ...vitest.configs.recommended.rules,
+      ...testingLibrary.configs['flat/react'].rules,
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
   eslintConfigPrettier,

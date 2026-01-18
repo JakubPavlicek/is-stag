@@ -1,5 +1,6 @@
-src/components/ui
 src/api
+src/routeTree.gen.ts
+coverage
 
 ### react template
 .DS_*
@@ -8,6 +9,8 @@ logs
 **/*.backup.*
 **/*.back.*
 
+.tanstack
+dist
 node_modules
 bower_components
 

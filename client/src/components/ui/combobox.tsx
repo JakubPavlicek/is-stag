@@ -1,8 +1,8 @@
-import * as React from "react"
-import { Check, ChevronsUpDown, X } from "lucide-react"
+import * as React from 'react'
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { Check, ChevronsUpDown, X } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -10,12 +10,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+} from '@/components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
 
 export interface ComboboxOption {
   value: string
@@ -42,8 +39,8 @@ export function Combobox({
   options,
   value,
   onSelect,
-  placeholder = "Select option...",
-  emptyText = "No option found.",
+  placeholder = 'Select option...',
+  emptyText = 'No option found.',
   className,
   modal = false,
 }: Readonly<ComboboxProps>) {
@@ -56,12 +53,14 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("h-auto w-full justify-between min-w-0 shadow-sm", !value && "text-muted-foreground", className)}
+          className={cn(
+            'h-auto w-full min-w-0 justify-between shadow-sm',
+            !value && 'text-muted-foreground',
+            className,
+          )}
         >
           <span className="flex-1 truncate text-left">
-            {value
-              ? options.find((option) => option.value === value)?.label
-              : placeholder}
+            {value ? options.find((option) => option.value === value)?.label : placeholder}
           </span>
           <div className="ml-2 flex items-center gap-1">
             {/* Clear button - only shown when a value is selected */}
@@ -71,12 +70,12 @@ export function Combobox({
                 tabIndex={0}
                 onClick={(e) => {
                   e.stopPropagation()
-                  onSelect("")
+                  onSelect('')
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
+                  if (e.key === 'Enter' || e.key === ' ') {
                     e.stopPropagation()
-                    onSelect("")
+                    onSelect('')
                   }
                 }}
                 className="flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center opacity-50 hover:opacity-100"
@@ -106,15 +105,15 @@ export function Combobox({
                   value={option.label}
                   onSelect={() => {
                     // Toggle selection: deselect if already selected, otherwise select
-                    onSelect(option.value === value ? "" : option.value)
+                    onSelect(option.value === value ? '' : option.value)
                     setOpen(false)
                   }}
                   className="items-start"
                 >
                   <Check
                     className={cn(
-                      "mr-2 h-4 w-4 mt-0.5",
-                      value === option.value ? "opacity-100" : "opacity-0"
+                      'mt-0.5 mr-2 h-4 w-4',
+                      value === option.value ? 'opacity-100' : 'opacity-0',
                     )}
                   />
                   <span className="flex-1 text-left">{option.label}</span>

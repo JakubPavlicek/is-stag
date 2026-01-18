@@ -14,7 +14,7 @@ import { keycloak } from './auth'
  * - Refreshes the token if it's about to expire (within 5 seconds).
  * - Sets the Accept-Language header based on the current i18n language.
  */
-const authMiddleware: Middleware = {
+export const authMiddleware: Middleware = {
   async onRequest({ request }) {
     // Authorization
     if (keycloak.token) {

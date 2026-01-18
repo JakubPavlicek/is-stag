@@ -28,6 +28,10 @@ export interface paths {
         /**
          * Update person
          * @description Update a person by their unique identifier.
+         *
+         *     **Required Roles:**
+         *     * `AD`
+         *     * `ST` (only if accessing their own data)
          */
         patch: operations["updatePersonProfile"];
         trace?: never;

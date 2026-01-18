@@ -8,7 +8,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { Toaster } from 'sonner'
 
-import { ThemeProvider, useTheme } from '@/components/theme-provider'
+import { ThemeProvider, useTheme } from '@/components/theme/theme-provider'
 
 import './i18n'
 import './index.css'

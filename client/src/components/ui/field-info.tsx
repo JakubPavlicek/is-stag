@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
-
 import { useTranslation } from 'react-i18next'
+
 import type { ValidationError } from '@tanstack/react-form'
 
 import { Label } from '@/components/ui/label'
@@ -37,9 +37,7 @@ function FieldInfo({ field }: Readonly<{ field: MinimalFieldApi }>) {
                   : error
               const msgString = message as string
               // Check if translation exists in 'zod' namespace, otherwise use raw message
-              return i18n.exists(msgString, { ns: 'zod' })
-                ? t(msgString, { ns: 'zod' })
-                : msgString
+              return i18n.exists(msgString, { ns: 'zod' }) ? t(msgString, { ns: 'zod' }) : msgString
             })
             .join(', ')}
         </p>
@@ -65,7 +63,7 @@ export function FormField({
   className?: string
 }>) {
   return (
-    <div className={cn('grid gap-2 items-start', className)}>
+    <div className={cn('grid items-start gap-2', className)}>
       <Label
         htmlFor={field.name}
         className={field.state.meta.errors.length ? 'text-destructive' : ''}
