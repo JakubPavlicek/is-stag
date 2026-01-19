@@ -13,7 +13,7 @@ full observability.
 
 The system is designed as a set of microservices communicating via gRPC, deployed on Kubernetes.
 
-<img src="images/is-stag-architecture.png" alt="arch" width="600">
+![IS/STAG architecture](images/is-stag-architecture.png)
 
 ### 🛠 Tech Stack
 
@@ -53,7 +53,7 @@ The system is designed as a set of microservices communicating via gRPC, deploye
 
 ## ☸️ Kubernetes Architecture
 
-<img src="images/is-stag-kubernetes-architecture.png" alt="k8s-arch" width="600">
+![Kubernetes architecture](images/is-stag-kubernetes-architecture.png)
 
 ---
 

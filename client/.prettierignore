@@ -1,6 +1,7 @@
 src/api
 src/routeTree.gen.ts
 coverage
+README.md
 
 ### react template
 .DS_*
