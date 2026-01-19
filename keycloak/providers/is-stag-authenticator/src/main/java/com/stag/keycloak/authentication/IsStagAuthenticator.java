@@ -20,8 +20,21 @@ import java.net.URI;
 import java.util.Base64;
 import java.util.Optional;
 
+/**
+ * Custom Keycloak Authenticator for IS/STAG integration.
+ * <p>
+ * This authenticator extends {@link UsernamePasswordForm} to provide a custom authentication flow
+ * that integrates with the IS/STAG system. It handles redirects to the IS/STAG login page,
+ * processes the response containing user information, and creates or updates users in Keycloak accordingly.
+ * It also supports anonymous login handling.
+ * </p>
+ *
+ * @author Jakub Pavlíček
+ * @version 1.0.0
+ */
 public class IsStagAuthenticator extends UsernamePasswordForm {
 
+    /** Logger for logging authentication events and errors */
     private static final Logger log = Logger.getLogger(IsStagAuthenticator.class.getName());
 
     /** Object mapper for JSON processing - Jdk8Module is needed because of Optional<> usage */
@@ -40,6 +53,19 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
     private static final String STUDENT_ID_ATTR = "studentId";
     private static final String TEACHER_ID_ATTR = "teacherId";
 
+    /**
+     * Authenticates the user based on the context and query parameters.
+     * <p>
+     * This method checks the query parameters to determine the flow:
+     * <ul>
+     *   <li>If {@code stagUserInfo} is present, it handles the login response from IS/STAG (either anonymous or regular user).</li>
+     *   <li>If {@code stag_login} is set to "true", it redirects the user to the IS/STAG login page.</li>
+     *   <li>Otherwise, it proceeds with the standard username/password authentication.</li>
+     * </ul>
+     * </p>
+     *
+     * @param context The {@link AuthenticationFlowContext} containing request and session information.
+     */
     @Override
     public void authenticate(AuthenticationFlowContext context) {
         log.info("Authentication started");
@@ -79,6 +105,14 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         super.authenticate(context);
     }
 
+    /**
+     * Redirects the user to the external IS/STAG login page.
+     * <p>
+     * Constructs the redirect URL by appending the current request URI as the {@code originalURL} parameter.
+     * </p>
+     *
+     * @param context The {@link AuthenticationFlowContext} used to build the redirect URI.
+     */
     private void redirectToStagLogin(AuthenticationFlowContext context) {
         log.info("Redirecting to STAG login");
 
@@ -96,6 +130,16 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         context.challenge(Response.seeOther(stagLoginUri).build());
     }
 
+    /**
+     * Handles the anonymous login flow.
+     * <p>
+     * Attempts to find a user with the username "anonymous" in the current realm.
+     * If found, the user is set in the context and authentication succeeds.
+     * Otherwise, an authentication error is reported.
+     * </p>
+     *
+     * @param context The {@link AuthenticationFlowContext} for user lookup and session management.
+     */
     private void handleAnonymousLogin(AuthenticationFlowContext context) {
         log.info("Handling anonymous login");
 
@@ -117,6 +161,17 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         context.success();
     }
 
+    /**
+     * Handles the regular user login flow based on IS/STAG user info.
+     * <p>
+     * Decodes and parses the Base64 encoded {@code stagUserInfo}.
+     * It then looks up the user in Keycloak by username. If the user does not exist,
+     * a new user is created. On successful processing, the user is authenticated.
+     * </p>
+     *
+     * @param context The {@link AuthenticationFlowContext} for user management.
+     * @param stagUserInfo The Base64 encoded JSON string containing user details from IS/STAG.
+     */
     private void handleUserLogin(AuthenticationFlowContext context, String stagUserInfo) {
         log.info("Handling user login");
 
@@ -151,6 +206,20 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         }
     }
 
+    /**
+     * Creates a new user in Keycloak based on the provided IS/STAG data.
+     * <p>
+     * Sets the username, email, first name, last name, and additional attributes
+     * (student ID or teacher ID) based on the {@link IsStagUserDetails}.
+     * It also assigns the user a role if one is specified and exists in the realm.
+     * </p>
+     *
+     * @param userProvider The {@link UserProvider} to manage users.
+     * @param realm The {@link RealmModel} where the user will be created.
+     * @param isStagUser The {@link IsStagUser} containing the user's name details.
+     * @param isStagUserDetails The {@link IsStagUserDetails} containing specific user attributes and role.
+     * @return The newly created {@link UserModel}.
+     */
     private UserModel createUser(
         UserProvider userProvider,
         RealmModel realm,
@@ -192,6 +261,16 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         return user;
     }
 
+    /**
+     * Handles authentication errors by setting a failure challenge.
+     * <p>
+     * Logs the warning message and updates the authentication context with an invalid credentials error
+     * and a corresponding error page.
+     * </p>
+     *
+     * @param message The error message to display and log.
+     * @param context The {@link AuthenticationFlowContext} to update with failure details.
+     */
     private void handleAuthenticationError(String message, AuthenticationFlowContext context) {
         log.warn(message);
 

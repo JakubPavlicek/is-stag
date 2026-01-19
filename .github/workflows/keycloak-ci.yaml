@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'keycloak/**'
+      - '!**/*.md'
       - '.github/workflows/keycloak-ci.yaml'
 
 jobs:

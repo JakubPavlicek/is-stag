@@ -5,6 +5,7 @@ on:
     paths:
       - 'services/**'
       - 'proto/**'
+      - '!**/*.md'
       - '.github/workflows/backend-ci.yaml'
 
 jobs:
