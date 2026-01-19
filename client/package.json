@@ -12,6 +12,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "format": "prettier --write \"**/*.{ts,tsx,md}\" --check-ignore-pragma",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md}\" --check-ignore-pragma",
     "preview": "vite preview",
     "gen:api": "npm run gen:student && npm run gen:user && npm run gen:codelist",
     "gen:student": "openapi-typescript ../services/student-service/src/main/resources/static/openapi.yaml -o src/api/student/schema.d.ts",

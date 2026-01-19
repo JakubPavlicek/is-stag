@@ -1,5 +1,8 @@
 # React Client
 
+[![Frontend CI](https://github.com/JakubPavlicek/is-stag/actions/workflows/frontend-ci.yaml/badge.svg)](https://github.com/JakubPavlicek/is-stag/actions/workflows/frontend-ci.yaml)
+[![codecov](https://codecov.io/github/JakubPavlicek/is-stag/graph/badge.svg?token=G9QCAP4G9J)](https://codecov.io/github/JakubPavlicek/is-stag)
+
 This is the frontend application for the University Portal (IS/STAG).
 
 ## Prerequisites
