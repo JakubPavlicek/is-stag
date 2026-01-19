@@ -27,11 +27,6 @@ grpc:
   validation:
     enabled: true
 
-logging:
-  level:
-    com.stag.academics: DEBUG
-#    com.zaxxer.hikari: DEBUG
-
 spring:
   application:
     name: study-plan-service

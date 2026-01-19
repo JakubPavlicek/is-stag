@@ -100,6 +100,7 @@ services:
       VITE_API_URL: http://localhost:8100/api/v1
       VITE_KEYCLOAK_URL: http://localhost:8180/auth
       VITE_KEYCLOAK_REALM: is-stag
+      VITE_KEYCLOAK_CLIENT_ID: React-client
     ports:
       - "5173:5173"
     depends_on:

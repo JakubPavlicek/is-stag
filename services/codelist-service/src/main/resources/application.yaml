@@ -14,10 +14,6 @@ grpc:
     server:
       enabled: true
 
-#logging:
-#  level:
-#    com.zaxxer.hikari: DEBUG
-
 spring:
   application:
     name: codelist-service

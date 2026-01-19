@@ -168,6 +168,7 @@ releases:
     chart: prometheus-community/prometheus
     version: 28.6.0
     namespace: "{{ .Environment.Values.namespace }}"
+    missingFileHandler: Warn
     values:
       - observability/prometheus/values.yaml
       - observability/prometheus/values-{{ .Environment.Name }}.yaml
@@ -191,6 +192,7 @@ releases:
     version: 10.5.8
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
+    missingFileHandler: Warn
     values:
       - observability/grafana/values.yaml
       - observability/grafana/values-{{ .Environment.Name }}.yaml

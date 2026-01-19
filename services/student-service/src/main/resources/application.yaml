@@ -37,10 +37,6 @@ grpc:
   validation:
     enabled: true
 
-#logging:
-#  level:
-#    com.zaxxer.hikari: DEBUG
-
 spring:
   application:
     name: student-service
