@@ -4,6 +4,8 @@ server:
     enabled: true
   compression:
     enabled: true
+  netty:
+    connection-timeout: 5s
 
 # Templates for API Gateway filters
 filter-templates:
@@ -37,8 +39,15 @@ spring:
       server:
         webflux:
           httpclient:
-            response-timeout: 2s
             compression: true
+            connect-timeout: 3000
+            response-timeout: 10s
+            pool:
+              type: fixed
+              max-connections: 1000
+              max-idle-time: 30s
+              max-life-time: 60s
+              eviction-interval: 30s
           metrics:
             enabled: true
           routes:
@@ -154,7 +163,7 @@ resilience4j:
   timelimiter:
     configs:
       default:
-        timeout-duration: 5s
+        timeout-duration: 10s
         cancel-running-future: true
 
 management:
