@@ -20,19 +20,13 @@ public class AuthorizationService {
     /// gRPC Student Client
     private final StudentClient studentClient;
 
-    /// Checks if the user is a student and owns the requested person profile.
+    /// Checks if the student owns the requested person profile.
     /// Used in @PreAuthorize expressions to enforce data access restrictions.
     ///
-    /// @param isStudent whether a user has a student role
     /// @param studentId the student identifier from JWT claims
     /// @param personId the requested person identifier
     /// @return true if a student owns the person profile, false otherwise
-    public boolean isStudentAndOwner(boolean isStudent, String studentId, Integer personId) {
-        if (!isStudent) {
-            log.debug("User is not a student");
-            return false;
-        }
-
+    public boolean isStudentOwner(String studentId, Integer personId) {
         Integer studentPersonId = studentClient.getStudentPersonId(studentId);
         return studentPersonId.equals(personId);
     }

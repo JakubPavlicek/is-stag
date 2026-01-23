@@ -30,6 +30,9 @@ grpc:
 spring:
   application:
     name: study-plan-service
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration
   jackson:
     mapper:
       sort-properties-alphabetically: false
@@ -122,11 +125,6 @@ spring:
   config:
     activate:
       on-profile: prod
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
       sentinel:
@@ -157,12 +155,6 @@ spring:
   config:
     activate:
       on-profile: dev
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-#          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
-          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
 #      host: redis-cache

@@ -8,9 +8,3 @@ spring:
       hibernate:
         default_schema: install2
         dialect: org.hibernate.dialect.OracleDialect
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://test-issuer.example.com
-          jwk-set-uri: https://test-issuer.example.com/.well-known/jwks.json

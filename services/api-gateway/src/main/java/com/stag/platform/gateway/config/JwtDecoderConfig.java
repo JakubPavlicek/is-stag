@@ -33,7 +33,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 @Profile("!perftest")
 @Slf4j
 @Configuration
-public class JwtConfig {
+public class JwtDecoderConfig {
 
     /// JWK Set URI from application configuration (e.g., Keycloak endpoint)
     @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")

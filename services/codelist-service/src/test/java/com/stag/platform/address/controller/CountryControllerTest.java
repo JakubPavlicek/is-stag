@@ -3,7 +3,6 @@ package com.stag.platform.address.controller;
 import com.stag.platform.address.repository.projection.CountryView;
 import com.stag.platform.address.service.CountryService;
 import com.stag.platform.config.TestCacheConfig;
-import com.stag.platform.config.TestSecurityConfig;
 import com.stag.platform.shared.config.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(CountryController.class)
-@Import({ TestCacheConfig.class, TestSecurityConfig.class, SecurityConfig.class })
+@Import({ TestCacheConfig.class, SecurityConfig.class })
 @ActiveProfiles("test")
 class CountryControllerTest {
 

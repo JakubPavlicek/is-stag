@@ -1,7 +1,6 @@
 package com.stag.academics.student.controller;
 
 import com.stag.academics.config.TestCacheConfig;
-import com.stag.academics.config.TestSecurityConfig;
 import com.stag.academics.shared.config.SecurityConfig;
 import com.stag.academics.student.exception.StudentNotFoundException;
 import com.stag.academics.student.exception.StudentProfileFetchException;
@@ -26,14 +25,14 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
 import java.util.concurrent.CompletionException;
 
+import static com.stag.academics.config.GatewayHeadersRequestPostProcessor.gatewayHeaders;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
 @WebMvcTest(StudentController.class)
-@Import({ TestCacheConfig.class, TestSecurityConfig.class, SecurityConfig.class })
+@Import({ TestCacheConfig.class, SecurityConfig.class })
 @ActiveProfiles("test")
 class StudentControllerTest {
 
@@ -65,7 +64,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -94,7 +93,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(404)
             .bodyJson()
             .satisfies(json -> {
@@ -119,7 +118,7 @@ class StudentControllerTest {
         assertThat(mvc.get()
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .accept(MediaType.APPLICATION_JSON))
             .hasStatus(500)
             .bodyJson()
@@ -133,7 +132,7 @@ class StudentControllerTest {
     }
 
     @Test
-    @DisplayName("should return 401 Unauthorized when no JWT token provided")
+    @DisplayName("should return 403 Unauthorized when no auth headers are provided")
     void getStudentProfile_NoJwtToken_Returns401() {
         String studentId = "S123";
         String language = "en";
@@ -142,7 +141,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON))
-            .hasStatus(401);
+            .hasStatus(403);
     }
 
     @Test
@@ -158,7 +157,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(403)
             .bodyJson()
             .satisfies(json -> {
@@ -183,7 +182,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(503)
             .bodyJson()
             .satisfies(json -> {
@@ -207,7 +206,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(404)
             .bodyJson()
             .satisfies(json -> {
@@ -231,7 +230,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(400)
             .bodyJson()
             .satisfies(json -> {
@@ -255,7 +254,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(503)
             .bodyJson()
             .satisfies(json -> {
@@ -279,7 +278,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(504)
             .bodyJson()
             .satisfies(json -> {
@@ -316,7 +315,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(expectedStatus)
             .bodyJson()
             .satisfies(json -> json.assertThat().extractingPath("$.status").isEqualTo(expectedStatus));
@@ -337,7 +336,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(404)
             .bodyJson()
             .satisfies(json -> {
@@ -361,7 +360,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", studentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(500)
             .bodyJson()
             .satisfies(json -> {
@@ -383,7 +382,7 @@ class StudentControllerTest {
                       .uri("/api/v1/students/{studentId}", longStudentId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(400)
             .bodyJson()
             .satisfies(json -> {

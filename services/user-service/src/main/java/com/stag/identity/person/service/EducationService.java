@@ -46,7 +46,7 @@ public class EducationService {
     @Cacheable(value = "person-education", key = "{#personId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
-        || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)
+        || (principal.isStudent() && @authorizationService.isStudentOwner(principal.studentId, #personId))
     """)
     public Education getPersonEducation(Integer personId, String language) {
         log.info("Fetching person education information for personId: {} with language: {}", personId, language);

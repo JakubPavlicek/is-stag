@@ -12,7 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuthorizationServiceTest {
@@ -22,19 +23,6 @@ class AuthorizationServiceTest {
 
     @InjectMocks
     private AuthorizationService authorizationService;
-
-    @Test
-    @DisplayName("Should return false when user is not a student")
-    void isStudentAndOwner_NotStudent_ReturnsFalse() {
-        boolean isStudent = false;
-        String studentId = "ST123";
-        Integer personId = 456;
-
-        boolean result = authorizationService.isStudentAndOwner(isStudent, studentId, personId);
-
-        assertThat(result).isFalse();
-        verifyNoInteractions(studentClient);
-    }
 
     @ParameterizedTest(name = "Should return {3} when studentPersonId={1} and requested personId={2}")
     @CsvSource(
@@ -47,10 +35,9 @@ class AuthorizationServiceTest {
     void isStudentAndOwner_Student_ReturnsOwnershipStatus(
         String studentId, Integer studentPersonId, Integer requestedPersonId, boolean expectedResult
     ) {
-        boolean isStudent = true;
         when(studentClient.getStudentPersonId(studentId)).thenReturn(studentPersonId);
 
-        boolean result = authorizationService.isStudentAndOwner(isStudent, studentId, requestedPersonId);
+        boolean result = authorizationService.isStudentOwner(studentId, requestedPersonId);
 
         assertThat(result).isEqualTo(expectedResult);
         verify(studentClient).getStudentPersonId(studentId);
@@ -58,14 +45,13 @@ class AuthorizationServiceTest {
 
     @Test
     @DisplayName("Should propagate exception when student client fails")
-    void isStudentAndOwner_ClientThrowsException_PropagatesException() {
-        boolean isStudent = true;
+    void isStudentOwner_ClientThrowsException_PropagatesException() {
         String studentId = "ST123";
         Integer personId = 456;
 
         when(studentClient.getStudentPersonId(studentId)).thenThrow(new RuntimeException("gRPC error"));
 
-        assertThatThrownBy(() -> authorizationService.isStudentAndOwner(isStudent, studentId, personId))
+        assertThatThrownBy(() -> authorizationService.isStudentOwner(studentId, personId))
             .isInstanceOf(RuntimeException.class)
             .hasMessage("gRPC error");
 

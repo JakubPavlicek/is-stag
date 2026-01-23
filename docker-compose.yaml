@@ -316,7 +316,7 @@ services:
       - dev
       - prod
     container_name: otel
-    image: otel/opentelemetry-collector-contrib:0.143.1
+    image: otel/opentelemetry-collector-contrib:0.144.0
     command: [ --config=/etc/otel-config.yml ]
     volumes:
       - ./observability/opentel-config.yaml:/etc/otel-config.yml
@@ -340,7 +340,7 @@ services:
       - dev
       - prod
     container_name: loki
-    image: grafana/loki:3.6.3
+    image: grafana/loki:3.6.4
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./observability/loki-config.yaml:/etc/loki/local-config.yaml
@@ -374,7 +374,7 @@ services:
       - dev
       - prod
     container_name: tempo
-    image: grafana/tempo:2.9.0
+    image: grafana/tempo:2.9.1
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./observability/tempo-config.yaml:/etc/tempo.yaml

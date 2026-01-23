@@ -1,22 +1,30 @@
 package com.stag.identity.shared.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.server.resource.authentication.ExpressionJwtGrantedAuthoritiesConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /// **Security Configuration**
 ///
-/// Production security configuration with OAuth2 resource server and JWT authentication.
-/// Extracts roles from Keycloak JWT tokens (realm_access.roles claim) and enforces method-level security via @PreAuthorize.
+/// Production security configuration with header-based authentication.
+/// The API Gateway validates JWT tokens and forwards user identity as HTTP headers.
+/// This service trusts the gateway and extracts authentication from headers via `HeaderAuthenticationFilter`.
+///
+/// **Authentication Flow**
+///
+/// 1. API Gateway validates JWT token from Keycloak
+/// 2. Gateway extracts claims and sets `X-Student-Id`, `X-Teacher-Id`, `X-Roles`, `X-Email` headers
+/// 3. Gateway strips the `Authorization` header before forwarding
+/// 4. This service reads headers via `HeaderAuthenticationFilter` and populates `SecurityContext`
+///
 /// Public endpoints include health checks, OpenAPI docs, and Swagger UI.
 ///
 /// @author Jakub Pavlíček
@@ -25,6 +33,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     /// Swagger UI and OpenAPI documentation public endpoints
@@ -34,8 +43,11 @@ public class SecurityConfig {
         "/v3/api-docs/swagger-config"
     };
 
-    /// Configures a Spring Security filter chain with JWT authentication.
-    /// Enables CSRF protection, OAuth2 resource server, and stateless session management.
+    /// Header authentication filter
+    private final HeaderAuthenticationFilter headerAuthenticationFilter;
+
+    /// Configures a Spring Security filter chain with header-based authentication.
+    /// Enables method-level security via @PreAuthorize and stateless session management.
     ///
     /// @param http the HTTP security configuration
     /// @return configured security filter chain
@@ -50,40 +62,9 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/**").hasRole("AD")
                 .anyRequest().authenticated()
             )
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(
-                jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
-            ))
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+            .addFilterBefore(headerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .build();
-    }
-
-    /// Creates JWT authorities converter extracting roles from Keycloak token.
-    /// Reads realm_access.roles claim and prefixes with "ROLE_" for Spring Security.
-    ///
-    /// @return expression-based JWT authorities converter
-    @Bean
-    public ExpressionJwtGrantedAuthoritiesConverter expressionConverter() {
-        // Extract roles from the realm_access.roles claim and prefix with "ROLE_"
-        ExpressionJwtGrantedAuthoritiesConverter expressionConverter =
-            new ExpressionJwtGrantedAuthoritiesConverter(
-                new SpelExpressionParser().parseRaw("[realm_access][roles]")
-            );
-        expressionConverter.setAuthorityPrefix("ROLE_");
-
-        return expressionConverter;
-    }
-
-    /// Configures JWT authentication converter with custom authorities' extraction.
-    ///
-    /// @return JWT authentication converter
-    @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtAuthenticationConverter jwtAuthConverter = new JwtAuthenticationConverter();
-        jwtAuthConverter.setJwtGrantedAuthoritiesConverter(expressionConverter());
-
-        return jwtAuthConverter;
     }
 
 }

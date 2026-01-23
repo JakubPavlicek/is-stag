@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 /// @author Jakub Pavlíček
 /// @version 1.0.0
 @Configuration
-public class HttpConfig {
+public class HttpClientConfig {
 
     /// Creates a configured HTTP request factory using Apache HttpComponents.
     ///

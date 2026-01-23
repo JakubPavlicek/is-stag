@@ -64,6 +64,7 @@ spring:
               predicates:
                 - Path=/api/v1/students/**
               filters:
+                - RemoveRequestHeader=Authorization
                 - name: RequestRateLimiter
                   args:
                     <<: *request_rate_limiter_args
@@ -79,6 +80,7 @@ spring:
               predicates:
                 - Path=/api/v1/users/**,/api/v1/persons/**
               filters:
+                - RemoveRequestHeader=Authorization
                 - name: RequestRateLimiter
                   args:
                     <<: *request_rate_limiter_args

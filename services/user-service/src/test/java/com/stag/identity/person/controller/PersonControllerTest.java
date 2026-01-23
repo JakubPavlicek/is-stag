@@ -1,7 +1,6 @@
 package com.stag.identity.person.controller;
 
 import com.stag.identity.config.TestCacheConfig;
-import com.stag.identity.config.TestSecurityConfig;
 import com.stag.identity.person.exception.InvalidAccountNumberException;
 import com.stag.identity.person.exception.InvalidBankAccountException;
 import com.stag.identity.person.exception.InvalidDataBoxException;
@@ -43,16 +42,16 @@ import java.util.List;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Stream;
 
+import static com.stag.identity.config.GatewayHeadersRequestPostProcessor.gatewayHeaders;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
 @WebMvcTest(PersonController.class)
-@Import({ TestCacheConfig.class, TestSecurityConfig.class, SecurityConfig.class })
+@Import({ TestCacheConfig.class, SecurityConfig.class })
 @ActiveProfiles("test")
 class PersonControllerTest {
 
@@ -92,7 +91,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -126,7 +125,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -159,7 +158,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -193,7 +192,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -234,7 +233,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -255,7 +254,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("""
                         {
@@ -295,7 +294,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/addresses", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -342,7 +341,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/addresses", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -384,7 +383,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/addresses", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -424,7 +423,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/banking", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -478,7 +477,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/banking", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -522,7 +521,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/banking", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -566,7 +565,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/education", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -604,7 +603,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/education", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -645,7 +644,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/education", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -682,7 +681,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/education", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -692,45 +691,6 @@ class PersonControllerTest {
             });
 
         verify(educationService).getPersonEducation(personId, language);
-    }
-
-    @ParameterizedTest
-    @ValueSource(
-        strings = {
-            "/api/v1/persons/{personId}",
-            "/api/v1/persons/{personId}/addresses",
-            "/api/v1/persons/{personId}/banking",
-            "/api/v1/persons/{personId}/education"
-        }
-    )
-    @DisplayName("should return 401 Unauthorized when no JWT token provided for GET endpoints")
-    void getEndpoints_NoJwtToken_Returns401(String uriTemplate) {
-        Integer personId = 12345;
-        String language = "en";
-
-        assertThat(mvc.get()
-                      .uri(uriTemplate, personId)
-                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
-                      .accept(MediaType.APPLICATION_JSON))
-            .hasStatus(401);
-    }
-
-    @Test
-    @DisplayName("should return 401 Unauthorized when no JWT token provided for updatePersonProfile")
-    void updatePersonProfile_NoJwtToken_Returns401() {
-        Integer personId = 12345;
-
-        assertThat(mvc.patch()
-                      .uri("/api/v1/persons/{personId}", personId)
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content("""
-                        {
-                          "contact": {
-                            "email": "test@example.com"
-                          }
-                        }
-                        """))
-            .hasStatus(401);
     }
 
     @ParameterizedTest
@@ -762,7 +722,7 @@ class PersonControllerTest {
                       .uri(uriTemplate, personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(404)
             .bodyJson()
             .satisfies(json -> {
@@ -793,7 +753,7 @@ class PersonControllerTest {
         assertThat(mvc.get()
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content(""))
             .hasStatus(500)
@@ -816,7 +776,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("""
                                {
@@ -843,7 +803,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("{ invalid json }"))
             .hasStatus(400)
@@ -861,7 +821,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content(""))
             .hasStatus(400);
@@ -875,7 +835,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content(requestBody))
             .hasStatus(400)
@@ -1016,7 +976,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("""
                                {
@@ -1041,7 +1001,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("""
                                {
@@ -1066,7 +1026,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("{ \"birthSurname\": \"%s\" }".formatted(longSurname)))
             .hasStatus(400)
@@ -1084,7 +1044,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("{ \"birthSurname\": \"!!!\" }"))
             .hasStatus(400)
@@ -1103,7 +1063,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("{ \"maritalStatus\": \"%s\" }".formatted(longStatus)))
             .hasStatus(400)
@@ -1122,7 +1082,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("""
                                {
@@ -1147,7 +1107,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("""
                                {
@@ -1177,7 +1137,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(403)
             .bodyJson()
             .satisfies(json -> {
@@ -1199,7 +1159,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("""
                                {
@@ -1229,7 +1189,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("""
                                {
@@ -1257,7 +1217,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", personId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("""
                                {
@@ -1291,7 +1251,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(503)
             .bodyJson()
             .satisfies(json -> {
@@ -1316,7 +1276,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(404)
             .bodyJson()
             .satisfies(json -> {
@@ -1353,7 +1313,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(expectedStatus)
             .bodyJson()
             .satisfies(json -> json.assertThat().extractingPath("$.status").isEqualTo(expectedStatus));
@@ -1374,7 +1334,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(400)
             .bodyJson()
             .satisfies(json -> {
@@ -1398,7 +1358,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(503)
             .bodyJson()
             .satisfies(json -> {
@@ -1422,7 +1382,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(504)
             .bodyJson()
             .satisfies(json -> {
@@ -1446,7 +1406,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(404)
             .bodyJson()
             .satisfies(json -> {
@@ -1470,7 +1430,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(503)
             .debug()
             .bodyJson()
@@ -1495,7 +1455,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(500)
             .bodyJson()
             .satisfies(json -> {
@@ -1520,7 +1480,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", personId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(500)
             .bodyJson()
             .satisfies(json -> {
@@ -1541,7 +1501,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}", invalidPersonId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(400)
             .bodyJson()
             .satisfies(json -> {
@@ -1558,7 +1518,7 @@ class PersonControllerTest {
 
         assertThat(mvc.patch()
                       .uri("/api/v1/persons/{personId}", invalidPersonId)
-                      .with(jwt())
+                      .with(gatewayHeaders())
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("""
                                {
@@ -1587,7 +1547,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/addresses", invalidPersonId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(400)
             .bodyJson()
             .satisfies(json -> {
@@ -1607,7 +1567,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/banking", invalidPersonId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(400)
             .bodyJson()
             .satisfies(json -> {
@@ -1627,7 +1587,7 @@ class PersonControllerTest {
                       .uri("/api/v1/persons/{personId}/education", invalidPersonId)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
                       .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .with(gatewayHeaders()))
             .hasStatus(400)
             .bodyJson()
             .satisfies(json -> {
@@ -1635,6 +1595,251 @@ class PersonControllerTest {
                 json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
                 json.assertThat().extractingPath("$.violations").isNotNull();
             });
+    }
+
+    // ===========================
+    // Authentication Tests
+    // ===========================
+
+    @Test
+    @DisplayName("should return 403 Forbidden when no authentication headers present")
+    void getPersonProfile_NoAuthenticationHeaders_Returns403() {
+        Integer personId = 12345;
+        String language = "en";
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatus(403);
+    }
+
+    @Test
+    @DisplayName("should return 403 Forbidden when only email header is present without studentId or teacherId")
+    void getPersonProfile_OnlyEmailHeader_Returns403() {
+        Integer personId = 12345;
+        String language = "en";
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .header("X-Email", "user@example.com")
+                      .header("X-Roles", "AD")
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatus(403);
+    }
+
+    @Test
+    @DisplayName("should authenticate with studentId header")
+    void getPersonProfile_WithStudentIdHeader_Authenticates() {
+        Integer personId = 12345;
+        String language = "en";
+
+        Profile profile = Profile.builder()
+                                 .personId(personId)
+                                 .firstName("John")
+                                 .lastName("Doe")
+                                 .build();
+
+        when(profileService.getPersonProfile(personId, language)).thenReturn(profile);
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .header("X-Student-Id", "S12345")
+                      .header("X-Email", "student@example.com")
+                      .header("X-Roles", "ST,AD")
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatusOk();
+
+        verify(profileService).getPersonProfile(personId, language);
+    }
+
+    @Test
+    @DisplayName("should return 200 OK when authenticated but no roles present")
+    void getPersonProfile_NoRoles_Returns200() {
+        Integer personId = 12345;
+        String language = "en";
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .header("X-Student-Id", "S12345")
+                      .header("X-Email", "student@example.com")
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatus(200);
+    }
+
+    @Test
+    @DisplayName("should return 200 OK when authenticated and blank roles")
+    void getPersonProfile_BlankRoles_Returns200() {
+        Integer personId = 12345;
+        String language = "en";
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .header("X-Student-Id", "S12345")
+                      .header("X-Email", "student@example.com")
+                      .header("X-Roles", "  ")
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatus(200);
+    }
+
+    @Test
+    @DisplayName("should authenticate with teacherId header")
+    void getPersonProfile_WithTeacherIdHeader_Authenticates() {
+        Integer personId = 12345;
+        String language = "en";
+
+        Profile profile = Profile.builder()
+                                 .personId(personId)
+                                 .firstName("Jane")
+                                 .lastName("Smith")
+                                 .build();
+
+        when(profileService.getPersonProfile(personId, language)).thenReturn(profile);
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .header("X-Teacher-Id", "T99999")
+                      .header("X-Email", "teacher@example.com")
+                      .header("X-Roles", "VY,AD")
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatusOk();
+
+        verify(profileService).getPersonProfile(personId, language);
+    }
+
+    @Test
+    @DisplayName("should authenticate with both studentId and teacherId headers")
+    void getPersonProfile_WithBothIdHeaders_Authenticates() {
+        Integer personId = 12345;
+        String language = "en";
+
+        Profile profile = Profile.builder()
+                                 .personId(personId)
+                                 .firstName("John")
+                                 .lastName("Doe")
+                                 .build();
+
+        when(profileService.getPersonProfile(personId, language)).thenReturn(profile);
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .header("X-Student-Id", "S12345")
+                      .header("X-Teacher-Id", "T99999")
+                      .header("X-Email", "user@example.com")
+                      .header("X-Roles", "ST,VY,AD")
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatusOk();
+
+        verify(profileService).getPersonProfile(personId, language);
+    }
+
+    @Test
+    @DisplayName("should parse roles with whitespace correctly")
+    void getPersonProfile_RolesWithWhitespace_ParsesCorrectly() {
+        Integer personId = 12345;
+        String language = "en";
+
+        Profile profile = Profile.builder()
+                                 .personId(personId)
+                                 .firstName("John")
+                                 .lastName("Doe")
+                                 .build();
+
+        when(profileService.getPersonProfile(personId, language)).thenReturn(profile);
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .header("X-Student-Id", "S12345")
+                      .header("X-Email", "student@example.com")
+                      .header("X-Roles", " ST , AD , VY ")
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatusOk();
+
+        verify(profileService).getPersonProfile(personId, language);
+    }
+
+    @Test
+    @DisplayName("should filter empty role values after splitting and trimming")
+    void getPersonProfile_RolesWithEmptyValues_FiltersEmpty() {
+        Integer personId = 12345;
+        String language = "en";
+
+        Profile profile = Profile.builder()
+                                 .personId(personId)
+                                 .firstName("John")
+                                 .lastName("Doe")
+                                 .build();
+
+        when(profileService.getPersonProfile(personId, language)).thenReturn(profile);
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .header("X-Student-Id", "S12345")
+                      .header("X-Email", "student@example.com")
+                      .header("X-Roles", "ST, , AD,  ,VY")
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatusOk();
+
+        verify(profileService).getPersonProfile(personId, language);
+    }
+
+    @Test
+    @DisplayName("should authenticate with single role without comma")
+    void getPersonProfile_SingleRole_Authenticates() {
+        Integer personId = 12345;
+        String language = "en";
+
+        Profile profile = Profile.builder()
+                                 .personId(personId)
+                                 .firstName("John")
+                                 .lastName("Doe")
+                                 .build();
+
+        when(profileService.getPersonProfile(personId, language)).thenReturn(profile);
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .header("X-Student-Id", "S12345")
+                      .header("X-Email", "student@example.com")
+                      .header("X-Roles", "AD")
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatusOk();
+
+        verify(profileService).getPersonProfile(personId, language);
+    }
+
+    @Test
+    @DisplayName("should authenticate without email header")
+    void getPersonProfile_WithoutEmailHeader_Authenticates() {
+        Integer personId = 12345;
+        String language = "en";
+
+        Profile profile = Profile.builder()
+                                 .personId(personId)
+                                 .firstName("John")
+                                 .lastName("Doe")
+                                 .build();
+
+        when(profileService.getPersonProfile(personId, language)).thenReturn(profile);
+
+        assertThat(mvc.get()
+                      .uri("/api/v1/persons/{personId}", personId)
+                      .header(HttpHeaders.ACCEPT_LANGUAGE, language)
+                      .header("X-Student-Id", "S12345")
+                      .header("X-Roles", "ST,AD")
+                      .accept(MediaType.APPLICATION_JSON))
+            .hasStatusOk();
+
+        verify(profileService).getPersonProfile(personId, language);
     }
 
 }

@@ -17,6 +17,9 @@ grpc:
 spring:
   application:
     name: codelist-service
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration
   jackson:
     mapper:
       sort-properties-alphabetically: false
@@ -33,12 +36,9 @@ spring:
           plan_cache_max_size: 4096
         jdbc:
           fetch_size: 50
-        format_sql: true
-        generate_statistics: true
     hibernate:
       ddl-auto: none
     open-in-view: false
-    show-sql: true
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
@@ -78,11 +78,6 @@ spring:
   config:
     activate:
       on-profile: prod
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
       sentinel:
@@ -113,12 +108,6 @@ spring:
   config:
     activate:
       on-profile: dev
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-#          jwk-set-uri: http://keycloak-http:8080/auth/realms/is-stag/protocol/openid-connect/certs
-          jwk-set-uri: http://localhost:8180/auth/realms/is-stag/protocol/openid-connect/certs
   data:
     redis:
 #      host: redis-cache

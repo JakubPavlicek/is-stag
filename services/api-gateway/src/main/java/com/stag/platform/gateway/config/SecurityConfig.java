@@ -45,11 +45,10 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeExchange(ex -> ex
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                .pathMatchers("/actuator/health/**").permitAll()
+                .pathMatchers("/actuator/**").permitAll()
                 .pathMatchers("/api/*/openapi.yaml").permitAll()
                 .pathMatchers(SWAGGER_URLS).permitAll()
                 .pathMatchers("/api/v1/addresses/**", "/api/v1/countries/**", "/api/v1/domains/**").permitAll()
-                .pathMatchers("/actuator/**").hasRole("AD")
                 .anyExchange().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->

@@ -66,7 +66,7 @@ public class ProfileService {
     @Cacheable(value = "person-profile", key = "{#personId, #language}")
     @PreAuthorize("""
         hasAnyRole('AD', 'DE', 'PR', 'SR', 'SP', 'VY', 'VK')
-        || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)
+        || (principal.isStudent() && @authorizationService.isStudentOwner(principal.studentId, #personId))
     """)
     public Profile getPersonProfile(Integer personId, String language) {
         log.info("Fetching person profile for personId: {} with language: {}", personId, language);
@@ -156,7 +156,7 @@ public class ProfileService {
     })
     @PreAuthorize("""
         hasRole('AD')
-        || @authorizationService.isStudentAndOwner(hasRole('ST'), principal.claims['studentId'], #personId)
+        || (principal.isStudent() && @authorizationService.isStudentOwner(principal.studentId, #personId))
     """)
     public void updatePersonProfile(Integer personId, PersonUpdateCommand command) {
         log.info("Updating person profile for personId: {}", personId);

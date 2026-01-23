@@ -85,7 +85,7 @@
     </properties>
 
     <modules>
-        <!-- Infrastructure services -->
+        <!-- API Gateway -->
         <module>api-gateway</module>
 
         <!-- Business services -->

@@ -1,7 +1,6 @@
 package com.stag.platform.entry.controller;
 
 import com.stag.platform.config.TestCacheConfig;
-import com.stag.platform.config.TestSecurityConfig;
 import com.stag.platform.entry.entity.CodelistEntryId;
 import com.stag.platform.entry.exception.CodelistEntriesNotFoundException;
 import com.stag.platform.entry.exception.CodelistMeaningsNotFoundException;
@@ -28,10 +27,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
 @WebMvcTest(DomainController.class)
-@Import({ TestCacheConfig.class, TestSecurityConfig.class, SecurityConfig.class })
+@Import({ TestCacheConfig.class, SecurityConfig.class })
 @ActiveProfiles("test")
 class DomainControllerTest {
 
@@ -49,13 +47,10 @@ class DomainControllerTest {
 
         assertThat(mvc.get()
                       .uri("/api/v1/domains")
-                      .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .accept(MediaType.APPLICATION_JSON))
             .hasStatusOk()
             .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.domains").asArray().containsExactly("TITUL_PRED", "FAKULTA");
-            });
+            .satisfies(json -> json.assertThat().extractingPath("$.domains").asArray().containsExactly("TITUL_PRED", "FAKULTA"));
 
         verify(domainService).getDomains();
     }
@@ -72,8 +67,7 @@ class DomainControllerTest {
         assertThat(mvc.get()
                       .uri("/api/v1/domains/{domain}", domain)
                       .header(HttpHeaders.ACCEPT_LANGUAGE, language)
-                      .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .accept(MediaType.APPLICATION_JSON))
             .hasStatusOk()
             .bodyJson()
             .satisfies(json -> {
@@ -94,8 +88,7 @@ class DomainControllerTest {
 
         assertThat(mvc.get()
                       .uri("/api/v1/domains/TEST")
-                      .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .accept(MediaType.APPLICATION_JSON))
             .hasStatus(500)
             .bodyJson()
             .satisfies(json -> {
@@ -113,13 +106,10 @@ class DomainControllerTest {
 
         assertThat(mvc.get()
                       .uri("/api/v1/domains/TEST")
-                      .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .accept(MediaType.APPLICATION_JSON))
             .hasStatus(500)
             .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.title").isEqualTo("Internal Server Error");
-            });
+            .satisfies(json -> json.assertThat().extractingPath("$.title").isEqualTo("Internal Server Error"));
     }
 
     @Test
@@ -129,8 +119,7 @@ class DomainControllerTest {
 
         assertThat(mvc.get()
                       .uri("/api/v1/domains")
-                      .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .accept(MediaType.APPLICATION_JSON))
             .hasStatus(403)
             .bodyJson()
             .satisfies(json -> {
@@ -146,13 +135,10 @@ class DomainControllerTest {
 
         assertThat(mvc.get()
                       .uri("/api/v1/domains")
-                      .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .accept(MediaType.APPLICATION_JSON))
             .hasStatus(400)
             .bodyJson()
-            .satisfies(json -> {
-                json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value");
-            });
+            .satisfies(json -> json.assertThat().extractingPath("$.title").isEqualTo("Invalid Value"));
     }
 
     @Test
@@ -162,8 +148,7 @@ class DomainControllerTest {
 
         assertThat(mvc.get()
                       .uri("/api/v1/domains")
-                      .accept(MediaType.APPLICATION_JSON)
-                      .with(jwt()))
+                      .accept(MediaType.APPLICATION_JSON))
             .hasStatus(500)
             .bodyJson()
             .satisfies(json -> {
