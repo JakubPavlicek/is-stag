@@ -18,4 +18,4 @@ COPY --from=builder /usr/src/app/target/is-stag-authenticator.jar /opt/keycloak/
 COPY theme/is-stag-theme /opt/keycloak/themes/is-stag-theme/
 
 # Copy the realm configuration for auto-import on startup.
-COPY is-stag-realm-export.json /opt/keycloak/data/import/is-stag-realm.json
+COPY is-stag-realm-export-dev.json /opt/keycloak/data/import/is-stag-realm.json

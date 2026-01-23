@@ -134,7 +134,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.2.0
+    version: 18.2.3
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - database/keycloak-postgresql/values.yaml
@@ -175,7 +175,7 @@ releases:
 
   - name: loki
     chart: grafana/loki
-    version: 6.49.0
+    version: 6.51.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - observability/loki/values.yaml
@@ -189,7 +189,7 @@ releases:
 
   - name: grafana
     chart: grafana/grafana
-    version: 10.5.8
+    version: 10.5.12
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -254,7 +254,7 @@ releases:
   # ========================================
   - name: keycloak
     chart: codecentric/keycloakx
-    version: 7.1.6
+    version: 7.1.7
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - otel-config
