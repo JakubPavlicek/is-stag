@@ -4,7 +4,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=JakubPavlicek_is-stag&metric=alert_status)](https://sonarcloud.io/summary/overall?id=JakubPavlicek_is-stag)
 [![Backend CI](https://github.com/JakubPavlicek/is-stag/actions/workflows/backend-ci.yaml/badge.svg)](https://github.com/JakubPavlicek/is-stag/actions/workflows/backend-ci.yaml)
 [![JavaDoc](https://github.com/JakubPavlicek/is-stag/actions/workflows/publish-javadoc.yaml/badge.svg)](https://github.com/JakubPavlicek/is-stag/actions/workflows/publish-javadoc.yaml)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.1-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.2-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
 
 The backend of IS/STAG is built as a distributed microservices architecture. It leverages the power of Spring Boot 4 and
