@@ -1,10 +1,14 @@
 # Helmfile for IS-STAG Infrastructure
+# Secrets are encrypted with helm-secrets.
+# Decryption requires the plugin and the appropriate private key.
 # Usage:
 #   helmfile -e perftest sync        # Deploy to perftest
 #   helmfile -e prod sync            # Deploy to prod
 #   helmfile -e perftest destroy     # Destroy perftest
 
 repositories:
+  - name: wiremind
+    url: https://wiremind.github.io/wiremind-helm-charts
   - name: metallb
     url: https://metallb.github.io/metallb
   - name: jetstack
@@ -12,7 +16,7 @@ repositories:
   - name: grafana
     url: https://grafana.github.io/helm-charts
   - name: grafana-community
-    url: https://grafana-community.github.io/helm-charts/
+    url: https://grafana-community.github.io/helm-charts
   - name: prometheus-community
     url: https://prometheus-community.github.io/helm-charts
   - name: open-telemetry
@@ -20,41 +24,23 @@ repositories:
   - name: codecentric
     url: https://codecentric.github.io/helm-charts
   - name: is-stag
-    url: https://jakubpavlicek.github.io/is-stag/
+    url: https://jakubpavlicek.github.io/is-stag
 
 environments:
   perftest:
     values:
       - namespace: is-stag-perftest
+        keycloak:
+          enabled: false
+        client:
+          enabled: false
   prod:
     values:
       - namespace: is-stag-prod
-
-# Global Namespace Management
-hooks:
-  # Install Gateway API CRDs
-  - events: [ "prepare" ]
-    showlogs: true
-    command: "kubectl"
-    args:
-      - "apply"
-      - "--server-side"
-      - "-f"
-      - "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml"
-
-  # Create a namespace before deploying to it
-  - events: [ "prepare" ]
-    showlogs: true
-    command: "bash"
-    args:
-      - "-c"
-      - |
-        kubectl apply -f - <<EOF
-        apiVersion: v1
-        kind: Namespace
-        metadata:
-          name: {{ .Environment.Values.namespace }}
-        EOF
+        keycloak:
+          enabled: true
+        client:
+          enabled: true
 
 ---
 
@@ -69,12 +55,19 @@ templates:
       - secrets
       - otel-config
       - redis-cache
-      - keycloak
     secrets:
       - secrets/oracle-secrets.yaml
     values:
       - "is-stag/{{ .Release.Name }}/values.yaml"
       - "is-stag/{{ .Release.Name }}/values-{{ .Environment.Name }}.yaml"
+
+  .redis-common: &redis-common
+    chart: oci://registry-1.docker.io/bitnamicharts/redis
+    version: 25.2.0
+    namespace: "{{ .Environment.Values.namespace }}"
+    timeout: 600
+    needs:
+      - secrets
 
 helmDefaults:
   createNamespace: true
@@ -83,6 +76,14 @@ helmDefaults:
   timeout: 300
 
 releases:
+  # ========================================
+  # Gateway API CRDs
+  # ========================================
+  - name: gateway-api-crds
+    chart: wiremind/gateway-api-crds
+    version: 1.4.0
+    namespace: "{{ .Environment.Values.namespace }}"
+
   # ========================================
   # Secrets
   # ========================================
@@ -119,6 +120,8 @@ releases:
     chart: jetstack/cert-manager
     version: v1.19.3
     namespace: "{{ .Environment.Values.namespace }}"
+    needs:
+      - gateway-api-crds
     values:
       - cert-manager/values.yaml
 
@@ -136,39 +139,30 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.2.4
+    version: 18.3.0
     namespace: "{{ .Environment.Values.namespace }}"
+    condition: keycloak.enabled
     values:
       - database/keycloak-postgresql/values.yaml
     needs:
       - secrets
 
   - name: redis-cache
-    chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 24.1.3
-    namespace: "{{ .Environment.Values.namespace }}"
-    timeout: 600
+    <<: *redis-common
     values:
       - database/redis/cache-values.yaml
-    needs:
-      - secrets
 
   - name: redis-rate-limiter
-    chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 24.1.3
-    namespace: "{{ .Environment.Values.namespace }}"
-    timeout: 600
+    <<: *redis-common
     values:
       - database/redis/rate-limiter-values.yaml
-    needs:
-      - secrets
 
   # ========================================
   # Observability Stack
   # ========================================
   - name: prometheus
     chart: prometheus-community/prometheus
-    version: 28.7.0
+    version: 28.9.1
     namespace: "{{ .Environment.Values.namespace }}"
     missingFileHandler: Warn
     values:
@@ -177,7 +171,7 @@ releases:
 
   - name: loki
     chart: grafana/loki
-    version: 6.51.0
+    version: 6.53.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - observability/loki/values.yaml
@@ -191,7 +185,7 @@ releases:
 
   - name: grafana
     chart: grafana-community/grafana
-    version: 11.0.1
+    version: 11.1.5
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -208,13 +202,10 @@ releases:
   # ========================================
   - name: opentelemetry-operator
     chart: open-telemetry/opentelemetry-operator
-    version: 0.105.0
+    version: 0.105.1
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - cert-manager-config
-      - prometheus
-      - loki
-      - tempo
     values:
       - observability/opentelemetry/values.yaml
     hooks:
@@ -228,7 +219,7 @@ releases:
             kubectl wait --for=condition=available --timeout=300s \
               deployment/opentelemetry-operator-controller-manager \
               -n {{ .Environment.Values.namespace }}
-            
+
             echo "Waiting for webhook service endpoint to be ready..."
             for i in {1..60}; do
               if kubectl get endpoints opentelemetry-operator-webhook -n {{ .Environment.Values.namespace }} -o jsonpath='{.subsets[*].addresses[*].ip}' | grep -q .; then
@@ -248,6 +239,9 @@ releases:
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - opentelemetry-operator
+      - prometheus
+      - loki
+      - tempo
     values:
       - otel-config/values.yaml
 
@@ -256,8 +250,9 @@ releases:
   # ========================================
   - name: keycloak
     chart: codecentric/keycloakx
-    version: 7.1.7
+    version: 7.1.8
     namespace: "{{ .Environment.Values.namespace }}"
+    condition: keycloak.enabled
     needs:
       - otel-config
       - keycloak-postgresql
@@ -270,12 +265,13 @@ releases:
   # ========================================
   - name: nginx-gateway-fabric
     chart: oci://ghcr.io/nginx/charts/nginx-gateway-fabric
-    version: 2.4.0
+    version: 2.4.1
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     values:
-      - gateway/values.yaml
+      - nginx-gateway-fabric/values.yaml
     needs:
+      - gateway-api-crds
       - cert-manager-config
 
   - name: gateway-config
@@ -300,6 +296,7 @@ releases:
     chart: is-stag/client
     version: 0.0.2
     namespace: "{{ .Environment.Values.namespace }}"
+    condition: client.enabled
     wait: false
     missingFileHandler: Warn
     values:
