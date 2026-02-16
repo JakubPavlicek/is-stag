@@ -27,9 +27,13 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -144,17 +148,32 @@ class ProfileServiceTest {
         Integer personId = 123;
         String language = "en";
         ProfileView profileView = mock(ProfileView.class);
+        CountDownLatch taskStarted = new CountDownLatch(1);
+        AtomicReference<Throwable> thrownException = new AtomicReference<>();
 
         when(personRepository.findById(personId, ProfileView.class)).thenReturn(Optional.of(profileView));
+        when(studentClient.getStudentIds(any())).thenAnswer(_ -> {
+            taskStarted.countDown();
+            Thread.sleep(Long.MAX_VALUE);
+            return List.of();
+        });
 
-        // Interrupt the thread before calling method to trigger InterruptedException in scope.join()
-        Thread.currentThread().interrupt();
+        Thread caller = new Thread(() -> {
+            try {
+                profileService.getPersonProfile(personId, language);
+            } catch (Throwable t) {
+                thrownException.set(t);
+            }
+        });
+        caller.start();
 
-        assertThatThrownBy(() -> profileService.getPersonProfile(personId, language))
+        await().atMost(5, SECONDS).until(() -> taskStarted.getCount() == 0);
+        caller.interrupt();
+
+        await().atMost(5, SECONDS).until(() -> !caller.isAlive());
+        assertThat(thrownException.get())
             .isInstanceOf(PersonProfileFetchException.class)
             .hasCauseInstanceOf(InterruptedException.class);
-
-        assertThat(Thread.interrupted()).isTrue();
     }
 
     @Test

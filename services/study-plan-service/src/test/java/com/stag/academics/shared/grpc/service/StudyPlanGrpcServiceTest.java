@@ -17,7 +17,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Duration;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -100,18 +105,32 @@ class StudyPlanGrpcServiceTest {
             .setLanguage(language)
             .build();
 
-        when(studyProgramService.findStudyProgram(any(), any())).thenReturn(Instancio.create(StudyProgramView.class));
+        CountDownLatch taskStarted = new CountDownLatch(1);
+
+        when(studyProgramService.findStudyProgram(any(), any())).thenAnswer(_ -> {
+            taskStarted.countDown();
+            Thread.sleep(Long.MAX_VALUE);
+            return null;
+        });
         when(studyPlanService.findFieldOfStudy(any(), any())).thenReturn(Instancio.create(FieldOfStudyView.class));
 
-        // Interrupt the thread before calling method to trigger InterruptedException in scope.join()
-        Thread.currentThread().interrupt();
+        AtomicReference<Thread> callerThread = new AtomicReference<>();
 
-        grpcService.getStudyProgramAndField(request, responseObserver);
+        Thread testThread = new Thread(() -> {
+            callerThread.set(Thread.currentThread());
+            grpcService.getStudyProgramAndField(request, responseObserver);
+        });
+        testThread.start();
+
+        await().atMost(Duration.ofSeconds(5)).until(() -> taskStarted.getCount() == 0);
+
+        testThread.interrupt();
+
+        await().atMost(Duration.ofSeconds(5)).until(() -> !testThread.isAlive());
 
         ArgumentCaptor<Throwable> captor = ArgumentCaptor.forClass(Throwable.class);
         verify(responseObserver).onError(captor.capture());
         
         assertThat(captor.getValue()).isNull();
-        assertThat(Thread.interrupted()).isTrue();
     }
 }

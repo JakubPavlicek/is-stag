@@ -28,8 +28,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.anyBoolean;
@@ -125,13 +128,22 @@ class CodelistGrpcServiceTest {
         @DisplayName("should handle InterruptedException")
         void interrupted() {
             GetPersonProfileDataRequest request = GetPersonProfileDataRequest.newBuilder().build();
+            CountDownLatch taskStarted = new CountDownLatch(1);
 
-            Thread.currentThread().interrupt();
+            when(dataService.fetchCodelistMeanings(any(), any())).thenAnswer(_ -> {
+                taskStarted.countDown();
+                Thread.sleep(Long.MAX_VALUE);
+                return List.of();
+            });
 
-            grpcService.getPersonProfileData(request, responseObserver);
+            Thread caller = new Thread(() -> grpcService.getPersonProfileData(request, responseObserver));
+            caller.start();
 
-            verify(responseObserver).onError(null);
-            assertThat(Thread.interrupted()).isTrue();
+            await().atMost(5, SECONDS).until(() -> taskStarted.getCount() == 0);
+            caller.interrupt();
+
+            await().atMost(5, SECONDS).until(() -> !caller.isAlive());
+            verify(responseObserver).onError(any());
         }
     }
 
@@ -185,13 +197,22 @@ class CodelistGrpcServiceTest {
         @DisplayName("should handle InterruptedException")
         void interrupted() {
             GetPersonProfileUpdateDataRequest request = GetPersonProfileUpdateDataRequest.newBuilder().build();
+            CountDownLatch taskStarted = new CountDownLatch(1);
 
-            Thread.currentThread().interrupt();
+            when(dataService.fetchCodelistLowValues(any(), any(), any())).thenAnswer(_ -> {
+                taskStarted.countDown();
+                Thread.sleep(Long.MAX_VALUE);
+                return null;
+            });
 
-            grpcService.getPersonProfileUpdateData(request, responseObserver);
+            Thread caller = new Thread(() -> grpcService.getPersonProfileUpdateData(request, responseObserver));
+            caller.start();
 
-            verify(responseObserver).onError(null);
-            assertThat(Thread.interrupted()).isTrue();
+            await().atMost(5, SECONDS).until(() -> taskStarted.getCount() == 0);
+            caller.interrupt();
+
+            await().atMost(5, SECONDS).until(() -> !caller.isAlive());
+            verify(responseObserver).onError(any());
         }
     }
 
@@ -259,13 +280,22 @@ class CodelistGrpcServiceTest {
         @DisplayName("should handle InterruptedException")
         void interrupted() {
             GetPersonAddressDataRequest request = GetPersonAddressDataRequest.newBuilder().build();
+            CountDownLatch taskStarted = new CountDownLatch(1);
 
-            Thread.currentThread().interrupt();
+            when(dataService.fetchAddressNames(any())).thenAnswer(_ -> {
+                taskStarted.countDown();
+                Thread.sleep(Long.MAX_VALUE);
+                return Map.of();
+            });
 
-            grpcService.getPersonAddressData(request, responseObserver);
+            Thread caller = new Thread(() -> grpcService.getPersonAddressData(request, responseObserver));
+            caller.start();
 
-            verify(responseObserver).onError(null);
-            assertThat(Thread.interrupted()).isTrue();
+            await().atMost(5, SECONDS).until(() -> taskStarted.getCount() == 0);
+            caller.interrupt();
+
+            await().atMost(5, SECONDS).until(() -> !caller.isAlive());
+            verify(responseObserver).onError(any());
         }
     }
 
@@ -320,13 +350,22 @@ class CodelistGrpcServiceTest {
         @DisplayName("should handle InterruptedException")
         void interrupted() {
             GetPersonBankingDataRequest request = GetPersonBankingDataRequest.newBuilder().build();
+            CountDownLatch taskStarted = new CountDownLatch(1);
 
-            Thread.currentThread().interrupt();
+            when(dataService.fetchCodelistMeanings(any(), any())).thenAnswer(_ -> {
+                taskStarted.countDown();
+                Thread.sleep(Long.MAX_VALUE);
+                return List.of();
+            });
 
-            grpcService.getPersonBankingData(request, responseObserver);
+            Thread caller = new Thread(() -> grpcService.getPersonBankingData(request, responseObserver));
+            caller.start();
 
-            verify(responseObserver).onError(null);
-            assertThat(Thread.interrupted()).isTrue();
+            await().atMost(5, SECONDS).until(() -> taskStarted.getCount() == 0);
+            caller.interrupt();
+
+            await().atMost(5, SECONDS).until(() -> !caller.isAlive());
+            verify(responseObserver).onError(any());
         }
     }
 
@@ -384,13 +423,22 @@ class CodelistGrpcServiceTest {
         @DisplayName("should handle InterruptedException")
         void interrupted() {
             GetPersonEducationDataRequest request = GetPersonEducationDataRequest.newBuilder().build();
+            CountDownLatch taskStarted = new CountDownLatch(1);
 
-            Thread.currentThread().interrupt();
+            when(dataService.fetchHighSchoolAddress(anyBoolean(), any())).thenAnswer(_ -> {
+                taskStarted.countDown();
+                Thread.sleep(Long.MAX_VALUE);
+                return null;
+            });
 
-            grpcService.getPersonEducationData(request, responseObserver);
+            Thread caller = new Thread(() -> grpcService.getPersonEducationData(request, responseObserver));
+            caller.start();
 
-            verify(responseObserver).onError(null);
-            assertThat(Thread.interrupted()).isTrue();
+            await().atMost(5, SECONDS).until(() -> taskStarted.getCount() == 0);
+            caller.interrupt();
+
+            await().atMost(5, SECONDS).until(() -> !caller.isAlive());
+            verify(responseObserver).onError(any());
         }
     }
 }

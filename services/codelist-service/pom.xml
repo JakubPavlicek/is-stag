@@ -144,6 +144,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.github.danielliu1123</groupId>
             <artifactId>grpc-starter-test</artifactId>
             <scope>test</scope>
