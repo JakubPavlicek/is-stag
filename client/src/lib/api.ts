@@ -31,7 +31,8 @@ export const authMiddleware: Middleware = {
     }
 
     // Localization (only sends the primary language code (e.g., "cs" or "en"))
-    request.headers.set('Accept-Language', i18n.language)
+    const primaryLanguage = i18n.language.split('-')[0]
+    request.headers.set('Accept-Language', primaryLanguage)
 
     return request
   },
