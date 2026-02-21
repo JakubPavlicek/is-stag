@@ -28,7 +28,7 @@ The system is designed as a set of microservices communicating via gRPC, deploye
 
 **Backend ([/services](./services))**
 
-* **Java 25** & **Spring Boot 4.0.2**
+* **Java 25** & **Spring Boot 4.0.3**
 * **Spring Cloud 2025.1.1** (Gateway, Circuit Breaker)
 * **gRPC** – Inter-service communication
 * **Oracle Database** – Primary Data Store

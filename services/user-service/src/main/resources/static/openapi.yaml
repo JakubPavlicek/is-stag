@@ -529,6 +529,7 @@ components:
           nullable: true
           description: Email address of the person.
           example: Martin95043186@xxx.cz
+          maxLength: 100
         phone:
           title: Phone
           type: string

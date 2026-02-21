@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 /** Validation schema for user contact information. */
 export const contactSchema = z.object({
-  email: z.string().email('invalid_email').or(z.literal('')),
+  email: z.email('invalid_email').max(100).or(z.literal('')),
   phone: z
     .string()
     .max(20)

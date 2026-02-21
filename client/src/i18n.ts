@@ -4,7 +4,6 @@ import i18n from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import Backend from 'i18next-http-backend'
 import { z } from 'zod'
-import { zodI18nMap } from 'zod-i18n-map'
 
 /** Internationalization (i18n) configuration. */
 i18n
@@ -27,8 +26,25 @@ i18n
     },
   })
 
-// Set the global error map for Zod to use i18next translations for validation errors
-z.setErrorMap(zodI18nMap)
+// Configure Zod to use localized error messages based on the current language
+function applyZodLocale(lang: string) {
+  switch (lang) {
+    case 'cs':
+      z.config(z.locales.cs())
+      break
+    case 'en':
+    default:
+      z.config(z.locales.en())
+      break
+  }
+}
 
-export { default as z } from 'zod'
+// Apply on init
+applyZodLocale(i18n.language)
+
+// Re-apply whenever language changes
+i18n.on('languageChanged', (lang) => {
+  applyZodLocale(lang)
+})
+
 export { default } from 'i18next'
