@@ -63,7 +63,7 @@ templates:
 
   .redis-common: &redis-common
     chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 25.2.0
+    version: 25.3.0
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     needs:
@@ -139,7 +139,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.3.0
+    version: 18.4.0
     namespace: "{{ .Environment.Values.namespace }}"
     condition: keycloak.enabled
     values:
@@ -178,14 +178,14 @@ releases:
 
   - name: tempo
     chart: grafana-community/tempo
-    version: 1.26.1
+    version: 1.26.4
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - observability/tempo/values.yaml
 
   - name: grafana
     chart: grafana-community/grafana
-    version: 11.1.5
+    version: 11.1.7
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -265,7 +265,7 @@ releases:
   # ========================================
   - name: nginx-gateway-fabric
     chart: oci://ghcr.io/nginx/charts/nginx-gateway-fabric
-    version: 2.4.1
+    version: 2.4.2
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     values:
