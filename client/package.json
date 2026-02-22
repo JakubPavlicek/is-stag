@@ -34,7 +34,7 @@
     "@react-keycloak/web": "^3.4.0",
     "@tanstack/react-form": "^1.28.3",
     "@tanstack/react-query": "^5.90.21",
-    "@tanstack/react-router": "^1.161.4",
+    "@tanstack/react-router": "^1.162.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -56,7 +56,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.3",
     "@tailwindcss/vite": "^4.2.0",
-    "@tanstack/router-plugin": "^1.161.4",
+    "@tanstack/router-plugin": "^1.162.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",

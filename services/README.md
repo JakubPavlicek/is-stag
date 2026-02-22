@@ -84,8 +84,8 @@ mvn test
 Each service exposes OpenAPI documentation. When running locally via Docker Compose or Kubernetes, the aggregated
 documentation is available through the API Gateway.
 
-- If running via Docker Compose: http://localhost:8100/api/v1/swagger-ui/index.html
-- If running via Kubernetes: https://is-stag.cz/api/v1/swagger-ui/index.html
+- If running via Docker Compose: http://localhost:8100/api/swagger-ui/index.html
+- If running via Kubernetes: https://is-stag.cz/api/swagger-ui/index.html
 
 ---
 

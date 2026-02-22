@@ -4,4 +4,4 @@ config:
   enableGatewayAPI: true
 
 crds:
-  enabled: true
+  enabled: false
