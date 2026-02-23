@@ -44,8 +44,8 @@
                         <button id="stag-login-button"
                                 class="${properties.kcButtonPrimaryClass} ${properties.kcButtonBlockClass} ${properties.kcMarginTopClass}"
                                 type="button"
-                                onclick="window.location.href += '&stag_login=true';">
-                            ${msg("Login with IS/STAG")}
+                                onclick="window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'stag_login=true';">
+                            Login with IS/STAG
                         </button>
                     </div>
                 </#if>

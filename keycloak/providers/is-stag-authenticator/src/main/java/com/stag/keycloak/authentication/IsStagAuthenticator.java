@@ -119,6 +119,7 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         // Build a return URL back to Keycloak's login-action endpoint
         URI returnUri = context.getUriInfo()
                                .getRequestUriBuilder()
+                               .replaceQueryParam(STAG_LOGIN, (Object[]) null)
                                .build();
 
         // Build the STAG login URL with the return URI as a query parameter
@@ -230,12 +231,13 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
 
         log.info("Creating user for username: " + userName);
 
+        // Create the user
         UserModel user = userProvider.addUser(realm, userName);
-        user.setEnabled(true);
-        user.setEmail(isStagUserDetails.email());
-        user.setEmailVerified(true);
         user.setFirstName(isStagUser.firstName());
         user.setLastName(isStagUser.lastName());
+        user.setEmail(isStagUserDetails.email());
+        user.setEmailVerified(true);
+        user.setEnabled(true);
 
         // Set additional attributes (student has studentId, teacher has teacherId)
         isStagUserDetails.studentId()
@@ -249,8 +251,8 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
                              user.setSingleAttribute(TEACHER_ID_ATTR, id.toString());
                          });
 
+        // Assign role if specified
         String roleName = isStagUserDetails.role();
-
         Optional.ofNullable(realm.getRole(roleName))
                 .ifPresent(role -> {
                     user.grantRole(role);

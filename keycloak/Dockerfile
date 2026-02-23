@@ -11,6 +11,9 @@ RUN mvn package
 
 FROM quay.io/keycloak/keycloak:26.5.4
 
+# Build argument for realm file (defaults to prod)
+ARG REALM_FILE=is-stag-realm-export-prod.json
+
 # Copy the custom provider JAR from the builder stage
 COPY --from=builder /usr/src/app/target/is-stag-authenticator.jar /opt/keycloak/providers/
 
@@ -18,4 +21,4 @@ COPY --from=builder /usr/src/app/target/is-stag-authenticator.jar /opt/keycloak/
 COPY theme/is-stag-theme /opt/keycloak/themes/is-stag-theme/
 
 # Copy the realm configuration for auto-import on startup.
-COPY is-stag-realm-export.json /opt/keycloak/data/import/is-stag-realm.json
+COPY ${REALM_FILE} /opt/keycloak/data/import/is-stag-realm.json

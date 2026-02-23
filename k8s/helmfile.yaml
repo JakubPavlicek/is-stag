@@ -194,7 +194,7 @@ releases:
 
   - name: grafana
     chart: grafana-community/grafana
-    version: 11.1.7
+    version: 11.1.8
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn

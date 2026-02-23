@@ -6,6 +6,8 @@ services:
     container_name: keycloak-http
     build:
       context: ./keycloak
+      args:
+        REALM_FILE: is-stag-realm-export-dev.json
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
