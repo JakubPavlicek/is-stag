@@ -2,25 +2,10 @@
 # Secrets are encrypted with helm-secrets.
 # Decryption requires the plugin and the appropriate private key.
 # Usage:
-#   helmfile -e perftest sync        # Deploy to perftest
-#   helmfile -e prod sync            # Deploy to prod
-#   helmfile -e perftest destroy     # Destroy perftest
+#   helmfile apply -e [perftest|prod]        // Deploy to perftest/prod
+#   helmfile destroy -e [perftest|prod]      // Destroy perftest/prod
 
 repositories:
-  - name: metallb
-    url: https://metallb.github.io/metallb
-  - name: jetstack
-    url: https://charts.jetstack.io
-  - name: grafana
-    url: https://grafana.github.io/helm-charts
-  - name: grafana-community
-    url: https://grafana-community.github.io/helm-charts
-  - name: prometheus-community
-    url: https://prometheus-community.github.io/helm-charts
-  - name: open-telemetry
-    url: https://open-telemetry.github.io/opentelemetry-helm-charts
-  - name: codecentric
-    url: https://codecentric.github.io/helm-charts
   - name: is-stag
     url: https://jakubpavlicek.github.io/is-stag
 
@@ -82,7 +67,7 @@ templates:
 
   .redis-common: &redis-common
     chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 25.3.0
+    version: 25.3.2
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     needs:
@@ -109,7 +94,7 @@ releases:
   # MetalLB
   # ========================================
   - name: metallb
-    chart: metallb/metallb
+    chart: oci://quay.io/metallb/chart/metallb
     version: 0.15.3
     namespace: "{{ .Environment.Values.namespace }}"
     values:
@@ -128,8 +113,8 @@ releases:
   # Cert-Manager
   # ========================================
   - name: cert-manager
-    chart: jetstack/cert-manager
-    version: v1.19.3
+    chart: oci://quay.io/jetstack/charts/cert-manager
+    version: v1.19.4
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - cert-manager/values.yaml
@@ -148,7 +133,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.4.0
+    version: 18.5.1
     namespace: "{{ .Environment.Values.namespace }}"
     condition: keycloak.enabled
     needs:
@@ -170,8 +155,8 @@ releases:
   # Observability Stack
   # ========================================
   - name: prometheus
-    chart: prometheus-community/prometheus
-    version: 28.9.1
+    chart: oci://ghcr.io/prometheus-community/charts/prometheus
+    version: 28.10.1
     namespace: "{{ .Environment.Values.namespace }}"
     missingFileHandler: Warn
     values:
@@ -179,22 +164,22 @@ releases:
       - observability/prometheus/values-{{ .Environment.Name }}.yaml
 
   - name: loki
-    chart: grafana/loki
+    chart: oci://ghcr.io/grafana/helm-charts/loki
     version: 6.53.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - observability/loki/values.yaml
 
   - name: tempo
-    chart: grafana-community/tempo
-    version: 1.26.4
+    chart: oci://ghcr.io/grafana-community/helm-charts/tempo
+    version: 1.26.5
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - observability/tempo/values.yaml
 
   - name: grafana
-    chart: grafana-community/grafana
-    version: 11.1.8
+    chart: oci://ghcr.io/grafana-community/helm-charts/grafana
+    version: 11.2.0
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -210,8 +195,8 @@ releases:
   # OpenTelemetry
   # ========================================
   - name: opentelemetry-operator
-    chart: open-telemetry/opentelemetry-operator
-    version: 0.105.1
+    chart: oci://ghcr.io/open-telemetry/opentelemetry-helm-charts/opentelemetry-operator
+    version: 0.106.0
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - cert-manager-config
@@ -258,7 +243,7 @@ releases:
   # Keycloak
   # ========================================
   - name: keycloak
-    chart: codecentric/keycloakx
+    chart: oci://ghcr.io/codecentric/helm-charts/keycloakx
     version: 7.1.8
     namespace: "{{ .Environment.Values.namespace }}"
     condition: keycloak.enabled
