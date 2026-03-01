@@ -99,7 +99,6 @@ services:
     image: ghcr.io/jakubpavlicek/react-client:0.0.1
     pull_policy: never
     environment:
-      PORT: 5173
       VITE_API_URL: http://localhost:8100/api/v1
       VITE_KEYCLOAK_URL: http://localhost:8180/auth
       VITE_KEYCLOAK_REALM: is-stag
