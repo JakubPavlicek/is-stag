@@ -6,7 +6,7 @@ import { CZ, GB } from 'country-flag-icons/react/3x2'
 import { Globe, LogOut, Menu } from 'lucide-react'
 
 import { ModeToggle } from '@/components/theme/mode-toggle'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -99,7 +99,6 @@ export function Header() {
               className="hover:bg-accent relative h-9 w-9 rounded-full transition-transform hover:scale-105"
             >
               <Avatar className="h-9 w-9 border shadow-sm">
-                <AvatarImage src="/avatars/01.png" alt="User" />
                 <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                   {userInitials}
                 </AvatarFallback>

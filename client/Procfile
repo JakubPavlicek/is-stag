@@ -1,0 +1,1 @@
+web: nginx -c /workspace/nginx.conf -g 'daemon off;'
