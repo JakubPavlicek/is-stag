@@ -4,6 +4,7 @@ metadata:
   name: {{ .Values.name }}-config
   namespace: {{ .Release.Namespace }}
 data:
+  PORT: {{ .Values.service.ports.http | quote }}
   VITE_KEYCLOAK_URL: {{ .Values.keycloak.url | quote }}
   VITE_KEYCLOAK_REALM: {{ .Values.keycloak.realm | quote }}
   VITE_API_URL: {{ .Values.api.url | quote }}
