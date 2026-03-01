@@ -318,7 +318,7 @@ services:
       - dev
       - prod
     container_name: otel
-    image: otel/opentelemetry-collector-contrib:0.144.0
+    image: otel/opentelemetry-collector-contrib:0.146.1
     command: [ --config=/etc/otel-config.yml ]
     volumes:
       - ./observability/opentel-config.yaml:/etc/otel-config.yml
@@ -342,7 +342,7 @@ services:
       - dev
       - prod
     container_name: loki
-    image: grafana/loki:3.6.4
+    image: grafana/loki:3.6.7
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./observability/loki-config.yaml:/etc/loki/local-config.yaml
@@ -356,7 +356,7 @@ services:
       - dev
       - prod
     container_name: grafana
-    image: grafana/grafana:12.3.1
+    image: grafana/grafana:12.3.4
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -376,7 +376,7 @@ services:
       - dev
       - prod
     container_name: tempo
-    image: grafana/tempo:2.9.1
+    image: grafana/tempo:2.10.1
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./observability/tempo-config.yaml:/etc/tempo.yaml
@@ -391,7 +391,7 @@ services:
       - dev
       - prod
     container_name: prometheus
-    image: prom/prometheus:v3.9.1
+    image: prom/prometheus:v3.10.0
     command: [
       --config.file=/etc/prometheus/prometheus.yml,
       --web.enable-otlp-receiver,
