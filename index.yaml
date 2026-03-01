@@ -72,6 +72,28 @@ entries:
   client:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-03-01T15:31:26.794965809Z"
+    description: A Helm chart for deploying an IS/STAG frontend client
+    digest: 1d791a75f2205a1f9381ff4f66a6efb7fbeb1e58dfd78aff084d93972e02a673
+    home: https://github.com/JakubPavlicek/is-stag
+    keywords:
+    - is-stag
+    - frontend
+    - client
+    - typescript
+    - react
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: client
+    sources:
+    - https://github.com/JakubPavlicek/is-stag
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/client-0.0.4/client-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-03-01T14:50:17.983645297Z"
     description: A Helm chart for deploying an IS/STAG frontend client
     digest: 75579b25493456edee761f6be88db3447664cd2b4759854062776dfa7903e58c
@@ -263,4 +285,4 @@ entries:
     urls:
     - https://github.com/JakubPavlicek/is-stag/releases/download/secrets-0.0.1/secrets-0.0.1.tgz
     version: 0.0.1
-generated: "2026-03-01T14:50:17.983676786Z"
+generated: "2026-03-01T15:31:26.794996236Z"
