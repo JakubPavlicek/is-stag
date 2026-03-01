@@ -1,0 +1,19 @@
+[_]
+schema-version = "0.2"
+
+[io.buildpacks]
+builder = "heroku/builder:24"
+include = [
+    "dist",
+    "project.toml"
+]
+
+[[io.buildpacks.group]]
+uri = "heroku/static-web-server"
+
+[com.heroku.static-web-server]
+root = "dist"
+
+[[build.env]]
+name = "BP_OCI_SOURCE"
+value = "https://github.com/JakubPavlicek/is-stag"
