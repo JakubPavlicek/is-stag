@@ -287,7 +287,7 @@ releases:
   # ========================================
   - name: react-client
     chart: is-stag/client
-    version: 0.0.2
+    version: 0.0.4
     namespace: "{{ .Environment.Values.namespace }}"
     condition: client.enabled
     wait: false
