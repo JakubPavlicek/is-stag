@@ -133,7 +133,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.5.1
+    version: 18.5.2
     namespace: "{{ .Environment.Values.namespace }}"
     condition: keycloak.enabled
     needs:
@@ -156,7 +156,7 @@ releases:
   # ========================================
   - name: prometheus
     chart: oci://ghcr.io/prometheus-community/charts/prometheus
-    version: 28.12.0
+    version: 28.13.0
     namespace: "{{ .Environment.Values.namespace }}"
     missingFileHandler: Warn
     values:
@@ -172,14 +172,14 @@ releases:
 
   - name: tempo
     chart: oci://ghcr.io/grafana-community/helm-charts/tempo
-    version: 1.26.5
+    version: 2.0.0
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - observability/tempo/values.yaml
 
   - name: grafana
     chart: oci://ghcr.io/grafana-community/helm-charts/grafana
-    version: 11.2.2
+    version: 11.3.0
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn

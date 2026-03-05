@@ -48,7 +48,7 @@
 
         <!-- Spring -->
         <spring-cloud.version>2025.1.1</spring-cloud.version>
-        <springdoc.version>3.0.1</springdoc.version>
+        <springdoc.version>3.0.2</springdoc.version>
         <oracle.jdbc.version>23.26.1.0.0</oracle.jdbc.version>
 
         <!-- gRPC -->
@@ -56,7 +56,7 @@
         <protobuf-java.version>4.33.2</protobuf-java.version>
         <grpc-starter.version>4.0.2</grpc-starter.version>
         <protovalidate.version>1.1.0</protovalidate.version>
-        <protobuf-maven-plugin.version>5.0.0</protobuf-maven-plugin.version>
+        <protobuf-maven-plugin.version>5.0.1</protobuf-maven-plugin.version>
 
         <!-- Hibernate ORM Processor for JPA Metamodel generation -->
         <hibernate-processor.version>7.2.4.Final</hibernate-processor.version>
@@ -77,7 +77,7 @@
         <jacoco.version>0.8.14</jacoco.version>
 
         <!-- Cloud Native Buildpacks -->
-        <image.builder.version>0.0.108</image.builder.version>
+        <image.builder.version>0.0.111</image.builder.version>
         <buildpack-java.version>21.2.0</buildpack-java.version>
         <buildpack-health-checker.version>2.13.0</buildpack-health-checker.version>
     </properties>
