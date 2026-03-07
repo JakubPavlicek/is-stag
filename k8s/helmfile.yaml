@@ -133,7 +133,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.5.2
+    version: 18.5.5
     namespace: "{{ .Environment.Values.namespace }}"
     condition: keycloak.enabled
     needs:

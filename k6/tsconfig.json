@@ -11,6 +11,7 @@
     "lib": ["ES2024"],
     "types": ["k6"],
     "paths": {
+      "@/*": ["./src/*"],
       "k6/x/faker": ["./typings/xk6-faker/index.d.ts"]
     }
   },

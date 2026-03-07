@@ -1,7 +1,7 @@
 # React Client
 
 [![codecov](https://codecov.io/github/JakubPavlicek/is-stag/graph/badge.svg?token=G9QCAP4G9J)](https://codecov.io/github/JakubPavlicek/is-stag)
-[![Frontend CI](https://github.com/JakubPavlicek/is-stag/actions/workflows/frontend-ci.yaml/badge.svg)](https://github.com/JakubPavlicek/is-stag/actions/workflows/frontend-ci.yaml)
+[![Client CI](https://github.com/JakubPavlicek/is-stag/actions/workflows/client-ci.yaml/badge.svg)](https://github.com/JakubPavlicek/is-stag/actions/workflows/client-ci.yaml)
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)

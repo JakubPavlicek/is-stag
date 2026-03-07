@@ -9,7 +9,7 @@ COPY providers/is-stag-authenticator/src ./src/
 # Build the provider JAR
 RUN mvn --no-transfer-progress package -DskipTests
 
-FROM quay.io/keycloak/keycloak:26.5.4
+FROM quay.io/keycloak/keycloak:26.5.5
 
 # Build argument for realm file (defaults to prod)
 ARG REALM_FILE=is-stag-realm-export-prod.json

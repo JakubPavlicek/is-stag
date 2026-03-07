@@ -1,0 +1,40 @@
+name: Frontend CI
+
+on:
+  push:
+    paths:
+      - 'k6/**'
+      - '!**/*.md'
+      - 'k6-ci.yaml'
+
+jobs:
+  build-and-publish-client:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: k6
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v6.2.0
+        with:
+          node-version: 25.3.0
+          cache: npm
+          cache-dependency-path: k6/package-lock.json
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Check Formatting
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check Types
+        run: npm run typecheck
+

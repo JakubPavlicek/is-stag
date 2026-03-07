@@ -5,7 +5,7 @@ on:
     paths:
       - 'client/**'
       - '!**/*.md'
-      - '.github/workflows/frontend-ci.yaml'
+      - '.github/workflows/client-ci.yaml'
 
 jobs:
   build-and-publish-client:
@@ -30,7 +30,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Check Format
+      - name: Check Formatting
         run: npm run format:check
 
       - name: Lint

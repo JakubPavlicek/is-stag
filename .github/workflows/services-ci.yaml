@@ -6,7 +6,7 @@ on:
       - 'services/**'
       - 'proto/**'
       - '!**/*.md'
-      - '.github/workflows/backend-ci.yaml'
+      - '.github/workflows/services-ci.yaml'
 
 jobs:
   protolint-lint-proto:
