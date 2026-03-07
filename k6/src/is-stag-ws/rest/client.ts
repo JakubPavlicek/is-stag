@@ -1,7 +1,7 @@
 import { check } from 'k6';
 import http, { Params } from 'k6/http';
 
-import { HEADERS, IS_STAG_BASE_URL, TEST_RUN_ID } from '../shared/common.ts';
+import { BASE_URL, HEADERS, TEST_RUN_ID } from '../shared/common.ts';
 
 type QueryValue = string | number | boolean | null | undefined;
 
@@ -21,7 +21,7 @@ function buildQueryString(query: Record<string, QueryValue> = {}) {
 
 export function getRequest({ path, query = {}, tagName, expectedStatus = 200 }: GetRequestOptions) {
   const queryString = buildQueryString(query);
-  const url = queryString ? `${IS_STAG_BASE_URL}${path}?${queryString}` : `${IS_STAG_BASE_URL}${path}`;
+  const url = queryString ? `${BASE_URL}${path}?${queryString}` : `${BASE_URL}${path}`;
   const params: Params = {
     headers: HEADERS,
     tags: {

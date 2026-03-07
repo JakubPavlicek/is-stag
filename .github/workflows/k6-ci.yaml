@@ -1,4 +1,4 @@
-name: Frontend CI
+name: k6 CI
 
 on:
   push:

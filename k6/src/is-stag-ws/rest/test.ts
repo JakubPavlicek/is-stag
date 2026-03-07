@@ -3,8 +3,7 @@ import { RefinedResponse } from 'k6/http';
 import { Options } from 'k6/options';
 import faker from 'k6/x/faker';
 
-import { STUDENT_IDS } from '@/data/student-ids.ts';
-
+import { STUDENT_IDS } from '../../data/student-ids.ts';
 import * as codelistApi from './codelist-api.ts';
 import * as fieldOfStudyApi from './field-of-study-api.ts';
 import * as studentApi from './student-api.ts';

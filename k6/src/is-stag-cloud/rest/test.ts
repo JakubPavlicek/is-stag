@@ -2,8 +2,7 @@ import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
 import faker from 'k6/x/faker';
 
-import { STUDENT_IDS } from '@/data/student-ids.ts';
-
+import { STUDENT_IDS } from '../../data/student-ids.ts';
 import * as studentApi from './student-api.ts';
 import * as userApi from './user-api.ts';
 
@@ -37,7 +36,7 @@ export const options: Options = {
 };
 
 export function smokeTest() {
-  group('Smoke Test - Implementation REST APIs', () => {
+  group('Smoke Test - IS/STAG Cloud REST APIs', () => {
     const studentProfile = studentApi.getStudentProfile(STUDENT_IDS[0]);
     const personId = studentProfile?.json('personId') as number;
 
@@ -55,7 +54,7 @@ export function loadTest() {
   let personId: number;
 
   // Fetch the student profile to get the person ID.
-  group('Implementation Student Journey', () => {
+  group('IS/STAG Cloud Student Journey', () => {
     const studentProfile = studentApi.getStudentProfile(studentId);
     personId = studentProfile?.json('personId') as number;
   });
@@ -63,7 +62,7 @@ export function loadTest() {
   sleep(faker.numbers.float64Range(0.1, 1));
 
   // Fetch user-related information using the person ID obtained from the student profile.
-  group('Implementation User Journey', () => {
+  group('IS/STAG Cloud User Journey', () => {
     userApi.getPersonProfile(personId);
     sleep(faker.numbers.float64Range(0.1, 1));
 
