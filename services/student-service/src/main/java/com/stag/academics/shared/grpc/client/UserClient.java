@@ -32,12 +32,11 @@ public class UserClient {
 
     /// Fetches simple profile data for a person via gRPC.
     ///
-    /// Includes circuit breaker for fault tolerance and caching for performance.
+    /// Includes circuit breaker for fault tolerance.
     ///
     /// @param personId the person identifier
     /// @param language the language code for localized data
     /// @return simple profile lookup data
-    @Cacheable(value = "student-person-simple-profile", key = "{#personId, #language}")
     @CircuitBreaker(name = "user-service")
     @Retry(name = "user-service")
     public SimpleProfileLookupData getPersonSimpleProfileData(Integer personId, String language) {

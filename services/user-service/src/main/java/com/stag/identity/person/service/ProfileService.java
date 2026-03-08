@@ -150,9 +150,7 @@ public class ProfileService {
         @CacheEvict(value = "person-simple-profile", key = "{#personId, 'en'}"),
         @CacheEvict(value = "person-banking", key = "{#personId, 'cs'}"),
         @CacheEvict(value = "person-banking", key = "{#personId, 'en'}"),
-        @CacheEvict(value = "student-person-simple-profile", key = "{#personId, 'cs'}"),
-        @CacheEvict(value = "student-person-simple-profile", key = "{#personId, 'en'}"),
-        @CacheEvict(value = "student-profile", allEntries = true),
+        @CacheEvict(value = "student-profile", allEntries = true)
     })
     @PreAuthorize("""
         hasRole('AD')
