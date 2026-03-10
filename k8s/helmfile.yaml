@@ -179,7 +179,7 @@ releases:
 
   - name: grafana
     chart: oci://ghcr.io/grafana-community/helm-charts/grafana
-    version: 11.3.0
+    version: 11.3.2
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -196,7 +196,7 @@ releases:
   # ========================================
   - name: opentelemetry-operator
     chart: oci://ghcr.io/open-telemetry/opentelemetry-helm-charts/opentelemetry-operator
-    version: 0.106.0
+    version: 0.107.0
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - cert-manager-config
@@ -244,7 +244,7 @@ releases:
   # ========================================
   - name: keycloak
     chart: oci://ghcr.io/codecentric/helm-charts/keycloakx
-    version: 7.1.8
+    version: 7.1.9
     namespace: "{{ .Environment.Values.namespace }}"
     condition: keycloak.enabled
     needs:
