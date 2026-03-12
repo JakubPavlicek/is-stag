@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v6.0.2
 
       - name: Setup Node.js Environment
-        uses: actions/setup-node@v6.2.0
+        uses: actions/setup-node@v6.3.0
         with:
           node-version: 25.3.0
           cache: npm
@@ -49,7 +49,7 @@ jobs:
         run: npm run build
 
       - name: Upload Dist Artifact
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: dist
           path: client/dist
@@ -61,7 +61,7 @@ jobs:
         uses: buildpacks/github-actions/setup-pack@v5.11.0
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3.7.0
+        uses: docker/login-action@v4.0.0
         with:
           registry: ghcr.io
           username: ${{ secrets.GHCR_USERNAME }}

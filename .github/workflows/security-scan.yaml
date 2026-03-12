@@ -32,7 +32,7 @@ jobs:
           cache: maven
 
       - name: Setup Node.js Environment
-        uses: actions/setup-node@v6.2.0
+        uses: actions/setup-node@v6.3.0
         if: matrix.target.build == 'node'
         with:
           node-version: 25.2.1
@@ -59,11 +59,9 @@ jobs:
           path: ${{ matrix.target.scan_path }}
           format: HTML
           out: reports/${{ matrix.target.name }}
-      #          args: >
-      #            --failOnCVSS 8
 
       - name: Upload Report
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: depcheck-${{ matrix.target.name }}
           path: reports/${{ matrix.target.name }}
