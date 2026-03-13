@@ -4,3 +4,7 @@ nginxGateway:
 # We will use cert-manager to generate certs
 certGenerator:
   enabled: false
+
+nginx:
+  config:
+    ipFamily: ipv4

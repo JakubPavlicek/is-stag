@@ -3,7 +3,7 @@ auth:
   existingSecretPasswordKey: redis-password
 
 global:
-  defaultStorageClass: standard
+  defaultStorageClass: nfs-client
 
 sentinel:
   enabled: true

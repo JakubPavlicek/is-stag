@@ -34,7 +34,13 @@ deploymentMode: SingleBinary
 singleBinary:
   replicas: 1
   persistence:
-    storageClass: standard
+    enabled: true
+    storageClass: nfs-client
+    size: 2Gi
+
+gateway:
+  nginxConfig:
+    enableIPv6: false
 
 backend:
   replicas: 0
@@ -47,4 +53,37 @@ test:
   enabled: false
 
 lokiCanary:
+  enabled: false
+
+chunksCache:
+  enabled: false
+
+resultsCache:
+  enabled: false
+
+indexGateway:
+  enabled: false
+
+compactor:
+  enabled: true
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+
+querier:
+  enabled: false
+
+queryFrontend:
+  enabled: false
+
+queryScheduler:
+  enabled: false
+
+distributor:
+  enabled: false
+
+ingester:
   enabled: false

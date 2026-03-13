@@ -48,4 +48,5 @@ tempo:
 
 persistence:
   enabled: true
-  storageClassName: standard
+  storageClassName: nfs-client
+  size: 2Gi

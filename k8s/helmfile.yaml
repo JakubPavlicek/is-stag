@@ -77,7 +77,7 @@ helmDefaults:
   createNamespace: true
   wait: true
   waitForJobs: true
-  timeout: 300
+  timeout: 500
 
 releases:
   # ========================================
@@ -93,21 +93,21 @@ releases:
   # ========================================
   # MetalLB
   # ========================================
-  - name: metallb
-    chart: oci://quay.io/metallb/chart/metallb
-    version: 0.15.3
-    namespace: "{{ .Environment.Values.namespace }}"
-    values:
-      - metallb/values.yaml
-
-  - name: metallb-config
-    chart: is-stag/metallb-config
-    version: 0.0.2
-    namespace: "{{ .Environment.Values.namespace }}"
-    needs:
-      - metallb
-    values:
-      - metallb-config/values.yaml
+#  - name: metallb
+#    chart: oci://quay.io/metallb/chart/metallb
+#    version: 0.15.3
+#    namespace: "{{ .Environment.Values.namespace }}"
+#    values:
+#      - metallb/values.yaml
+#
+#  - name: metallb-config
+#    chart: is-stag/metallb-config
+#    version: 0.0.2
+#    namespace: "{{ .Environment.Values.namespace }}"
+#    needs:
+#      - metallb
+#    values:
+#      - metallb-config/values.yaml
 
   # ========================================
   # Cert-Manager

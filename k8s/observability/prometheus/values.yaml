@@ -1,13 +1,36 @@
 alertmanager:
   enabled: false
 
+prometheus-node-exporter:
+  enabled: false  # Use existing ones
+
+# Add scrape config for existing node-exporters
+extraScrapeConfigs: |
+  # Scrape existing kube-prometheus node-exporters
+  - job_name: 'node-exporter-existing'
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - default
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+        regex: node-exporter
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_node_name]
+        target_label: instance
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+
 server:
   fullnameOverride: prometheus
   service:
     servicePort: 9090
 
   persistentVolume:
-    storageClass: standard
+    enabled: true
+    storageClass: nfs-client
+    size: 2Gi
 
   extraFlags:
     - web.enable-lifecycle

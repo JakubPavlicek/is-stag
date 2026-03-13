@@ -16,9 +16,9 @@ database:
 probes:
   readiness:
     path: /actuator/health/readiness
-    initialDelaySeconds: 30
+    initialDelaySeconds: 200
     periodSeconds: 10
   liveness:
     path: /actuator/health/liveness
-    initialDelaySeconds: 30
+    initialDelaySeconds: 200
     periodSeconds: 10

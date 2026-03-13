@@ -16,6 +16,35 @@ http:
 service:
   httpPort: 8080
 
+# Liveness probe configuration
+livenessProbe: |
+  httpGet:
+    path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/health/live'
+    port: '{{ .Values.http.internalPort }}'
+    scheme: '{{ .Values.http.internalScheme }}'
+  initialDelaySeconds: 240
+  timeoutSeconds: 10
+
+# Readiness probe configuration
+readinessProbe: |
+  httpGet:
+    path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/health/ready'
+    port: '{{ .Values.http.internalPort }}'
+    scheme: '{{ .Values.http.internalScheme }}'
+  initialDelaySeconds: 240
+  timeoutSeconds: 10
+
+# Startup probe configuration
+startupProbe: |
+  httpGet:
+    path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/health'
+    port: '{{ .Values.http.internalPort }}'
+    scheme: '{{ .Values.http.internalScheme }}'
+  initialDelaySeconds: 240
+  timeoutSeconds: 5
+  failureThreshold: 60
+  periodSeconds: 5
+
 proxy:
   enabled: false
 

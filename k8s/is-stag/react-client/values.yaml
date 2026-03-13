@@ -15,9 +15,9 @@ api:
 probes:
   readiness:
     path: /
-    initialDelaySeconds: 20
+    initialDelaySeconds: 200
     periodSeconds: 10
   liveness:
     path: /
-    initialDelaySeconds: 30
+    initialDelaySeconds: 200
     periodSeconds: 10

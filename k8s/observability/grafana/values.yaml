@@ -3,7 +3,7 @@ service:
 
 persistence:
   enabled: true
-  storageClassName: standard
+  storageClassName: nfs-client
 
 initChownData:
   enabled: false
