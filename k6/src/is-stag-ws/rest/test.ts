@@ -39,7 +39,7 @@ export const options: Options = {
 };
 
 export function smokeTest() {
-  group('Smoke Test - IS/STAG REST WebServices', () => {
+  group('WebServices - Smoke Test', () => {
     const studentInfo = studentApi.getStudentInfo({ osCislo: STUDENT_IDS[0] });
     const person = usersApi.getOsoba({ osCislo: STUDENT_IDS[0] });
 
@@ -66,6 +66,11 @@ export function smokeTest() {
     // Fetch bank name
     const bankNameId = person.json('ucetBanka') as string;
     codelistApi.getCiselnikNewItems({ domena: 'CIS_BANK', key: bankNameId });
+
+    // Update person
+    const osobIdno = person.json('osobIdno') as number;
+    const updateBody = usersApi.generateUpdateOsobaBody(osobIdno);
+    usersApi.updateOsoba(updateBody);
   });
 }
 
@@ -78,19 +83,19 @@ export function loadTest() {
   // Placeholder for person, which will be fetched from the usersApi.
   let person: RefinedResponse<'binary' | 'none' | 'text'>;
 
-  group('IS/STAG Student Journey', () => {
+  group('WebServices - Student', () => {
     student = studentApi.getStudentInfo({ osCislo: studentId });
   });
 
   sleep(faker.numbers.float64Range(0.1, 1));
 
-  group('IS/STAG Student Journey', () => {
+  group('WebServices - Person', () => {
     person = usersApi.getOsoba({ osCislo: studentId });
   });
 
   sleep(faker.numbers.float64Range(0.1, 1));
 
-  group('IS/STAG Codelist Journey', () => {
+  group('WebServices - Codelist', () => {
     // Fetch title prefix
     const titlePrefixId = person.json('titulPred') as string;
     codelistApi.getCiselnikNewItems({ domena: 'TITUL_PRED', key: titlePrefixId });
@@ -124,6 +129,14 @@ export function loadTest() {
     // Fetch bank name
     const bankNameId = person.json('ucetBanka') as string;
     codelistApi.getCiselnikNewItems({ domena: 'CIS_BANK', key: bankNameId });
+  });
+
+  sleep(faker.numbers.float64Range(0.1, 1));
+
+  group('WebServices - Update Person', () => {
+    const osobIdno = person.json('osobIdno') as number;
+    const updateBody = usersApi.generateUpdateOsobaBody(osobIdno);
+    usersApi.updateOsoba(updateBody);
   });
 
   sleep(faker.numbers.float64Range(0.1, 1));

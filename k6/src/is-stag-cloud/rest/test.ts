@@ -36,7 +36,7 @@ export const options: Options = {
 };
 
 export function smokeTest() {
-  group('Smoke Test - IS/STAG Cloud REST APIs', () => {
+  group('Cloud - Smoke Test', () => {
     const studentProfile = studentApi.getStudentProfile(STUDENT_IDS[0]);
     const personId = studentProfile?.json('personId') as number;
 
@@ -44,6 +44,9 @@ export function smokeTest() {
     userApi.getPersonAddresses(personId);
     userApi.getPersonBanking(personId);
     userApi.getPersonEducation(personId);
+
+    const updateBody = userApi.generateUpdatePersonBody();
+    userApi.updatePersonProfile(personId, updateBody);
   });
 }
 
@@ -54,7 +57,7 @@ export function loadTest() {
   let personId: number;
 
   // Fetch the student profile to get the person ID.
-  group('IS/STAG Cloud Student Journey', () => {
+  group('Cloud - Student', () => {
     const studentProfile = studentApi.getStudentProfile(studentId);
     personId = studentProfile?.json('personId') as number;
   });
@@ -62,7 +65,7 @@ export function loadTest() {
   sleep(faker.numbers.float64Range(0.1, 1));
 
   // Fetch user-related information using the person ID obtained from the student profile.
-  group('IS/STAG Cloud User Journey', () => {
+  group('Cloud - User', () => {
     userApi.getPersonProfile(personId);
     sleep(faker.numbers.float64Range(0.1, 1));
 
@@ -73,6 +76,14 @@ export function loadTest() {
     sleep(faker.numbers.float64Range(0.1, 1));
 
     userApi.getPersonEducation(personId);
+  });
+
+  sleep(faker.numbers.float64Range(0.1, 1));
+
+  // Update person profile with randomly generated data.
+  group('Cloud - Update Person', () => {
+    const updateBody = userApi.generateUpdatePersonBody();
+    userApi.updatePersonProfile(personId, updateBody);
   });
 
   sleep(faker.numbers.float64Range(0.1, 1));

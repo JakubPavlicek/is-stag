@@ -12,6 +12,13 @@ interface GetRequestOptions {
   expectedStatus?: number;
 }
 
+interface PostRequestOptions {
+  path: string;
+  body: Record<string, string | number>;
+  tagName: string;
+  expectedStatus?: number;
+}
+
 function buildQueryString(query: Record<string, QueryValue> = {}) {
   return Object.entries(query)
     .filter(([, value]) => value !== undefined && value !== null)
@@ -31,6 +38,28 @@ export function getRequest({ path, query = {}, tagName, expectedStatus = 200 }: 
   };
 
   const response = http.get(url, params);
+
+  check(response, {
+    [`${tagName}: status is ${expectedStatus}`]: (res) => res.status === expectedStatus,
+  });
+
+  return response;
+}
+
+export function postRequest({ path, body, tagName, expectedStatus = 204 }: PostRequestOptions) {
+  const url = `${BASE_URL}${path}`;
+  const params: Params = {
+    headers: {
+      ...HEADERS,
+      'Content-Type': 'application/json',
+    },
+    tags: {
+      name: tagName,
+      testId: TEST_RUN_ID,
+    },
+  };
+
+  const response = http.post(url, JSON.stringify(body), params);
 
   check(response, {
     [`${tagName}: status is ${expectedStatus}`]: (res) => res.status === expectedStatus,

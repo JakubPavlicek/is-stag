@@ -30,7 +30,7 @@ export function getRequest({ path, tagName, expectedStatus = 200 }: RequestOptio
   return response;
 }
 
-export function patchRequest({ path, body, tagName, expectedStatus = 200 }: PatchRequestOptions) {
+export function patchRequest({ path, body, tagName, expectedStatus = 204 }: PatchRequestOptions) {
   const params: Params = {
     headers: HEADERS,
     tags: {

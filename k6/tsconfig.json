@@ -8,7 +8,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "allowImportingTsExtensions": true,
-    "lib": ["ES2024"],
+    "lib": ["ES2024", "DOM"],
     "types": ["k6"],
     "paths": {
       "k6/x/faker": ["./typings/xk6-faker/index.d.ts"]

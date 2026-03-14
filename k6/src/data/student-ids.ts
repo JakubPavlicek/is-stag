@@ -1,3 +1,4 @@
+// Valid student ids from the STUDENTI table
 export const STUDENT_IDS: string[] = [
   'E21B9212P',
   'E21B9213P',
