@@ -318,7 +318,7 @@ services:
       - dev
       - prod
     container_name: otel
-    image: otel/opentelemetry-collector-contrib:0.146.1
+    image: otel/opentelemetry-collector-contrib:0.147.0
     command: [ --config=/etc/otel-config.yml ]
     volumes:
       - ./observability/opentel-config.yaml:/etc/otel-config.yml
@@ -356,7 +356,7 @@ services:
       - dev
       - prod
     container_name: grafana
-    image: grafana/grafana:12.3.4
+    image: grafana/grafana:12.3.5
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -376,7 +376,7 @@ services:
       - dev
       - prod
     container_name: tempo
-    image: grafana/tempo:2.10.1
+    image: grafana/tempo:2.10.2
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./observability/tempo-config.yaml:/etc/tempo.yaml

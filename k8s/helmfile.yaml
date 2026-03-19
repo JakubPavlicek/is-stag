@@ -67,7 +67,7 @@ templates:
 
   .redis-common: &redis-common
     chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 25.3.2
+    version: 25.3.5
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     needs:
@@ -133,7 +133,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.5.6
+    version: 18.5.8
     namespace: "{{ .Environment.Values.namespace }}"
     condition: keycloak.enabled
     needs:
@@ -179,7 +179,7 @@ releases:
 
   - name: grafana
     chart: oci://ghcr.io/grafana-community/helm-charts/grafana
-    version: 11.3.2
+    version: 11.3.3
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -196,7 +196,7 @@ releases:
   # ========================================
   - name: opentelemetry-operator
     chart: oci://ghcr.io/open-telemetry/opentelemetry-helm-charts/opentelemetry-operator
-    version: 0.107.0
+    version: 0.107.2
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - cert-manager-config
