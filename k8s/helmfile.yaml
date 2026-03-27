@@ -34,7 +34,7 @@ hooks:
       - "apply"
       - "--server-side"
       - "-f"
-      - "https://github.com/cert-manager/cert-manager/releases/download/v1.19.3/cert-manager.crds.yaml"
+      - "https://github.com/cert-manager/cert-manager/releases/download/v1.20.0/cert-manager.crds.yaml"
 
   # Install Gateway API CRDs
   - events: [ "prepare" ]
@@ -67,7 +67,7 @@ templates:
 
   .redis-common: &redis-common
     chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 25.3.7
+    version: 25.3.9
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     needs:
@@ -133,7 +133,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.5.11
+    version: 18.5.14
     namespace: "{{ .Environment.Values.namespace }}"
     condition: keycloak.enabled
     needs:
@@ -156,7 +156,7 @@ releases:
   # ========================================
   - name: prometheus
     chart: oci://ghcr.io/prometheus-community/charts/prometheus
-    version: 28.14.0
+    version: 28.14.1
     namespace: "{{ .Environment.Values.namespace }}"
     missingFileHandler: Warn
     values:
@@ -179,7 +179,7 @@ releases:
 
   - name: grafana
     chart: oci://ghcr.io/grafana-community/helm-charts/grafana
-    version: 11.3.3
+    version: 11.3.5
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -196,7 +196,7 @@ releases:
   # ========================================
   - name: opentelemetry-operator
     chart: oci://ghcr.io/open-telemetry/opentelemetry-helm-charts/opentelemetry-operator
-    version: 0.108.0
+    version: 0.109.0
     namespace: "{{ .Environment.Values.namespace }}"
     needs:
       - cert-manager-config
