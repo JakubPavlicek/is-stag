@@ -34,7 +34,7 @@ hooks:
       - "apply"
       - "--server-side"
       - "-f"
-      - "https://github.com/cert-manager/cert-manager/releases/download/v1.20.0/cert-manager.crds.yaml"
+      - "https://github.com/cert-manager/cert-manager/releases/download/v1.20.1/cert-manager.crds.yaml"
 
   # Install Gateway API CRDs
   - events: [ "prepare" ]
@@ -114,7 +114,7 @@ releases:
   # ========================================
   - name: cert-manager
     chart: oci://quay.io/jetstack/charts/cert-manager
-    version: v1.20.0
+    version: v1.20.1
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - cert-manager/values.yaml
@@ -179,7 +179,7 @@ releases:
 
   - name: grafana
     chart: oci://ghcr.io/grafana-community/helm-charts/grafana
-    version: 11.3.5
+    version: 11.3.6
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -259,7 +259,7 @@ releases:
   # ========================================
   - name: nginx-gateway-fabric
     chart: oci://ghcr.io/nginx/charts/nginx-gateway-fabric
-    version: 2.4.2
+    version: 2.5.0
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     needs:
