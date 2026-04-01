@@ -21,8 +21,8 @@
     "pack": "pack build ghcr.io/$(npm pkg get author | tr -d '\"')/$(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --platform linux/arm64"
   },
   "engines": {
-    "node": ">=25.3.0",
-    "npm": ">=11.7.0"
+    "node": ">=25.8.2",
+    "npm": ">=11.12.1"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
