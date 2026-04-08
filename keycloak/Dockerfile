@@ -9,7 +9,7 @@ RUN mvn --no-transfer-progress dependency:go-offline
 COPY providers/is-stag-authenticator/src ./src/
 RUN mvn --no-transfer-progress package -DskipTests
 
-FROM quay.io/keycloak/keycloak:26.5.7
+FROM quay.io/keycloak/keycloak:26.6.0
 
 # Build argument for realm file (defaults to production realm)
 ARG REALM_FILE=is-stag-realm-export-prod.json

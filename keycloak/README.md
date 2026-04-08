@@ -1,7 +1,7 @@
 # Identity & Access Management (Keycloak)
 
 [![Keycloak CI](https://github.com/JakubPavlicek/is-stag/actions/workflows/keycloak-ci.yaml/badge.svg)](https://github.com/JakubPavlicek/is-stag/actions/workflows/keycloak-ci.yaml)
-[![Keycloak](https://img.shields.io/badge/Keycloak-26.5.7-blue?logo=keycloak&logoColor=white)](https://www.keycloak.org/)
+[![Keycloak](https://img.shields.io/badge/Keycloak-26.6.0-blue?logo=keycloak&logoColor=white)](https://www.keycloak.org/)
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 
