@@ -5,6 +5,7 @@ import com.stag.academics.student.service.data.StudyProgramAndFieldLookupData;
 import com.stag.academics.studyplan.v1.StudyPlanServiceGrpc;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -18,17 +19,11 @@ import org.springframework.stereotype.Service;
 /// @version 1.0.0
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class StudyPlanClient {
 
     /// Study plan service stub
-    private StudyPlanServiceGrpc.StudyPlanServiceBlockingStub studyPlanServiceStub;
-
-    /// Constructs the study plan client with a study plan service stub.
-    ///
-    /// @param studyPlanServiceStub the gRPC blocking stub for study plan service
-    public StudyPlanClient(StudyPlanServiceGrpc.StudyPlanServiceBlockingStub studyPlanServiceStub) {
-        this.studyPlanServiceStub = studyPlanServiceStub;
-    }
+    private final StudyPlanServiceGrpc.StudyPlanServiceBlockingStub studyPlanServiceStub;
 
     /// Fetches study program and field of study data via gRPC.
     ///

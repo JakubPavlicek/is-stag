@@ -6,5 +6,5 @@ replicaCount: 1
 service:
   type: NodePort
   ports:
-    httpNodePort: 30050
-    grpcNodePort: 30051
+    httpNodePort: 30030
+    grpcNodePort: 30031

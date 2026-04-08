@@ -76,9 +76,9 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
 
         log.debug("Query parameters received: " + queryParams.keySet());
 
-        // Check if we are handling a STAG login response
+        // Check if we are handling an IS/STAG login response
         if (queryParams.containsKey(STAG_USER_INFO)) {
-            log.info("Handling STAG login response");
+            log.info("Handling IS/STAG login response");
 
             // The user is trying to log in as an anonymous user
             if (ANONYMOUS.equals(queryParams.getFirst(STAG_USER_TICKET))) {
@@ -88,15 +88,15 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
             }
 
             // The user is trying to log in as a regular user
-            log.info("Regular STAG user login detected");
+            log.info("Regular IS/STAG user login detected");
             handleUserLogin(context, queryParams.getFirst(STAG_USER_INFO));
             return;
         }
 
-        // Redirect user to STAG if the "Login with IS/STAG" button was clicked
+        // Redirect the user to IS/STAG if the "Log In with IS/STAG" button was clicked
         if (STAG_LOGIN_TRIGGER.equals(queryParams.getFirst(STAG_LOGIN))) {
-            log.info("STAG login trigger detected, redirecting to STAG login");
-            redirectToStagLogin(context);
+            log.info("IS/STAG login trigger detected, redirecting to IS/STAG login");
+            redirectToStagLoginPage(context);
             return;
         }
 
@@ -113,8 +113,8 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
      *
      * @param context The {@link AuthenticationFlowContext} used to build the redirect URI.
      */
-    private void redirectToStagLogin(AuthenticationFlowContext context) {
-        log.info("Redirecting to STAG login");
+    private void redirectToStagLoginPage(AuthenticationFlowContext context) {
+        log.info("Redirecting to IS/STAG login");
 
         // Build a return URL back to Keycloak's login-action endpoint
         URI returnUri = context.getUriInfo()
@@ -177,7 +177,7 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
         log.info("Handling user login");
 
         try {
-            log.debug("Decoding and parsing STAG user info");
+            log.debug("Decoding and parsing IS/STAG user info");
 
             // Decode and parse the user info
             IsStagUser isStagUser = objectMapper.readValue(
@@ -186,7 +186,7 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
             );
             IsStagUserDetails isStagUserDetails = isStagUser.stagUserInfo().getFirst();
 
-            log.info("Successfully parsed STAG user info for username: " + isStagUserDetails.userName());
+            log.info("Successfully parsed IS/STAG user info for username: " + isStagUserDetails.userName());
 
             // Create or load the user
             RealmModel realm = context.getRealm();
@@ -199,11 +199,11 @@ public class IsStagAuthenticator extends UsernamePasswordForm {
                 user = createUser(userProvider, realm, isStagUser, isStagUserDetails);
             }
 
-            log.info("STAG authentication successful for user: " + isStagUserDetails.userName());
+            log.info("IS/STAG authentication successful for user: " + isStagUserDetails.userName());
             context.setUser(user);
             context.success();
         } catch (Exception e) {
-            handleAuthenticationError("Error during STAG login handling: " + e.getMessage(), context);
+            handleAuthenticationError("Error during IS/STAG login handling: " + e.getMessage(), context);
         }
     }
 

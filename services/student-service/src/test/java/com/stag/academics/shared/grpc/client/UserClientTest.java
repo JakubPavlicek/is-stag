@@ -1,9 +1,9 @@
 package com.stag.academics.shared.grpc.client;
 
 import com.stag.academics.student.service.data.SimpleProfileLookupData;
-import com.stag.identity.person.v1.GetPersonSimpleProfileRequest;
-import com.stag.identity.person.v1.GetPersonSimpleProfileResponse;
-import com.stag.identity.person.v1.PersonServiceGrpc;
+import com.stag.identity.user.v1.GetPersonSimpleProfileRequest;
+import com.stag.identity.user.v1.GetPersonSimpleProfileResponse;
+import com.stag.identity.user.v1.UserServiceGrpc;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 class UserClientTest {
 
     @Mock
-    private PersonServiceGrpc.PersonServiceBlockingStub personServiceStub;
+    private UserServiceGrpc.UserServiceBlockingStub userServiceStub;
 
     @InjectMocks
     private UserClient userClient;
@@ -41,13 +41,13 @@ class UserClientTest {
                                                                                 .setGender(gender)
                                                                                 .build();
 
-        when(personServiceStub.getPersonSimpleProfile(any(GetPersonSimpleProfileRequest.class)))
+        when(userServiceStub.getPersonSimpleProfile(any(GetPersonSimpleProfileRequest.class)))
             .thenReturn(response);
 
         SimpleProfileLookupData result = userClient.getPersonSimpleProfileData(personId, language);
 
         ArgumentCaptor<GetPersonSimpleProfileRequest> requestCaptor = ArgumentCaptor.forClass(GetPersonSimpleProfileRequest.class);
-        verify(personServiceStub).getPersonSimpleProfile(requestCaptor.capture());
+        verify(userServiceStub).getPersonSimpleProfile(requestCaptor.capture());
 
         GetPersonSimpleProfileRequest capturedRequest = requestCaptor.getValue();
         assertThat(capturedRequest.getPersonId()).isEqualTo(personId);

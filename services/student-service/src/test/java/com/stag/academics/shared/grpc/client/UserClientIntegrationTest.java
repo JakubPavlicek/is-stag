@@ -2,10 +2,10 @@ package com.stag.academics.shared.grpc.client;
 
 import com.stag.academics.config.TestCacheConfig;
 import com.stag.academics.config.TestOracleContainerConfig;
-import com.stag.academics.shared.grpc.server.FakePersonService;
+import com.stag.academics.shared.grpc.server.FakeUserService;
 import com.stag.academics.student.service.data.SimpleProfileLookupData;
-import com.stag.identity.person.v1.GetPersonSimpleProfileResponse;
-import com.stag.identity.person.v1.PersonServiceGrpc;
+import com.stag.identity.user.v1.GetPersonSimpleProfileResponse;
+import com.stag.identity.user.v1.UserServiceGrpc;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@Import({ TestOracleContainerConfig.class, TestCacheConfig.class, FakePersonService.class })
+@Import({ TestOracleContainerConfig.class, TestCacheConfig.class, FakeUserService.class })
 @ActiveProfiles("test")
 class UserClientIntegrationTest {
 
@@ -35,14 +35,14 @@ class UserClientIntegrationTest {
     private UserClient userClient;
 
     @Autowired
-    private FakePersonService fakePersonService;
+    private FakeUserService fakeUserService;
 
     @Autowired
     private CircuitBreakerRegistry circuitBreakerRegistry;
 
     @BeforeEach
     void setUp() {
-        fakePersonService.clear();
+        fakeUserService.clear();
         circuitBreakerRegistry.circuitBreaker("user-service")
                               .transitionToClosedState();
     }
@@ -51,13 +51,13 @@ class UserClientIntegrationTest {
     static class TestConfig {
 
         @Bean
-        public PersonServiceGrpc.PersonServiceBlockingStub personServiceStub() {
+        public UserServiceGrpc.UserServiceBlockingStub userServiceStub() {
             // Create a channel to the in-process server named "test"
             ManagedChannel channel = InProcessChannelBuilder.forName("test")
                                                             .directExecutor()
                                                             .build();
 
-            return PersonServiceGrpc.newBlockingStub(channel);
+            return UserServiceGrpc.newBlockingStub(channel);
         }
 
     }
@@ -72,7 +72,7 @@ class UserClientIntegrationTest {
                                                                                         .setLastName("Doe")
                                                                                         .setGender("M")
                                                                                         .build();
-        fakePersonService.addProfile(personId, expectedResponse);
+        fakeUserService.addProfile(personId, expectedResponse);
 
         SimpleProfileLookupData result = userClient.getPersonSimpleProfileData(personId, language);
 
@@ -99,18 +99,18 @@ class UserClientIntegrationTest {
         Integer personId = 123;
         String language = "en";
         // Fail 2 times, succeed on 3rd (max attempts are 3)
-        fakePersonService.setFailNextCalls(2, Status.UNAVAILABLE);
-        fakePersonService.addProfile(personId, GetPersonSimpleProfileResponse.newBuilder()
-                                                                             .setFirstName("John")
-                                                                             .setLastName("Doe")
-                                                                             .setGender("M")
-                                                                             .build());
+        fakeUserService.setFailNextCalls(2, Status.UNAVAILABLE);
+        fakeUserService.addProfile(personId, GetPersonSimpleProfileResponse.newBuilder()
+                                                                           .setFirstName("John")
+                                                                           .setLastName("Doe")
+                                                                           .setGender("M")
+                                                                           .build());
 
         SimpleProfileLookupData result = userClient.getPersonSimpleProfileData(personId, language);
 
         assertThat(result.firstName()).isEqualTo("John");
         // Initial call + 2 retries = 3 calls
-        assertThat(fakePersonService.getGetPersonSimpleProfileCallCount()).isEqualTo(3);
+        assertThat(fakeUserService.getGetPersonSimpleProfileCallCount()).isEqualTo(3);
     }
 
     @Test
@@ -119,7 +119,7 @@ class UserClientIntegrationTest {
         Integer personId = 123;
         String language = "en";
         // Fail enough times to trip circuit breaker (sliding window size 5, threshold 50%)
-        fakePersonService.setFailNextCalls(10, Status.UNAVAILABLE);
+        fakeUserService.setFailNextCalls(10, Status.UNAVAILABLE);
 
         // Call until CB opens (5 calls should be enough as per application-test.yaml)
         for (int i = 0; i < 5; i++) {

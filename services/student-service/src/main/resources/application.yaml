@@ -1,5 +1,5 @@
 server:
-  port: 8030
+  port: 8020
   http2:
     enabled: true
   compression:
@@ -7,21 +7,12 @@ server:
 
 grpc:
   server:
-    port: 9030
+    port: 9020
     reflection:
       enabled: true
   client:
     channels:
-      - authority: ${GRPC_CLIENT_USER-SERVICE_ADDRESS:user-service:9020}
-        classes:
-          - com.stag.identity.person.v1.PersonServiceGrpc.PersonServiceBlockingStub
-        compression: gzip
-        max-inbound-message-size:
-          bytes: 4194304 # 4MB
-        deadline: 1000 # 1s
-        retry:
-          enabled: false # Handled by Resilience4j
-      - authority: ${GRPC_CLIENT_STUDY-PLAN-SERVICE_ADDRESS:study-plan-service:9050}
+      - authority: ${STUDY_PLAN_SERVICE_GRPC_ADDRESS:study-plan-service:9030}
         classes:
           - com.stag.academics.studyplan.v1.StudyPlanServiceGrpc.StudyPlanServiceBlockingStub
         compression: gzip
@@ -30,8 +21,17 @@ grpc:
         deadline: 1000 # 1s
         retry:
           enabled: false # Handled by Resilience4j
+      - authority: ${USER_SERVICE_GRPC_ADDRESS:user-service:9040}
+        classes:
+          - com.stag.identity.user.v1.UserServiceGrpc.UserServiceBlockingStub
+        compression: gzip
+        max-inbound-message-size:
+          bytes: 4194304 # 4MB
+        deadline: 1000 # 1s
+        retry:
+          enabled: false # Handled by Resilience4j
     clients:
-      - com.stag.identity.person.v1.PersonServiceGrpc.PersonServiceBlockingStub
+      - com.stag.identity.user.v1.UserServiceGrpc.UserServiceBlockingStub
       - com.stag.academics.studyplan.v1.StudyPlanServiceGrpc.StudyPlanServiceBlockingStub
     enabled: true
   validation:
@@ -184,5 +184,5 @@ spring:
       port: 6379
       password: redis
 
-GRPC_CLIENT_USER-SERVICE_ADDRESS: localhost:9020
-GRPC_CLIENT_STUDY-PLAN-SERVICE_ADDRESS: localhost:9050
+STUDY_PLAN_SERVICE_GRPC_ADDRESS: localhost:9030
+USER_SERVICE_GRPC_ADDRESS: localhost:9040

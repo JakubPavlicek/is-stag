@@ -1,5 +1,5 @@
 server:
-  port: 8020
+  port: 8040
   http2:
     enabled: true
   compression:
@@ -7,23 +7,23 @@ server:
 
 grpc:
   server:
-    port: 9020
+    port: 9040
     reflection:
       enabled: true
   client:
     channels:
-      - authority: ${GRPC_CLIENT_STUDENT-SERVICE_ADDRESS:student-service:9030}
+      - authority: ${CODELIST_SERVICE_GRPC_ADDRESS:codelist-service:9010}
         classes:
-          - com.stag.academics.student.v1.StudentServiceGrpc.StudentServiceBlockingStub
+          - com.stag.platform.codelist.v1.CodelistServiceGrpc.CodelistServiceBlockingStub
         compression: gzip
         max-inbound-message-size:
           bytes: 4194304 # 4MB
         deadline: 1000 # 1s
         retry:
           enabled: false # Handled by Resilience4j
-      - authority: ${GRPC_CLIENT_CODELIST-SERVICE_ADDRESS:codelist-service:9010}
+      - authority: ${STUDENT_SERVICE_GRPC_ADDRESS:student-service:9020}
         classes:
-          - com.stag.platform.codelist.v1.CodelistServiceGrpc.CodelistServiceBlockingStub
+          - com.stag.academics.student.v1.StudentServiceGrpc.StudentServiceBlockingStub
         compression: gzip
         max-inbound-message-size:
           bytes: 4194304 # 4MB
@@ -64,12 +64,11 @@ spring:
     open-in-view: false
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    # Oracle Proxy Authentication Configuration
     proxy:
+      target-username: ${DATASOURCE_TARGET_USERNAME} # Oracle Proxy Target User
+    hikari:
       username: ${DATASOURCE_PROXY_USERNAME}
       password: ${DATASOURCE_PROXY_PASSWORD}
-      target-username: ${DATASOURCE_TARGET_USERNAME}
-    hikari:
       auto-commit: false
       minimum-idle: 5
       maximum-pool-size: 30
@@ -80,7 +79,9 @@ spring:
         oracle:
           jdbc:
             defaultConnectionValidation: LOCAL
+            defaultRowPrefetch: 500
             implicitStatementCacheSize: 200
+            disabledBugFixes: 11891661 # Makes setAutoCommit behavior compliant with the JDBC specification
   cache:
     type: redis
     redis:
@@ -181,5 +182,5 @@ spring:
       port: 6379
       password: redis
 
-GRPC_CLIENT_STUDENT-SERVICE_ADDRESS: localhost:9030
-GRPC_CLIENT_CODELIST-SERVICE_ADDRESS: localhost:9010
+CODELIST_SERVICE_GRPC_ADDRESS: localhost:9010
+STUDENT_SERVICE_GRPC_ADDRESS: localhost:9020

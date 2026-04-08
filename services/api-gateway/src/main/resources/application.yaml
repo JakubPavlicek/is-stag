@@ -53,7 +53,7 @@ spring:
           routes:
             # Service routes
             - id: codelist-service
-              uri: ${CODELIST-SERVICE_ADDRESS:http://codelist-service:8010}
+              uri: ${CODELIST_SERVICE_ADDRESS:http://codelist-service:8010}
               predicates:
                 - Path=/api/v1/addresses/**,/api/v1/countries/**,/api/v1/domains/**
               filters:
@@ -69,7 +69,7 @@ spring:
                   args:
                     <<: *retry_args
             - id: student-service
-              uri: ${STUDENT-SERVICE_ADDRESS:http://student-service:8030}
+              uri: ${STUDENT_SERVICE_ADDRESS:http://student-service:8020}
               predicates:
                 - Path=/api/v1/students/**
               filters:
@@ -85,7 +85,7 @@ spring:
                   args:
                     <<: *retry_args
             - id: user-service
-              uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
+              uri: ${USER_SERVICE_ADDRESS:http://user-service:8040}
               predicates:
                 - Path=/api/v1/users/**,/api/v1/persons/**
               filters:
@@ -103,25 +103,25 @@ spring:
 
             # OpenAPI routes for aggregation
             - id: swagger-config
-              uri: ${API-GATEWAY_ADDRESS:http://api-gateway:8100}
+              uri: ${API_GATEWAY_ADDRESS:http://api-gateway:8100}
               predicates:
                 - Path=/api/v3/api-docs/swagger-config
               filters:
                 - SetPath=/v3/api-docs/swagger-config
             - id: codelist-service-openapi
-              uri: ${CODELIST-SERVICE_ADDRESS:http://codelist-service:8010}
+              uri: ${CODELIST_SERVICE_ADDRESS:http://codelist-service:8010}
               predicates:
                 - Path=/api/codelist-service/**
               filters:
                 - RewritePath=/api/codelist-service/(?<segment>.*), /$\{segment}
             - id: student-service-openapi
-              uri: ${STUDENT-SERVICE_ADDRESS:http://student-service:8030}
+              uri: ${STUDENT_SERVICE_ADDRESS:http://student-service:8020}
               predicates:
                 - Path=/api/student-service/**
               filters:
                 - RewritePath=/api/student-service/(?<segment>.*), /$\{segment}
             - id: user-service-openapi
-              uri: ${USER-SERVICE_ADDRESS:http://user-service:8020}
+              uri: ${USER_SERVICE_ADDRESS:http://user-service:8040}
               predicates:
                 - Path=/api/user-service/**
               filters:
@@ -250,7 +250,7 @@ spring:
       port: 6380
       password: redis
 
-API-GATEWAY_ADDRESS: http://localhost:8100
-CODELIST-SERVICE_ADDRESS: http://localhost:8010
-STUDENT-SERVICE_ADDRESS: http://localhost:8030
-USER-SERVICE_ADDRESS: http://localhost:8020
+API_GATEWAY_ADDRESS: http://localhost:8100
+CODELIST_SERVICE_ADDRESS: http://localhost:8010
+STUDENT_SERVICE_ADDRESS: http://localhost:8020
+USER_SERVICE_ADDRESS: http://localhost:8040

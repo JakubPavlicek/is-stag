@@ -61,13 +61,13 @@ public class ProxyOracleConnection implements Connection {
         }
 
         try {
-            // 1. Close the Oracle proxy session first.
+            // Close the Oracle proxy session first.
             if (oracleConnection.isProxySession()) {
                 log.debug("Closing Oracle proxy session.");
                 oracleConnection.close(OracleConnection.PROXY_SESSION);
             }
 
-            // 2. Now, close the physical connection (which returns it to the pool).
+            // Now, close the physical connection (which returns it to the pool).
             physicalConnection.close();
             isClosed = true;
         } catch (SQLException e) {
@@ -84,8 +84,6 @@ public class ProxyOracleConnection implements Connection {
     public boolean isClosed() throws SQLException {
         return isClosed || physicalConnection.isClosed();
     }
-
-    // --- All other methods are delegated directly to the physical connection ---
 
     @Override
     public Statement createStatement() throws SQLException {

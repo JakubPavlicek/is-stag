@@ -3,8 +3,8 @@ package com.stag.identity.shared.grpc.service;
 import com.stag.identity.person.model.Profile;
 import com.stag.identity.person.model.SimpleProfile;
 import com.stag.identity.person.service.ProfileService;
-import com.stag.identity.person.v1.GetPersonSimpleProfileRequest;
-import com.stag.identity.person.v1.GetPersonSimpleProfileResponse;
+import com.stag.identity.user.v1.GetPersonSimpleProfileRequest;
+import com.stag.identity.user.v1.GetPersonSimpleProfileResponse;
 import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PersonGrpcServiceTest {
+class UserGrpcServiceTest {
 
     @Mock
     private ProfileService profileService;
@@ -27,7 +27,7 @@ class PersonGrpcServiceTest {
     private StreamObserver<GetPersonSimpleProfileResponse> responseObserver;
 
     @InjectMocks
-    private PersonGrpcService personGrpcService;
+    private UserGrpcService userGrpcService;
 
     @Test
     @DisplayName("getPersonSimpleProfile should return mapped profile and complete observer")
@@ -50,7 +50,7 @@ class PersonGrpcServiceTest {
         when(profileService.getPersonSimpleProfile(personId, language))
             .thenReturn(simpleProfile);
 
-        personGrpcService.getPersonSimpleProfile(request, responseObserver);
+        userGrpcService.getPersonSimpleProfile(request, responseObserver);
 
         verify(profileService).getPersonSimpleProfile(personId, language);
 

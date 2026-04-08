@@ -4,7 +4,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=JakubPavlicek_is-stag&metric=alert_status)](https://sonarcloud.io/summary/overall?id=JakubPavlicek_is-stag)
 [![Services CI](https://github.com/JakubPavlicek/is-stag/actions/workflows/services-ci.yaml/badge.svg)](https://github.com/JakubPavlicek/is-stag/actions/workflows/services-ci.yaml)
 [![JavaDoc](https://github.com/JakubPavlicek/is-stag/actions/workflows/publish-javadoc.yaml/badge.svg)](https://github.com/JakubPavlicek/is-stag/actions/workflows/publish-javadoc.yaml)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.4-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.5-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
 
 The backend of IS/STAG is built as a distributed microservices architecture. It leverages the power of Spring Boot 4 and
@@ -18,16 +18,16 @@ Java 25 to provide high performance, scalability, and modern language features (
 |:-----------------------------------------------|:-------|:-------------------------------------------------------------------------------------------|
 | **[api-gateway](./api-gateway)**               | `8100` | Entry point for all external traffic. Handles routing, auth validation, and rate limiting. |
 | **[codelist-service](./codelist-service)**     | `8010` | Manages static and semi-static dictionaries (Countries, Municipalities, etc.).             |
-| **[user-service](./user-service)**             | `8020` | Identity and profile management for Persons.                                               |
-| **[student-service](./student-service)**       | `8030` | Core domain service for student records and enrollments.                                   |
-| **[study-plan-service](./study-plan-service)** | `8050` | Manages curriculums, subjects, and study prerequisites.                                    |
+| **[student-service](./student-service)**       | `8020` | Core domain service for student records and enrollments.                                   |
+| **[study-plan-service](./study-plan-service)** | `8030` | Manages curriculums, subjects, and study prerequisites.                                    |
+| **[user-service](./user-service)**             | `8040` | Identity and profile management for Persons.                                               |
 
 ---
 
 ## 🛠 Technology Stack
 
 * **Language:** Java 25 (Preview features enabled for Structured Concurrency)
-* **Framework:** Spring Boot 4.0.4, Spring Cloud 2025.1.1
+* **Framework:** Spring Boot 4.0.5, Spring Cloud 2025.1.1
 * **Communication:**
     * **External:** REST API (OpenAPI 3.0)
     * **Internal:** gRPC (High-performance inter-service communication)

@@ -1,8 +1,8 @@
 package com.stag.academics.shared.grpc.mapper;
 
 import com.stag.academics.student.service.data.SimpleProfileLookupData;
-import com.stag.identity.person.v1.GetPersonSimpleProfileRequest;
-import com.stag.identity.person.v1.GetPersonSimpleProfileResponse;
+import com.stag.identity.user.v1.GetPersonSimpleProfileRequest;
+import com.stag.identity.user.v1.GetPersonSimpleProfileResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.factory.Mappers;

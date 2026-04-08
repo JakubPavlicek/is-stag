@@ -1,14 +1,14 @@
 syntax = "proto3";
 
-package stag.identity.person.v1;
+package stag.identity.user.v1;
 
 import "buf/validate/validate.proto";
 
-option java_package = "com.stag.identity.person.v1";
-option java_outer_classname = "PersonServiceProto";
+option java_package = "com.stag.identity.user.v1";
+option java_outer_classname = "UserServiceProto";
 option java_multiple_files = true;
 
-service PersonService {
+service UserService {
   rpc GetPersonSimpleProfile (GetPersonSimpleProfileRequest)
       returns (GetPersonSimpleProfileResponse);
 }

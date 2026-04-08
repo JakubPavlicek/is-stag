@@ -9,14 +9,13 @@
     <packaging>jar</packaging>
 
     <name>IS/STAG Keycloak Authenticator</name>
-    <description>A Keycloak Authenticator to redirect user to the IS/STAG authentication system.</description>
+    <description>A Keycloak Authenticator for user redirection to the IS/STAG login page</description>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <keycloak.version>26.5.6</keycloak.version>
-        <httpclient.version>5.6</httpclient.version>
+        <keycloak.version>26.6.0</keycloak.version>
         <jackson.version>2.21.2</jackson.version>
     </properties>
 
@@ -39,13 +38,6 @@
             <artifactId>keycloak-services</artifactId>
             <version>${keycloak.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- HTTP Client for calling the IS/STAG authentication endpoint -->
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>${httpclient.version}</version>
         </dependency>
 
         <!-- JSON serialization -->

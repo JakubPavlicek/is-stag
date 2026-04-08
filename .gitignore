@@ -41,15 +41,3 @@ build/
 
 ### MacOS specific files ###
 **/.DS_Store
-
-### AI ###
-.crush
-.gemini
-GEMINI.md
-DATABASE.md
-MICROSERVICES.md
-FRONTEND.md
-API.md
-
-### Kubernetes ###
-k8s-openapi.json

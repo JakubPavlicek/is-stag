@@ -77,7 +77,7 @@
         <jacoco.version>0.8.14</jacoco.version>
 
         <!-- Cloud Native Buildpacks -->
-        <image.builder.version>0.0.123</image.builder.version>
+        <image.builder.version>0.0.125</image.builder.version>
         <buildpack-java.version>21.4.0</buildpack-java.version>
         <buildpack-health-checker.version>2.13.1</buildpack-health-checker.version>
     </properties>

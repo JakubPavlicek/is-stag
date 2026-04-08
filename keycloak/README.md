@@ -1,7 +1,7 @@
 # Identity & Access Management (Keycloak)
 
 [![Keycloak CI](https://github.com/JakubPavlicek/is-stag/actions/workflows/keycloak-ci.yaml/badge.svg)](https://github.com/JakubPavlicek/is-stag/actions/workflows/keycloak-ci.yaml)
-[![Keycloak](https://img.shields.io/badge/Keycloak-26.5.1-blue?logo=keycloak&logoColor=white)](https://www.keycloak.org/)
+[![Keycloak](https://img.shields.io/badge/Keycloak-26.5.7-blue?logo=keycloak&logoColor=white)](https://www.keycloak.org/)
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 
@@ -46,17 +46,16 @@ keycloak/
 
 ### Running Locally
 
-The easiest way to run Keycloak is via the project's root `docker-compose.yaml`, but you can also run it standalone:
+The easiest way to run Keycloak is via the project's root `docker-compose.yaml`:
 
 ```bash
-docker build -t is-stag-keycloak .
-docker run -p 8180:8080 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin is-stag-keycloak start-dev --import-realm
+docker compose up -d keycloak-http
 ```
 
-Access the IS/STAG Console: [http://localhost:8180/is-stag](http://localhost:8180/admin)  
+Access the IS/STAG Console: http://localhost:8180/auth/admin/is-stag/console  
 (Credentials: `stagadmin`/`stagadmin`)
 
-Access the Admin Console: [http://localhost:8180/admin](http://localhost:8180/admin)  
+Access the Admin Console: http://localhost:8180/auth/admin/master/console  
 (Credentials: `admin`/`admin`)
 
 ---

@@ -2,11 +2,11 @@ package com.stag.academics.shared.grpc.client;
 
 import com.stag.academics.shared.grpc.mapper.PersonMapper;
 import com.stag.academics.student.service.data.SimpleProfileLookupData;
-import com.stag.identity.person.v1.PersonServiceGrpc;
+import com.stag.identity.user.v1.UserServiceGrpc;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /// **User Client**
@@ -18,17 +18,11 @@ import org.springframework.stereotype.Service;
 /// @version 1.0.0
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserClient {
 
     /// Person service stub
-    private PersonServiceGrpc.PersonServiceBlockingStub personServiceStub;
-
-    /// Constructs the user client with a person service stub.
-    ///
-    /// @param personServiceStub the gRPC blocking stub for person service
-    public UserClient(PersonServiceGrpc.PersonServiceBlockingStub personServiceStub) {
-        this.personServiceStub = personServiceStub;
-    }
+    private final UserServiceGrpc.UserServiceBlockingStub userServiceStub;
 
     /// Fetches simple profile data for a person via gRPC.
     ///
@@ -43,7 +37,7 @@ public class UserClient {
         log.info("Fetching student simple profile for personId: {}", personId);
 
         var request = PersonMapper.INSTANCE.toSimpleProfileDataRequest(personId, language);
-        var response = personServiceStub.getPersonSimpleProfile(request);
+        var response = userServiceStub.getPersonSimpleProfile(request);
 
         log.debug("Completed fetching student simple profile");
 

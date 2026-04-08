@@ -1,8 +1,8 @@
 package com.stag.academics.shared.grpc.server;
 
-import com.stag.identity.person.v1.GetPersonSimpleProfileRequest;
-import com.stag.identity.person.v1.GetPersonSimpleProfileResponse;
-import com.stag.identity.person.v1.PersonServiceGrpc;
+import com.stag.identity.user.v1.GetPersonSimpleProfileRequest;
+import com.stag.identity.user.v1.GetPersonSimpleProfileResponse;
+import com.stag.identity.user.v1.UserServiceGrpc;
 import grpcstarter.server.GrpcService;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @GrpcService
-public class FakePersonService extends PersonServiceGrpc.PersonServiceImplBase {
+public class FakeUserService extends UserServiceGrpc.UserServiceImplBase {
 
     private final Map<Integer, GetPersonSimpleProfileResponse> profiles = new HashMap<>();
 

@@ -8,8 +8,8 @@ image:
   tag: 0.0.1
 service:
   ports:
-    http: 8020
-    grpc: 9020
+    http: 8040
+    grpc: 9040
 database:
   enabled: true
   url: "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=atreus.zcu.cz)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=pelops.zcu.cz)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=DEMO_SERVICE)(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"

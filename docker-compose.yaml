@@ -159,120 +159,6 @@ services:
     networks:
       - is-stag-backend
 
-  student-service:
-    profiles:
-      - prod
-    container_name: student-service
-    image: ghcr.io/jakubpavlicek/student-service:0.0.1
-    pull_policy: never
-    env_file:
-      - .env
-    environment:
-      SPRING_PROFILES_ACTIVE: dev
-      THC_PATH: /actuator/health
-      THC_PORT: 8030
-      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
-      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
-      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
-      OTEL_SERVICE_NAME: student-service
-      OTEL_RESOURCE_ATTRIBUTES: service.name=student-service,service.namespace=dev,service.version=0.0.1,environment=dev
-      OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_always_on
-    volumes:
-      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
-    healthcheck:
-      test: [ "CMD", "/workspace/health-check" ]
-      start_period: 30s
-      timeout: 10s
-      retries: 5
-    ports:
-      - "8030:8030"
-      - "9030:9030"
-    depends_on:
-      redis-cache:
-        condition: service_healthy
-      otel:
-        condition: service_started
-    networks:
-      - is-stag-backend
-
-  study-plan-service:
-    profiles:
-      - prod
-    container_name: study-plan-service
-    image: ghcr.io/jakubpavlicek/study-plan-service:0.0.1
-    pull_policy: never
-    env_file:
-      - .env
-    environment:
-      SPRING_PROFILES_ACTIVE: dev
-      THC_PATH: /actuator/health
-      THC_PORT: 8050
-      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
-      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
-      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
-      OTEL_SERVICE_NAME: study-plan-service
-      OTEL_RESOURCE_ATTRIBUTES: service.name=study-plan-service,service.namespace=dev,service.version=0.0.1,environment=dev
-      OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_always_on
-    volumes:
-      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
-    healthcheck:
-      test: [ "CMD", "/workspace/health-check" ]
-      start_period: 30s
-      timeout: 10s
-      retries: 5
-    ports:
-      - "8050:8050"
-      - "9050:9050"
-    depends_on:
-      redis-cache:
-        condition: service_healthy
-      otel:
-        condition: service_started
-    networks:
-      - is-stag-backend
-
-  user-service:
-    profiles:
-      - prod
-    container_name: user-service
-    image: ghcr.io/jakubpavlicek/user-service:0.0.1
-    pull_policy: never
-    env_file:
-      - .env
-    environment:
-      SPRING_PROFILES_ACTIVE: dev
-      THC_PATH: /actuator/health
-      THC_PORT: 8020
-      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
-      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
-      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
-      OTEL_SERVICE_NAME: user-service
-      OTEL_RESOURCE_ATTRIBUTES: service.name=user-service,service.namespace=dev,service.version=0.0.1,environment=dev
-      OTEL_METRICS_EXPORTER: otlp
-      OTEL_TRACES_SAMPLER: parentbased_always_on
-    volumes:
-      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
-    healthcheck:
-      test: [ "CMD", "/workspace/health-check" ]
-      start_period: 30s
-      timeout: 10s
-      retries: 5
-    ports:
-      - "8020:8020"
-      - "9020:9020"
-    depends_on:
-      redis-cache:
-        condition: service_healthy
-      otel:
-        condition: service_started
-    networks:
-      - is-stag-backend
-
   codelist-service:
     profiles:
       - prod
@@ -303,6 +189,120 @@ services:
     ports:
       - "8010:8010"
       - "9010:9010"
+    depends_on:
+      redis-cache:
+        condition: service_healthy
+      otel:
+        condition: service_started
+    networks:
+      - is-stag-backend
+
+  student-service:
+    profiles:
+      - prod
+    container_name: student-service
+    image: ghcr.io/jakubpavlicek/student-service:0.0.1
+    pull_policy: never
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      THC_PATH: /actuator/health
+      THC_PORT: 8020
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
+      OTEL_SERVICE_NAME: student-service
+      OTEL_RESOURCE_ATTRIBUTES: service.name=student-service,service.namespace=dev,service.version=0.0.1,environment=dev
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_always_on
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
+    healthcheck:
+      test: [ "CMD", "/workspace/health-check" ]
+      start_period: 30s
+      timeout: 10s
+      retries: 5
+    ports:
+      - "8020:8020"
+      - "9020:9020"
+    depends_on:
+      redis-cache:
+        condition: service_healthy
+      otel:
+        condition: service_started
+    networks:
+      - is-stag-backend
+
+  study-plan-service:
+    profiles:
+      - prod
+    container_name: study-plan-service
+    image: ghcr.io/jakubpavlicek/study-plan-service:0.0.1
+    pull_policy: never
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      THC_PATH: /actuator/health
+      THC_PORT: 8030
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
+      OTEL_SERVICE_NAME: study-plan-service
+      OTEL_RESOURCE_ATTRIBUTES: service.name=study-plan-service,service.namespace=dev,service.version=0.0.1,environment=dev
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_always_on
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
+    healthcheck:
+      test: [ "CMD", "/workspace/health-check" ]
+      start_period: 30s
+      timeout: 10s
+      retries: 5
+    ports:
+      - "8030:8030"
+      - "9030:9030"
+    depends_on:
+      redis-cache:
+        condition: service_healthy
+      otel:
+        condition: service_started
+    networks:
+      - is-stag-backend
+
+  user-service:
+    profiles:
+      - prod
+    container_name: user-service
+    image: ghcr.io/jakubpavlicek/user-service:0.0.1
+    pull_policy: never
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      THC_PATH: /actuator/health
+      THC_PORT: 8040
+      JAVA_TOOL_OPTIONS: "-javaagent:/otel/opentelemetry-javaagent.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_COMPRESSION: gzip
+      OTEL_SERVICE_NAME: user-service
+      OTEL_RESOURCE_ATTRIBUTES: service.name=user-service,service.namespace=dev,service.version=0.0.1,environment=dev
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_SAMPLER: parentbased_always_on
+    volumes:
+      - ./otel/opentelemetry-javaagent.jar:/otel/opentelemetry-javaagent.jar
+    healthcheck:
+      test: [ "CMD", "/workspace/health-check" ]
+      start_period: 30s
+      timeout: 10s
+      retries: 5
+    ports:
+      - "8040:8040"
+      - "9040:9040"
     depends_on:
       redis-cache:
         condition: service_healthy

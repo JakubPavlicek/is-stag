@@ -2,18 +2,18 @@ package com.stag.identity.shared.grpc.service;
 
 import com.stag.identity.person.model.SimpleProfile;
 import com.stag.identity.person.service.ProfileService;
-import com.stag.identity.person.v1.GetPersonSimpleProfileRequest;
-import com.stag.identity.person.v1.GetPersonSimpleProfileResponse;
-import com.stag.identity.person.v1.PersonServiceGrpc;
+import com.stag.identity.user.v1.GetPersonSimpleProfileRequest;
+import com.stag.identity.user.v1.GetPersonSimpleProfileResponse;
+import com.stag.identity.user.v1.UserServiceGrpc;
 import com.stag.identity.shared.grpc.mapper.PersonMapper;
 import grpcstarter.server.GrpcService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/// **Person gRPC Service**
+/// **User gRPC Service**
 ///
-/// gRPC service implementation for person-related operations.
+/// gRPC service implementation for user-related operations.
 /// Provides RPC endpoints for retrieving person profiles with localized data.
 /// Used for inter-service communication within the microservice architecture.
 ///
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @GrpcService
-public class PersonGrpcService extends PersonServiceGrpc.PersonServiceImplBase {
+public class UserGrpcService extends UserServiceGrpc.UserServiceImplBase {
 
     /// Profile Service
     private final ProfileService profileService;

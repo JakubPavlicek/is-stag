@@ -5,6 +5,7 @@ import com.stag.academics.student.v1.GetStudentPersonIdRequest;
 import com.stag.academics.student.v1.StudentServiceGrpc;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -21,17 +22,11 @@ import java.util.List;
 /// @version 1.0.0
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class StudentClient {
 
     /// Student Service stub
     private final StudentServiceGrpc.StudentServiceBlockingStub studentServiceStub;
-
-    /// Constructor for StudentClient
-    ///
-    /// @param studentServiceStub the gRPC blocking stub for student service
-    public StudentClient(StudentServiceGrpc.StudentServiceBlockingStub studentServiceStub) {
-        this.studentServiceStub = studentServiceStub;
-    }
 
     /// Retrieves all student IDs (personal numbers) for a person.
     ///

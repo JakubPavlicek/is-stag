@@ -1,7 +1,7 @@
 package com.stag.academics;
 
 import com.stag.academics.studyplan.v1.StudyPlanServiceGrpc;
-import com.stag.identity.person.v1.PersonServiceGrpc;
+import com.stag.identity.user.v1.UserServiceGrpc;
 import grpcstarter.client.EnableGrpcClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +20,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableGrpcClients(
     clients = {
         StudyPlanServiceGrpc.StudyPlanServiceBlockingStub.class,
-        PersonServiceGrpc.PersonServiceBlockingStub.class
+        UserServiceGrpc.UserServiceBlockingStub.class
     }
 )
 @SpringBootApplication

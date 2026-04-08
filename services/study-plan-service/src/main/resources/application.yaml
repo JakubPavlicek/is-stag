@@ -1,5 +1,5 @@
 server:
-  port: 8050
+  port: 8030
   http2:
     enabled: true
   compression:
@@ -7,12 +7,12 @@ server:
 
 grpc:
   server:
-    port: 9050
+    port: 9030
     reflection:
       enabled: true
   client:
     channels:
-      - authority: ${GRPC_CLIENT_CODELIST-SERVICE_ADDRESS:codelist-service:9010}
+      - authority: ${CODELIST_SERVICE_GRPC_ADDRESS:codelist-service:9010}
         classes:
           - com.stag.platform.codelist.v1.CodelistServiceGrpc.CodelistServiceBlockingStub
         compression: gzip
@@ -162,4 +162,4 @@ spring:
       port: 6379
       password: redis
 
-GRPC_CLIENT_CODELIST-SERVICE_ADDRESS: localhost:9010
+CODELIST_SERVICE_GRPC_ADDRESS: localhost:9010

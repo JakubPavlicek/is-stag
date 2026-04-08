@@ -52,9 +52,9 @@ public class DomainController implements DomainsApi {
         log.info("Domains requested");
 
         List<String> domains = domainService.getDomains();
-        DomainListResponse domainsResponse = DomainApiMapper.INSTANCE.toDomainListResponse(domains);
+        DomainListResponse domainListResponse = DomainApiMapper.INSTANCE.toDomainListResponse(domains);
 
-        return ResponseEntity.ok(domainsResponse);
+        return ResponseEntity.ok(domainListResponse);
     }
 
 }

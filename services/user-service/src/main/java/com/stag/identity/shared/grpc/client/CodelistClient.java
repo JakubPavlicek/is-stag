@@ -21,6 +21,7 @@ import com.stag.platform.codelist.v1.GetPersonProfileDataRequest;
 import com.stag.platform.codelist.v1.GetPersonProfileUpdateDataRequest;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -34,17 +35,11 @@ import org.springframework.stereotype.Service;
 /// @version 1.0.0
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CodelistClient {
 
     /// Codelist Service stub
     private final CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub;
-
-    /// Constructor for CodelistClient
-    ///
-    /// @param codelistServiceStub the gRPC blocking stub for codelist service
-    public CodelistClient(CodelistServiceGrpc.CodelistServiceBlockingStub codelistServiceStub) {
-        this.codelistServiceStub = codelistServiceStub;
-    }
 
     /// Fetches codelist meanings for simple profile enrichment.
     ///
