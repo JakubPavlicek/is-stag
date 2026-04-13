@@ -29,12 +29,12 @@ i18n
 // Configure Zod to use localized error messages based on the current language
 function applyZodLocale(lang: string) {
   switch (lang) {
-    case 'cs':
-      z.config(z.locales.cs())
-      break
     case 'en':
-    default:
       z.config(z.locales.en())
+      break
+    case 'cs':
+    default:
+      z.config(z.locales.cs())
       break
   }
 }
