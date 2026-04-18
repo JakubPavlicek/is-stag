@@ -318,7 +318,6 @@
                                 <BPE_DELIM_JAVA_TOOL_OPTIONS xml:space="preserve"> </BPE_DELIM_JAVA_TOOL_OPTIONS>
                                 <BPE_APPEND_JAVA_TOOL_OPTIONS>--enable-preview -Duser.timezone=Europe/Prague -XX:+UseCompactObjectHeaders -XX:MaxDirectMemorySize=256M --sun-misc-unsafe-memory-access=allow</BPE_APPEND_JAVA_TOOL_OPTIONS>
                             </env>
-                            <name>ghcr.io/${github.username}/${project.artifactId}:${project.version}</name>
                         </image>
                         <docker>
                             <publishRegistry>
