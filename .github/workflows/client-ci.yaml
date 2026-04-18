@@ -8,11 +8,11 @@ on:
       - '.github/workflows/client-ci.yaml'
 
 jobs:
-  build-and-publish-client:
-    runs-on: ubuntu-24.04-arm
+  verify-client:
+    name: Verify Client
+    runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
     defaults:
       run:
         working-directory: client
@@ -54,6 +54,33 @@ jobs:
           name: dist
           path: client/dist
 
+  build-and-publish-client:
+    name: Build and Publish Client Image (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+    needs: verify-client
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-latest
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v6.3.0
+        with:
+          node-version: 25.8.2
+
       - name: Setup Buildpacks Tools
         uses: buildpacks/github-actions/setup-tools@v5.12.0
 
@@ -68,4 +95,45 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker Image with Buildpacks
-        run: npm run pack -- --publish
+        run: |
+          image="ghcr.io/$(npm pkg get author | tr -d '\"')/$(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"')"
+          pack build "$image-${{ matrix.arch }}" \
+            --platform "linux/${{ matrix.arch }}" \
+            --publish
+
+  publish-client-manifest:
+    name: Publish Client Multi-Arch Manifest
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: build-and-publish-client
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v6.3.0
+        with:
+          node-version: 25.8.2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4.0.0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Client Multi-Arch Manifest
+        run: |
+          image="ghcr.io/$(npm pkg get author | tr -d '\"')/$(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"')"
+          docker buildx imagetools create \
+            --tag "$image" \
+            "$image-amd64" \
+            "$image-arm64"

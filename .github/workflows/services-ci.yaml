@@ -162,8 +162,8 @@ jobs:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-docker-images:
-    name: Publish Service Docker Images
-    runs-on: ubuntu-24.04-arm
+    name: Publish Service Docker Images (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
       packages: write
@@ -172,6 +172,14 @@ jobs:
       - vacuum-lint-openapi
       - test
       - sonar-analyze
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-latest
+          - arch: arm64
+            runner: ubuntu-24.04-arm
     defaults:
       run:
         working-directory: services
@@ -194,8 +202,80 @@ jobs:
           cache: maven
 
       - name: Build and Push Spring Boot Docker Images
+        env:
+          IMAGE_ARCH: ${{ matrix.arch }}
         run: |
-          mvn -B -T 1C -DskipTests spring-boot:build-image \
-            -Dspring-boot.build-image.publish=true \
-            -Dgithub.username=${{ secrets.GHCR_USERNAME }} \
-            -Dgithub.password=${{ secrets.GITHUB_TOKEN }}
+          service_version="$(python <<'PY'
+          import xml.etree.ElementTree as ET
+          ns = {"m": "http://maven.apache.org/POM/4.0.0"}
+          root = ET.parse("pom.xml").getroot()
+          print(root.findtext("m:version", namespaces=ns))
+          PY
+          )"
+
+          python <<'PY' > /tmp/service-modules.txt
+          import xml.etree.ElementTree as ET
+          ns = {"m": "http://maven.apache.org/POM/4.0.0"}
+          root = ET.parse("pom.xml").getroot()
+          for module in root.findall("m:modules/m:module", ns):
+              print(module.text)
+          PY
+
+          while read -r module; do
+            mvn -B -DskipTests -pl "$module" -am spring-boot:build-image \
+              -Dspring-boot.build-image.publish=true \
+              -Dspring-boot.build-image.imageName="ghcr.io/${{ secrets.GHCR_USERNAME }}/$module:${service_version}-${IMAGE_ARCH}" \
+              -Ddocker.publishRegistry.username=${{ secrets.GHCR_USERNAME }} \
+              -Ddocker.publishRegistry.password=${{ secrets.GITHUB_TOKEN }} \
+              -Ddocker.publishRegistry.url=https://ghcr.io
+          done < /tmp/service-modules.txt
+
+  publish-docker-manifests:
+    name: Publish Service Docker Manifests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: publish-docker-images
+    defaults:
+      run:
+        working-directory: services
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4.0.0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Service Multi-Arch Manifests
+        run: |
+          service_version="$(python <<'PY'
+          import xml.etree.ElementTree as ET
+          ns = {"m": "http://maven.apache.org/POM/4.0.0"}
+          root = ET.parse("pom.xml").getroot()
+          print(root.findtext("m:version", namespaces=ns))
+          PY
+          )"
+
+          python <<'PY' > /tmp/service-modules.txt
+          import xml.etree.ElementTree as ET
+          ns = {"m": "http://maven.apache.org/POM/4.0.0"}
+          root = ET.parse("pom.xml").getroot()
+          for module in root.findall("m:modules/m:module", ns):
+              print(module.text)
+          PY
+
+          while read -r module; do
+            image="ghcr.io/${{ secrets.GHCR_USERNAME }}/$module:$service_version"
+            docker buildx imagetools create \
+              --tag "$image" \
+              "$image-amd64" \
+              "$image-arm64"
+          done < /tmp/service-modules.txt

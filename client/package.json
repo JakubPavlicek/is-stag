@@ -17,8 +17,7 @@
     "gen:api": "npm run gen:student && npm run gen:user && npm run gen:codelist",
     "gen:student": "openapi-typescript ../services/student-service/src/main/resources/static/openapi.yaml -o src/api/student/schema.d.ts",
     "gen:user": "openapi-typescript ../services/user-service/src/main/resources/static/openapi.yaml -o src/api/user/schema.d.ts",
-    "gen:codelist": "openapi-typescript ../services/codelist-service/src/main/resources/static/openapi.yaml -o src/api/codelist/schema.d.ts",
-    "pack": "pack build ghcr.io/$(npm pkg get author | tr -d '\"')/$(npm pkg get name | tr -d '\"'):$(npm pkg get version | tr -d '\"') --platform linux/arm64"
+    "gen:codelist": "openapi-typescript ../services/codelist-service/src/main/resources/static/openapi.yaml -o src/api/codelist/schema.d.ts"
   },
   "engines": {
     "node": ">=25.8.2",
