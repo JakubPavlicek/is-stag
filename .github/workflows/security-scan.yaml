@@ -77,9 +77,6 @@ jobs:
 
       - name: Build scan matrix
         id: prepare
-        env:
-          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
           python <<'PY'
           import json
@@ -100,7 +97,7 @@ jobs:
           images = [
               {
                   "name": module,
-                  "image": f"ghcr.io/{os.environ['GHCR_USERNAME']}/{module}:{services_version}",
+                  "image": f"ghcr.io/jakubpavlicek/{module}:{services_version}",
               }
               for module in service_modules
           ]
@@ -114,7 +111,7 @@ jobs:
           images.append(
               {
                   "name": "keycloak",
-                  "image": f"ghcr.io/{os.environ['DOCKERHUB_USERNAME']}/is-stag-keycloak:latest",
+                  "image": f"ghcr.io/jakubpavlicek/is-stag-keycloak:latest",
               }
           )
 
