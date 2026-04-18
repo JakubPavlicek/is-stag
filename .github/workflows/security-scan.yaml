@@ -56,7 +56,7 @@ jobs:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         with:
           project: is-stag-${{ matrix.target.name }}
-          path: ${{ matrix.target.scan_path }}
+          path: ${{ matrix.target.path }}
           format: HTML
           out: reports/${{ matrix.target.name }}
 
@@ -65,3 +65,89 @@ jobs:
         with:
           name: depcheck-${{ matrix.target.name }}
           path: reports/${{ matrix.target.name }}
+
+  prepare-image-scan-matrix:
+    name: Prepare Docker Image Scan Targets
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.prepare.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Build scan matrix
+        id: prepare
+        env:
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          python <<'PY'
+          import json
+          import os
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          ns = {"m": "http://maven.apache.org/POM/4.0.0"}
+          services_root = ET.parse("services/pom.xml").getroot()
+          services_version = services_root.findtext("m:version", namespaces=ns)
+          service_modules = [
+              module.text
+              for module in services_root.findall("m:modules/m:module", ns)
+          ]
+
+          client_package = json.loads(Path("client/package.json").read_text(encoding="utf-8"))
+
+          images = [
+              {
+                  "name": module,
+                  "image": f"ghcr.io/{os.environ['GHCR_USERNAME']}/{module}:{services_version}",
+              }
+              for module in service_modules
+          ]
+
+          images.append(
+              {
+                  "name": "client",
+                  "image": f"ghcr.io/{client_package['author']}/{client_package['name']}:{client_package['version']}",
+              }
+          )
+          images.append(
+              {
+                  "name": "keycloak",
+                  "image": f"ghcr.io/{os.environ['DOCKERHUB_USERNAME']}/is-stag-keycloak:latest",
+              }
+          )
+
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+              output.write(f"matrix={json.dumps({'include': images})}\n")
+          PY
+
+  docker-image-vulnerability-scan:
+    name: Trivy Image Scan (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    needs: prepare-image-scan-matrix
+    permissions:
+      contents: read
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.prepare-image-scan-matrix.outputs.matrix) }}
+    steps:
+      - name: Run Trivy image scan
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          image-ref: ${{ matrix.image }}
+          format: sarif
+          output: trivy-${{ matrix.name }}.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          vuln-type: os,library
+          scanners: vuln
+          limit-severities-for-sarif: true
+
+      - name: Upload Trivy report
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: trivy-${{ matrix.name }}
+          path: trivy-${{ matrix.name }}.sarif
