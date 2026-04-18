@@ -134,13 +134,12 @@ jobs:
         uses: aquasecurity/trivy-action@0.35.0
         with:
           image-ref: ${{ matrix.image }}
-          format: sarif
-          output: trivy-${{ matrix.name }}.sarif
+          format: table
+          output: trivy-${{ matrix.name }}.txt
           severity: HIGH,CRITICAL
           ignore-unfixed: true
           vuln-type: os,library
           scanners: vuln
-          limit-severities-for-sarif: true
 
       - name: Upload Trivy report
         if: always()
