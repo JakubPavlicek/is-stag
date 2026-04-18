@@ -48,7 +48,7 @@
 
         <!-- Spring -->
         <spring-cloud.version>2025.1.1</spring-cloud.version>
-        <springdoc.version>3.0.2</springdoc.version>
+        <springdoc.version>3.0.3</springdoc.version>
         <oracle.jdbc.version>23.26.1.0.0</oracle.jdbc.version>
 
         <!-- gRPC -->
@@ -77,7 +77,7 @@
         <jacoco.version>0.8.14</jacoco.version>
 
         <!-- Cloud Native Buildpacks -->
-        <image.builder.version>0.0.129</image.builder.version>
+        <image.builder.version>0.0.130</image.builder.version>
         <buildpack-java.version>21.5.0</buildpack-java.version>
         <buildpack-health-checker.version>2.13.1</buildpack-health-checker.version>
     </properties>
