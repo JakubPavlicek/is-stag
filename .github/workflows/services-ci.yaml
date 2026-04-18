@@ -225,9 +225,8 @@ jobs:
             mvn -B -DskipTests -pl "$module" -am spring-boot:build-image \
               -Dspring-boot.build-image.publish=true \
               -Dspring-boot.build-image.imageName="ghcr.io/${{ secrets.GHCR_USERNAME }}/$module:${service_version}-${IMAGE_ARCH}" \
-              -Ddocker.publishRegistry.username=${{ secrets.GHCR_USERNAME }} \
-              -Ddocker.publishRegistry.password=${{ secrets.GITHUB_TOKEN }} \
-              -Ddocker.publishRegistry.url=https://ghcr.io
+              -Dgithub.username=${{ secrets.GHCR_USERNAME }} \
+              -Dgithub.password=${{ secrets.GITHUB_TOKEN }}
           done < /tmp/service-modules.txt
 
   publish-docker-manifests:
