@@ -146,4 +146,4 @@ jobs:
         uses: actions/upload-artifact@v7.0.0
         with:
           name: trivy-${{ matrix.name }}
-          path: trivy-${{ matrix.name }}.sarif
+          path: trivy-${{ matrix.name }}.txt
