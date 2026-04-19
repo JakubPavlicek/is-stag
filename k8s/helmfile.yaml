@@ -2,8 +2,8 @@
 # Secrets are encrypted with helm-secrets.
 # Decryption requires the plugin and the appropriate private key.
 # Usage:
-#   helmfile apply -e [perftest|prod]        // Deploy to perftest/prod
-#   helmfile destroy -e [perftest|prod]      // Destroy perftest/prod
+#   helmfile sync -e [perftest|prod]        // Deploy to perftest/prod
+#   helmfile destroy -e [perftest|prod]     // Destroy perftest/prod
 
 repositories:
   - name: is-stag
@@ -62,8 +62,8 @@ templates:
     secrets:
       - secrets/oracle-secrets.yaml
     values:
-      - "is-stag/{{ .Release.Name }}/values.yaml"
-      - "is-stag/{{ .Release.Name }}/values-{{ .Environment.Name }}.yaml"
+      - is-stag/{{ .Release.Name }}/values.yaml
+      - is-stag/{{ .Release.Name }}/values-{{ .Environment.Name }}.yaml
 
   .redis-common: &redis-common
     chart: oci://registry-1.docker.io/bitnamicharts/redis
