@@ -9,13 +9,13 @@ full observability.
 
 ---
 
-## 🏗 System Architecture
+## System Architecture
 
 The system is designed as a set of microservices communicating via gRPC, deployed on Kubernetes.
 
 ![IS/STAG architecture](images/is-stag-architecture.png)
 
-### 🛠 Tech Stack
+### Tech Stack
 
 **Infrastructure & DevOps**
 
@@ -51,13 +51,13 @@ The system is designed as a set of microservices communicating via gRPC, deploye
 
 ---
 
-## ☸️ Kubernetes Architecture
+## Kubernetes Architecture
 
 ![Kubernetes architecture](images/is-stag-kubernetes-architecture.png)
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -66,7 +66,7 @@ The system is designed as a set of microservices communicating via gRPC, deploye
 * [Node.js 22+](https://nodejs.org/)
 * [Helm](https://helm.sh/) & [Helmfile](https://github.com/helmfile/helmfile) (for K8s deployment)
 
-### ⚡️ Quick Start (Docker Compose)
+### Quick Start (Docker Compose)
 
 The fastest way to spin up the entire stack locally is using Docker Compose.
 
@@ -106,7 +106,7 @@ The fastest way to spin up the entire stack locally is using Docker Compose.
 
 ---
 
-## ☸️ Kubernetes Deployment
+## Kubernetes Deployment
 
 This project uses **Helmfile** to manage deployments across environments.
 
@@ -164,7 +164,7 @@ This will install:
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```text
 ├── charts/                  # Local Helm charts for microservices
@@ -184,7 +184,7 @@ This will install:
 └── README.md                # You are here
 ```
 
-## 🔭 Observability
+## Observability
 
 The system is fully instrumented for observability using OpenTelemetry Java Agent, providing insights into application
 performance and behavior.

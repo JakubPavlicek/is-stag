@@ -12,7 +12,7 @@ Java 25 to provide high performance, scalability, and modern language features (
 
 ---
 
-## 🧩 Services Overview
+## Services Overview
 
 | Service                                        | Port   | Description                                                                                |
 |:-----------------------------------------------|:-------|:-------------------------------------------------------------------------------------------|
@@ -24,7 +24,7 @@ Java 25 to provide high performance, scalability, and modern language features (
 
 ---
 
-## 🛠 Technology Stack
+## Technology Stack
 
 * **Language:** Java 25 (Preview features enabled for Structured Concurrency)
 * **Framework:** Spring Boot 4.0.5, Spring Cloud 2025.1.1
@@ -46,7 +46,7 @@ Java 25 to provide high performance, scalability, and modern language features (
 
 ---
 
-## 🚀 Development Setup
+## Development Setup
 
 ### Prerequisites
 
@@ -79,7 +79,7 @@ mvn test
 
 ---
 
-## 📡 API Documentation
+## API Documentation
 
 Each service exposes OpenAPI documentation. When running locally via Docker Compose or Kubernetes, the aggregated
 documentation is available through the API Gateway.
@@ -89,7 +89,7 @@ documentation is available through the API Gateway.
 
 ---
 
-## 🐋 Docker & Containers
+## Docker & Containers
 
 All services are containerized using **Cloud Native Buildpacks** (Paketobuildpacks) via the Maven plugin. This ensures secure,
 efficient, and layered images without writing manual `Dockerfile`s.

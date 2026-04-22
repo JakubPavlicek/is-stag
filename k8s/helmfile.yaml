@@ -67,7 +67,7 @@ templates:
 
   .redis-common: &redis-common
     chart: oci://registry-1.docker.io/bitnamicharts/redis
-    version: 25.3.11
+    version: 25.3.12
     namespace: "{{ .Environment.Values.namespace }}"
     timeout: 600
     needs:
@@ -133,7 +133,7 @@ releases:
   # ========================================
   - name: keycloak-postgresql
     chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-    version: 18.5.24
+    version: 18.6.1
     namespace: "{{ .Environment.Values.namespace }}"
     condition: keycloak.enabled
     needs:
@@ -165,7 +165,7 @@ releases:
 
   - name: loki
     chart: oci://ghcr.io/grafana-community/helm-charts/loki
-    version: 13.1.3
+    version: 13.2.1
     namespace: "{{ .Environment.Values.namespace }}"
     values:
       - observability/loki/values.yaml
@@ -244,7 +244,7 @@ releases:
   # ========================================
   - name: keycloak
     chart: oci://ghcr.io/codecentric/helm-charts/keycloakx
-    version: 7.1.9
+    version: 7.1.11
     namespace: "{{ .Environment.Values.namespace }}"
     condition: keycloak.enabled
     needs:

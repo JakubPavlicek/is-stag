@@ -12,7 +12,7 @@ It includes a custom build of Keycloak with specific providers and themes tailor
 
 ---
 
-## 🔐 Features
+## Features
 
 * **Custom Realm Configuration:** Pre-configured `is-stag` realm with roles, clients, and scopes.
 * **Custom Theme:** A branded login theme (`is-stag-theme`) with IS/STAG login button.
@@ -21,7 +21,7 @@ It includes a custom build of Keycloak with specific providers and themes tailor
 
 ---
 
-## 📂 Structure
+## Structure
 
 ```text
 keycloak/
@@ -36,7 +36,7 @@ keycloak/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -60,7 +60,7 @@ Access the Admin Console: http://localhost:8180/auth/admin/master/console
 
 ---
 
-## 🛠 Development
+## Development
 
 ### Custom Authenticator
 
