@@ -24,8 +24,8 @@ This directory contains k6 load tests for two targets:
 
 ### Load-test runs
 
-- `npm run run:is-stag-cloud:rest:test` – runs the load test against this project's REST API
-- `npm run run:is-stag-ws:rest:test` – runs the load test against the original IS/STAG WebServices
+- `npm run test:is-stag-cloud` – runs the load test against this project's REST API
+- `npm run test:is-stag-ws` – runs the load test against the original IS/STAG WebServices
 
 ### Local quality checks
 
@@ -45,7 +45,7 @@ The example commands below use Prometheus remote write output.
 | `K6_PROMETHEUS_RW_TREND_STATS`              | Exported trend aggregations sent to Prometheus.        | None, must be provided explicitly if you want custom trend stats. |
 | `K6_PROMETHEUS_RW_INSECURE_SKIP_TLS_VERIFY` | Disables TLS verification for the remote write target. | `false`                                                           |
 
-## IS/STAG WebServices load test
+## IS/STAG WebServices Load Tests
 
 This suite targets the original IS/STAG WebServices in `src/is-stag-ws/`.
 
@@ -58,7 +58,7 @@ This suite targets the original IS/STAG WebServices in `src/is-stag-ws/`.
 Example:
 
 ```shell
-npm run run:is-stag-ws:rest:test -- \
+npm run test:is-stag-ws -- \
   -e K6_PROMETHEUS_RW_SERVER_URL=https://prometheus.is-stag.internal/api/v1/write \
   -e K6_PROMETHEUS_RW_TREND_STATS='p(90),p(95),p(99),min,max,avg,med,count,sum' \
   -e K6_PROMETHEUS_RW_INSECURE_SKIP_TLS_VERIFY=true \
@@ -66,7 +66,7 @@ npm run run:is-stag-ws:rest:test -- \
   -e WSCOOKIE=8240b2482c79e3c578a61d45912bd360315d8ed7875a4a9e19eaa52ba688f141
 ```
 
-## IS/STAG Cloud load test
+## IS/STAG Cloud Load Tests
 
 This suite targets this project's REST API in `src/is-stag-cloud/`.
 
@@ -78,7 +78,7 @@ This suite targets this project's REST API in `src/is-stag-cloud/`.
 Example:
 
 ```shell
-npm run run:is-stag-cloud:rest:test -- \
+npm run test:is-stag-cloud -- \
   -e K6_PROMETHEUS_RW_SERVER_URL=https://prometheus.is-stag.internal/api/v1/write \
   -e K6_PROMETHEUS_RW_TREND_STATS='p(90),p(95),p(99),min,max,avg,med,count,sum' \
   -e K6_PROMETHEUS_RW_INSECURE_SKIP_TLS_VERIFY=true \

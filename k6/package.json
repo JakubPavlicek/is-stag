@@ -5,8 +5,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "run:is-stag-cloud:rest:test": "k6 run -o experimental-prometheus-rw src/is-stag-cloud/rest/test.ts",
-    "run:is-stag-ws:rest:test": "k6 run -o experimental-prometheus-rw src/is-stag-ws/rest/test.ts",
+    "test:is-stag-cloud": "k6 run -o experimental-prometheus-rw src/is-stag-cloud/test.ts",
+    "test:is-stag-ws": "k6 run -o experimental-prometheus-rw src/is-stag-ws/test.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,ts,json,md}\" --check-ignore-pragma",

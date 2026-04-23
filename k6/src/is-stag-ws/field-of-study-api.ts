@@ -1,5 +1,5 @@
-import { CommonQueryParams, getDefaultQueryParams } from '../shared/common.ts';
 import { getRequest } from './client.ts';
+import { CommonQueryParams, getDefaultQueryParams } from './common.ts';
 
 export interface GetFieldOfStudyParams extends CommonQueryParams {
   oborIdno: number;

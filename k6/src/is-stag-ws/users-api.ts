@@ -1,11 +1,11 @@
 import faker from 'k6/x/faker';
 
-import { BANK_CODE_VALUES } from '../../data/bank-codes.ts';
-import { STAT_IDNO_VALUES } from '../../data/countries.ts';
-import { STAV_VALUES } from '../../data/marital-statuses.ts';
-import { TITUL_PRED_VALUES, TITUL_ZA_VALUES } from '../../data/titles.ts';
-import { CommonQueryParams, getDefaultQueryParams } from '../shared/common.ts';
+import { BANK_CODE_VALUES } from '../data/bank-codes.ts';
+import { STAT_IDNO_VALUES } from '../data/countries.ts';
+import { STAV_VALUES } from '../data/marital-statuses.ts';
+import { TITUL_PRED_VALUES, TITUL_ZA_VALUES } from '../data/titles.ts';
 import { getRequest, postRequest } from './client.ts';
+import { CommonQueryParams, getDefaultQueryParams } from './common.ts';
 
 export interface GetOsobaParams extends CommonQueryParams {
   osCislo: string;

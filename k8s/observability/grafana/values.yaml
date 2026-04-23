@@ -43,9 +43,8 @@ dashboardProviders:
 dashboards:
   default:
     k6:
-      gnetId: 19665
-      revision: 3
-      datasource: Prometheus
+      url: https://raw.githubusercontent.com/JakubPavlicek/is-stag/master/observability/dashboards/k6.json
+      curlOptions: "-sLf"
     opentelemetry-collector:
       gnetId: 15983
       revision: 29

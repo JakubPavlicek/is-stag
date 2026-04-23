@@ -1,9 +1,9 @@
 import faker from 'k6/x/faker';
 
-import { BANK_CODE_VALUES } from '../../data/bank-codes.ts';
-import { COUNTRY_VALUES } from '../../data/countries.ts';
-import { MARITAL_STATUS_VALUES } from '../../data/marital-statuses.ts';
-import { TITLE_PREFIX_VALUES, TITLE_SUFFIX_VALUES } from '../../data/titles.ts';
+import { BANK_CODE_VALUES } from '../data/bank-codes.ts';
+import { COUNTRY_VALUES } from '../data/countries.ts';
+import { MARITAL_STATUS_VALUES } from '../data/marital-statuses.ts';
+import { TITLE_PREFIX_VALUES, TITLE_SUFFIX_VALUES } from '../data/titles.ts';
 import { getRequest, patchRequest } from './client.ts';
 
 interface ContactUpdate {

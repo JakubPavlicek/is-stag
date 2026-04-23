@@ -1,0 +1,865 @@
+{
+  "info": {
+    "_postman_id": "6c531fed-f315-4070-b60c-c06f289afc98",
+    "name": "is-stag REST",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26807991"
+  },
+  "item": [
+    {
+      "name": "persons",
+      "item": [
+        {
+          "name": "Get person profile",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {},
+            "protocolVersion": "http2"
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "cs",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/persons/{{personId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "persons",
+                "{{personId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "221264",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/persons/221264",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "persons",
+                    "221264"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Tue, 22 Jul 2025 13:12:42 GMT"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "Pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "Expires",
+                  "value": "0"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=60"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"personId\": 221264,\n    \"personalNumbers\": [\n        \"K24B4302P\",\n        \"K20B4816P\",\n        \"F20B4188P\"\n    ],\n    \"firstName\": \"Ondřej\",\n    \"lastName\": \"ZDENĚK\",\n    \"birthSurname\": \"PAVLICEK\",\n    \"contact\": {\n        \"email\": \"Martin95043186@xxx.cz\",\n        \"phone\": \"111420111\",\n        \"mobile\": \"69270493\"\n    },\n    \"titles\": {\n        \"prefix\": \"BcA.\",\n        \"suffix\": \"CSc.\"\n    },\n    \"birthNumber\": \"7061030163\",\n    \"birthDate\": \"1970-11-03\",\n    \"birthPlace\": {\n        \"city\": \"Bratislava\",\n        \"country\": \"Slovenská republika\"\n    },\n    \"citizenship\": {\n        \"country\": \"Česká republika\",\n        \"qualifier\": \"Občan\"\n    },\n    \"passportNumber\": null,\n    \"gender\": \"muž\",\n    \"maritalStatus\": \"ženatý/vdaná\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update person profile",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {},
+            "protocolVersion": "http2"
+          },
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"birthSurname\": \"Smith\",\n  \"maritalStatus\": \"divorced\",\n  \"contact\": {\n    \"email\": \"Martin95043186@xxx.cz\",\n    \"phone\": \"+420123456789\",\n    \"mobile\": \"+420987654321\",\n    \"dataBox\": \"9hjaihw\"\n  },\n  \"titles\": {\n    \"prefix\": \"Ing.\",\n    \"suffix\": \"PhD.\"\n  },\n  \"birthPlace\": {\n    \"country\": \"the Slovak Republic\",\n    \"city\": \"Prague\"\n  },\n  \"bankAccount\": {\n    \"accountNumberPrefix\": \"19\",\n    \"accountNumberSuffix\": \"123457\",\n    \"bankCode\": \"0800\",\n    \"holderName\": \"Jan Novák\",\n    \"holderAddress\": \"Příchovice 97, 34901 Stříbro, Česká republika\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/persons/{{personId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "persons",
+                "{{personId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get person addresses",
+          "protocolProfileBehavior": {
+            "protocolVersion": "http2"
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/persons/{{personId}}/addresses",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "persons",
+                "{{personId}}",
+                "addresses"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "221264",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/persons/221264/addresses",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "persons",
+                    "221264",
+                    "addresses"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 27 Jul 2025 20:22:17 GMT"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=60"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"permanentResidence\": {\n        \"street\": \"Příchovice\",\n        \"streetNumber\": \"97\",\n        \"zipCode\": \"34901\",\n        \"municipality\": \"Stříbro\",\n        \"municipalityPart\": \"Stříbro\",\n        \"district\": \"Tachov\",\n        \"country\": \"Česká republika\"\n    },\n    \"temporaryResidence\": {\n        \"street\": \"Plzeňská\",\n        \"streetNumber\": \"594/41\",\n        \"zipCode\": \"37004\",\n        \"municipality\": \"České Budějovice 3\",\n        \"municipalityPart\": \"České Budějovice\",\n        \"district\": \"České Budějovice\",\n        \"country\": \"Česká republika\"\n    },\n    \"foreignPermanentResidence\": {\n        \"zipCode\": null,\n        \"municipality\": null,\n        \"district\": null,\n        \"postOffice\": null\n    },\n    \"foreignTemporaryResidence\": {\n        \"zipCode\": null,\n        \"municipality\": null,\n        \"district\": null,\n        \"postOffice\": null\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get person banking",
+          "protocolProfileBehavior": {
+            "protocolVersion": "http2"
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/persons/{{personId}}/banking",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "persons",
+                "{{personId}}",
+                "banking"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "232233",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/persons/232233/banking",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "persons",
+                    "232233",
+                    "banking"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 30 Jul 2025 09:50:11 GMT"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=60"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"account\": {\n        \"bankAccountNumberPrefix\": null,\n        \"bankAccountNumberSuffix\": \"1600079330\",\n        \"bankCode\": \"5500\",\n        \"bankName\": \"Raiffeisenbank a.s.\",\n        \"iban\": null,\n        \"currency\": null,\n        \"holderName\": \"Pepek Námořník\",\n        \"holderAddress\": \"Špenátová 4, 82053, Mrazíkov\"\n    },\n    \"euroAccount\": {\n        \"bankAccountNumberPrefix\": \"710544\",\n        \"bankAccountNumberSuffix\": \"7915425294\",\n        \"bankCode\": \"0100\",\n        \"bankName\": \"Komerční banka, a.s.\",\n        \"iban\": \"308637869092796123338886369411\",\n        \"currency\": \"EUR\",\n        \"holderName\": \"Fifinka\",\n        \"holderAddress\": \"Banánová 11, 30153, Třeskoprsky\",\n        \"country\": \"Česká republika\",\n        \"swift\": \"KOMBCZPPXXX\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get person education",
+          "protocolProfileBehavior": {
+            "protocolVersion": "http2"
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/persons/{{personId}}/education",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "persons",
+                "{{personId}}",
+                "education"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "232233",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/persons/232233/education",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "persons",
+                    "232233",
+                    "education"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 Aug 2025 18:03:26 GMT"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=60"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"highSchool\": {\n        \"institutionName\": \"Zahraniční školy-Běloruská republika\",\n        \"fieldOfStudy\": \"\",\n        \"graduationDate\": \"2020-01-01\",\n        \"address\": {\n            \"street\": \"\",\n            \"zipCode\": \"\",\n            \"municipality\": \"\",\n            \"district\": \"\",\n            \"country\": \"Běloruská republika\"\n        }\n    },\n    \"foreignHighSchool\": {\n        \"institutionName\": \"Gymnasium 1\",\n        \"location\": \"Minsk\",\n        \"fieldOfStudy\": \"\"\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "students",
+      "item": [
+        {
+          "name": "Get student",
+          "protocolProfileBehavior": {
+            "protocolVersion": "http2"
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "cs",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/students/E24B6704P",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "students",
+                "E24B6704P"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "K24B4302P",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept-Language",
+                    "value": "cs",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/students/K24B4302P",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "students",
+                    "K24B4302P"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": ":status",
+                  "value": 200
+                },
+                {
+                  "key": "x-content-type-options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "x-xss-protection",
+                  "value": "0"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "expires",
+                  "value": "0"
+                },
+                {
+                  "key": "x-frame-options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "vary",
+                  "value": "accept-encoding"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "date",
+                  "value": "Wed, 10 Sep 2025 14:14:51 GMT"
+                },
+                {
+                  "key": "strict-transport-security",
+                  "value": "max-age=31536000 ; includeSubDomains"
+                },
+                {
+                  "key": "referrer-policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "content-encoding",
+                  "value": "gzip"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"studentId\": \"K24B4302P\",\n    \"personId\": 221264,\n    \"firstName\": \"Ondřej\",\n    \"lastName\": \"ZDENĚK\",\n    \"titles\": {\n        \"prefix\": \"BcA.\",\n        \"suffix\": \"CSc.\"\n    },\n    \"gender\": \"muž\",\n    \"studyProgram\": {\n        \"id\": 1966,\n        \"name\": \"Ekonomická a regionální geografie\",\n        \"faculty\": \"FEK\",\n        \"code\": \"B0532A330036\",\n        \"form\": \"Prezenční\",\n        \"type\": \"Bakalářský\"\n    },\n    \"fieldOfStudy\": {\n        \"id\": 4343,\n        \"name\": \"Ekonomická a regionální geografie\",\n        \"faculty\": \"FEK\",\n        \"department\": \"KGE\",\n        \"code\": \"B0532A330036\"\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "countries",
+      "item": [
+        {
+          "name": "Get all countries",
+          "protocolProfileBehavior": {
+            "protocolVersion": "http2"
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/countries",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "countries"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "countries",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/countries",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "countries"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": ":status",
+                  "value": 200
+                },
+                {
+                  "key": "x-content-type-options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "x-xss-protection",
+                  "value": "0"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "expires",
+                  "value": "0"
+                },
+                {
+                  "key": "x-frame-options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "vary",
+                  "value": "accept-encoding"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "date",
+                  "value": "Wed, 10 Sep 2025 14:15:15 GMT"
+                },
+                {
+                  "key": "strict-transport-security",
+                  "value": "max-age=31536000 ; includeSubDomains"
+                },
+                {
+                  "key": "referrer-policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "content-encoding",
+                  "value": "gzip"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"countries\": [\n        {\n            \"id\": 20,\n            \"name\": \"the Principality of Andorra\",\n            \"commonName\": \"Andorra\",\n            \"abbreviation\": \"AD\"\n        },\n        {\n            \"id\": 784,\n            \"name\": \"the United Arab Emirates\",\n            \"commonName\": \"United Arab Emirates (the)\",\n            \"abbreviation\": \"AE\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"the Islamic Republic of Afghanistan\",\n            \"commonName\": \"Afghanistan\",\n            \"abbreviation\": \"AF\"\n        },\n        {\n            \"id\": 28,\n            \"name\": \"Antigua and Barbuda\",\n            \"commonName\": \"Antigua and Barbuda\",\n            \"abbreviation\": \"AG\"\n        },\n        {\n            \"id\": 660,\n            \"name\": \"Anguilla\",\n            \"commonName\": \"Anguilla\",\n            \"abbreviation\": \"AI\"\n        },\n        {\n            \"id\": 8,\n            \"name\": \"the Republic of Albania\",\n            \"commonName\": \"Albania\",\n            \"abbreviation\": \"AL\"\n        },\n        {\n            \"id\": 51,\n            \"name\": \"the Republic of Armenia\",\n            \"commonName\": \"Armenia\",\n            \"abbreviation\": \"AM\"\n        },\n        {\n            \"id\": 530,\n            \"name\": \"Netherlands Antilles\",\n            \"commonName\": null,\n            \"abbreviation\": \"AN\"\n        },\n        {\n            \"id\": 24,\n            \"name\": \"the Republic of Angola\",\n            \"commonName\": \"Angola\",\n            \"abbreviation\": \"AO\"\n        },\n        {\n            \"id\": 10,\n            \"name\": \"Antarctica\",\n            \"commonName\": \"Antarctica\",\n            \"abbreviation\": \"AQ\"\n        },\n        {\n            \"id\": 32,\n            \"name\": \"the Argentine Republic\",\n            \"commonName\": \"Argentina\",\n            \"abbreviation\": \"AR\"\n        },\n        {\n            \"id\": 16,\n            \"name\": \"American Samoa\",\n            \"commonName\": \"American Samoa\",\n            \"abbreviation\": \"AS\"\n        },\n        {\n            \"id\": 40,\n            \"name\": \"the Republic of Austria\",\n            \"commonName\": \"Austria\",\n            \"abbreviation\": \"AT\"\n        },\n        {\n            \"id\": 36,\n            \"name\": \"Australia\",\n            \"commonName\": \"Australia\",\n            \"abbreviation\": \"AU\"\n        },\n        {\n            \"id\": 533,\n            \"name\": \"Aruba\",\n            \"commonName\": \"Aruba\",\n            \"abbreviation\": \"AW\"\n        },\n        {\n            \"id\": 248,\n            \"name\": \"Aland Islands\",\n            \"commonName\": \"Aland Islands\",\n            \"abbreviation\": \"AX\"\n        },\n        {\n            \"id\": 31,\n            \"name\": \"the Republic of Azerbaijan\",\n            \"commonName\": \"Azerbaijan\",\n            \"abbreviation\": \"AZ\"\n        },\n        {\n            \"id\": 70,\n            \"name\": \"Bosnia and Herzegovina\",\n            \"commonName\": \"Bosnia and Herzegovina\",\n            \"abbreviation\": \"BA\"\n        },\n        {\n            \"id\": 52,\n            \"name\": \"Barbados\",\n            \"commonName\": \"Barbados\",\n            \"abbreviation\": \"BB\"\n        },\n        {\n            \"id\": 50,\n            \"name\": \"the People's Republic of Bangladesh\",\n            \"commonName\": \"Bangladesh\",\n            \"abbreviation\": \"BD\"\n        },\n        {\n            \"id\": 56,\n            \"name\": \"the Kingdom of Belgium\",\n            \"commonName\": \"Belgium\",\n            \"abbreviation\": \"BE\"\n        },\n        {\n            \"id\": 854,\n            \"name\": \"Burkina Faso\",\n            \"commonName\": \"Burkina Faso\",\n            \"abbreviation\": \"BF\"\n        },\n        {\n            \"id\": 100,\n            \"name\": \"the Republic of Bulgaria\",\n            \"commonName\": \"Bulgaria\",\n            \"abbreviation\": \"BG\"\n        },\n        {\n            \"id\": 48,\n            \"name\": \"the Kingdom of Bahrain\",\n            \"commonName\": \"Bahrain\",\n            \"abbreviation\": \"BH\"\n        },\n        {\n            \"id\": 108,\n            \"name\": \"the Republic of Burundi\",\n            \"commonName\": \"Burundi\",\n            \"abbreviation\": \"BI\"\n        },\n        {\n            \"id\": 204,\n            \"name\": \"the Republic of Benin\",\n            \"commonName\": \"Benin\",\n            \"abbreviation\": \"BJ\"\n        },\n        {\n            \"id\": 652,\n            \"name\": \"Saint Barthélemy\",\n            \"commonName\": \"Saint Barthélemy\",\n            \"abbreviation\": \"BL\"\n        },\n        {\n            \"id\": 60,\n            \"name\": \"Bermuda\",\n            \"commonName\": \"Bermuda\",\n            \"abbreviation\": \"BM\"\n        },\n        {\n            \"id\": 96,\n            \"name\": \"Brunei Darussalam\",\n            \"commonName\": \"Brunei Darussalam\",\n            \"abbreviation\": \"BN\"\n        },\n        {\n            \"id\": 68,\n            \"name\": \"the Plurinational State of Bolivia\",\n            \"commonName\": \"Bolivia (Plurinational State of)\",\n            \"abbreviation\": \"BO\"\n        },\n        {\n            \"id\": 535,\n            \"name\": \"Bonaire, Sint Eustatius and Saba\",\n            \"commonName\": \"Bonaire, Sint Eustatius and Saba\",\n            \"abbreviation\": \"BQ\"\n        },\n        {\n            \"id\": 76,\n            \"name\": \"the Federative Republic of Brazil\",\n            \"commonName\": \"Brazil\",\n            \"abbreviation\": \"BR\"\n        },\n        {\n            \"id\": 44,\n            \"name\": \"the Commonwealth of the Bahamas\",\n            \"commonName\": \"Bahamas (the)\",\n            \"abbreviation\": \"BS\"\n        },\n        {\n            \"id\": 64,\n            \"name\": \"the Kingdom of Bhutan\",\n            \"commonName\": \"Bhutan\",\n            \"abbreviation\": \"BT\"\n        },\n        {\n            \"id\": 74,\n            \"name\": \"Bouvet Island\",\n            \"commonName\": \"Bouvet Island\",\n            \"abbreviation\": \"BV\"\n        },\n        {\n            \"id\": 72,\n            \"name\": \"the Republic of Botswana\",\n            \"commonName\": \"Botswana\",\n            \"abbreviation\": \"BW\"\n        },\n        {\n            \"id\": 112,\n            \"name\": \"the Republic of Belarus\",\n            \"commonName\": \"Belarus\",\n            \"abbreviation\": \"BY\"\n        },\n        {\n            \"id\": 84,\n            \"name\": \"Belize\",\n            \"commonName\": \"Belize\",\n            \"abbreviation\": \"BZ\"\n        },\n        {\n            \"id\": 124,\n            \"name\": \"Canada\",\n            \"commonName\": \"Canada\",\n            \"abbreviation\": \"CA\"\n        },\n        {\n            \"id\": 166,\n            \"name\": \"Cocos (Keeling) Islands (the)\",\n            \"commonName\": \"Cocos (Keeling) Islands (the)\",\n            \"abbreviation\": \"CC\"\n        },\n        {\n            \"id\": 180,\n            \"name\": \"the Democratic Republic of the Congo\",\n            \"commonName\": \"Congo (the Democratic Republic of the)\",\n            \"abbreviation\": \"CD\"\n        },\n        {\n            \"id\": 140,\n            \"name\": \"the Central African Republic\",\n            \"commonName\": \"Central African Republic (the)\",\n            \"abbreviation\": \"CF\"\n        },\n        {\n            \"id\": 178,\n            \"name\": \"the Republic of the Congo\",\n            \"commonName\": \"Congo (the)\",\n            \"abbreviation\": \"CG\"\n        },\n        {\n            \"id\": 384,\n            \"name\": \"the Republic of Côte d'Ivoire\",\n            \"commonName\": \"Côte d'Ivoire\",\n            \"abbreviation\": \"CI\"\n        },\n        {\n            \"id\": 184,\n            \"name\": \"Cook Islands (the)\",\n            \"commonName\": \"Cook Islands (the)\",\n            \"abbreviation\": \"CK\"\n        },\n        {\n            \"id\": 152,\n            \"name\": \"the Republic of Chile\",\n            \"commonName\": \"Chile\",\n            \"abbreviation\": \"CL\"\n        },\n        {\n            \"id\": 120,\n            \"name\": \"the Republic of Cameroon\",\n            \"commonName\": \"Cameroon\",\n            \"abbreviation\": \"CM\"\n        },\n        {\n            \"id\": 156,\n            \"name\": \"the People's Republic of China\",\n            \"commonName\": \"China\",\n            \"abbreviation\": \"CN\"\n        },\n        {\n            \"id\": 170,\n            \"name\": \"the Republic of Colombia\",\n            \"commonName\": \"Colombia\",\n            \"abbreviation\": \"CO\"\n        },\n        {\n            \"id\": 188,\n            \"name\": \"the Republic of Costa Rica\",\n            \"commonName\": \"Costa Rica\",\n            \"abbreviation\": \"CR\"\n        },\n        {\n            \"id\": 192,\n            \"name\": \"the Republic of Cuba\",\n            \"commonName\": \"Cuba\",\n            \"abbreviation\": \"CU\"\n        },\n        {\n            \"id\": 132,\n            \"name\": \"the Republic of Cabo Verde\",\n            \"commonName\": \"Cabo Verde\",\n            \"abbreviation\": \"CV\"\n        },\n        {\n            \"id\": 531,\n            \"name\": \"Curaçao\",\n            \"commonName\": \"Curaçao\",\n            \"abbreviation\": \"CW\"\n        },\n        {\n            \"id\": 162,\n            \"name\": \"Christmas Island\",\n            \"commonName\": \"Christmas Island\",\n            \"abbreviation\": \"CX\"\n        },\n        {\n            \"id\": 196,\n            \"name\": \"the Republic of Cyprus\",\n            \"commonName\": \"Cyprus\",\n            \"abbreviation\": \"CY\"\n        },\n        {\n            \"id\": 203,\n            \"name\": \"the Czech Republic\",\n            \"commonName\": \"Czechia\",\n            \"abbreviation\": \"CZ\"\n        },\n        {\n            \"id\": 276,\n            \"name\": \"the Federal Republic of Germany\",\n            \"commonName\": \"Germany\",\n            \"abbreviation\": \"DE\"\n        },\n        {\n            \"id\": 262,\n            \"name\": \"the Republic of Djibouti\",\n            \"commonName\": \"Djibouti\",\n            \"abbreviation\": \"DJ\"\n        },\n        {\n            \"id\": 208,\n            \"name\": \"the Kingdom of Denmark\",\n            \"commonName\": \"Denmark\",\n            \"abbreviation\": \"DK\"\n        },\n        {\n            \"id\": 212,\n            \"name\": \"the Commonwealth of Dominica\",\n            \"commonName\": \"Dominica\",\n            \"abbreviation\": \"DM\"\n        },\n        {\n            \"id\": 214,\n            \"name\": \"the Dominican Republic\",\n            \"commonName\": \"Dominican Republic (the)\",\n            \"abbreviation\": \"DO\"\n        },\n        {\n            \"id\": 12,\n            \"name\": \"the People's Democratic Republic of Algeria\",\n            \"commonName\": \"Algeria\",\n            \"abbreviation\": \"DZ\"\n        },\n        {\n            \"id\": 218,\n            \"name\": \"the Republic of Ecuador\",\n            \"commonName\": \"Ecuador\",\n            \"abbreviation\": \"EC\"\n        },\n        {\n            \"id\": 233,\n            \"name\": \"the Republic of Estonia\",\n            \"commonName\": \"Estonia\",\n            \"abbreviation\": \"EE\"\n        },\n        {\n            \"id\": 818,\n            \"name\": \"the Arab Republic of Egypt\",\n            \"commonName\": \"Egypt\",\n            \"abbreviation\": \"EG\"\n        },\n        {\n            \"id\": 732,\n            \"name\": \"Western Sahara\",\n            \"commonName\": \"Western Sahara\",\n            \"abbreviation\": \"EH\"\n        },\n        {\n            \"id\": 232,\n            \"name\": \"the State of Eritrea\",\n            \"commonName\": \"Eritrea\",\n            \"abbreviation\": \"ER\"\n        },\n        {\n            \"id\": 724,\n            \"name\": \"the Kingdom of Spain\",\n            \"commonName\": \"Spain\",\n            \"abbreviation\": \"ES\"\n        },\n        {\n            \"id\": 231,\n            \"name\": \"the Federal Democratic Republic of Ethiopia\",\n            \"commonName\": \"Ethiopia\",\n            \"abbreviation\": \"ET\"\n        },\n        {\n            \"id\": 246,\n            \"name\": \"the Republic of Finland\",\n            \"commonName\": \"Finland\",\n            \"abbreviation\": \"FI\"\n        },\n        {\n            \"id\": 242,\n            \"name\": \"the Republic of Fiji\",\n            \"commonName\": \"Fiji\",\n            \"abbreviation\": \"FJ\"\n        },\n        {\n            \"id\": 238,\n            \"name\": \"Falkland Islands (the) (Malvinas)\",\n            \"commonName\": \"Falkland Islands (the) (Malvinas)\",\n            \"abbreviation\": \"FK\"\n        },\n        {\n            \"id\": 583,\n            \"name\": \"the Federated States of Micronesia\",\n            \"commonName\": \"Micronesia (Federated States of)\",\n            \"abbreviation\": \"FM\"\n        },\n        {\n            \"id\": 234,\n            \"name\": \"Faroe Islands (the)\",\n            \"commonName\": \"Faroe Islands (the)\",\n            \"abbreviation\": \"FO\"\n        },\n        {\n            \"id\": 250,\n            \"name\": \"the French Republic\",\n            \"commonName\": \"France\",\n            \"abbreviation\": \"FR\"\n        },\n        {\n            \"id\": 266,\n            \"name\": \"the Gabonese Republic\",\n            \"commonName\": \"Gabon\",\n            \"abbreviation\": \"GA\"\n        },\n        {\n            \"id\": 826,\n            \"name\": \"the United Kingdom of Great Britain and Northern Ireland\",\n            \"commonName\": \"United Kingdom of Great Britain and Northern Ireland (the)\",\n            \"abbreviation\": \"GB\"\n        },\n        {\n            \"id\": 308,\n            \"name\": \"Grenada\",\n            \"commonName\": \"Grenada\",\n            \"abbreviation\": \"GD\"\n        },\n        {\n            \"id\": 268,\n            \"name\": \"Georgia\",\n            \"commonName\": \"Georgia\",\n            \"abbreviation\": \"GE\"\n        },\n        {\n            \"id\": 254,\n            \"name\": \"French Guiana\",\n            \"commonName\": \"French Guiana\",\n            \"abbreviation\": \"GF\"\n        },\n        {\n            \"id\": 831,\n            \"name\": \"Guernsey\",\n            \"commonName\": \"Guernsey\",\n            \"abbreviation\": \"GG\"\n        },\n        {\n            \"id\": 288,\n            \"name\": \"the Republic of Ghana\",\n            \"commonName\": \"Ghana\",\n            \"abbreviation\": \"GH\"\n        },\n        {\n            \"id\": 292,\n            \"name\": \"Gibraltar\",\n            \"commonName\": \"Gibraltar\",\n            \"abbreviation\": \"GI\"\n        },\n        {\n            \"id\": 304,\n            \"name\": \"Greenland\",\n            \"commonName\": \"Greenland\",\n            \"abbreviation\": \"GL\"\n        },\n        {\n            \"id\": 270,\n            \"name\": \"the Republic of the Gambia\",\n            \"commonName\": \"Gambia (the)\",\n            \"abbreviation\": \"GM\"\n        },\n        {\n            \"id\": 324,\n            \"name\": \"the Republic of Guinea\",\n            \"commonName\": \"Guinea\",\n            \"abbreviation\": \"GN\"\n        },\n        {\n            \"id\": 312,\n            \"name\": \"Guadeloupe\",\n            \"commonName\": \"Guadeloupe\",\n            \"abbreviation\": \"GP\"\n        },\n        {\n            \"id\": 226,\n            \"name\": \"the Republic of Equatorial Guinea\",\n            \"commonName\": \"Equatorial Guinea\",\n            \"abbreviation\": \"GQ\"\n        },\n        {\n            \"id\": 300,\n            \"name\": \"the Hellenic Republic\",\n            \"commonName\": \"Greece\",\n            \"abbreviation\": \"GR\"\n        },\n        {\n            \"id\": 239,\n            \"name\": \"South Georgia and the South Sandwich Islands\",\n            \"commonName\": \"South Georgia and the South Sandwich Islands\",\n            \"abbreviation\": \"GS\"\n        },\n        {\n            \"id\": 320,\n            \"name\": \"the Republic of Guatemala\",\n            \"commonName\": \"Guatemala\",\n            \"abbreviation\": \"GT\"\n        },\n        {\n            \"id\": 316,\n            \"name\": \"Guam\",\n            \"commonName\": \"Guam\",\n            \"abbreviation\": \"GU\"\n        },\n        {\n            \"id\": 624,\n            \"name\": \"the Republic of Guinea-Bissau\",\n            \"commonName\": \"Guinea-Bissau\",\n            \"abbreviation\": \"GW\"\n        },\n        {\n            \"id\": 328,\n            \"name\": \"the Co-operative Republic of Guyana\",\n            \"commonName\": \"Guyana\",\n            \"abbreviation\": \"GY\"\n        },\n        {\n            \"id\": 344,\n            \"name\": \"the Hong Kong Special Administrative Region of China\",\n            \"commonName\": \"Hong Kong\",\n            \"abbreviation\": \"HK\"\n        },\n        {\n            \"id\": 334,\n            \"name\": \"Heard Island and McDonald Islands\",\n            \"commonName\": \"Heard Island and McDonald Islands\",\n            \"abbreviation\": \"HM\"\n        },\n        {\n            \"id\": 340,\n            \"name\": \"the Republic of Honduras\",\n            \"commonName\": \"Honduras\",\n            \"abbreviation\": \"HN\"\n        },\n        {\n            \"id\": 191,\n            \"name\": \"the Republic of Croatia\",\n            \"commonName\": \"Croatia\",\n            \"abbreviation\": \"HR\"\n        },\n        {\n            \"id\": 332,\n            \"name\": \"the Republic of Haiti\",\n            \"commonName\": \"Haiti\",\n            \"abbreviation\": \"HT\"\n        },\n        {\n            \"id\": 348,\n            \"name\": \"Hungary\",\n            \"commonName\": \"Hungary\",\n            \"abbreviation\": \"HU\"\n        },\n        {\n            \"id\": 756,\n            \"name\": \"the Swiss Confederation\",\n            \"commonName\": \"Switzerland\",\n            \"abbreviation\": \"CH\"\n        },\n        {\n            \"id\": 360,\n            \"name\": \"the Republic of Indonesia\",\n            \"commonName\": \"Indonesia\",\n            \"abbreviation\": \"ID\"\n        },\n        {\n            \"id\": 372,\n            \"name\": \"Ireland\",\n            \"commonName\": \"Ireland\",\n            \"abbreviation\": \"IE\"\n        },\n        {\n            \"id\": 376,\n            \"name\": \"the State of Israel\",\n            \"commonName\": \"Israel\",\n            \"abbreviation\": \"IL\"\n        },\n        {\n            \"id\": 833,\n            \"name\": \"Isle of Man\",\n            \"commonName\": \"Isle of Man\",\n            \"abbreviation\": \"IM\"\n        },\n        {\n            \"id\": 356,\n            \"name\": \"the Republic of India\",\n            \"commonName\": \"India\",\n            \"abbreviation\": \"IN\"\n        },\n        {\n            \"id\": 86,\n            \"name\": \"British Indian Ocean Territory (the)\",\n            \"commonName\": \"British Indian Ocean Territory (the)\",\n            \"abbreviation\": \"IO\"\n        },\n        {\n            \"id\": 368,\n            \"name\": \"the Republic of Iraq\",\n            \"commonName\": \"Iraq\",\n            \"abbreviation\": \"IQ\"\n        },\n        {\n            \"id\": 364,\n            \"name\": \"the Islamic Republic of Iran\",\n            \"commonName\": \"Iran (Islamic Republic of)\",\n            \"abbreviation\": \"IR\"\n        },\n        {\n            \"id\": 352,\n            \"name\": \"Iceland\",\n            \"commonName\": \"Iceland\",\n            \"abbreviation\": \"IS\"\n        },\n        {\n            \"id\": 380,\n            \"name\": \"the Republic of Italy\",\n            \"commonName\": \"Italy\",\n            \"abbreviation\": \"IT\"\n        },\n        {\n            \"id\": 832,\n            \"name\": \"Jersey\",\n            \"commonName\": \"Jersey\",\n            \"abbreviation\": \"JE\"\n        },\n        {\n            \"id\": 388,\n            \"name\": \"Jamaica\",\n            \"commonName\": \"Jamaica\",\n            \"abbreviation\": \"JM\"\n        },\n        {\n            \"id\": 400,\n            \"name\": \"the Hashemite Kingdom of Jordan\",\n            \"commonName\": \"Jordan\",\n            \"abbreviation\": \"JO\"\n        },\n        {\n            \"id\": 392,\n            \"name\": \"Japan\",\n            \"commonName\": \"Japan\",\n            \"abbreviation\": \"JP\"\n        },\n        {\n            \"id\": 404,\n            \"name\": \"the Republic of Kenya\",\n            \"commonName\": \"Kenya\",\n            \"abbreviation\": \"KE\"\n        },\n        {\n            \"id\": 417,\n            \"name\": \"the Kyrgyz Republic\",\n            \"commonName\": \"Kyrgyzstan\",\n            \"abbreviation\": \"KG\"\n        },\n        {\n            \"id\": 116,\n            \"name\": \"the Kingdom of Cambodia\",\n            \"commonName\": \"Cambodia\",\n            \"abbreviation\": \"KH\"\n        },\n        {\n            \"id\": 296,\n            \"name\": \"the Republic of Kiribati\",\n            \"commonName\": \"Kiribati\",\n            \"abbreviation\": \"KI\"\n        },\n        {\n            \"id\": 174,\n            \"name\": \"the Union of the Comoros\",\n            \"commonName\": \"Comoros (the)\",\n            \"abbreviation\": \"KM\"\n        },\n        {\n            \"id\": 659,\n            \"name\": \"Saint Kitts and Nevis\",\n            \"commonName\": \"Saint Kitts and Nevis\",\n            \"abbreviation\": \"KN\"\n        },\n        {\n            \"id\": 408,\n            \"name\": \"the Democratic People's Republic of Korea\",\n            \"commonName\": \"Korea (the Democratic People's Republic of)\",\n            \"abbreviation\": \"KP\"\n        },\n        {\n            \"id\": 410,\n            \"name\": \"the Republic of Korea\",\n            \"commonName\": \"Korea (the Republic of)\",\n            \"abbreviation\": \"KR\"\n        },\n        {\n            \"id\": 414,\n            \"name\": \"the State of Kuwait\",\n            \"commonName\": \"Kuwait\",\n            \"abbreviation\": \"KW\"\n        },\n        {\n            \"id\": 136,\n            \"name\": \"Cayman Islands (the)\",\n            \"commonName\": \"Cayman Islands (the)\",\n            \"abbreviation\": \"KY\"\n        },\n        {\n            \"id\": 398,\n            \"name\": \"the Republic of Kazakhstan\",\n            \"commonName\": \"Kazakhstan\",\n            \"abbreviation\": \"KZ\"\n        },\n        {\n            \"id\": 418,\n            \"name\": \"the Lao People's Democratic Republic\",\n            \"commonName\": \"Lao People's Democratic Republic (the)\",\n            \"abbreviation\": \"LA\"\n        },\n        {\n            \"id\": 422,\n            \"name\": \"the Lebanese Republic\",\n            \"commonName\": \"Lebanon\",\n            \"abbreviation\": \"LB\"\n        },\n        {\n            \"id\": 662,\n            \"name\": \"Saint Lucia\",\n            \"commonName\": \"Saint Lucia\",\n            \"abbreviation\": \"LC\"\n        },\n        {\n            \"id\": 438,\n            \"name\": \"the Principality of Liechtenstein\",\n            \"commonName\": \"Liechtenstein\",\n            \"abbreviation\": \"LI\"\n        },\n        {\n            \"id\": 144,\n            \"name\": \"the Democratic Socialist Republic of Sri Lanka\",\n            \"commonName\": \"Sri Lanka\",\n            \"abbreviation\": \"LK\"\n        },\n        {\n            \"id\": 430,\n            \"name\": \"the Republic of Liberia\",\n            \"commonName\": \"Liberia\",\n            \"abbreviation\": \"LR\"\n        },\n        {\n            \"id\": 426,\n            \"name\": \"the Kingdom of Lesotho\",\n            \"commonName\": \"Lesotho\",\n            \"abbreviation\": \"LS\"\n        },\n        {\n            \"id\": 440,\n            \"name\": \"the Republic of Lithuania\",\n            \"commonName\": \"Lithuania\",\n            \"abbreviation\": \"LT\"\n        },\n        {\n            \"id\": 442,\n            \"name\": \"the Grand Duchy of Luxembourg\",\n            \"commonName\": \"Luxembourg\",\n            \"abbreviation\": \"LU\"\n        },\n        {\n            \"id\": 428,\n            \"name\": \"the Republic of Latvia\",\n            \"commonName\": \"Latvia\",\n            \"abbreviation\": \"LV\"\n        },\n        {\n            \"id\": 434,\n            \"name\": \"the State of Libya\",\n            \"commonName\": \"Libya\",\n            \"abbreviation\": \"LY\"\n        },\n        {\n            \"id\": 504,\n            \"name\": \"the Kingdom of Morocco\",\n            \"commonName\": \"Morocco\",\n            \"abbreviation\": \"MA\"\n        },\n        {\n            \"id\": 492,\n            \"name\": \"the Principality of Monaco\",\n            \"commonName\": \"Monaco\",\n            \"abbreviation\": \"MC\"\n        },\n        {\n            \"id\": 498,\n            \"name\": \"the Republic of Moldova\",\n            \"commonName\": \"Moldova (the Republic of)\",\n            \"abbreviation\": \"MD\"\n        },\n        {\n            \"id\": 499,\n            \"name\": \"Montenegro\",\n            \"commonName\": \"Montenegro\",\n            \"abbreviation\": \"ME\"\n        },\n        {\n            \"id\": 663,\n            \"name\": \"Saint Martin (French part)\",\n            \"commonName\": \"Saint Martin (French part)\",\n            \"abbreviation\": \"MF\"\n        },\n        {\n            \"id\": 450,\n            \"name\": \"the Republic of Madagascar\",\n            \"commonName\": \"Madagascar\",\n            \"abbreviation\": \"MG\"\n        },\n        {\n            \"id\": 584,\n            \"name\": \"the Republic of the Marshall Islands\",\n            \"commonName\": \"Marshall Islands (the)\",\n            \"abbreviation\": \"MH\"\n        },\n        {\n            \"id\": 807,\n            \"name\": \"the Republic of North Macedonia\",\n            \"commonName\": \"North Macedonia\",\n            \"abbreviation\": \"MK\"\n        },\n        {\n            \"id\": 466,\n            \"name\": \"the Republic of Mali\",\n            \"commonName\": \"Mali\",\n            \"abbreviation\": \"ML\"\n        },\n        {\n            \"id\": 104,\n            \"name\": \"the Republic of the Union of Myanmar\",\n            \"commonName\": \"Myanmar\",\n            \"abbreviation\": \"MM\"\n        },\n        {\n            \"id\": 496,\n            \"name\": \"Mongolia\",\n            \"commonName\": \"Mongolia\",\n            \"abbreviation\": \"MN\"\n        },\n        {\n            \"id\": 446,\n            \"name\": \"Macao Special Administrative Region of China\",\n            \"commonName\": \"Macao\",\n            \"abbreviation\": \"MO\"\n        },\n        {\n            \"id\": 580,\n            \"name\": \"the Commonwealth of the Northern Mariana Islands\",\n            \"commonName\": \"Northern Mariana Islands (the)\",\n            \"abbreviation\": \"MP\"\n        },\n        {\n            \"id\": 474,\n            \"name\": \"Martinique\",\n            \"commonName\": \"Martinique\",\n            \"abbreviation\": \"MQ\"\n        },\n        {\n            \"id\": 478,\n            \"name\": \"the Islamic Republic of Mauritania\",\n            \"commonName\": \"Mauritania\",\n            \"abbreviation\": \"MR\"\n        },\n        {\n            \"id\": 500,\n            \"name\": \"Montserrat\",\n            \"commonName\": \"Montserrat\",\n            \"abbreviation\": \"MS\"\n        },\n        {\n            \"id\": 470,\n            \"name\": \"the Republic of Malta\",\n            \"commonName\": \"Malta\",\n            \"abbreviation\": \"MT\"\n        },\n        {\n            \"id\": 480,\n            \"name\": \"the Republic of Mauritius\",\n            \"commonName\": \"Mauritius\",\n            \"abbreviation\": \"MU\"\n        },\n        {\n            \"id\": 462,\n            \"name\": \"the Republic of Maldives\",\n            \"commonName\": \"Maldives\",\n            \"abbreviation\": \"MV\"\n        },\n        {\n            \"id\": 454,\n            \"name\": \"the Republic of Malawi\",\n            \"commonName\": \"Malawi\",\n            \"abbreviation\": \"MW\"\n        },\n        {\n            \"id\": 484,\n            \"name\": \"the United Mexican States\",\n            \"commonName\": \"Mexico\",\n            \"abbreviation\": \"MX\"\n        },\n        {\n            \"id\": 458,\n            \"name\": \"Malaysia\",\n            \"commonName\": \"Malaysia\",\n            \"abbreviation\": \"MY\"\n        },\n        {\n            \"id\": 508,\n            \"name\": \"the Republic of Mozambique\",\n            \"commonName\": \"Mozambique\",\n            \"abbreviation\": \"MZ\"\n        },\n        {\n            \"id\": 516,\n            \"name\": \"the Republic of Namibia\",\n            \"commonName\": \"Namibia\",\n            \"abbreviation\": \"NA\"\n        },\n        {\n            \"id\": 540,\n            \"name\": \"New Caledonia\",\n            \"commonName\": \"New Caledonia\",\n            \"abbreviation\": \"NC\"\n        },\n        {\n            \"id\": 562,\n            \"name\": \"the Republic of the Niger\",\n            \"commonName\": \"Niger (the)\",\n            \"abbreviation\": \"NE\"\n        },\n        {\n            \"id\": 574,\n            \"name\": \"Norfolk Island\",\n            \"commonName\": \"Norfolk Island\",\n            \"abbreviation\": \"NF\"\n        },\n        {\n            \"id\": 566,\n            \"name\": \"the Federal Republic of Nigeria\",\n            \"commonName\": \"Nigeria\",\n            \"abbreviation\": \"NG\"\n        },\n        {\n            \"id\": 558,\n            \"name\": \"the Republic of Nicaragua\",\n            \"commonName\": \"Nicaragua\",\n            \"abbreviation\": \"NI\"\n        },\n        {\n            \"id\": 528,\n            \"name\": \"the Kingdom of the Netherlands\",\n            \"commonName\": \"Netherlands (Kingdom of the)\",\n            \"abbreviation\": \"NL\"\n        },\n        {\n            \"id\": 578,\n            \"name\": \"the Kingdom of Norway\",\n            \"commonName\": \"Norway\",\n            \"abbreviation\": \"NO\"\n        },\n        {\n            \"id\": 524,\n            \"name\": \"Nepal\",\n            \"commonName\": \"Nepal\",\n            \"abbreviation\": \"NP\"\n        },\n        {\n            \"id\": 520,\n            \"name\": \"the Republic of Nauru\",\n            \"commonName\": \"Nauru\",\n            \"abbreviation\": \"NR\"\n        },\n        {\n            \"id\": 570,\n            \"name\": \"Niue\",\n            \"commonName\": \"Niue\",\n            \"abbreviation\": \"NU\"\n        },\n        {\n            \"id\": 554,\n            \"name\": \"New Zealand\",\n            \"commonName\": \"New Zealand\",\n            \"abbreviation\": \"NZ\"\n        },\n        {\n            \"id\": 512,\n            \"name\": \"the Sultanate of Oman\",\n            \"commonName\": \"Oman\",\n            \"abbreviation\": \"OM\"\n        },\n        {\n            \"id\": 591,\n            \"name\": \"the Republic of Panama\",\n            \"commonName\": \"Panama\",\n            \"abbreviation\": \"PA\"\n        },\n        {\n            \"id\": 604,\n            \"name\": \"the Republic of Peru\",\n            \"commonName\": \"Peru\",\n            \"abbreviation\": \"PE\"\n        },\n        {\n            \"id\": 258,\n            \"name\": \"French Polynesia\",\n            \"commonName\": \"French Polynesia\",\n            \"abbreviation\": \"PF\"\n        },\n        {\n            \"id\": 598,\n            \"name\": \"the Independent State of Papua New Guinea\",\n            \"commonName\": \"Papua New Guinea\",\n            \"abbreviation\": \"PG\"\n        },\n        {\n            \"id\": 608,\n            \"name\": \"the Republic of the Philippines\",\n            \"commonName\": \"Philippines (the)\",\n            \"abbreviation\": \"PH\"\n        },\n        {\n            \"id\": 586,\n            \"name\": \"the Islamic Republic of Pakistan\",\n            \"commonName\": \"Pakistan\",\n            \"abbreviation\": \"PK\"\n        },\n        {\n            \"id\": 616,\n            \"name\": \"the Republic of Poland\",\n            \"commonName\": \"Poland\",\n            \"abbreviation\": \"PL\"\n        },\n        {\n            \"id\": 666,\n            \"name\": \"Saint Pierre and Miquelon\",\n            \"commonName\": \"Saint Pierre and Miquelon\",\n            \"abbreviation\": \"PM\"\n        },\n        {\n            \"id\": 612,\n            \"name\": \"Pitcairn\",\n            \"commonName\": \"Pitcairn\",\n            \"abbreviation\": \"PN\"\n        },\n        {\n            \"id\": 630,\n            \"name\": \"Puerto Rico\",\n            \"commonName\": \"Puerto Rico\",\n            \"abbreviation\": \"PR\"\n        },\n        {\n            \"id\": 275,\n            \"name\": \"the State of Palestine\",\n            \"commonName\": \"Palestine, State of\",\n            \"abbreviation\": \"PS\"\n        },\n        {\n            \"id\": 620,\n            \"name\": \"the Portuguese Republic\",\n            \"commonName\": \"Portugal\",\n            \"abbreviation\": \"PT\"\n        },\n        {\n            \"id\": 585,\n            \"name\": \"the Republic of Palau\",\n            \"commonName\": \"Palau\",\n            \"abbreviation\": \"PW\"\n        },\n        {\n            \"id\": 600,\n            \"name\": \"the Republic of Paraguay\",\n            \"commonName\": \"Paraguay\",\n            \"abbreviation\": \"PY\"\n        },\n        {\n            \"id\": 634,\n            \"name\": \"the State of Qatar\",\n            \"commonName\": \"Qatar\",\n            \"abbreviation\": \"QA\"\n        },\n        {\n            \"id\": 638,\n            \"name\": \"Réunion\",\n            \"commonName\": \"Réunion\",\n            \"abbreviation\": \"RE\"\n        },\n        {\n            \"id\": 642,\n            \"name\": \"Romania\",\n            \"commonName\": \"Romania\",\n            \"abbreviation\": \"RO\"\n        },\n        {\n            \"id\": 688,\n            \"name\": \"the Republic of Serbia\",\n            \"commonName\": \"Serbia\",\n            \"abbreviation\": \"RS\"\n        },\n        {\n            \"id\": 643,\n            \"name\": \"the Russian Federation\",\n            \"commonName\": \"Russian Federation (the)\",\n            \"abbreviation\": \"RU\"\n        },\n        {\n            \"id\": 646,\n            \"name\": \"the Republic of Rwanda\",\n            \"commonName\": \"Rwanda\",\n            \"abbreviation\": \"RW\"\n        },\n        {\n            \"id\": 682,\n            \"name\": \"the Kingdom of Saudi Arabia\",\n            \"commonName\": \"Saudi Arabia\",\n            \"abbreviation\": \"SA\"\n        },\n        {\n            \"id\": 90,\n            \"name\": \"Solomon Islands\",\n            \"commonName\": \"Solomon Islands\",\n            \"abbreviation\": \"SB\"\n        },\n        {\n            \"id\": 690,\n            \"name\": \"the Republic of Seychelles\",\n            \"commonName\": \"Seychelles\",\n            \"abbreviation\": \"SC\"\n        },\n        {\n            \"id\": 729,\n            \"name\": \"the Republic of the Sudan\",\n            \"commonName\": \"Sudan (the)\",\n            \"abbreviation\": \"SD\"\n        },\n        {\n            \"id\": 752,\n            \"name\": \"the Kingdom of Sweden\",\n            \"commonName\": \"Sweden\",\n            \"abbreviation\": \"SE\"\n        },\n        {\n            \"id\": 702,\n            \"name\": \"the Republic of Singapore\",\n            \"commonName\": \"Singapore\",\n            \"abbreviation\": \"SG\"\n        },\n        {\n            \"id\": 654,\n            \"name\": \"Saint Helena, Ascension and Tristan da Cunha\",\n            \"commonName\": \"Saint Helena, Ascension and Tristan da Cunha\",\n            \"abbreviation\": \"SH\"\n        },\n        {\n            \"id\": 705,\n            \"name\": \"the Republic of Slovenia\",\n            \"commonName\": \"Slovenia\",\n            \"abbreviation\": \"SI\"\n        },\n        {\n            \"id\": 744,\n            \"name\": \"Svalbard and Jan Mayen\",\n            \"commonName\": \"Svalbard and Jan Mayen\",\n            \"abbreviation\": \"SJ\"\n        },\n        {\n            \"id\": 703,\n            \"name\": \"the Slovak Republic\",\n            \"commonName\": \"Slovakia\",\n            \"abbreviation\": \"SK\"\n        },\n        {\n            \"id\": 694,\n            \"name\": \"the Republic of Sierra Leone\",\n            \"commonName\": \"Sierra Leone\",\n            \"abbreviation\": \"SL\"\n        },\n        {\n            \"id\": 674,\n            \"name\": \"the Republic of San Marino\",\n            \"commonName\": \"San Marino\",\n            \"abbreviation\": \"SM\"\n        },\n        {\n            \"id\": 686,\n            \"name\": \"the Republic of Senegal\",\n            \"commonName\": \"Senegal\",\n            \"abbreviation\": \"SN\"\n        },\n        {\n            \"id\": 706,\n            \"name\": \"the Federal Republic of Somalia\",\n            \"commonName\": \"Somalia\",\n            \"abbreviation\": \"SO\"\n        },\n        {\n            \"id\": 740,\n            \"name\": \"the Republic of Suriname\",\n            \"commonName\": \"Suriname\",\n            \"abbreviation\": \"SR\"\n        },\n        {\n            \"id\": 728,\n            \"name\": \"the Republic of South Sudan\",\n            \"commonName\": \"South Sudan\",\n            \"abbreviation\": \"SS\"\n        },\n        {\n            \"id\": 678,\n            \"name\": \"the Democratic Republic of Sao Tome and Principe\",\n            \"commonName\": \"Sao Tome and Principe\",\n            \"abbreviation\": \"ST\"\n        },\n        {\n            \"id\": 222,\n            \"name\": \"the Republic of El Salvador\",\n            \"commonName\": \"El Salvador\",\n            \"abbreviation\": \"SV\"\n        },\n        {\n            \"id\": 534,\n            \"name\": \"Sint Maarten (Dutch part)\",\n            \"commonName\": \"Sint Maarten (Dutch part)\",\n            \"abbreviation\": \"SX\"\n        },\n        {\n            \"id\": 760,\n            \"name\": \"the Syrian Arab Republic\",\n            \"commonName\": \"Syrian Arab Republic (the)\",\n            \"abbreviation\": \"SY\"\n        },\n        {\n            \"id\": 748,\n            \"name\": \"the Kingdom of Eswatini\",\n            \"commonName\": \"Eswatini\",\n            \"abbreviation\": \"SZ\"\n        },\n        {\n            \"id\": 796,\n            \"name\": \"Turks and Caicos Islands (the)\",\n            \"commonName\": \"Turks and Caicos Islands (the)\",\n            \"abbreviation\": \"TC\"\n        },\n        {\n            \"id\": 148,\n            \"name\": \"the Republic of Chad\",\n            \"commonName\": \"Chad\",\n            \"abbreviation\": \"TD\"\n        },\n        {\n            \"id\": 260,\n            \"name\": \"French Southern Territories (the)\",\n            \"commonName\": \"French Southern Territories (the)\",\n            \"abbreviation\": \"TF\"\n        },\n        {\n            \"id\": 768,\n            \"name\": \"the Togolese Republic\",\n            \"commonName\": \"Togo\",\n            \"abbreviation\": \"TG\"\n        },\n        {\n            \"id\": 764,\n            \"name\": \"the Kingdom of Thailand\",\n            \"commonName\": \"Thailand\",\n            \"abbreviation\": \"TH\"\n        },\n        {\n            \"id\": 762,\n            \"name\": \"the Republic of Tajikistan\",\n            \"commonName\": \"Tajikistan\",\n            \"abbreviation\": \"TJ\"\n        },\n        {\n            \"id\": 772,\n            \"name\": \"Tokelau\",\n            \"commonName\": \"Tokelau\",\n            \"abbreviation\": \"TK\"\n        },\n        {\n            \"id\": 626,\n            \"name\": \"the Democratic Republic of Timor-Leste\",\n            \"commonName\": \"Timor-Leste\",\n            \"abbreviation\": \"TL\"\n        },\n        {\n            \"id\": 795,\n            \"name\": \"Turkmenistan\",\n            \"commonName\": \"Turkmenistan\",\n            \"abbreviation\": \"TM\"\n        },\n        {\n            \"id\": 788,\n            \"name\": \"the Republic of Tunisia\",\n            \"commonName\": \"Tunisia\",\n            \"abbreviation\": \"TN\"\n        },\n        {\n            \"id\": 776,\n            \"name\": \"the Kingdom of Tonga\",\n            \"commonName\": \"Tonga\",\n            \"abbreviation\": \"TO\"\n        },\n        {\n            \"id\": 792,\n            \"name\": \"the Republic of Türkiye\",\n            \"commonName\": \"Türkiye\",\n            \"abbreviation\": \"TR\"\n        },\n        {\n            \"id\": 780,\n            \"name\": \"the Republic of Trinidad and Tobago\",\n            \"commonName\": \"Trinidad and Tobago\",\n            \"abbreviation\": \"TT\"\n        },\n        {\n            \"id\": 798,\n            \"name\": \"Tuvalu\",\n            \"commonName\": \"Tuvalu\",\n            \"abbreviation\": \"TV\"\n        },\n        {\n            \"id\": 158,\n            \"name\": \"Taiwan\",\n            \"commonName\": \"Taiwan\",\n            \"abbreviation\": \"TW\"\n        },\n        {\n            \"id\": 834,\n            \"name\": \"the United Republic of Tanzania\",\n            \"commonName\": \"Tanzania, the United Republic of\",\n            \"abbreviation\": \"TZ\"\n        },\n        {\n            \"id\": 804,\n            \"name\": \"Ukraine\",\n            \"commonName\": \"Ukraine\",\n            \"abbreviation\": \"UA\"\n        },\n        {\n            \"id\": 800,\n            \"name\": \"the Republic of Uganda\",\n            \"commonName\": \"Uganda\",\n            \"abbreviation\": \"UG\"\n        },\n        {\n            \"id\": 581,\n            \"name\": \"United States Minor Outlying Islands (the)\",\n            \"commonName\": \"United States Minor Outlying Islands (the)\",\n            \"abbreviation\": \"UM\"\n        },\n        {\n            \"id\": 840,\n            \"name\": \"the United States of America\",\n            \"commonName\": \"United States of America (the)\",\n            \"abbreviation\": \"US\"\n        },\n        {\n            \"id\": 858,\n            \"name\": \"the Eastern Republic of Uruguay\",\n            \"commonName\": \"Uruguay\",\n            \"abbreviation\": \"UY\"\n        },\n        {\n            \"id\": 860,\n            \"name\": \"the Republic of Uzbekistan\",\n            \"commonName\": \"Uzbekistan\",\n            \"abbreviation\": \"UZ\"\n        },\n        {\n            \"id\": 336,\n            \"name\": \"Holy See (the)\",\n            \"commonName\": \"Holy See (the)\",\n            \"abbreviation\": \"VA\"\n        },\n        {\n            \"id\": 670,\n            \"name\": \"Saint Vincent and the Grenadines\",\n            \"commonName\": \"Saint Vincent and the Grenadines\",\n            \"abbreviation\": \"VC\"\n        },\n        {\n            \"id\": 862,\n            \"name\": \"the Bolivarian Republic of Venezuela\",\n            \"commonName\": \"Venezuela (Bolivarian Republic of)\",\n            \"abbreviation\": \"VE\"\n        },\n        {\n            \"id\": 92,\n            \"name\": \"British Virgin Islands (the)\",\n            \"commonName\": \"Virgin Islands (British)\",\n            \"abbreviation\": \"VG\"\n        },\n        {\n            \"id\": 850,\n            \"name\": \"the Virgin Islands of the United States\",\n            \"commonName\": \"Virgin Islands (U.S.)\",\n            \"abbreviation\": \"VI\"\n        },\n        {\n            \"id\": 704,\n            \"name\": \"the Socialist Republic of Viet Nam\",\n            \"commonName\": \"Viet Nam\",\n            \"abbreviation\": \"VN\"\n        },\n        {\n            \"id\": 548,\n            \"name\": \"the Republic of Vanuatu\",\n            \"commonName\": \"Vanuatu\",\n            \"abbreviation\": \"VU\"\n        },\n        {\n            \"id\": 876,\n            \"name\": \"Wallis and Futuna Islands\",\n            \"commonName\": \"Wallis and Futuna\",\n            \"abbreviation\": \"WF\"\n        },\n        {\n            \"id\": 882,\n            \"name\": \"the Independent State of Samoa\",\n            \"commonName\": \"Samoa\",\n            \"abbreviation\": \"WS\"\n        },\n        {\n            \"id\": 95,\n            \"name\": \"Kosovo\",\n            \"commonName\": \"Kosovo\",\n            \"abbreviation\": \"XK\"\n        },\n        {\n            \"id\": 887,\n            \"name\": \"the Republic of Yemen\",\n            \"commonName\": \"Yemen\",\n            \"abbreviation\": \"YE\"\n        },\n        {\n            \"id\": 175,\n            \"name\": \"Mayotte\",\n            \"commonName\": \"Mayotte\",\n            \"abbreviation\": \"YT\"\n        },\n        {\n            \"id\": 710,\n            \"name\": \"the Republic of South Africa\",\n            \"commonName\": \"South Africa\",\n            \"abbreviation\": \"ZA\"\n        },\n        {\n            \"id\": 894,\n            \"name\": \"the Republic of Zambia\",\n            \"commonName\": \"Zambia\",\n            \"abbreviation\": \"ZM\"\n        },\n        {\n            \"id\": 716,\n            \"name\": \"the Republic of Zimbabwe\",\n            \"commonName\": \"Zimbabwe\",\n            \"abbreviation\": \"ZW\"\n        }\n    ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "domains",
+      "item": [
+        {
+          "name": "Get all domains",
+          "protocolProfileBehavior": {
+            "protocolVersion": "http2"
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/domains",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "domains"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "domains",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/domains",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "domains"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": ":status",
+                  "value": 200
+                },
+                {
+                  "key": "x-content-type-options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "x-xss-protection",
+                  "value": "0"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "expires",
+                  "value": "0"
+                },
+                {
+                  "key": "x-frame-options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "vary",
+                  "value": "accept-encoding"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "date",
+                  "value": "Wed, 10 Sep 2025 14:16:11 GMT"
+                },
+                {
+                  "key": "strict-transport-security",
+                  "value": "max-age=31536000 ; includeSubDomains"
+                },
+                {
+                  "key": "referrer-policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "content-encoding",
+                  "value": "gzip"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"domains\": [\n        \"ABSL_OPERACE\",\n        \"ABSOLVOVAL\",\n        \"AKREDITACE\",\n        \"AKREDITACE_OMEZENI\",\n        \"AKTIVITY_POVINNOST\",\n        \"AKTUALNOST\",\n        \"AND_OR\",\n        \"ANO_NE\",\n        \"ANO_NE_2\",\n        \"ANO_NIC\",\n        \"ANO_ZDR\",\n        \"APROBACE\",\n        \"ATELIER\",\n        \"CASOVA_RADA\",\n        \"CIS_BANK\",\n        \"CIS_BANK_EURO\",\n        \"CLEN_KOMISE\",\n        \"DEN\",\n        \"DIPFILE_ROK\",\n        \"DIPFILE_TYP_SOUBORU\",\n        \"DIPFILE_TYP_UVEREJNENI\",\n        \"DOKUMENT\",\n        \"DRUH_AKTIVITY\",\n        \"DRUH_DOKUMENTU\",\n        \"DRUH_MOBILITY\",\n        \"DRUH_PRACOVISTE\",\n        \"DRUH_ZK\",\n        \"DULEZITOST_LITERATURY\",\n        \"DUVOD_DELENI\",\n        \"DUVOD_KONTROLY\",\n        \"ECTS_AKREDITACE\",\n        \"ECTS_KLASIFIKACE\",\n        \"ELEKTRONICKY_PODPIS_KDE\",\n        \"ELEMENT\",\n        \"ESB_APLIKACE\",\n        \"EV_VYPLNUJE\",\n        \"EV_ZPUSOB_ODPOVEDI\",\n        \"EWP_STAV_ODESLANI_POZADAVKU\",\n        \"FAKULTA\",\n        \"FINANCOVANI\",\n        \"FORMA_OBORU_INT\",\n        \"FORMA_OBORU_NEW\",\n        \"FORMA_UHRADY\",\n        \"FORMA_ZK\",\n        \"FORMA_ZPRACOVANI\",\n        \"FUNK_OBDOBI\",\n        \"FUNK_OBLAST\",\n        \"FUNK_ROLE\",\n        \"GDPR_ST_ST_VLAST_NAST\",\n        \"HK_UROVEN\",\n        \"HODINA\",\n        \"HODNOCENI_ZK\",\n        \"HODNOTICI_METODY\",\n        \"JAK_CASTO_PREDMET_NABIZET\",\n        \"JAK_VLOZENO\",\n        \"JAZYK\",\n        \"JAZYK_SEZNAM\",\n        \"JEDNOTKA_VYUKY\",\n        \"JOINT_DEGREES\",\n        \"KAM_POSLAT\",\n        \"KATALOG_KURZU_STAV\",\n        \"KDO_MA_ODSOUHLASIT\",\n        \"KNIHOVNA\",\n        \"KOEF_EKONONICKE_NAROCNOSTI\",\n        \"KOLEJ_IN\",\n        \"KOLEJ_NABIDKA\",\n        \"KOLEJ_ODKUD\",\n        \"KOLEJ_OUT\",\n        \"KOLEJ_STAV\",\n        \"KOMENTARE_POVINNOST\",\n        \"KONTROLY_STUDIA\",\n        \"KVANT_OBCAN\",\n        \"LA_JAZYK_NAZVU_PREDMETU\",\n        \"LOKALITA\",\n        \"MC_DOBA\",\n        \"MC_FORMA_UCASTI\",\n        \"MC_TYP_DOHLEDU_A_OVERENI\",\n        \"MC_TYP_HODNOCENI\",\n        \"MC_TYP_ZAJISTENI_KVALITY\",\n        \"MESIC\",\n        \"METODA_OVERENI_OSOBY\",\n        \"MISTO\",\n        \"MISTO_VYSTAVENI\",\n        \"MISTO_VYUKY\",\n        \"MO_MAX_DOBA_SE_TYKA\",\n        \"MO_RIZENI_TYPY_INFORMACI\",\n        \"MO_SMLOUVY_TYP_UCASTI_OSOBY\",\n        \"MO_SMLOUVY_TYPY_INFORMACI\",\n        \"MO_STAV_PRIHLASKY\",\n        \"NABIZEN\",\n        \"NE_ANO\",\n        \"NOTIFIKACE_DORUCENI\",\n        \"NOTIFIKACE_KATEGORIE\",\n        \"NOTIFIKACE_TYP\",\n        \"OBLAST\",\n        \"OBLASTI_VZDELAVANI\",\n        \"OCENENI_POVINNOST\",\n        \"OCENENI_VAZBA\",\n        \"ODKUD\",\n        \"ODKUD_ZNA_SKOLU\",\n        \"OMEZENI_ZAPISU\",\n        \"OPERACE\",\n        \"OPERATOR\",\n        \"ORGANIZACE\",\n        \"OS_CISLO\",\n        \"OSU_AKR_ORGAN\",\n        \"PDF_ROZLOZENI\",\n        \"PLAGIAT_SYSTEM\",\n        \"PLATBA_DRUH_PREDPISU\",\n        \"PLATBA_ODESLANO_DO_EIS\",\n        \"PLATBA_PERIODA\",\n        \"PLATBA_STAV_VYROVNANI\",\n        \"PLATBA_TYP_KONCE\",\n        \"PLATBA_TYP_PLATNOSTI\",\n        \"PLATBA_TYP_UCTU_STUDENTA\",\n        \"PLATBA_TYP_ZACATKU\",\n        \"PLATBA_UCET_MENA\",\n        \"PLATBY_STAV_PLATBY\",\n        \"PLATNOST_RA\",\n        \"PLATNOST_ST\",\n        \"PLATNOST_TERMINU\",\n        \"PLATNOST_VYJEZDU\",\n        \"POHLAVI\",\n        \"POSOUZENI_PODOBNOSTI\",\n        \"POTVRZENI_O_STUDIU_ROZSAH\",\n        \"POVOLIT_BRANU\",\n        \"POZADAVKY_PRO_PRIJETI\",\n        \"PRACE\",\n        \"PRACOVNI_STAZE\",\n        \"PRAXE_DEADLINE_UPRAVY\",\n        \"PRAXE_VOLBA_STUDENTEM\",\n        \"PREDMET_NA_EPRIHLASCE\",\n        \"PRED_VZDELANI\",\n        \"PRIJIMACI_OBOR_IKONY\",\n        \"PRIJIMACKY_STATISTIKA\",\n        \"PROFIL\",\n        \"PROFIL_PROGRAMU\",\n        \"PROFSTATUS\",\n        \"PUSOBNOST\",\n        \"PUVOD_UZN_PREDM\",\n        \"QRAM_CO_JE_VYPLNENO\",\n        \"QRAM_CO_VYPLNOVAT\",\n        \"QRAM_KATEGORIE\",\n        \"QRAM_POVINNOST\",\n        \"QRAM_SCHOPNOSTI\",\n        \"QRAM_SCHVALOVANI\",\n        \"QRAM_UROVEN\",\n        \"R_DELENI\",\n        \"REALIZACE_VYJEZDU\",\n        \"REPORT_NASTROJ\",\n        \"R_ETAPA\",\n        \"ROCNI\",\n        \"ROCNIK\",\n        \"ROLE\",\n        \"ROZHODNUTI\",\n        \"ROZVRHOVY_DEN\",\n        \"ROZVRHOVY_TYDEN\",\n        \"R_STRUKTURA\",\n        \"SABLONY_PRAC_TYP\",\n        \"SEMESTR\",\n        \"SEMESTR_OBA\",\n        \"SIMS_UBYTSTIP\",\n        \"SKUPINA_OBCANSTVI\",\n        \"SKUPINA_OBORU\",\n        \"SKUPINA_TYPU_ZADOSTI\",\n        \"SKUP_PREDM\",\n        \"SLOVNI_HODNOCENI\",\n        \"SOUBOR_JAKE_PRACOVISTE\",\n        \"SOUBOR_PRAVA\",\n        \"SOUBOR_PRO_KOHO\",\n        \"SOUBORY_OBLASTI\",\n        \"SPAM_JAK_CASTO\",\n        \"SP_HODNOCENI_SKUPINY\",\n        \"SPIS_DORUCOVACI_CESTA\",\n        \"SPIS_ELEKTRONICKA_PECET\",\n        \"SPIS_ELEKTRONICKE_RAZITKO\",\n        \"SPIS_ELEKTRONICKY_PODPIS\",\n        \"SPIS_KDE_ZOBRAZIT\",\n        \"SPIS_SKARTACNI_ZNAK\",\n        \"SPIS_SPISOVY_ZNAK\",\n        \"SPIS_TYP_UKONCENI_STUDIA\",\n        \"SPLNENI_KLAUZURY\",\n        \"SPLNIT_PODMINUJICI\",\n        \"SP_STAV_TEMATU\",\n        \"SP_TYP_OKRUHU\",\n        \"SP_URCENI_VYSLEDNYCH_BODU\",\n        \"SP_VALIDATOR\",\n        \"SP_VYSLEDEK_KONTROLY\",\n        \"SP_VYSLEDEK_VALIDACE\",\n        \"SP_ZPUSOB_OPRAVOVANI\",\n        \"STATUS_PRACE\",\n        \"STATUT\",\n        \"STAV\",\n        \"STAV_ABSOLVOVANI\",\n        \"STAV_CASOPROSTORU\",\n        \"STAV_MODULU\",\n        \"STAV_NASAZENI_SLUZBY\",\n        \"STAV_ODESLANI\",\n        \"STAV_OSOBY_ROB\",\n        \"STAV_OSVEDCENI\",\n        \"STAV_SCHVALENI\",\n        \"STAV_STUDENTA\",\n        \"STUDENTI_ZADOSTI_ROZHODNUTI\",\n        \"TABULKY\",\n        \"TERMIN_UCAST\",\n        \"TERMINY_KDO\",\n        \"TERMINY_REGISTRACE_PREDMETU\",\n        \"TERM_PRICINA_ODHLASENI\",\n        \"TISK_SPECIALIZACE_DIPLOM_A_DS\",\n        \"TITUL\",\n        \"TITUL_PRED\",\n        \"TITUL_ZA\",\n        \"TRIDA_PISEMNOSTI\",\n        \"TRIGGER_KDY\",\n        \"TYDEN\",\n        \"TYP_AKCE\",\n        \"TYP_CASOPROSTORU\",\n        \"TYP_CASOVE_NAROCNOSTI\",\n        \"TYP_CERTIFIKATU\",\n        \"TYP_CINNOSTI_RASP\",\n        \"TYP_CISELNE_RADY\",\n        \"TYP_CV\",\n        \"TYP_DIPLOMU\",\n        \"TYP_DODATKU_DIPLOMU\",\n        \"TYP_DPH\",\n        \"TYP_EL_SYSTEMU\",\n        \"TYP_HODNOTY\",\n        \"TYP_JED_AKCE\",\n        \"TYP_LITERATURY\",\n        \"TYP_MOBILITY\",\n        \"TYP_MODULU\",\n        \"TYP_OBORU\",\n        \"TYP_OBORU_INTERNI\",\n        \"TYP_OMEZENI\",\n        \"TYP_OSOBY_DP\",\n        \"TYP_OSVEDCENI\",\n        \"TYP_PODKLADU\",\n        \"TYP_POLOZKY\",\n        \"TYP_PR\",\n        \"TYP_PRACOVISTE\",\n        \"TYP_PRACOVNIHO_POMERU\",\n        \"TYP_PRAXE\",\n        \"TYP_PREDPISU\",\n        \"TYP_ROZVRH_DNE\",\n        \"TYP_SKUPINY_PREDM\",\n        \"TYP_SMENY_PRAXE\",\n        \"TYP_SOUBORU\",\n        \"TYP_SOUBORU_KLAUZURNI\",\n        \"TYP_SS\",\n        \"TYP_STUDIA\",\n        \"TYP_TEMATU\",\n        \"TYP_TERMINU\",\n        \"TYP_UCEB\",\n        \"TYP_UKAZATELE\",\n        \"TYP_VALIDATORU\",\n        \"TYP_VEDOUCIHO\",\n        \"TYP_VYJEZDU\",\n        \"TYP_VYJEZDU_ZAMESTNANEC\",\n        \"TYP_VYSVEDCENI\",\n        \"TYP_ZADANI_DP\",\n        \"TYP_ZADOSTI\",\n        \"TYP_ZALOZKY\",\n        \"TYP_ZAMESTNANCE\",\n        \"TYP_ZAPISU_SZZ\",\n        \"TYP_ZAVERECNE_PRACE\",\n        \"TYP_ZK_NEW\",\n        \"UCEL_POTVRZENI\",\n        \"UCEL_PROGRAMU_CZV\",\n        \"UDALOST\",\n        \"UKONCENI_NEW\",\n        \"UROVEN_EQF\",\n        \"UROVEN_JAZYKOVYCH_ZNALOSTI\",\n        \"UROVEN_PRAC\",\n        \"UROVEN_PREDMETU\",\n        \"UZNANA_DOBA_RODICOVSTVI\",\n        \"UZNANI\",\n        \"UZNANI_PREDMETU_ROZHODNUTI_DUVOD\",\n        \"VALIDATOR_DRUH_EL_PODPISU\",\n        \"VALIDATOR_STATUS\",\n        \"VSKP_OCENENI\",\n        \"VSKP_POS_POLOZKA_ZP_TISKU\",\n        \"VSKP_POSUDEK_POLOZKA\",\n        \"VSKP_POSUDEK_POVINNOST\",\n        \"VSKP_UZNANO\",\n        \"VYBAVENI_MIST\",\n        \"VYSLEDEK_ZAPISU\",\n        \"VYUCOVACI_METODY\",\n        \"VYZNAM_PREDMETU\",\n        \"VZOREC\",\n        \"ZADANI_PREDMETU\",\n        \"ZADANI_PREDMETU_DUVOD_ZMENY\",\n        \"ZADOSTI_FINANCOVANI_POVINNOST\",\n        \"ZADOSTI_FINANCOVANI_STAV\",\n        \"ZADOST_KATEDRA_VYJADRENI\",\n        \"ZADOST_POVINNOST_PRILOHY\",\n        \"ZADOST_ROZHODUJE\",\n        \"ZADOST_SOUBOR_VLOZIT\",\n        \"ZADOST_TISK\",\n        \"ZADOST_ZPRACOVAVA\",\n        \"ZAOKROUHLOVANI\",\n        \"ZAPIS\",\n        \"ZDRAVOTNICKY_OBOR\",\n        \"ZDR_SPECIFIKA\",\n        \"ZNAMENKO\",\n        \"ZNAMKA\",\n        \"ZPUSOB_CITACE\",\n        \"ZPUSOBILOSTI\",\n        \"ZPUSOB_ODESLANI\",\n        \"ZPUSOB_VYRIZENI\",\n        \"ZPUSOB_VYUKY\",\n        \"ZTOTOZNENI_STAV\",\n        \"ZTOTOZNENI_SYSTEM\"\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get domain values",
+          "protocolProfileBehavior": {
+            "protocolVersion": "http2"
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "cs",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/domains/STAV",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "domains",
+                "STAV"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "FAKULTA",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept-Language",
+                    "value": "en",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/domains/FAKULTA",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "domains",
+                    "FAKULTA"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": ":status",
+                  "value": 200
+                },
+                {
+                  "key": "x-content-type-options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "x-xss-protection",
+                  "value": "0"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "expires",
+                  "value": "0"
+                },
+                {
+                  "key": "x-frame-options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "vary",
+                  "value": "accept-encoding"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "date",
+                  "value": "Wed, 10 Sep 2025 14:16:20 GMT"
+                },
+                {
+                  "key": "strict-transport-security",
+                  "value": "max-age=31536000 ; includeSubDomains"
+                },
+                {
+                  "key": "referrer-policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "content-encoding",
+                  "value": "gzip"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"values\": [\n        {\n            \"key\": \"FAV\",\n            \"name\": \"Faculty of Applied Sciences\",\n            \"abbreviation\": \"FAV\"\n        },\n        {\n            \"key\": \"FEK\",\n            \"name\": \"Faculty of Economics\",\n            \"abbreviation\": \"FEK\"\n        },\n        {\n            \"key\": \"FPE\",\n            \"name\": \"Faculty of Education\",\n            \"abbreviation\": \"FPE\"\n        },\n        {\n            \"key\": \"FEL\",\n            \"name\": \"Faculty of Electrical Engineering\",\n            \"abbreviation\": \"FEL\"\n        },\n        {\n            \"key\": \"FZS\",\n            \"name\": \"Faculty of Health Care Studies\",\n            \"abbreviation\": \"FZS\"\n        },\n        {\n            \"key\": \"FPR\",\n            \"name\": \"Faculty of Law\",\n            \"abbreviation\": \"FPR\"\n        },\n        {\n            \"key\": \"FST\",\n            \"name\": \"Faculty of Mechanical Engineering\",\n            \"abbreviation\": \"FST\"\n        },\n        {\n            \"key\": \"FF\",\n            \"name\": \"Faculty of Philosophy and Arts\",\n            \"abbreviation\": \"FF\"\n        },\n        {\n            \"key\": \"UCV\",\n            \"name\": \"Institute for Continuing Education\",\n            \"abbreviation\": \"UCV\"\n        },\n        {\n            \"key\": \"UJP\",\n            \"name\": \"Institute of Applied Language Studies\",\n            \"abbreviation\": \"UJP\"\n        },\n        {\n            \"key\": \"UTS\",\n            \"name\": \"Institute of Physical education and sport\",\n            \"abbreviation\": \"UTS\"\n        },\n        {\n            \"key\": \"FDU\",\n            \"name\": \"Ladislav Sutnar Faculty of Design and Art\",\n            \"abbreviation\": \"FDU\"\n        },\n        {\n            \"key\": \"REK\",\n            \"name\": \"University of West Bohemia\",\n            \"abbreviation\": \"REK\"\n        }\n    ]\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmc3JkU3ppbGk2NkFDYjZQT2tBTlhLZlNqdVBBdjEyTVJIdDFKYms4TWtVIn0.eyJleHAiOjE3NjkxOTg3MTcsImlhdCI6MTc2OTE5ODQxNywiYXV0aF90aW1lIjoxNzY5MTk3OTI4LCJqdGkiOiJvbnJ0YWM6OGM4ZTRlNGItYzhlZi1jMTQxLWNmMDgtYWYxYzc2ZTQ2YjY0IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTgwL2F1dGgvcmVhbG1zL2lzLXN0YWciLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiZWM3MWFlOGUtZDVjMS00MGVhLTlkNzQtNmQ3MzQ5OTcxMjhiIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiUmVhY3QtY2xpZW50Iiwic2lkIjoiZlpTVzBJMDdXb2ZTSG5DalA3cWloTEJwIiwiYWNyIjoiMCIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJTVCIsImRlZmF1bHQtcm9sZXMtaXMtc3RhZyIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCBlbWFpbCBwcm9maWxlIiwic3R1ZGVudElkIjoiQTIzQjExNThQIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJNYXJlayBKQU5EQSIsInByZWZlcnJlZF91c2VybmFtZSI6ImEyM2IxMTU4cCIsImdpdmVuX25hbWUiOiJNYXJlayIsImZhbWlseV9uYW1lIjoiSkFOREEiLCJlbWFpbCI6ImEyM2IxMTU4cEBzdHVkZW50cy56Y3UuY3oifQ.BW7ShSPWwlX5u5MJdO1TPrtB4gewuDXpNyX-SqpXYEM9NKk3HJ85kvUbBwiIPNYF-HcwKJfKAR57VjO-Ag3Ha5ZrVVC9TCGykLE6Xg-Fu70434I-wKHxOarBtUwdwFhPtnBn4kSeZzQZgGZYzTPFSrLBofOYvLlzzyypU3Pgpa4QqcmsAWovMYN5vWn4wXA-9NEjzCNgns4FpglobpJxJnilgsmNhUYkMzP942hZF1DsiG7Y7L5h6Oy5ogtzVq_G8EFPS9fV0Tm36662RqO6SeI6RJNLKhgaxjJgrZ41bTKmaiI2ssf5eaKweVVm7HmSaEI3gvii60jnFVqrwMvsfw",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": "http://localhost:8100/api/v1"
+    },
+    {
+      "key": "personId",
+      "value": ""
+    }
+  ]
+}

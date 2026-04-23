@@ -1,7 +1,7 @@
 import { check } from 'k6';
 import http, { Params } from 'k6/http';
 
-import { BASE_URL, HEADERS, TEST_RUN_ID } from '../shared/common.ts';
+import { BASE_URL, HEADERS, TEST_RUN_ID } from './common.ts';
 
 interface RequestOptions {
   path: string;

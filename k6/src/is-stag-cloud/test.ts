@@ -2,7 +2,7 @@ import { group, sleep } from 'k6';
 import { Options } from 'k6/options';
 import faker from 'k6/x/faker';
 
-import { STUDENT_IDS } from '../../data/student-ids.ts';
+import { STUDENT_IDS } from '../data/student-ids.ts';
 import * as studentApi from './student-api.ts';
 import * as userApi from './user-api.ts';
 
