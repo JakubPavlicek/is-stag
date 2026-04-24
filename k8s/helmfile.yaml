@@ -51,7 +51,7 @@ hooks:
 templates:
   .backend-service-common: &backend-service-common
     chart: is-stag/backend-service
-    version: 0.0.2
+    version: 0.0.3
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn

@@ -33,17 +33,11 @@ resources:
 
 # Service configuration
 service:
-  # Kubernetes service type
-  type: ClusterIP
   ports:
     # HTTP port for the service
     http: 8080
     # gRPC port for the service (null to disable)
     grpc: null
-    # NodePort for HTTP (only used when service.type is NodePort)
-    httpNodePort: null
-    # NodePort for gRPC (only used when service.type is NodePort)
-    grpcNodePort: null
 
 # Spring Boot configuration
 spring:

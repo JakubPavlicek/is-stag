@@ -179,10 +179,6 @@ spring:
       on-profile: dev
   data:
     redis:
-#      host: redis-cache
-      host: localhost
+      host: redis-cache
       port: 6379
       password: redis
-
-STUDY_PLAN_SERVICE_GRPC_ADDRESS: localhost:9030
-USER_SERVICE_GRPC_ADDRESS: localhost:9040
