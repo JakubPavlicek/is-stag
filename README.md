@@ -20,15 +20,15 @@ and the backend services.
 
 ## Technology Stack
 
-| Area | Technologies |
-|------|--------------|
-| Backend | Java 25, Spring Boot 4.0.6, Spring Cloud 2025.1.1, Spring Data JPA, gRPC, Resilience4j |
-| Frontend | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui, TanStack Router, TanStack Query |
-| Identity | Keycloak with a custom realm, theme, and authenticator provider |
-| Data | Oracle Database, Redis cache, Redis rate limiter |
-| Observability | OpenTelemetry Collector, Prometheus, Grafana, Loki, Tempo |
-| Runtime | Docker Compose for local startup, Kubernetes for cluster deployment |
-| Deployment | Helm, Helmfile, SOPS, Age, helm-secrets, GitHub Actions |
+| Area          | Technologies                                                                           |
+|---------------|----------------------------------------------------------------------------------------|
+| Backend       | Java 25, Spring Boot 4.0.6, Spring Cloud 2025.1.1, Spring Data JPA, gRPC, Resilience4j |
+| Frontend      | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui, TanStack Router, TanStack Query   |
+| Identity      | Keycloak with a custom realm, theme, and authenticator provider                        |
+| Data          | Oracle Database, Redis cache, Redis rate limiter                                       |
+| Observability | OpenTelemetry Collector, Prometheus, Grafana, Loki, Tempo                              |
+| Runtime       | Docker Compose for local startup, Kubernetes for cluster deployment                    |
+| Deployment    | Helm, Helmfile, SOPS, Age, helm-secrets, GitHub Actions                                |
 
 ## Repository Structure
 
@@ -77,17 +77,17 @@ and the backend services.
 
 Install these tools before running the project locally:
 
-| Tool | Purpose |
-|------|---------|
-| Docker Desktop or Docker Engine | Local container runtime and Docker Compose |
-| Java 25 | Backend services |
-| Maven 3.9.11 or newer | Backend and Keycloak provider builds, or use `./mvnw` |
-| Node.js 25.8.2 or newer | React client development |
-| npm 11.12.1 or newer | React client package manager |
-| kubectl | Kubernetes access |
-| Helm | Kubernetes package manager |
-| Helmfile | Kubernetes release orchestration |
-| helm-secrets, SOPS, Age | Decrypting Kubernetes secrets |
+| Tool                            | Purpose                                               |
+|---------------------------------|-------------------------------------------------------|
+| Docker Desktop or Docker Engine | Local container runtime and Docker Compose            |
+| Java 25                         | Backend services                                      |
+| Maven 3.9.11 or newer           | Backend and Keycloak provider builds, or use `./mvnw` |
+| Node.js 25.8.2 or newer         | React client development                              |
+| npm 11.12.1 or newer            | React client package manager                          |
+| kubectl                         | Kubernetes access                                     |
+| Helm                            | Kubernetes package manager                            |
+| Helmfile                        | Kubernetes release orchestration                      |
+| helm-secrets, SOPS, Age         | Decrypting Kubernetes secrets                         |
 
 Docker Compose and the backend services also require access to an Oracle Database. The Oracle instance is not started by
 `docker-compose.yaml`; provide a reachable JDBC URL through `.env`.
@@ -131,26 +131,26 @@ docker compose up -d
 
 5. Open the application:
 
-| Service | URL |
-|---------|-----|
-| React client | http://localhost:5173 |
-| API gateway | http://localhost:8100 |
-| Codelist service | http://localhost:8010 |
-| Student service | http://localhost:8020 |
-| Study plan service | http://localhost:8030 |
-| User service | http://localhost:8040 |
-| Aggregated Swagger UI | http://localhost:8100/api/swagger-ui.html |
+| Service                      | URL                                              |
+|------------------------------|--------------------------------------------------|
+| React client                 | http://localhost:5173                            |
+| API gateway                  | http://localhost:8100                            |
+| Codelist service             | http://localhost:8010                            |
+| Student service              | http://localhost:8020                            |
+| Study plan service           | http://localhost:8030                            |
+| User service                 | http://localhost:8040                            |
+| Aggregated Swagger UI        | http://localhost:8100/api/swagger-ui.html        |
 | Keycloak IS/STAG realm admin | http://localhost:8180/auth/admin/is-stag/console |
-| Grafana | http://localhost:3000 |
-| Prometheus | http://localhost:9090 |
+| Grafana                      | http://localhost:3000                            |
+| Prometheus                   | http://localhost:9090                            |
 
 Default Docker Compose credentials:
 
-| Component | Username | Password |
-|-----------|----------|----------|
-| Keycloak master realm | `admin` | `admin` |
-| Keycloak IS/STAG realm | `stagadmin` | `stagadmin` |
-| Grafana | anonymous admin access | no password |
+| Component              | Username               | Password    |
+|------------------------|------------------------|-------------|
+| Keycloak master realm  | `admin`                | `admin`     |
+| Keycloak IS/STAG realm | `stagadmin`            | `stagadmin` |
+| Grafana                | anonymous admin access | no password |
 
 7. Stop the stack:
 
@@ -170,10 +170,10 @@ Kubernetes deployment is managed from `k8s/helmfile.yaml`.
 
 The Helmfile defines two environments:
 
-| Environment | Namespace | Notes |
-|-------------|-----------|-------|
-| `prod` | `is-stag-prod` | Full application, including Keycloak and React client |
-| `perftest` | `is-stag-perftest` | Performance-test setup with Keycloak and client disabled |
+| Environment | Namespace          | Notes                                                    |
+|-------------|--------------------|----------------------------------------------------------|
+| `prod`      | `is-stag-prod`     | Full application, including Keycloak and React client    |
+| `perftest`  | `is-stag-perftest` | Performance-test setup with Keycloak and client disabled |
 
 1. Connect `kubectl` to the target cluster.
 
@@ -223,6 +223,25 @@ kubectl get svc -n is-stag-prod
 <external-ip> grafana.is-stag.internal
 <external-ip> prometheus.is-stag.internal
 ```
+
+7. Open the application:
+
+| Service                      | URL                                           |
+|------------------------------|-----------------------------------------------|
+| React client                 | https://is-stag.cz                            |
+| API gateway                  | https://is-stag.cz/api                        |
+| Aggregated Swagger UI        | https://is-stag.cz/api/swagger-ui.html        |
+| Keycloak IS/STAG realm admin | https://is-stag.cz/auth/admin/is-stag/console |
+| Grafana                      | https://grafana.is-stag.internal              |
+| Prometheus                   | https://prometheus.is-stag.internal           |
+
+Default credentials:
+
+| Component              | Username    | Password    |
+|------------------------|-------------|-------------|
+| Keycloak master realm  | `admin`     | `admin`     |
+| Keycloak IS/STAG realm | `stagadmin` | `stagadmin` |
+| Grafana                | `admin`     | `admin`     |
 
 ## Project Context
 

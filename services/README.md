@@ -13,30 +13,30 @@ Database access, Redis integration, and OpenTelemetry instrumentation.
 
 ## Services
 
-| Service | HTTP port | gRPC port | Description |
-|---------|-----------|-----------|-------------|
-| [`api-gateway`](./api-gateway) | `8100` | none | Public entry point for REST traffic, OAuth2 resource server, routing, retries, circuit breakers, and rate limiting |
-| [`codelist-service`](./codelist-service) | `8010` | `9010` | Shared dictionaries, domains, countries, address data, and education codelists |
-| [`student-service`](./student-service) | `8020` | `9020` | Student data and student-facing REST endpoints |
-| [`study-plan-service`](./study-plan-service) | `8030` | `9030` | Study plans, study programs, field-of-study data, and internal gRPC endpoints |
-| [`user-service`](./user-service) | `8040` | `9040` | Persons, user profile data, and identity-related domain data |
+| Service                                      | HTTP port | gRPC port | Description                                                                                                        |
+|----------------------------------------------|-----------|-----------|--------------------------------------------------------------------------------------------------------------------|
+| [`api-gateway`](./api-gateway)               | `8100`    | none      | Public entry point for REST traffic, OAuth2 resource server, routing, retries, circuit breakers, and rate limiting |
+| [`codelist-service`](./codelist-service)     | `8010`    | `9010`    | Shared dictionaries, domains, countries, address data, and education codelists                                     |
+| [`student-service`](./student-service)       | `8020`    | `9020`    | Student data and student-facing REST endpoints                                                                     |
+| [`study-plan-service`](./study-plan-service) | `8030`    | `9030`    | Study plans, study programs, field-of-study data, and internal gRPC endpoints                                      |
+| [`user-service`](./user-service)             | `8040`    | `9040`    | Persons, user profile data, and identity-related domain data                                                       |
 
 ## Technology Stack
 
-| Area | Technologies                                                         |
-|------|----------------------------------------------------------------------|
-| Language | Java 25 with preview features enabled                                |
-| Framework | Spring Boot 4.0.6, Spring Cloud 2025.1.1                             |
-| APIs | REST, OpenAPI, Swagger UI                                            |
-| Internal communication | gRPC with protobuf contracts from `../proto`                         |
-| Database | Oracle Database through Spring Data JPA and Hibernate                |
+| Area                    | Technologies                                                         |
+|-------------------------|----------------------------------------------------------------------|
+| Language                | Java 25 with preview features enabled                                |
+| Framework               | Spring Boot 4.0.6, Spring Cloud 2025.1.1                             |
+| APIs                    | REST, OpenAPI, Swagger UI                                            |
+| Internal communication  | gRPC with protobuf contracts from `../proto`                         |
+| Database                | Oracle Database through Spring Data JPA and Hibernate                |
 | Cache and rate limiting | Redis                                                                |
-| Security | Spring Security, OAuth2 Resource Server, Keycloak JWT validation     |
-| Resilience | Resilience4j circuit breakers, retries, time limiters, and bulkheads |
-| Observability | OpenTelemetry Java agent, Spring Boot Actuator                       |
-| Containers | Cloud Native Buildpacks through the Spring Boot Maven plugin         |
-| Tests | JUnit 6, Spring Boot tests, Mockito, Testcontainers                  |
-| Build | Maven 3.9.11 or newer                                                |
+| Security                | Spring Security, OAuth2 Resource Server, Keycloak JWT validation     |
+| Resilience              | Resilience4j circuit breakers, retries, time limiters, and bulkheads |
+| Observability           | OpenTelemetry Java agent, Spring Boot Actuator                       |
+| Containers              | Cloud Native Buildpacks through the Spring Boot Maven plugin         |
+| Tests                   | JUnit 6, Spring Boot tests, Mockito, Testcontainers                  |
+| Build                   | Maven 3.9.11 or newer                                                |
 
 ## Module Structure
 
@@ -62,14 +62,14 @@ services/
 
 ## Prerequisites
 
-| Tool | Purpose |
-|------|---------|
-| Java 25 | Compile and run services |
-| Maven 3.9.11 or newer | Build backend modules, or use `../mvnw` from this directory |
-| Docker | Testcontainers and local Compose dependencies |
-| Oracle Database access | Runtime datasource for domain services |
-| Redis | Cache and API gateway rate limiting |
-| Keycloak | OAuth2 JWT issuer for the API gateway |
+| Tool                   | Purpose                                                     |
+|------------------------|-------------------------------------------------------------|
+| Java 25                | Compile and run services                                    |
+| Maven 3.9.11 or newer  | Build backend modules, or use `../mvnw` from this directory |
+| Docker                 | Testcontainers and local Compose dependencies               |
+| Oracle Database access | Runtime datasource for domain services                      |
+| Redis                  | Cache and API gateway rate limiting                         |
+| Keycloak               | OAuth2 JWT issuer for the API gateway                       |
 
 Use the root `docker-compose.yaml` when you want the standard local runtime dependencies and all backend containers to run
 together.
@@ -149,10 +149,10 @@ docker compose up -d student-service
 
 The API gateway aggregates Swagger UI for the public REST APIs.
 
-| Runtime | URL |
-|---------|-----|
+| Runtime        | URL                                       |
+|----------------|-------------------------------------------|
 | Docker Compose | http://localhost:8100/api/swagger-ui.html |
-| Kubernetes | https://is-stag.cz/api/swagger-ui.html |
+| Kubernetes     | https://is-stag.cz/api/swagger-ui.html    |
 
 OpenAPI source files are stored in each public REST service under `src/main/resources/static/openapi.yaml`. The React
 client generates TypeScript schemas from these files with `npm run gen:api` in `../client`.
