@@ -3,6 +3,27 @@ entries:
   backend-service:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-05-03T08:39:26.631092136Z"
+    description: A generic Helm chart for deploying an IS/STAG backend service
+    digest: d20a5d46dc4666407f1c9b22508f386cdb111957f91aff3661e4f4b02abd6cec
+    home: https://github.com/JakubPavlicek/is-stag
+    keywords:
+    - is-stag
+    - backend
+    - spring-boot
+    - java
+    maintainers:
+    - email: jpvlck@students.zcu.cz
+      name: Jakub Pavlíček
+    name: backend-service
+    sources:
+    - https://github.com/JakubPavlicek/is-stag
+    type: application
+    urls:
+    - https://github.com/JakubPavlicek/is-stag/releases/download/backend-service-0.0.4/backend-service-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-04-24T14:51:43.511323756Z"
     description: A generic Helm chart for deploying an IS/STAG backend service
     digest: 8790885816ec466e283b9ac875ae1ce13b0e0c0f2d91de5d1594a500a5584108
@@ -306,4 +327,4 @@ entries:
     urls:
     - https://github.com/JakubPavlicek/is-stag/releases/download/secrets-0.0.1/secrets-0.0.1.tgz
     version: 0.0.1
-generated: "2026-04-24T14:51:43.511349614Z"
+generated: "2026-05-03T08:39:26.631126069Z"
