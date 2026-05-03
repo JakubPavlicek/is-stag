@@ -51,7 +51,7 @@ hooks:
 templates:
   .backend-service-common: &backend-service-common
     chart: is-stag/backend-service
-    version: 0.0.3
+    version: 0.0.4
     namespace: "{{ .Environment.Values.namespace }}"
     wait: false
     missingFileHandler: Warn
@@ -60,7 +60,7 @@ templates:
       - otel-config
       - redis-cache
     secrets:
-      - secrets/oracle-secrets.yaml
+      - secrets/app-secrets.yaml
     values:
       - is-stag/{{ .Release.Name }}/values.yaml
       - is-stag/{{ .Release.Name }}/values-{{ .Environment.Name }}.yaml
@@ -88,7 +88,7 @@ releases:
     version: 0.0.2
     namespace: "{{ .Environment.Values.namespace }}"
     secrets:
-      - secrets/secrets.yaml
+      - secrets/infrastructure-secrets.yaml
 
   # ========================================
   # MetalLB

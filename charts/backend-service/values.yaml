@@ -50,13 +50,20 @@ database:
   url: jdbc:oracle:thin:@//localhost:1521/XEPDB1
   # Database credentials should be provided via an encrypted secrets file
   credentials: null
-  # credentials:
-  #   username: ""
-  #   password: ""
-  #   proxy:
-  #     username: ""
-  #     password: ""
-  #     targetUsername: ""
+#  credentials:
+#    username: ""
+#    password: ""
+#    proxy:
+#      username: ""
+#      password: ""
+#      targetUsername: ""
+
+# Redis configuration
+redis:
+  # Redis credentials should be provided via an encrypted secrets file
+  credentials: null
+#  credentials:
+#    password: ""
 
 # Additional environment variables (non-sensitive)
 # Will be added to the ConfigMap

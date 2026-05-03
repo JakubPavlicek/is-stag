@@ -37,6 +37,10 @@ spec:
             - secretRef:
                 name: {{ .Values.name }}-database-secret
             {{- end }}
+            {{- if .Values.redis.credentials }}
+            - secretRef:
+                name: {{ .Values.name }}-redis-secret
+            {{- end }}
           {{ with .Values.probes }}
           readinessProbe:
             httpGet:

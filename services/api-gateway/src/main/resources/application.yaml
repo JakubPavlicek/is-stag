@@ -137,9 +137,9 @@ resilience4j:
   bulkhead:
     configs:
       default:
-        max-concurrent-calls: 100
+        max-concurrent-calls: 200
         max-wait-duration: 10ms
-        event-consumer-buffer-size: 100
+        event-consumer-buffer-size: 200
   circuitbreaker:
     configs:
       default:
@@ -207,8 +207,8 @@ spring:
         master: mymaster
         nodes:
           - redis-rate-limiter:26379
-        password: redis
-      password: redis
+        password: ${REDIS_PASSWORD}
+      password: ${REDIS_PASSWORD}
 
 ---
 
@@ -222,12 +222,12 @@ spring:
         master: mymaster
         nodes:
           - redis-rate-limiter:26379
-        password: redis
-      password: redis
+        password: ${REDIS_PASSWORD}
+      password: ${REDIS_PASSWORD}
 
 gateway:
   ratelimit:
-    rate: 10000
+    rate: 20000
     burst: 10000
 
 ---
@@ -245,4 +245,4 @@ spring:
     redis:
       host: redis-rate-limiter
       port: 6379
-      password: redis
+      password: ${REDIS_PASSWORD}

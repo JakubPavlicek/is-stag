@@ -151,8 +151,8 @@ spring:
         master: mymaster
         nodes:
           - redis-cache:26379
-        password: redis
-      password: redis
+        password: ${REDIS_PASSWORD}
+      password: ${REDIS_PASSWORD}
 
 ---
 
@@ -166,8 +166,8 @@ spring:
         master: mymaster
         nodes:
           - redis-cache:26379
-        password: redis
-      password: redis
+        password: ${REDIS_PASSWORD}
+      password: ${REDIS_PASSWORD}
 
 ---
 
@@ -179,4 +179,4 @@ spring:
     redis:
       host: redis-cache
       port: 6379
-      password: redis
+      password: ${REDIS_PASSWORD}
