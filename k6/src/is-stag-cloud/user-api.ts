@@ -1,4 +1,4 @@
-import faker from 'k6/x/faker';
+import defaultFaker, { Faker } from 'k6/x/faker';
 
 import { BANK_CODE_VALUES } from '../data/bank-codes.ts';
 import { COUNTRY_VALUES } from '../data/countries.ts';
@@ -77,7 +77,7 @@ export function updatePersonProfile(personId: number, payload: UpdatePersonReque
   });
 }
 
-export function generateUpdatePersonBody(): UpdatePersonRequest {
+export function generateUpdatePersonBody(faker: Faker = defaultFaker): UpdatePersonRequest {
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
 

@@ -1,13 +1,17 @@
 import { group, sleep } from 'k6';
+import exec from 'k6/execution';
 import { RefinedResponse } from 'k6/http';
 import { Options } from 'k6/options';
-import faker from 'k6/x/faker';
+import { Faker } from 'k6/x/faker';
 
 import { STUDENT_IDS } from '../data/student-ids.ts';
 import * as codelistApi from './codelist-api.ts';
 import * as fieldOfStudyApi from './field-of-study-api.ts';
 import * as studentApi from './student-api.ts';
 import * as usersApi from './users-api.ts';
+
+const BASE_FAKER_SEED = Number(__ENV.XK6_FAKER_SEED ?? 11);
+const LOAD_TEST_SCENARIO_OFFSET = 100_000;
 
 export const options: Options = {
   insecureSkipTLSVerify: true,
@@ -26,20 +30,22 @@ export const options: Options = {
     },
     average_load: {
       executor: 'ramping-vus',
-      stages: [
-        { duration: '1m', target: 10 },
-        { duration: '2m', target: 25 },
-        { duration: '1m', target: 25 },
-        { duration: '1m', target: 0 },
-      ],
+      startVUs: 0,
+      stages: [{ duration: '20m', target: 800 }],
       exec: 'loadTest',
       startTime: '5s',
+      gracefulRampDown: '0s',
     },
   },
 };
 
+function createFaker(scenarioOffset = 0) {
+  return new Faker(BASE_FAKER_SEED + scenarioOffset + exec.scenario.iterationInTest);
+}
+
 export function smokeTest() {
   group('WebServices - Smoke Test', () => {
+    const fake = createFaker();
     const studentInfo = studentApi.getStudentInfo({ osCislo: STUDENT_IDS[0] });
     const person = usersApi.getOsoba({ osCislo: STUDENT_IDS[0] });
 
@@ -69,12 +75,13 @@ export function smokeTest() {
 
     // Update person
     const osobIdno = person.json('osobIdno') as number;
-    const updateBody = usersApi.generateUpdateOsobaBody(osobIdno);
+    const updateBody = usersApi.generateUpdateOsobaBody(osobIdno, fake);
     usersApi.updateOsoba(updateBody);
   });
 }
 
 export function loadTest() {
+  const faker = createFaker(LOAD_TEST_SCENARIO_OFFSET);
   // Randomly select a student ID from the list.
   const studentId = STUDENT_IDS[faker.numbers.uintRange(0, STUDENT_IDS.length - 1)];
 
@@ -135,7 +142,7 @@ export function loadTest() {
 
   group('WebServices - Update Person', () => {
     const osobIdno = person.json('osobIdno') as number;
-    const updateBody = usersApi.generateUpdateOsobaBody(osobIdno);
+    const updateBody = usersApi.generateUpdateOsobaBody(osobIdno, faker);
     usersApi.updateOsoba(updateBody);
   });
 

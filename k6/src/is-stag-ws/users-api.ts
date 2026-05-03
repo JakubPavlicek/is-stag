@@ -1,4 +1,4 @@
-import faker from 'k6/x/faker';
+import defaultFaker, { Faker } from 'k6/x/faker';
 
 import { BANK_CODE_VALUES } from '../data/bank-codes.ts';
 import { STAT_IDNO_VALUES } from '../data/countries.ts';
@@ -29,7 +29,7 @@ export interface UpdateOsobaBody {
   ucetAdresa: string;
 }
 
-export function generateUpdateOsobaBody(osobIdno: number): UpdateOsobaBody {
+export function generateUpdateOsobaBody(osobIdno: number, faker: Faker = defaultFaker): UpdateOsobaBody {
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
 
