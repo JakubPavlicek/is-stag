@@ -1,4 +1,4 @@
-# Reference Cloud Architecture for IS/STAG
+# IS/STAG Cloud Reference Architecture
 
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/is-stag)](https://artifacthub.io/packages/search?repo=is-stag)
 
@@ -6,148 +6,217 @@ A modern, cloud-native reference architecture for a University Information Syste
 This project demonstrates a scalable microservices architecture using Spring Boot, React, and Kubernetes, complete with
 full observability.
 
----
+## Architecture
 
-## System Architecture
-
-The system is designed as a set of microservices communicating via gRPC, deployed on Kubernetes.
+The application is split into a frontend, an API gateway, domain microservices, identity management, shared gRPC
+contracts, and platform infrastructure.
 
 ![IS/STAG architecture](images/is-stag-architecture.png)
 
-### Tech Stack
-
-**Infrastructure & DevOps**
-
-* **Kubernetes** (K8s) – Container Orchestration
-* **Helm & Helmfile** – Package Management & Deployment
-* **Docker Compose** – Local Development
-* **Nginx Gateway Fabric** – Kubernetes Gateway API
-* **Cert-Manager** – TLS Certificate Management
-* **GitHub Actions** – CI/CD Pipelines
-
-**Backend ([/services](./services))**
-
-* **Java 25** & **Spring Boot 4.0.6**
-* **Spring Cloud 2025.1.1** (Gateway, Circuit Breaker)
-* **gRPC** – Inter-service communication
-* **Oracle Database** – Primary Data Store
-* **Redis** – Caching & Rate Limiting
-
-**Frontend ([/client](./client))**
-
-* **React 19** & **Vite**
-* **TypeScript**
-* **Shadcn UI** & **Tailwind CSS**
-* **TanStack Router** & **TanStack Query** & **TanStack Form**
-
-**Observability**
-
-* **OpenTelemetry** - Tracing, Metrics, Logs
-* **Grafana** - Visualization
-* **Prometheus** - Metrics
-* **Loki** - Logs
-* **Tempo** - Distributed Tracing
-
----
-
-## Kubernetes Architecture
+The Kubernetes deployment uses Helm charts and Helmfile to install infrastructure, observability, Keycloak, the frontend,
+and the backend services.
 
 ![Kubernetes architecture](images/is-stag-kubernetes-architecture.png)
 
----
+## Technology Stack
 
-## Getting Started
+| Area | Technologies |
+|------|--------------|
+| Backend | Java 25, Spring Boot 4.0.6, Spring Cloud 2025.1.1, Spring Data JPA, gRPC, Resilience4j |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui, TanStack Router, TanStack Query |
+| Identity | Keycloak with a custom realm, theme, and authenticator provider |
+| Data | Oracle Database, Redis cache, Redis rate limiter |
+| Observability | OpenTelemetry Collector, Prometheus, Grafana, Loki, Tempo |
+| Runtime | Docker Compose for local startup, Kubernetes for cluster deployment |
+| Deployment | Helm, Helmfile, SOPS, Age, helm-secrets, GitHub Actions |
 
-### Prerequisites
+## Repository Structure
 
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (with Kubernetes enabled for local K8s)
-* [Java 25 SDK](https://jdk.java.net/25/)
-* [Node.js 22+](https://nodejs.org/)
-* [Helm](https://helm.sh/) & [Helmfile](https://github.com/helmfile/helmfile) (for K8s deployment)
+```text
+.
+├── docker-compose.yaml            # Local Docker Compose stack
+├── pom.xml                        # Root Maven aggregator for services and Keycloak provider
+├── charts/                        # Reusable Helm charts published for the project
+│   ├── backend-service/            # Generic backend service chart
+│   ├── cert-manager-config/        # Cert-manager issuer and certificate configuration
+│   ├── client/                     # React client chart
+│   ├── gateway-config/             # Gateway API routes and listeners
+│   ├── metallb-config/             # MetalLB address pool configuration
+│   ├── otel-config/                # OpenTelemetry collector and instrumentation chart
+│   └── secrets/                    # Secret template chart
+├── client/                        # React frontend application
+├── images/                        # Architecture diagrams and UI screenshots
+├── k6/                            # Load tests in k6
+├── k8s/                           # Helmfile environments and values
+│   ├── cert-manager/               # Cert-manager Helm values
+│   ├── cert-manager-config/        # Cert-manager issuer and certificate configuration
+│   ├── database/                   # Redis and Keycloak PostgreSQL values
+│   ├── gateway-config/             # Gateway API routes
+│   ├── is-stag/                    # Application values for services and client
+│   ├── keycloak/                   # Keycloak Helm values
+│   ├── metallb/                    # MetalLB Helm values
+│   ├── metallb-config/             # MetalLB address pool configuration
+│   ├── nginx-gateway-fabric/       # Nginx Gateway Fabric Helm values
+│   ├── observability/              # Prometheus, Grafana, Loki, Tempo, OpenTelemetry values
+│   ├── otel-config/                # OpenTelemetry collector and instrumentation configuration
+│   ├── secrets/                    # SOPS-encrypted environment secrets
+│   └── helmfile.yaml               # Main Kubernetes deployment entry point
+├── keycloak/                      # Keycloak Docker build, realm exports, theme, and provider
+├── observability/                 # Local Docker Compose observability configuration
+├── otel/                          # Local OpenTelemetry Java agent mount point
+├── proto/                         # Shared gRPC protobuf contracts
+└── services/                      # Java Spring Boot backend microservices
+    ├── api-gateway/               # Spring Cloud Gateway application
+    ├── codelist-service/          # Shared dictionaries and address/codelist domains
+    ├── student-service/           # Student domain service
+    ├── study-plan-service/        # Study plan and study program domain service
+    └── user-service/              # Person and user profile domain service
+```
 
-### Quick Start (Docker Compose)
+## Prerequisites
 
-The fastest way to spin up the entire stack locally is using Docker Compose.
+Install these tools before running the project locally:
 
-1. **Clone the repository**
-    ```shell
-    git clone https://github.com/JakubPavlicek/is-stag.git
-    cd is-stag
-    ```
+| Tool | Purpose |
+|------|---------|
+| Docker Desktop or Docker Engine | Local container runtime and Docker Compose |
+| Java 25 | Backend services |
+| Maven 3.9.11 or newer | Backend and Keycloak provider builds, or use `./mvnw` |
+| Node.js 25.8.2 or newer | React client development |
+| npm 11.12.1 or newer | React client package manager |
+| kubectl | Kubernetes access |
+| Helm | Kubernetes package manager |
+| Helmfile | Kubernetes release orchestration |
+| helm-secrets, SOPS, Age | Decrypting Kubernetes secrets |
 
-2. **Download the OpenTelemetry Java Agent**
+Docker Compose and the backend services also require access to an Oracle Database. The Oracle instance is not started by
+`docker-compose.yaml`; provide a reachable JDBC URL through `.env`.
 
-   Download the latest OpenTelemetry Java Agent JAR from the [releases page](https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases) and put it into the `otel/` folder.
-   So the result should look like `otel/opentelemetry-javaagent.jar`.
+## Start With Docker Compose
 
+Docker Compose is the fastest way to start the full local stack. It starts Keycloak, Redis, the React client, all backend
+services, and the observability stack. Frontend and backend images are pulled from GitHub Container Registry by default.
 
-3. **Create a `.env` file in the root directory with the following variables**
-   ```text
-   SPRING_DATASOURCE_URL=<JDBC_CONNECTION_STRING>
-   SPRING_DATASOURCE_USERNAME=<DB_USERNAME>
-   SPRING_DATASOURCE_PASSWORD=<DB_PASSWORD>
-   
-   DATASOURCE_PROXY_USERNAME=<DB_PROXY_USERNAME>
-   DATASOURCE_PROXY_PASSWORD=<DB_PROXY_PASSWORD>
-   DATASOURCE_TARGET_USERNAME=<DB_TARGET_USERNAME>
-   ```
-
-4. **Start the stack**
-    ```shell
-    docker compose up -d
-    ```
-
-5. **Access the services**
-    * **Frontend:** [http://localhost:5173](http://localhost:5173)
-    * **API Gateway:** [http://localhost:8100](http://localhost:8100)
-    * **Keycloak:** [http://localhost:8180/auth](http://localhost:8180/auth) (stagadmin/stagadmin)
-    * **Grafana:** [http://localhost:3000](http://localhost:3000)
-
----
-
-## Kubernetes Deployment
-
-This project uses **Helmfile** to manage deployments across environments.
-
-The secrets are encrypted using **helm-secrets** plugin with [SOPS](https://github.com/mozilla/sops)
-and [Age](https://github.com/FiloSottile/age) encryption.
-
-> To automatically decrypt the secrets, set the `SOPS_AGE_KEY_FILE` environment variable before deploying the stack.
-> The `SOPS_AGE_KEY_FILE` should point to the file containing your Age key.
-
-### 1. Cluster Setup
-
-Ensure you have a Kubernetes cluster running (e.g., Minikube).
+1. Clone the repository:
 
 ```shell
-# Start Minikube
+git clone https://github.com/JakubPavlicek/is-stag.git
+cd is-stag
+```
+
+2. Make sure the OpenTelemetry Java agent exists at `otel/opentelemetry-javaagent.jar`.
+
+Download it from the OpenTelemetry Java instrumentation releases if the `.jar` file is missing:
+https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases
+
+3. Create `.env` in the repository root.
+
+```text
+SPRING_DATASOURCE_URL=<JDBC_CONNECTION_STRING>
+SPRING_DATASOURCE_USERNAME=<DB_USERNAME>
+SPRING_DATASOURCE_PASSWORD=<DB_PASSWORD>
+
+DATASOURCE_PROXY_USERNAME=<DB_PROXY_USERNAME>
+DATASOURCE_PROXY_PASSWORD=<DB_PROXY_PASSWORD>
+DATASOURCE_TARGET_USERNAME=<DB_TARGET_USERNAME>
+
+REDIS_PASSWORD=<REDIS_PASSWORD>
+```
+
+4. Start the stack:
+
+```shell
+docker compose up -d
+```
+
+5. Open the application:
+
+| Service | URL |
+|---------|-----|
+| React client | http://localhost:5173 |
+| API gateway | http://localhost:8100 |
+| Codelist service | http://localhost:8010 |
+| Student service | http://localhost:8020 |
+| Study plan service | http://localhost:8030 |
+| User service | http://localhost:8040 |
+| Aggregated Swagger UI | http://localhost:8100/api/swagger-ui.html |
+| Keycloak IS/STAG realm admin | http://localhost:8180/auth/admin/is-stag/console |
+| Grafana | http://localhost:3000 |
+| Prometheus | http://localhost:9090 |
+
+Default Docker Compose credentials:
+
+| Component | Username | Password |
+|-----------|----------|----------|
+| Keycloak master realm | `admin` | `admin` |
+| Keycloak IS/STAG realm | `stagadmin` | `stagadmin` |
+| Grafana | anonymous admin access | no password |
+
+7. Stop the stack:
+
+```shell
+docker compose down
+```
+
+Use this only when you also want to remove local Compose volumes:
+
+```shell
+docker compose down -v
+```
+
+## Start On Kubernetes
+
+Kubernetes deployment is managed from `k8s/helmfile.yaml`.
+
+The Helmfile defines two environments:
+
+| Environment | Namespace | Notes |
+|-------------|-----------|-------|
+| `prod` | `is-stag-prod` | Full application, including Keycloak and React client |
+| `perftest` | `is-stag-perftest` | Performance-test setup with Keycloak and client disabled |
+
+1. Connect `kubectl` to the target cluster.
+
+For a local cluster, u can use Minikube:
+```shell
 minikube start
 ```
 
-### 2. Deploy with Helmfile
-
-Deploy the entire suite of applications and infrastructure:
+2. Install the Helm plugins and tools required for encrypted secrets:
 
 ```shell
-# Enter the k8s directory
+helm plugin install https://github.com/jkroepke/helm-secrets
+```
+
+Install SOPS and Age using your system package manager if they are not already available.
+
+3. Export the Age key path used by SOPS:
+
+```shell
+export SOPS_AGE_KEY_FILE=$HOME/.config/sops/age/keys.txt
+```
+
+4. Deploy the stack:
+
+```shell
 cd k8s
-
-# Set the path to your age key file to decrypt secrets
-SOPS_AGE_KEY_FILE=$HOME/.config/sops/age/keys.txt
-
-# Apply the configuration
-helmfile apply -e prod
+helmfile sync -e prod
 ```
 
-### 3. Update the /etc/hosts file
-
-After deployment, retrieve the external IP addresses of the services:
+For performance testing, use:
 
 ```shell
-kubectl get svc
+helmfile sync -e perftest
 ```
 
-And add the following entries to your `/etc/hosts` file:
+5. Check the rollout:
+
+```shell
+kubectl get pods -n is-stag-prod
+kubectl get svc -n is-stag-prod
+```
+
+6. Configure local hostnames in `/etc/hosts`:
 
 ```text
 <external-ip> is-stag.cz
@@ -155,44 +224,7 @@ And add the following entries to your `/etc/hosts` file:
 <external-ip> prometheus.is-stag.internal
 ```
 
-This will install:
+## Project Context
 
-* **Infrastructure:** MetalLB, Nginx Gateway Fabric, Cert-Manager, Keycloak, PostgreSQL and Redis.
-* **Observability Stack:** OTEL, Prometheus, Grafana, Loki, Tempo.
-* **Applications:** All microservices and the frontend.
-
----
-
-## Repository Structure
-
-```text
-├── charts/                  # Local Helm charts for microservices
-├── client/                  # React frontend application
-├── k6/                      # Load testing scripts
-├── k8s/                     # Kubernetes manifests & Helmfile configs
-├── keycloak/                # Keycloak realm & authenticator configuration
-├── obervability/            # Grafana dashboards & Obsersavility configs
-├── proto/                   # gRPC proto files
-├── services/                # Java/Spring Boot microservices
-│   ├── api-gateway          # Spring Cloud Gateway
-│   ├── codelist-service     # Shared dictionaries/enums
-│   ├── student-service      # Student data management
-│   ├── study-plan-service   # Study plans & curriculum
-│   └── user-service         # User profiles & management
-├── docker-compose.yaml      # Local development orchestration
-└── README.md                # You are here
-```
-
-## Observability
-
-The system is fully instrumented for observability using OpenTelemetry Java Agent, providing insights into application
-performance and behavior.
-
-* **Traces:** Every request is traced using OpenTelemetry Java Agent and exported to Tempo.
-* **Metrics:** Spring Boot services uses OpenTelemetry Java Agent to export metrics to Prometheus.
-* **Logs:** Logs are collected via OpenTelemetry and sent to Loki.
-
-## Development
-
-This application is a Master's thesis (2025/26), authored by Jakub Pavlíček from the University of West Bohemia in
-Pilsen – Faculty of Applied Sciences.
+This application is a Master's thesis project for the 2025/2026 academic year at the University of West Bohemia,
+Faculty of Applied Sciences. Author: Jakub Pavlíček.

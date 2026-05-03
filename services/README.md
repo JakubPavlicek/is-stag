@@ -7,94 +7,178 @@
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.6-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
 
-The backend of IS/STAG is built as a distributed microservices architecture. It leverages the power of Spring Boot 4 and
-Java 25 to provide high performance, scalability, and modern language features (like virtual threads).
+This directory contains the Java backend for the IS/STAG cloud reference architecture. The backend is implemented as a
+Spring Boot multi-module project with a public API gateway, domain services, REST APIs, gRPC communication, Oracle
+Database access, Redis integration, and OpenTelemetry instrumentation.
 
----
+## Services
 
-## Services Overview
-
-| Service                                        | Port   | Description                                                                                |
-|:-----------------------------------------------|:-------|:-------------------------------------------------------------------------------------------|
-| **[api-gateway](./api-gateway)**               | `8100` | Entry point for all external traffic. Handles routing, auth validation, and rate limiting. |
-| **[codelist-service](./codelist-service)**     | `8010` | Manages static and semi-static dictionaries (Countries, Municipalities, etc.).             |
-| **[student-service](./student-service)**       | `8020` | Core domain service for student records and enrollments.                                   |
-| **[study-plan-service](./study-plan-service)** | `8030` | Manages curriculums, subjects, and study prerequisites.                                    |
-| **[user-service](./user-service)**             | `8040` | Identity and profile management for Persons.                                               |
-
----
+| Service | HTTP port | gRPC port | Description |
+|---------|-----------|-----------|-------------|
+| [`api-gateway`](./api-gateway) | `8100` | none | Public entry point for REST traffic, OAuth2 resource server, routing, retries, circuit breakers, and rate limiting |
+| [`codelist-service`](./codelist-service) | `8010` | `9010` | Shared dictionaries, domains, countries, address data, and education codelists |
+| [`student-service`](./student-service) | `8020` | `9020` | Student data and student-facing REST endpoints |
+| [`study-plan-service`](./study-plan-service) | `8030` | `9030` | Study plans, study programs, field-of-study data, and internal gRPC endpoints |
+| [`user-service`](./user-service) | `8040` | `9040` | Persons, user profile data, and identity-related domain data |
 
 ## Technology Stack
 
-* **Language:** Java 25 (Preview features enabled for Structured Concurrency)
-* **Framework:** Spring Boot 4.0.6, Spring Cloud 2025.1.1
-* **Communication:**
-    * **External:** REST API (OpenAPI 3.0)
-    * **Internal:** gRPC (High-performance inter-service communication)
-* **Database:** Oracle Database 19c
-* **ORM:** Spring Data JPA with Hibernate
-* **Caching & Rate Limiting:** Redis
-* **Security:** Spring Security with OAuth2 Resource Server (Keycloak)
-* **gRPC Framework:** Spring Boot Starter for gRPC ([DanielLiu1123/grpc-starter](https://github.com/DanielLiu1123/grpc-starter))
-* **API Documentation:** OpenAPI 3.0 & Swagger UI
-* **Resilience:** Resilience4j (Circuit Breaker, Retry, Time Limiter, Bulkhead)
-* **Observability:** OpenTelemetry (Tracing, Metrics, Logging)
-* **Containerization:** Cloud Native Buildpacks (Paketobuildpacks) via Spring Boot Maven Plugin
-* **Testing:** JUnit 5, Mockito, Testcontainers
-* **Code Quality:** SonarCloud
-* **Build Tool:** Maven 3.9.11+
+| Area | Technologies                                                         |
+|------|----------------------------------------------------------------------|
+| Language | Java 25 with preview features enabled                                |
+| Framework | Spring Boot 4.0.6, Spring Cloud 2025.1.1                             |
+| APIs | REST, OpenAPI, Swagger UI                                            |
+| Internal communication | gRPC with protobuf contracts from `../proto`                         |
+| Database | Oracle Database through Spring Data JPA and Hibernate                |
+| Cache and rate limiting | Redis                                                                |
+| Security | Spring Security, OAuth2 Resource Server, Keycloak JWT validation     |
+| Resilience | Resilience4j circuit breakers, retries, time limiters, and bulkheads |
+| Observability | OpenTelemetry Java agent, Spring Boot Actuator                       |
+| Containers | Cloud Native Buildpacks through the Spring Boot Maven plugin         |
+| Tests | JUnit 6, Spring Boot tests, Mockito, Testcontainers                  |
+| Build | Maven 3.9.11 or newer                                                |
 
----
+## Module Structure
 
-## Development Setup
-
-### Prerequisites
-
-* **Java 25**
-* **Maven** (or use the provided `mvnw` wrapper)
-* **Docker** (required for Testcontainers during tests)
-
-### Build & Run
-
-To build all services:
-
-```shell
-mvn clean package -DskipTests
+```text
+services/
+├── pom.xml               # Backend Maven aggregator and shared dependency management
+├── api-gateway/          # Spring Cloud Gateway application
+│   ├── pom.xml
+│   └── src/
+├── codelist-service/     # Shared dictionaries and address/codelist domains
+│   ├── pom.xml
+│   └── src/
+├── student-service/      # Student domain service
+│   ├── pom.xml
+│   └── src/
+├── study-plan-service/   # Study plan and study program domain service
+│   ├── pom.xml
+│   └── src/
+└── user-service/         # Person and user profile domain service
+    ├── pom.xml
+    └── src/
 ```
 
-To run a specific service (e.g., `student-service`):
+## Prerequisites
+
+| Tool | Purpose |
+|------|---------|
+| Java 25 | Compile and run services |
+| Maven 3.9.11 or newer | Build backend modules, or use `../mvnw` from this directory |
+| Docker | Testcontainers and local Compose dependencies |
+| Oracle Database access | Runtime datasource for domain services |
+| Redis | Cache and API gateway rate limiting |
+| Keycloak | OAuth2 JWT issuer for the API gateway |
+
+Use the root `docker-compose.yaml` when you want the standard local runtime dependencies and all backend containers to run
+together.
+
+## Developing Services
+
+Run commands from the repository root with `./mvnw -f services/pom.xml` or from this directory with `../mvnw`.
+
+Build all backend modules without tests:
 
 ```shell
-cd student-service
-mvn spring-boot:run
+./mvnw -f services/pom.xml package -DskipTests
 ```
 
-### Testing
-
-We use **Testcontainers** for integration testing to ensure real-world reliability.
+Run all backend tests:
 
 ```shell
-mvn test
+./mvnw -f services/pom.xml test
 ```
 
----
+Run tests for one service:
+
+```shell
+./mvnw -f services/pom.xml -pl student-service -am test
+```
+
+Run one service from source:
+
+```shell
+./mvnw -f services/pom.xml -pl student-service -am spring-boot:run
+```
+
+Use `SPRING_PROFILES_ACTIVE=dev` for local development. The Compose containers already set this profile. When running a
+service directly from the host, override container-only hostnames where needed. For example, use `localhost` for Redis or
+for gRPC peers that are exposed by Docker Compose.
+
+Example for running `student-service` locally while the rest of the stack runs in Docker Compose:
+
+```shell
+docker compose up -d redis-cache user-service study-plan-service
+docker compose stop student-service
+
+SPRING_PROFILES_ACTIVE=dev \
+SPRING_DATA_REDIS_HOST=localhost \
+STUDY_PLAN_SERVICE_GRPC_ADDRESS=localhost:9030 \
+USER_SERVICE_GRPC_ADDRESS=localhost:9040 \
+./mvnw -f services/pom.xml -pl student-service -am spring-boot:run
+```
+
+The service still needs the datasource variables from the root `.env` or equivalent shell environment variables.
+
+## Container Images
+
+Services use Cloud Native Buildpacks through the Spring Boot Maven plugin. No service-specific Dockerfiles are required.
+
+Build a local image for one service:
+
+```shell
+./mvnw -f services/pom.xml -pl student-service -am spring-boot:build-image -DskipTests
+```
+
+Build an image with the same name used by Docker Compose:
+
+```shell
+./mvnw -f services/pom.xml -pl student-service -am spring-boot:build-image \
+  -DskipTests \
+  -Dspring-boot.build-image.imageName=ghcr.io/jakubpavlicek/student-service:0.0.1
+```
+
+Then restart the service container:
+
+```shell
+docker compose up -d student-service
+```
 
 ## API Documentation
 
-Each service exposes OpenAPI documentation. When running locally via Docker Compose or Kubernetes, the aggregated
-documentation is available through the API Gateway.
+The API gateway aggregates Swagger UI for the public REST APIs.
 
-- If running via Docker Compose: http://localhost:8100/api/swagger-ui/index.html
-- If running via Kubernetes: https://is-stag.cz/api/swagger-ui/index.html
+| Runtime | URL |
+|---------|-----|
+| Docker Compose | http://localhost:8100/api/swagger-ui.html |
+| Kubernetes | https://is-stag.cz/api/swagger-ui.html |
 
----
+OpenAPI source files are stored in each public REST service under `src/main/resources/static/openapi.yaml`. The React
+client generates TypeScript schemas from these files with `npm run gen:api` in `../client`.
 
-## Docker & Containers
+## gRPC Contracts
 
-All services are containerized using **Cloud Native Buildpacks** (Paketobuildpacks) via the Maven plugin. This ensures secure,
-efficient, and layered images without writing manual `Dockerfile`s.
+Shared protobuf definitions live in `../proto`. Service builds generate Java gRPC code through the protobuf Maven plugin.
 
-```bash
-# Build image for a specific module
-mvn spring-boot:build-image -pl <module-name> -DskipTests
+When changing a protobuf contract:
+
+1. Update the relevant `.proto` file in `../proto`.
+2. Update the producer and consumer service code in this directory.
+3. Run affected service tests with `./mvnw -f services/pom.xml -pl <service-name> -am test`.
+4. Rebuild affected service images if Docker Compose or Kubernetes should use the change.
+
+## Testing Notes
+
+Unit and integration tests are run with Maven. Integration tests use Testcontainers, so Docker must be running before
+executing tests.
+
+Common commands:
+
+```shell
+./mvnw -f services/pom.xml test
+./mvnw -f services/pom.xml -pl student-service -am test
+./mvnw -f services/pom.xml verify
 ```
+
+JaCoCo coverage reports are generated during the Maven test lifecycle and published by CI.

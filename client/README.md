@@ -11,7 +11,7 @@ leveraging the latest React ecosystem tools.
 
 ---
 
-## ⚡️ Tech Stack
+## Tech Stack
 
 * **Core:** [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/)
 * **Build Tool:** [Vite](https://vitejs.dev/)
@@ -22,7 +22,7 @@ leveraging the latest React ecosystem tools.
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -49,7 +49,7 @@ The application will be available at [http://localhost:5173](http://localhost:51
 
 ### Code Generation
 
-We use OpenAPI to generate typed API clients from the backend specifications. If the backend API changes:
+Use OpenAPI to generate typed API clients from the backend specifications. If the backend API changes:
 
 ```bash
 npm run gen:api
@@ -57,7 +57,7 @@ npm run gen:api
 
 ---
 
-## 🏗 Project Structure
+## Project Structure
 
 ```text
 src/
